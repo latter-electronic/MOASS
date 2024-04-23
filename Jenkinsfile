@@ -6,6 +6,7 @@ pipeline {
             steps {
                 // Spring Boot 백엔드 빌드
                 sh 'cd Backend/moass-api-server'
+                sh 'ls'
                 sh './gradlew build'
             }
         }
