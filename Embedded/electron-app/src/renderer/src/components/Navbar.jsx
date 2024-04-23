@@ -14,7 +14,7 @@ export default function Navbar() {
         <nav className="flex flex-col justify-between w-24 h-screen bg-gray-800 text-white p-4">
             <div className="flex flex-col items-center">
                 <div className="mt-2">
-                    <div class="w-16 h-16 rounded-full bg-emerald-600"></div>
+                    <div class="w-16 h-16 rounded-full bg-emerald-500"></div>
                 </div>
             </div>
             <div className="flex flex-col items-center gap-2">
