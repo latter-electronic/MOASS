@@ -2,10 +2,11 @@ pipeline {
     agent any
     
     stages {
-        stage('Electron Build') {
-            // Electron 프론트엔드 빌드
-            sh 'npm install'
-            sh 'npm run electron-build'
+        stage('Spring Build') {
+            steps {
+                // Spring Boot 백엔드 빌드
+                sh './gradlew build'
+            }
         }
     }
     
