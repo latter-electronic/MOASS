@@ -16,21 +16,27 @@ public class ApiResponse<T> {
 	private final long timestamp;
 	private final int status;
 
-	ApiResponse( String message, T data, int status) {
-		this(data, message, System.currentTimeMillis(), status);
+	ApiResponse(T data, String message, int status) {
+		this.data = data;
+		this.message = message;
+		this.status = status;
+		this.timestamp = System.currentTimeMillis();
 	}
 
-	ApiResponse(String message, int status) {
-		this((T)"", message, System.currentTimeMillis(), status);
+	public ApiResponse(String message, int value) {
+		this.data = (T) "";
+		this.message = message;
+		this.status = value;
+		this.timestamp = System.currentTimeMillis();
 	}
 
 
-	public static <T> Mono<ResponseEntity<ApiResponse>> ok(String message, T data) {
-		ApiResponse response = new ApiResponse(message, data,200);
+	public static  Mono<ResponseEntity<ApiResponse>> ok(String message, Object data) {
+		ApiResponse response = new ApiResponse(data, message,200);
 		return Mono.just(ResponseEntity.status(200).body(response));
 	}
 
-	public static <T> Mono<ResponseEntity<ApiResponse>> ok(String message) {
+	public static  Mono<ResponseEntity<ApiResponse>> ok(String message) {
 		ApiResponse response = new ApiResponse(message,200);
 		return Mono.just(ResponseEntity.status(200).body(response));
 	}

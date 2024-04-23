@@ -30,6 +30,9 @@ out/
 **/application-local.properties
 **/application-prod.properties
 
+/src/main/resources/data.sql
+/src/main/resources/schema.sql
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

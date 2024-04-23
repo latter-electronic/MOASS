@@ -15,7 +15,10 @@ public class User {
 
     @Id
     @Column("user_id")
-    private String studentId;
+    private String userId;
+
+    @Column
+    private String userEmail;
 
     @Column("status_id")
     private String statusId;
