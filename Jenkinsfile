@@ -5,6 +5,7 @@ pipeline {
         stage('Spring Build') {
             steps {
                 // Spring Boot 백엔드 빌드
+                sh 'ls'
                 sh './gradlew build'
             }
         }
