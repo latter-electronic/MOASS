@@ -10,7 +10,7 @@ import Navbar from "./components/Navbar";
 export default function App() {
     return (
         <BrowserRouter>
-            <div className="flex min-h-screen">
+            <div className="flex min-h-screen font-noto-sans">
                 <main className="flex-grow">
                     <Routes>
                         <Route path="/" element={<Home />} />
