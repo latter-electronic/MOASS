@@ -1,5 +1,5 @@
 export default function Home() {
     return(
-        <div>메인탭입니당</div>
+        <div className="text-4xl font-extrabold">메인탭입니당</div>
     );
 }
