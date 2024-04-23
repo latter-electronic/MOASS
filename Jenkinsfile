@@ -6,7 +6,8 @@ pipeline {
             steps {
                 // Spring Boot 백엔드 빌드
                 dir('/var/jenkins_home/workspace/Moass/Backend/moass-api-server') {
-                    sh 'sudo ./gradlew build'
+                    sh 'chmod +x gradlew'
+                    sh './gradlew build'
                 }
             }
         }
