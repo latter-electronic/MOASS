@@ -16,6 +16,8 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
 
     Mono<User> findByUserEmail(String userEmail);
 
+    Mono<User> findByUserEmailOrUserId(String userEmail, String userId);
+
     @Query("INSERT INTO `User` (user_id, user_email, password) " +
             "VALUES (:#{#user.userId}, :#{#user.userEmail}, :#{#user.password}) RETURNING *")
     Mono<User> saveForce(User user);
