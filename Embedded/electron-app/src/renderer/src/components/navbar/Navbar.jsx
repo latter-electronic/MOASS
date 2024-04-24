@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { fetchAllUsers } from '../services/userService.js';
-import useUIStore from '../stores/UIStore.js';
+import { fetchAllUsers } from '../../services/userService.js';
+import useUIStore from '../../stores/UIStore.js';
 
-import mainIcon from '../assets/navbar_icon_main.svg';
-import mainIcon_w from '../assets/navbar_icon_main_white.svg';
-import boardIcon from '../assets/navbar_icon_board.svg';
-import boardIcon_w from '../assets/navbar_icon_board_white.svg';
-import jiraIcon from '../assets/navbar_icon_jira.svg';
-import jiraIcon_w from '../assets/navbar_icon_jira_white.svg';
-import alertIcon from '../assets/navbar_icon_alert.svg';
-import alertIcon_w from '../assets/navbar_icon_alert_white.svg';
-import testProfileImg from '../assets/profileImageTest.jpg';
+import mainIcon from '../../assets/navbar_icon_main.svg';
+import mainIcon_w from '../../assets/navbar_icon_main_white.svg';
+import boardIcon from '../../assets/navbar_icon_board.svg';
+import boardIcon_w from '../../assets/navbar_icon_board_white.svg';
+import jiraIcon from '../../assets/navbar_icon_jira.svg';
+import jiraIcon_w from '../../assets/navbar_icon_jira_white.svg';
+import alertIcon from '../../assets/navbar_icon_alert.svg';
+import alertIcon_w from '../../assets/navbar_icon_alert_white.svg';
+import testProfileImg from '../../assets/profileImageTest.jpg';
 
 export default function Navbar() {
     const { activeTab, setActiveTab } = useUIStore();  // 네브바 선택 아이콘
