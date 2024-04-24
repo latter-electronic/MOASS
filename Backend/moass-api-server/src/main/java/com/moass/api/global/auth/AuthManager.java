@@ -1,6 +1,9 @@
 package com.moass.api.global.auth;
 
+import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,6 +12,7 @@ import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthManager implements ReactiveAuthenticationManager {
@@ -20,14 +24,16 @@ public class AuthManager implements ReactiveAuthenticationManager {
         return Mono.justOrEmpty(authentication)
                 .cast(BearerToken.class)
                 .flatMap(auth -> {
+
                     String token = auth.getCredentials();
+                    log.warn("token: {}", token);
                     if (jwtService.validateAccessToken(token)) {
-                        // 액세스 토큰 유효성 검사
-                        String userEmail = jwtService.getUserInfoFromToken(token).getUserEmail();
+                        String userEmail = jwtService.getUserInfoFromAccessToken(token).getUserEmail();
+                        log.warn("userEmail: {}", userEmail);
                         return processAuthentication(userEmail);
                     }
-                    else {// 유효기간 지났거나, 토큰이아닌놈
-                        return Mono.error(new AuthenticationException("Invalid or expired token") {
+                    else {
+                        return Mono.error(new AuthenticationException("유효하지 않거나 만료된 토큰입니다.") {
                         });
                     }
                 });

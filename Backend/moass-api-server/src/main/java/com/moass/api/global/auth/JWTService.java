@@ -76,8 +76,15 @@ public class JWTService {
     }
 
 
-    public UserInfo getUserInfoFromToken(String token) {
+    public UserInfo getUserInfoFromAccessToken(String token) {
         Claims claims = accessParser.parseClaimsJws(token).getBody();
+        return new UserInfo(claims.get("id", String.class),
+                claims.get("name", String.class),
+                claims.get("email", String.class));
+    }
+
+    public UserInfo getUserInfoFromRefreshToken(String token) {
+        Claims claims = refreshParser.parseClaimsJws(token).getBody();
         return new UserInfo(claims.get("id", String.class),
                 claims.get("name", String.class),
                 claims.get("email", String.class));
@@ -89,6 +96,16 @@ public class JWTService {
             return claims.getExpiration().after(new Date());
         } catch (Exception e) {
             log.info("액세스 토큰 검증 실패");
+            return false;
+        }
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            Claims claims = refreshParser.parseClaimsJws(token).getBody();
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            log.info("리프레쉬 토큰 검증 실패");
             return false;
         }
     }

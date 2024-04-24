@@ -1,11 +1,14 @@
 package com.moass.api.global.config;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.AuthConverter;
 import com.moass.api.global.auth.AuthManager;
 import com.moass.api.global.auth.CustomReactiveUserDetailsService;
 import com.moass.api.global.auth.CustomUserDetails;
+import com.moass.api.global.handler.CustomAuthenticationEntryPoint;
+import com.moass.api.global.handler.CustomAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +39,8 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http , AuthConverter jwtAuthConverter, AuthManager jwtAuthManager) {
         AuthenticationWebFilter jwtFilter = new AuthenticationWebFilter(jwtAuthManager);
-
+        jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler(new ObjectMapper()));
+        jwtFilter.setServerAuthenticationConverter(jwtAuthConverter);
         return http
                 .authorizeExchange(auth ->
                         auth.pathMatchers("/user/login").permitAll()
@@ -46,10 +50,12 @@ public class SecurityConfig {
                                 .pathMatchers("/**").authenticated()
                                 .anyExchange().permitAll()
                 )
-                .httpBasic(httpBasic -> httpBasic.disable()) // HTTP 기본 인증 비활성화
-                .formLogin(formLogin -> formLogin.disable()) // 폼 로그인을 비활성화
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(formLogin -> formLogin.disable())
                 .csrf(csrf -> csrf.disable())
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .exceptionHandling(authenticationManager -> authenticationManager
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(new ObjectMapper())))
                 // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .build();
     }

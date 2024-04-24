@@ -1,6 +1,8 @@
 package com.moass.api.global.auth;
 
+import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,19 +31,16 @@ public class CustomReactiveUserDetailsService implements ReactiveUserDetailsServ
         return userRepository.findUserDetailByUserEmail(userEmail)
                 .map(userDetail -> new CustomUserDetails(userDetail))
                 .cast(UserDetails.class)
-                .switchIfEmpty(Mono.error(new UsernameNotFoundException("사용자를 찾을 수 없습니다.")));
+                .switchIfEmpty(Mono.error(new CustomException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)));
     }
 
     public Mono<Authentication> authenticate(String userEmail, String password) {
         return findByUserEmail(userEmail)
                 .flatMap(userDetails -> {
                     if (passwordEncoder.matches(password, userDetails.getPassword())) {
-                        System.out.println(passwordEncoder.encode(password));
-                        System.out.println(userDetails.getPassword());
-                        System.out.println(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
                         return Mono.just(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
                     } else {
-                        return Mono.error(new BadCredentialsException("Invalid Credentials"));
+                        return Mono.error(new CustomException("유효하지 않은 비밀번호입니다.", HttpStatus.UNAUTHORIZED));
                     }
                 });
     }
