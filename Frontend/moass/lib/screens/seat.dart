@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Seat extends StatelessWidget {
-  const Seat({super.key});
+class SeatScreen extends StatelessWidget {
+  const SeatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
