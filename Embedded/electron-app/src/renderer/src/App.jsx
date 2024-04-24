@@ -1,7 +1,7 @@
 // App.jsx
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/home/index.jsx";
+import Home from "./pages/home/HomePage.jsx";
 import Board from "./pages/board";
 import Jira from "./pages/jira";
 import Alert from "./pages/alert";
