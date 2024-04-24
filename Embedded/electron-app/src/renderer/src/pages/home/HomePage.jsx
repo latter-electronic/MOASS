@@ -22,9 +22,9 @@ export default function HomePage() {
                     <Schedule />
                 </div>
                 {/* 3열: 할 일 목록, 모찌 위아래로 배치 */}
-                <div className="flex flex-col justify-between">
+                <div className="flex flex-col justify-center items-end mr-6 h-full">
                     <TodoList />
-                    <div className="flex justify-center">
+                    <div className="mt-8">
                         <img src={Mozzy} alt="Mozzy" className="size-64"/>
                     </div>
                 </div>
