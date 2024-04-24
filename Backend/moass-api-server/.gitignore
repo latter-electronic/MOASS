@@ -29,6 +29,8 @@ out/
 **/application-env.properties
 **/application-local.properties
 **/application-prod.properties
+**/application-test.properties
+
 
 /src/main/resources/data.sql
 /src/main/resources/schema.sql
