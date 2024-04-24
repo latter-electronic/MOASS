@@ -41,7 +41,7 @@ export default function HomeScheduleComponent() {
     return (
         <div className="flex flex-col space-y-4">
             {schedules.map((schedule) => (
-                <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md bg-white max-w-screen-sm`}>
+                <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md bg-white max-w-screen-sm ml-12`}>
                     <div className={`border-l-4 ${schedule.color === 'blue' ? 'border-blue-500' : 'border-pink-500'} pl-4`}>
                         <p className="text-gray-800 font-semibold">{schedule.type} {schedule.title}</p>
                         <div className="flex items-center justify-between">
