@@ -1,7 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { fetchAllUsers } from '../../services/userService.js';
 import useUIStore from '../../stores/UIStore.js';
+import {
+    useFloating,
+    useClick,
+    useDismiss,
+    useRole,
+    useListNavigation,
+    useInteractions,
+    FloatingFocusManager,
+    useTypeahead,
+    offset,
+    flip,
+    size,
+    autoUpdate,
+    FloatingPortal,
+} from "@floating-ui/react";
 
 import mainIcon from '../../assets/navbar_icon_main.svg';
 import mainIcon_w from '../../assets/navbar_icon_main_white.svg';
@@ -16,6 +31,71 @@ import testProfileImg from '../../assets/profileImageTest.jpg';
 export default function Navbar() {
     const { activeTab, setActiveTab } = useUIStore();  // 네브바 선택 아이콘
     const [users, setUsers] = useState([]); // 사용자 데이터 저장할곳
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    const statusOptions = [
+        "착석중",
+        "자리비움",
+        "공가",
+        "방해금지",
+    ];
+
+    const { refs, floatingStyles, context } = useFloating({
+        placement: "left-start",
+        open: isOpen,
+        onOpenChange: setIsOpen,
+        whileElementsMounted: autoUpdate,
+        middleware: [
+            offset(5),
+            flip({ padding: 10 }),
+            size({
+                apply({ rects, elements, availableHeight }) {
+                    Object.assign(elements.floating.style, {
+                        maxHeight: `${availableHeight}px`,
+                        minWidth: `${rects.reference.width}px`,
+                    });
+                },
+                padding: 10,
+            }),
+        ],
+    });
+
+    const click = useClick(context, { event: "mousedown" });
+    const dismiss = useDismiss(context);
+    const role = useRole(context, { role: "listbox" });
+    const listContentRef = useRef(statusOptions);
+
+    const listRef = useRef(statusOptions.map(() => null));
+    const isTypingRef = useRef(false);
+    const listNav = useListNavigation(context, {
+        listRef,
+        activeIndex,
+        selectedIndex,
+        onNavigate: setActiveIndex,
+        loop: true,
+    });
+    const typeahead = useTypeahead(context, {
+        listRef: listContentRef,
+        activeIndex,
+        selectedIndex,
+        onMatch: isOpen ? setActiveIndex : setSelectedIndex,
+        onTypingChange(isTyping) {
+            isTypingRef.current = isTyping;
+        },
+    });
+
+    const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions(
+        [dismiss, role, listNav, typeahead, click]
+    );
+
+    const handleSelect = (index) => {
+        setSelectedIndex(index);
+        setIsOpen(false);
+    };
+
+    const selectedItemLabel = selectedIndex !== null ? statusOptions[selectedIndex] : undefined;
 
     useEffect(() => {
         const loadUsers = async () => {
@@ -33,8 +113,14 @@ export default function Navbar() {
     return (
         <nav className="flex flex-col justify-between w-24 h-screen bg-gray-800 text-white p-4">
             <div className="flex flex-col items-center">
-                <div className="mt-2 relative flex justify-center items-center w-16 h-16 rounded-full bg-emerald-500">
-                    <img src={ testProfileImg } alt="프사" className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full" />
+                <div 
+                    tabIndex={0}
+                    ref={refs.setReference}
+                    aria-labelledby="select-label"
+                    aria-autocomplete="none"
+                    className="mt-2 relative flex justify-center items-center w-16 h-16 rounded-full bg-stone-400"
+                    {...getReferenceProps()}>
+                    <img src={ testProfileImg } alt={selectedItemLabel || "Select..."} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full" />
                 </div>
             </div>
             <div className="flex flex-col items-center gap-2">
@@ -51,6 +137,68 @@ export default function Navbar() {
                     <img src={activeTab === '/alert' ? alertIcon : alertIcon_w} alt="Alert" className="p-2 hover:bg-gray-700 rounded size-24" />
                 </NavLink>
             </div>
+            {isOpen && (
+        <FloatingPortal>
+          <FloatingFocusManager context={context} modal={false}>
+            <div
+              ref={refs.setFloating}
+              style={{
+                ...floatingStyles,
+                overflowY: "auto",
+                background: "#fff",
+                minWidth: 100,
+                borderRadius: 8,
+                outline: 0,
+              }}
+              {...getFloatingProps()}
+            >
+              {statusOptions.map((value, i) => (
+                <div
+                  key={value}
+                  ref={(node) => {
+                    listRef.current[i] = node;
+                  }}
+                  role="option"
+                  tabIndex={i === activeIndex ? 0 : -1}
+                  aria-selected={i === selectedIndex && i === activeIndex}
+                  style={{
+                    padding: 10,
+                    cursor: "default",
+                    color: "#000",
+                    background: i === activeIndex ? "gainsboro" : "",
+                  }}
+                  {...getItemProps({
+                    onClick() {
+                      handleSelect(i);
+                    },
+                    onKeyDown(event) {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        handleSelect(i);
+                      }
+                      if (event.key === " " && !isTypingRef.current) {
+                        event.preventDefault();
+                        handleSelect(i);
+                      }
+                    },
+                  })}
+                >
+                  {value}
+                  <span
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      right: 10,
+                    }}
+                  >
+                    {i === selectedIndex ? " ✓" : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </FloatingFocusManager>
+        </FloatingPortal>
+      )}
         </nav>
     );
 }
