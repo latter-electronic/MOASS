@@ -6,6 +6,7 @@ import Board from "./pages/board";
 import Jira from "./pages/jira";
 import Alert from "./pages/alert";
 import Navbar from "./components/Navbar";
+import CallAlert from "./pages/common/CallAlertPage.jsx";
 
 export default function App() {
     return (
@@ -17,6 +18,7 @@ export default function App() {
                         <Route path="/board" element={<Board />} />
                         <Route path="/jira" element={<Jira />} />
                         <Route path="/alert" element={<Alert />} />
+                        <Route path="/callalert" element={<CallAlert />} />
                     </Routes>
                 </main>
                 {/* Correct the className and use fixed or absolute positioning with right-0 to stick it to the right */}
