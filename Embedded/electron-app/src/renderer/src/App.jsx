@@ -5,7 +5,7 @@ import Home from "./pages/home/index.jsx";
 import Board from "./pages/board";
 import Jira from "./pages/jira";
 import Alert from "./pages/alert";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar.jsx";
 import CallAlert from "./pages/common/CallAlertPage.jsx";
 
 export default function App() {

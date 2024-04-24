@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@floating-ui/react": "^0.26.12",
     "zustand": "^4.5.2"
   }
 }
