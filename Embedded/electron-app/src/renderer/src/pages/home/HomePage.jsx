@@ -13,7 +13,7 @@ export default function HomePage() {
                 {/* 1열: 시계, 달력 위아래로 배치 */}
                 <div className="flex flex-col justify-between">
                     <Clock />
-                    <div className="flex justify-center">
+                    <div className="flex justify-start">
                     <Calendar />
                     </div>
                 </div>
