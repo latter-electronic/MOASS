@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function ClockComponent() {
+export default function HomeClockComponent() {
     // 상태로 현재 시간 관리
     const [currentTime, setCurrentTime] = useState(new Date());
 

@@ -1,7 +1,7 @@
-import Clock from './ClockComponent.jsx'
+import Clock from './HomeClockComponent.jsx'
 import Calendar from './CalendarWidget.jsx'
-import TodoList from './TodoListComponent.jsx'
-import Schedule from './ScheduleCard.jsx'
+import TodoList from './HomeTodoListComponent.jsx'
+import Schedule from './HomeScheduleComponent.jsx'
 
 import Mozzy from '../../assets/Mozzy.svg'
 

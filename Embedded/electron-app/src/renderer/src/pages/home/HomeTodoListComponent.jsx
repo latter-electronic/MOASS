@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 
-export default function TodoListComponent() {
+export default function HomeTodoListComponent() {
     // 초기 할 일 목록 state로 관리
     const [todos, setTodos] = useState([
         { id: 1, text: 'BRENA 투어', isCompleted: false },
