@@ -1,26 +1,25 @@
 package com.moass.api.global.auth;
 
-import com.moass.api.domain.user.entity.UserProfile;
+import com.moass.api.domain.user.entity.UserDetail;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Getter
 public class CustomUserDetails implements UserDetails {
-    private UserProfile userProfile;
+    private UserDetail userDetail;
     private Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-    public CustomUserDetails(UserProfile userProfile) {
-        this.userProfile = userProfile;
+    public CustomUserDetails(UserDetail userDetail) {
+        this.userDetail = userDetail;
         initializeAuthorities();
     }
 
     private void initializeAuthorities() {
-        switch (userProfile.getJobCode()) {
+        switch (userDetail.getJobCode()) {
             case 1:
                 authorities.add(() -> "ROLE_STUDENT");
                 break;
@@ -43,16 +42,16 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return userProfile.getPassword();
+        return userDetail.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return userProfile.getUserName();
+        return userDetail.getUserName();
     }
 
     public String getEmail() {
-        return userProfile.getUserEmail();
+        return userDetail.getUserEmail();
     }
 
     @Override

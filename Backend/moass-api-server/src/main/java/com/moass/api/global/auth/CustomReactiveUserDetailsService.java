@@ -1,7 +1,6 @@
 package com.moass.api.global.auth;
 
-import com.moass.api.domain.user.entity.UserProfile;
-import com.moass.api.global.auth.dto.UserInfo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,24 +13,21 @@ import reactor.core.publisher.Mono;
 import com.moass.api.domain.user.repository.UserRepository;
 
 
+@RequiredArgsConstructor
 @Service
 public class CustomReactiveUserDetailsService implements ReactiveUserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    public CustomReactiveUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {
-        // 여기서 username은 실제로 userEmail을 의미합니다.
         return findByUserEmail(username);
     }
 
     public Mono<UserDetails> findByUserEmail(String userEmail) {
-        return userRepository.findByUserEmail(userEmail)
-                .map(userProfile -> new CustomUserDetails(userProfile))
+        return userRepository.findUserDetailByUserEmail(userEmail)
+                .map(userDetail -> new CustomUserDetails(userDetail))
                 .cast(UserDetails.class)
                 .switchIfEmpty(Mono.error(new UsernameNotFoundException("사용자를 찾을 수 없습니다.")));
     }
@@ -40,7 +36,9 @@ public class CustomReactiveUserDetailsService implements ReactiveUserDetailsServ
         return findByUserEmail(userEmail)
                 .flatMap(userDetails -> {
                     if (passwordEncoder.matches(password, userDetails.getPassword())) {
-                        UserInfo userInfo = UserInfo.of((UserProfile) userDetails);
+                        System.out.println(passwordEncoder.encode(password));
+                        System.out.println(userDetails.getPassword());
+                        System.out.println(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
                         return Mono.just(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
                     } else {
                         return Mono.error(new BadCredentialsException("Invalid Credentials"));
