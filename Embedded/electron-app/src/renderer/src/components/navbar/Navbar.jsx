@@ -42,6 +42,15 @@ export default function Navbar() {
         "방해금지",
     ];
 
+    const backgroundColors = {
+        "착석중": "bg-emerald-500",
+        "자리비움": "bg-amber-300",
+        "공가": "bg-rose-600",
+        "방해금지": "bg-stone-400"
+    };
+
+    const backgroundColor = selectedIndex !== null ? backgroundColors[statusOptions[selectedIndex]] : "bg-white";
+
     const { refs, floatingStyles, context } = useFloating({
         placement: "left-start",
         open: isOpen,
@@ -118,7 +127,7 @@ export default function Navbar() {
                     ref={refs.setReference}
                     aria-labelledby="select-label"
                     aria-autocomplete="none"
-                    className="mt-2 relative flex justify-center items-center w-16 h-16 rounded-full bg-stone-400"
+                    className={`mt-2 relative flex justify-center items-center w-16 h-16 rounded-full ${backgroundColor}`}
                     {...getReferenceProps()}>
                     <img src={ testProfileImg } alt={selectedItemLabel || "Select..."} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full" />
                 </div>
@@ -138,67 +147,74 @@ export default function Navbar() {
                 </NavLink>
             </div>
             {isOpen && (
-        <FloatingPortal>
-          <FloatingFocusManager context={context} modal={false}>
+    <FloatingPortal>
+        <FloatingFocusManager context={context} modal={false}>
             <div
-              ref={refs.setFloating}
-              style={{
-                ...floatingStyles,
-                overflowY: "auto",
-                background: "#fff",
-                minWidth: 100,
-                borderRadius: 8,
-                outline: 0,
-              }}
-              {...getFloatingProps()}
+                ref={refs.setFloating}
+                style={{
+                    ...floatingStyles,
+                    overflowY: "auto",
+                    background: "#fff",
+                    minWidth: 100,
+                    borderRadius: 8,
+                    outline: 0,
+                }}
+                {...getFloatingProps()}
             >
-              {statusOptions.map((value, i) => (
-                <div
-                  key={value}
-                  ref={(node) => {
-                    listRef.current[i] = node;
-                  }}
-                  role="option"
-                  tabIndex={i === activeIndex ? 0 : -1}
-                  aria-selected={i === selectedIndex && i === activeIndex}
-                  style={{
-                    padding: 10,
-                    cursor: "default",
-                    color: "#000",
-                    background: i === activeIndex ? "gainsboro" : "",
-                  }}
-                  {...getItemProps({
-                    onClick() {
-                      handleSelect(i);
-                    },
-                    onKeyDown(event) {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        handleSelect(i);
-                      }
-                      if (event.key === " " && !isTypingRef.current) {
-                        event.preventDefault();
-                        handleSelect(i);
-                      }
-                    },
-                  })}
-                >
-                  {value}
-                  <span
-                    aria-hidden
-                    style={{
-                      position: "absolute",
-                      right: 10,
-                    }}
-                  >
-                    {i === selectedIndex ? " ✓" : ""}
-                  </span>
-                </div>
-              ))}
+                {statusOptions.map((value, i) => (
+                    <div
+                        key={value}
+                        ref={(node) => {
+                            listRef.current[i] = node;
+                        }}
+                        role="option"
+                        tabIndex={i === activeIndex ? 0 : -1}
+                        aria-selected={i === selectedIndex && i === activeIndex}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '10px 20px', // Padding을 좌우로 증가시켜 주어 좀 더 넓은 간격을 제공
+                            cursor: "default",
+                            color: "#000",
+                            background: i === activeIndex ? "gainsboro" : "",
+                        }}
+                        {...getItemProps({
+                            onClick() {
+                                handleSelect(i);
+                            },
+                            onKeyDown(event) {
+                                if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    handleSelect(i);
+                                }
+                                if (event.key === " " && !isTypingRef.current) {
+                                    event.preventDefault();
+                                    handleSelect(i);
+                                }
+                            },
+                        })}
+                    >
+                        <span style={{ display: 'flex', alignItems: 'center' }}> {/* 상태 원과 텍스트를 함께 묶어 정렬 */}
+                            <span // 상태 색상을 나타내는 원
+                                className={`h-2.5 w-2.5 rounded-full mr-4 ${backgroundColors[value]}`}
+                            ></span>
+                            {value}
+                        </span>
+                        <span
+                            aria-hidden
+                            style={{
+                                marginLeft: '20px', // 체크 마크와 옵션명 사이의 간격을 추가
+                            }}
+                        >
+                            {i === selectedIndex ? " ✓" : ""}
+                        </span>
+                    </div>
+                ))}
             </div>
-          </FloatingFocusManager>
-        </FloatingPortal>
-      )}
+        </FloatingFocusManager>
+    </FloatingPortal>
+)}
         </nav>
     );
 }
