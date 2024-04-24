@@ -4,8 +4,8 @@
 import { create } from 'zustand';
 
 const useUIStore = create(set => ({
-  isModalOpen: false,
-  toggleModal: () => set(state => ({ isModalOpen: !state.isModalOpen }))
+  activeTab: '/',
+  setActiveTab: (tab) => set({ activeTab: tab })
 }));
 
 export default useUIStore;
