@@ -1,14 +1,25 @@
-import { useNavigate } from 'react-router-dom';
-export default function Home() {
-    const navigate = useNavigate();
-    const callAlertFunction = () => {
-        navigate(`/callalert`);
-    };
+import Clock from './ClockComponent.jsx'
+import Calendar from './CalendarWidget.jsx'
+import TodoList from './TodoListComponent.jsx'
+import Schedule from './ScheduleCard.jsx'
 
+export default function HomePage() {
     return(
         <div>
-            <div className="text-4xl font-extrabold">메인탭입니당</div>
-            <button onClick={() => callAlertFunction()}>button</button>
+            <div className="container mx-auto p-4">
+                <Clock />
+                <div className="grid grid-cols-3 gap-4">
+                    <div>
+                        <Calendar />
+                    </div>
+                    <div>
+                        <Schedule />
+                    </div>
+                    <div>
+                        <TodoList />
+                    </div>
+                </div>
+            </div>
         </div>
     );
-    }
+}
