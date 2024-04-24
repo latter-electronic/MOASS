@@ -49,7 +49,7 @@ export default function Navbar() {
         "방해금지": "bg-stone-400"
     };
 
-    const backgroundColor = selectedIndex !== null ? backgroundColors[statusOptions[selectedIndex]] : "bg-white";
+    const backgroundColor = selectedIndex !== null ? backgroundColors[statusOptions[selectedIndex]] : "bg-emerald-500";  // 초기 초록색으로 시작하게해놓음. 나중에 수정
 
     const { refs, floatingStyles, context } = useFloating({
         placement: "left-start",
