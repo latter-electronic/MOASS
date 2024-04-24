@@ -1,35 +1,27 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+// App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-function App() {
-  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
+import Home from "./pages/home/index.jsx";
+import Board from "./pages/board";
+import Jira from "./pages/jira";
+import Alert from "./pages/alert";
+import Navbar from "./components/Navbar";
 
-  return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
-  )
+export default function App() {
+    return (
+        <BrowserRouter>
+            <div className="flex min-h-screen font-noto-sans">
+                <main className="flex-grow">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/board" element={<Board />} />
+                        <Route path="/jira" element={<Jira />} />
+                        <Route path="/alert" element={<Alert />} />
+                    </Routes>
+                </main>
+                {/* Correct the className and use fixed or absolute positioning with right-0 to stick it to the right */}
+                <Navbar className="fixed inset-y-0 right-0"/>
+            </div>
+        </BrowserRouter>
+    );
 }
-
-export default App
-

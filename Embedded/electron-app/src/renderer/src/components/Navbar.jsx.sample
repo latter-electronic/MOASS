@@ -1,0 +1,36 @@
+import { NavLink } from 'react-router-dom';
+
+import mainIcon from '../assets/navbar_icon_main.svg';
+import mainIcon_w from '../assets/navbar_icon_main_white.svg';
+import boardIcon from '../assets/navbar_icon_board.svg';
+import boardIcon_w from '../assets/navbar_icon_board_white.svg';
+import jiraIcon from '../assets/navbar_icon_jira.svg';
+import jiraIcon_w from '../assets/navbar_icon_jira_white.svg';
+import alertIcon from '../assets/navbar_icon_alert.svg';
+import alertIcon_w from '../assets/navbar_icon_alert_white.svg';
+
+export default function Navbar() {
+    return (
+        <nav className="flex flex-col justify-between w-24 h-screen bg-gray-800 text-white p-4">
+            <div className="flex flex-col items-center">
+                <div className="mt-2">
+                    <div class="w-16 h-16 rounded-full bg-emerald-600"></div>
+                </div>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+                <NavLink to="/">
+                    <img src={mainIcon} alt="Main" className="p-2 hover:bg-gray-700 rounded size-24" />
+                </NavLink>
+                <NavLink to="/board">
+                    <img src={boardIcon} alt="Board" className="p-2 hover:bg-gray-700 rounded size-24" />
+                </NavLink>
+                <NavLink to="/jira">
+                    <img src={jiraIcon} alt="Jira" className="p-2 hover:bg-gray-700 rounded size-24" />
+                </NavLink>
+                <NavLink to="/alert">
+                    <img src={alertIcon} alt="Alert" className="p-2 hover:bg-gray-700 rounded size-24" />
+                </NavLink>
+            </div>
+        </nav>
+    );
+}

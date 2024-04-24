@@ -5,7 +5,11 @@ module.exports = {
     './src/renderer/src/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'noto-sans': ['Noto Sans KR', 'sans-serif'], // className="font-noto-sans" 으로 사용
+      },
+    },
   },
   plugins: [],
 }
