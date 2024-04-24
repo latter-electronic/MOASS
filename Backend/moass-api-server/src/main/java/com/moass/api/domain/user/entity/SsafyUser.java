@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("user")
+@Table("SsafyUser")
 @Getter
 @Data
 public class SsafyUser {

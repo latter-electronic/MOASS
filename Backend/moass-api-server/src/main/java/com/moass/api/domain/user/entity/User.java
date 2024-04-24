@@ -21,7 +21,7 @@ public class User {
     private String userEmail;
 
     @Column("status_id")
-    private String statusId;
+    private Integer statusId;
 
     @Column("password")
     private String password;
