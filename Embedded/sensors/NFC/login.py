@@ -3,6 +3,7 @@
 
 import os
 from dotenv import load_dotenv
+import pathlib
 import board
 import busio
 import time
@@ -16,7 +17,9 @@ def get_serial_number():
                 return line.split(':')[1].strip()
     return None
 
-load_dotenv() # .env 파일 로드
+# .env 파일 경로 지정
+env_path = pathlib.Path('..') / '.env'
+load_dotenv(dotenv_path=env_path)
 server_url = os.getenv('SERVER_URL')
 
 i2c = busio.I2C(board.SCL, board.SDA) # I2C 연결 설정
