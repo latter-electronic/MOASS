@@ -28,9 +28,8 @@ export default function NameplatePage() {
                         <div className="flex">
                             <div className="font-extrabold text-16xl tracking-wwww text-gray-900">{user.userName}</div>
                             <div className="flex flex-col justify-end">
-                                {/* jobCode를 기반으로 버튼 레이블을 표시합니다. */}
                                 <button className="bg-red-500 hover:bg-red-600 text-white text-2xl font-bold tracking-wider py-2 px-4 rounded-full mb-12">
-                                    {user.jobCode === 1 ? 'FE' : 'BE'} {/* 예시로 FE 또는 BE 표시 */}
+                                    {user.jobCode === 1 ? 'FE' : 'BE'} {/* 이 잡코드가 이 잡코드가 아님. 나중에 수정하기 */}
                                 </button>
                             </div>
                         </div>
@@ -39,7 +38,7 @@ export default function NameplatePage() {
             </div>
 
             <div className="fixed inset-y-0 right-0">
-                <Status />
+                <Status statusId={user.statusId}/>
             </div>
         </div>
     );
