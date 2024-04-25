@@ -116,4 +116,11 @@ public class DeviceTest {
         }
     }
 
+    @Nested
+    @DisplayName("[POST] 로그아웃 /device/logout")
+    class 로그아웃{
+
+
+    }
+
 }
