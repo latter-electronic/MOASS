@@ -6,7 +6,7 @@ pipeline {
 	        steps {
 				dir('/var/jenkins_home/workspace/Moass/Embedded/electron-app') {
                     sh '''
-                    docker run --rm -it -v ./:/project electronuserland/builder:wine /bin/bash -c "yarn && yarn dist -w"
+                    docker run --rm -i -v ./:/project electronuserland/builder:wine /bin/bash -c "yarn && yarn dist -w"
                     '''
                     // sh 'yarn && yarn dist'
                 }
