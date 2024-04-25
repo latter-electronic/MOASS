@@ -44,6 +44,7 @@ public class SecurityConfig {
         return http
                 .authorizeExchange(auth ->
                         auth.pathMatchers("/user/login").permitAll()
+                                .pathMatchers("/device/login").permitAll()
                                 .pathMatchers("/user/refresh").permitAll()
                                 .pathMatchers("/user/signup").permitAll()
                                 .pathMatchers("/test").permitAll()
