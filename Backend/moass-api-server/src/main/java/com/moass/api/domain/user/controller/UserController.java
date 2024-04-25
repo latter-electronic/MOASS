@@ -11,6 +11,7 @@ import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
+import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class UserController {
     private final CustomReactiveUserDetailsService userDetailsService;
 
     final UserService userService;
-
+    final SseService sseService;
     final JWTService jwtService;
     final PasswordEncoder encoder;
     final AuthManager authManager;
@@ -43,9 +44,11 @@ public class UserController {
                 .flatMap(auth -> {
                     CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
                     UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
+                    sseService.notifyTeam(userInfo.getTeamCode(),"로그인성공 :"+userInfo.getUserName());
                     return jwtService.generateTokens(userInfo);
                 })
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공", tokens))
+
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
     }
 
