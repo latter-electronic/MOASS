@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:moass/widgets/check_box.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -15,7 +16,26 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
-  bool selectSeatedState = true;
+  String selectedSeatedState = 'here';
+
+// 내상태 설정
+// 자리비움으로 바꾸기
+  void setStateNotHere() {
+    setState(() {
+      if (selectedSeatedState == 'here') {
+        selectedSeatedState = 'notHere';
+      }
+    });
+  }
+
+// 착석으로 바꾸기
+  void setStateHere() {
+    setState(() {
+      if (selectedSeatedState == 'notHere') {
+        selectedSeatedState = 'here';
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,43 +60,59 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 30),
-                    width: 80,
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF3DB887),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                  GestureDetector(
+                    onTap: setStateHere,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 30),
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          color: const Color(0xFF3DB887),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          border: selectedSeatedState == 'here'
+                              ? Border.all(
+                                  color: const Color(0xFF6ECEF5), width: 4.0)
+                              : null),
+                      child: const Center(
+                          child: Text('착석 중',
+                              style: TextStyle(color: Colors.white))),
                     ),
-                    child: const Center(
-                        child: Text('착석 중',
-                            style: TextStyle(color: Colors.white))),
                   ),
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFFFBC1F),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                  GestureDetector(
+                    onTap: setStateNotHere,
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFFFBC1F),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                          border: selectedSeatedState == 'notHere'
+                              ? Border.all(
+                                  color: const Color(0xFF6ECEF5), width: 4.0)
+                              : null),
+                      child: const Center(
+                          child: Text('자리 비움',
+                              style: TextStyle(color: Colors.white))),
                     ),
-                    child: const Center(
-                        child: Text('자리 비움',
-                            style: TextStyle(color: Colors.white))),
                   ),
                 ],
               ),
-              const Column(
-                children: [
-                  Text('사유를 입력하세요'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MyStateSelector(state: '취업면담'),
-                      MyStateSelector(state: '팀 미팅'),
-                      MyStateSelector(state: '기타'),
-                    ],
-                  )
-                ],
+              Column(
+                children: selectedSeatedState == 'notHere'
+                    ? [
+                        const Text('사유를 입력하세요'),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            MyStateSelector(state: '취업면담'),
+                            MyStateSelector(state: '팀 미팅'),
+                            MyStateSelector(state: '기타'),
+                          ],
+                        )
+                      ]
+                    : [],
               ),
             ],
           ),
