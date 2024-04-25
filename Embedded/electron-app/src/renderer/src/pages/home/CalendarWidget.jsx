@@ -1,7 +1,11 @@
+import Calendar from "../../assets/Calendar.png"
+
 export default function CalendarWidget() {
     return(
         <>
-            캘린더
+            <div className="flex items-center justify-center">
+            <img src={ Calendar } alt="캘린더" className="w-56 rounded ml-6 mb-6"/>
+        </div>
         </>
     );
 }
