@@ -2,7 +2,7 @@ import garden from '../../assets/call_garden.svg'
 import mozzy from '../../assets/call_mozzy.svg';
 export default function CallAlert() {
   return (
-    <div className="flex flex-row justify-between h-dvh bg-teal-600 p-12 text-center text-white">
+    <div className="flex flex-row justify-between h-dvh w-full bg-teal-600 p-12 text-center text-white">
       <div className="flex-1 flex items-start justify-start">
         <div className="bg-white rounded-full flex items-center px-4 py-2">
           <img
