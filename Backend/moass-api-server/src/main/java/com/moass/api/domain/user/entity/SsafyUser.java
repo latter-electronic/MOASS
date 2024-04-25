@@ -25,4 +25,7 @@ public class SsafyUser {
 
     @Column("user_name")
     private String userName;
+
+    @Column("card_serial_id")
+    private String cardSerialId;
 }

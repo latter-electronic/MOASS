@@ -27,6 +27,8 @@ public class UserDetail {
 
     private Integer connectFlag;
 
+    private String positionName;
+
     private String cardSerialId;
 
     private Integer jobCode;
@@ -44,7 +46,8 @@ public class UserDetail {
         this.backgroundImg = user.getBackgroundImg();
         this.rayout = user.getRayout();
         this.connectFlag = user.getConnectFlag();
-        this.cardSerialId = user.getCardSerialId();
+        this.positionName = user.getPositionName();
+        this.cardSerialId = ssafyUser.getCardSerialId();
         this.jobCode = ssafyUser.getJobCode();
         this.teamCode = ssafyUser.getTeamCode();
         this.userName = ssafyUser.getUserName();
