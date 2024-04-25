@@ -11,6 +11,11 @@ RUN npm install
 # 소스 코드 복사
 COPY . .
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wine \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # 애플리케이션 빌드
 RUN npm run build:pi
 
