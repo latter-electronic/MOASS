@@ -125,6 +125,15 @@ public class DeviceTest {
             @BeforeEach
             void setUp(){
                 login(new UserLoginDto("test04@com", "ssafyout4"));
+
+                    webTestClient.post().uri("/device/login")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .bodyValue(new ReqDeviceLoginDto("DDDD4", "AAAA4"))
+                            .exchange()
+                            .expectStatus().isOk()
+                            .expectBody()
+                            .jsonPath("$.status").isEqualTo(200);
+
             }
 
             @Test
