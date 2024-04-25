@@ -2,6 +2,7 @@ package com.moass.api.domain.device.controller;
 
 
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
+import com.moass.api.domain.device.dto.ReqDeviceLogoutDto;
 import com.moass.api.domain.device.service.DeviceService;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.global.auth.CustomReactiveUserDetailsService;
@@ -25,12 +26,18 @@ public class DeviceController {
 
     final DeviceService deviceService;
     final JWTService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    private final CustomReactiveUserDetailsService userDetailsService;
+
     @PostMapping("/login")
     public Mono<ResponseEntity<ApiResponse>> login(@RequestBody ReqDeviceLoginDto reqDeviceLoginDto) {
         return deviceService.deviceLogin(reqDeviceLoginDto)
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공",tokens))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/logout")
+    public Mono<ResponseEntity<ApiResponse>> logout(@RequestBody ReqDeviceLogoutDto reqDeviceLogoutDto) {
+        return deviceService.deviceLogout(reqDeviceLogoutDto)
+                .then(ApiResponse.ok("로그아웃 성공"))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("로그아웃 실패 : " + e.getMessage(), e.getStatus()));
     }
 }

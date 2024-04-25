@@ -2,6 +2,7 @@ package com.moass.api.domain.device.service;
 
 
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
+import com.moass.api.domain.device.dto.ReqDeviceLogoutDto;
 import com.moass.api.domain.device.repository.DeviceRepository;
 import com.moass.api.domain.user.dto.ReqFilteredUserDetailDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
@@ -41,7 +42,26 @@ public class DeviceService {
                             return jwtService.generateTokens(userInfo);
                         })
                 );
+    }
 
+    /**
+     * Todo
+     * 추후, 연결된 기기(본인이라도)에 로그아웃 하라는 SSE메세지 적용 필요
+     * @param reqDeviceLogoutDto
+     * @return
+     */
+    @Transactional
+    public Mono<Void> deviceLogout(ReqDeviceLogoutDto reqDeviceLogoutDto) {
+        return deviceRepository.findByDeviceId(reqDeviceLogoutDto.getDeviceId())
+                .switchIfEmpty(Mono.error(new CustomException("등록되지 않은 기기입니다.", HttpStatus.NOT_FOUND)))
+                .flatMap(device -> {
+                    if (device.getUserId() != null && device.getUserId().equals(reqDeviceLogoutDto.getUserId())) {
+                        device.setUserId(null); // 사용자 ID를 null로 설정
+                        return deviceRepository.save(device).then(); // 변경사항 저장 후 완료 신호만 보냄
+                    } else {
+                        return Mono.error(new CustomException("기기의 사용자 정보가 일치하지 않습니다.", HttpStatus.CONFLICT));
+                    }
+                });
     }
 
     public Mono<UserLoginDto> deviceLoginAuth(ReqDeviceLoginDto reqDeviceLoginDto) {
