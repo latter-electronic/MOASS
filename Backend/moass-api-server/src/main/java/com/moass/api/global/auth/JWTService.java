@@ -51,9 +51,10 @@ public class JWTService {
 
             String accessToken = Jwts.builder()
                     .setSubject(userInfo.getUserId())
-                    .claim("email", userInfo.getUserEmail())
-                    .claim("id", userInfo.getUserId())
-                    .claim("name", userInfo.getUserName())
+                    .claim("userEmail", userInfo.getUserEmail())
+                    .claim("userId", userInfo.getUserId())
+                    .claim("userName", userInfo.getUserName())
+                    .claim("teamCode", userInfo.getTeamCode())
                     .setIssuedAt(nowDate)
                     .setExpiration(expirationDateForAccessToken)
                     .signWith(this.accessKey)
@@ -61,9 +62,10 @@ public class JWTService {
 
             String refreshToken = Jwts.builder()
                     .setSubject(userInfo.getUserId())
-                    .claim("email", userInfo.getUserEmail())
-                    .claim("id", userInfo.getUserId())
-                    .claim("name", userInfo.getUserName())
+                    .claim("userEmail", userInfo.getUserEmail())
+                    .claim("userId", userInfo.getUserId())
+                    .claim("userName", userInfo.getUserName())
+                    .claim("teamCode", userInfo.getTeamCode())
                     .setIssuedAt(nowDate)
                     .setExpiration(expirationDateForRefreshToken)
                     .signWith(this.refreshKey)
@@ -79,16 +81,18 @@ public class JWTService {
 
     public UserInfo getUserInfoFromAccessToken(String token) {
         Claims claims = accessParser.parseClaimsJws(token).getBody();
-        return new UserInfo(claims.get("id", String.class),
-                claims.get("name", String.class),
-                claims.get("email", String.class));
+        return new UserInfo(claims.get("userId", String.class),
+                claims.get("userName", String.class),
+                claims.get("userEmail", String.class),
+                claims.get("teamCode",String.class));
     }
 
     public UserInfo getUserInfoFromRefreshToken(String token) {
         Claims claims = refreshParser.parseClaimsJws(token).getBody();
-        return new UserInfo(claims.get("id", String.class),
-                claims.get("name", String.class),
-                claims.get("email", String.class));
+        return new UserInfo(claims.get("userId", String.class),
+                claims.get("userName", String.class),
+                claims.get("userEmail", String.class),
+        claims.get("teamCode",String.class));
     }
 
     public boolean validateAccessToken(String token) {
