@@ -16,6 +16,7 @@ import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
@@ -30,6 +31,7 @@ public class DeviceService {
     private final JWTService jwtService;
 
 
+    @Transactional
     public Mono<Tokens> deviceLogin(ReqDeviceLoginDto reqDeviceLoginDto) {
         return deviceLoginAuth(reqDeviceLoginDto)
                 .flatMap(userLoginDto -> userDetailsService.authenticate(userLoginDto.getUserEmail(),userLoginDto.getPassword(),true)
@@ -42,13 +44,6 @@ public class DeviceService {
 
     }
 
-    /**
-     * 먼저, serialCardId로, User를 찾는다. - > User가 없으면 에러
-     * User가 있으면, Device를 찾는다. -> Device가 없으면 에러
-     * Device가 있으면, Device의 serialCardId와 serialCardId가 같은지 확인한다. -> 다르면 에러
-     * @param reqDeviceLoginDto
-     * @return
-     */
     public Mono<UserLoginDto> deviceLoginAuth(ReqDeviceLoginDto reqDeviceLoginDto) {
         return ssafyUserRepository.findUserDetailByCardSerialId(reqDeviceLoginDto.getCardSerialId())
                 .switchIfEmpty(Mono.error(new CustomException("등록되지 않은 카드입니다.", HttpStatus.NOT_FOUND)))
@@ -56,10 +51,13 @@ public class DeviceService {
                         .switchIfEmpty(Mono.error(new CustomException("등록되지 않은 기기입니다.", HttpStatus.NOT_FOUND)))
                         .flatMap(device -> {
                             if(device.getUserId() == null){
-                                return Mono.just(new UserLoginDto(userDetail));
+                                device.setUserId(userDetail.getUserId());
+                                return deviceRepository.save(device)
+                                        .map(savedDevice -> new UserLoginDto(userDetail));
                             }
                             return Mono.error(new CustomException("디바이스가 일치하지 않습니다.", HttpStatus.BAD_REQUEST));
 
                         }));
     }
+
 }
