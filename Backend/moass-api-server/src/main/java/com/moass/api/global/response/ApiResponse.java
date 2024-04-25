@@ -7,27 +7,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiResponse<T> {
 
 	private final T data;
 	private final String message;
-	private final long timestamp;
+	private final String timestamp;
 	private final int status;
 
 	ApiResponse(T data, String message, int status) {
 		this.data = data;
 		this.message = message;
 		this.status = status;
-		this.timestamp = System.currentTimeMillis();
+		this.timestamp = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
 	}
 
 	public ApiResponse(String message, int value) {
 		this.data = (T) "";
 		this.message = message;
 		this.status = value;
-		this.timestamp = System.currentTimeMillis();
+		this.timestamp = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
 	}
 
 
