@@ -12,7 +12,9 @@ RUN npm install
 COPY . .
 
 # 애플리케이션 빌드
-RUN npm run build
+RUN npm run build:pi
+RUN npm run build:win
+RUN npm run build:mac
 
 # 애플리케이션 실행을 위한 런타임 이미지 설정
 FROM node:20-slim
@@ -21,7 +23,7 @@ FROM node:20-slim
 WORKDIR /app
 
 # 필요한 파일 복사
-COPY --from=builder /app/out ./out
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 
 # 애플리케이션 실행
