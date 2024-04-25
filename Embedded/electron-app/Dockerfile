@@ -28,23 +28,19 @@ FROM ubuntu:20.04
 # Cross-compilation 도구 설치
 RUN apt-get update && apt-get install -y --no-install-recommends \
     mingw-w64 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Electron 및 빌드 의존성 설치
-# 예시로 Node.js와 npm을 설치합니다. 실제 프로젝트에 필요한 의존성을 설치하세요.
-RUN apt-get update && apt-get install -y --no-install-recommends \
     nodejs \
-    npm \
     && rm -rf /var/lib/apt/lists/*
 
 # 작업 디렉토리 설정
 WORKDIR /app
 
+COPY package.json package-lock.json ./
+RUN npm install
+
 # 애플리케이션 소스 코드 복사
 COPY . .
 
 # 빌드 스크립트 실행
-RUN npm install
 RUN npm run build:win
 
 # # 애플리케이션 실행을 위한 런타임 이미지 설정
