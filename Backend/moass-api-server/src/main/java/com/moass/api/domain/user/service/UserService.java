@@ -8,6 +8,7 @@ import com.moass.api.domain.user.entity.UserDetail;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.JWTService;
+import com.moass.api.global.auth.dto.Tokens;
 import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,7 +47,7 @@ public class UserService {
     }
 
 
-    public Mono<Map<String, String>> refreshAccessToken(String refreshToken) {
+    public Mono<Tokens> refreshAccessToken(String refreshToken) {
         return Mono.defer(() -> {
                     if (!jwtService.validateRefreshToken(refreshToken)) {
                         return Mono.error(new CustomException("유효하지 않거나 만료된 토큰입니다.",HttpStatus.UNAUTHORIZED));

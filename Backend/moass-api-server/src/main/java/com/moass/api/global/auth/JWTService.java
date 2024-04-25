@@ -1,5 +1,6 @@
 package com.moass.api.global.auth;
 
+import com.moass.api.global.auth.dto.Tokens;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.PropertiesConfig;
 import io.jsonwebtoken.Claims;
@@ -41,7 +42,7 @@ public class JWTService {
         this.refreshParser = Jwts.parserBuilder().setSigningKey(this.refreshKey).build();
     }
 
-    public Mono<Map<String, String>> generateTokens(UserInfo userInfo) {
+    public Mono<Tokens> generateTokens(UserInfo userInfo) {
         return Mono.fromCallable(() -> {
             Instant now = Instant.now();
             Date nowDate = Date.from(now);
@@ -68,9 +69,9 @@ public class JWTService {
                     .signWith(this.refreshKey)
                     .compact();
 
-            Map<String, String> tokens = new HashMap<>();
-            tokens.put("accessToken", accessToken);
-            tokens.put("refreshToken", refreshToken);
+            Tokens tokens = new Tokens();
+            tokens.setAccessToken(accessToken);
+            tokens.setRefreshToken(refreshToken);
             return tokens;
         }).subscribeOn(Schedulers.boundedElastic());
     }
