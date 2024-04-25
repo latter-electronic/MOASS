@@ -10,5 +10,5 @@ public interface DeviceRepository extends ReactiveCrudRepository<Device, Integer
 
     Mono<Device> findByDeviceId(String deviceId);
 
-
+    Mono<Device> findByUserId(String userId);
 }
