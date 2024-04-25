@@ -4,9 +4,7 @@ package com.moass.api.domain.device.controller;
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
 import com.moass.api.domain.device.dto.ReqDeviceLogoutDto;
 import com.moass.api.domain.device.service.DeviceService;
-import com.moass.api.domain.user.dto.UserLoginDto;
-import com.moass.api.global.auth.CustomReactiveUserDetailsService;
-import com.moass.api.global.auth.CustomUserDetails;
+import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
@@ -14,7 +12,6 @@ import com.moass.api.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -35,8 +32,8 @@ public class DeviceController {
     }
 
     @PostMapping("/logout")
-    public Mono<ResponseEntity<ApiResponse>> logout(@RequestBody ReqDeviceLogoutDto reqDeviceLogoutDto) {
-        return deviceService.deviceLogout(reqDeviceLogoutDto)
+    public Mono<ResponseEntity<ApiResponse>> logout(@Login UserInfo userInfo) {
+        return deviceService.deviceLogout(userInfo)
                 .then(ApiResponse.ok("로그아웃 성공"))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그아웃 실패 : " + e.getMessage(), e.getStatus()));
     }

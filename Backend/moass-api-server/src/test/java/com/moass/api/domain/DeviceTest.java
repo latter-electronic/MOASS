@@ -1,6 +1,7 @@
 package com.moass.api.domain;
 
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
+import com.moass.api.domain.device.dto.ReqDeviceLogoutDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
 import org.junit.jupiter.api.*;
@@ -33,6 +34,7 @@ public class DeviceTest {
 
     private ReqDeviceLoginDto reqDeviceLoginDto;
 
+    private ReqDeviceLogoutDto reqDeviceLogoutDto;
     private String accessToken;
 
     private String refreshToken;
@@ -120,6 +122,23 @@ public class DeviceTest {
     @DisplayName("[POST] 로그아웃 /device/logout")
     class 로그아웃{
 
+            @BeforeEach
+            void setUp(){
+                login(new UserLoginDto("test04@com", "ssafyout4"));
+            }
+
+            @Test
+            @Order(1)
+            @DisplayName("[200] 정상로그아웃")
+            void 로그아웃성공(){
+                webTestClient.post().uri("/device/logout")
+                        .header("Authorization", accessToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody()
+                        .jsonPath("$.status").isEqualTo(200);
+            }
 
     }
 
