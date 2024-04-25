@@ -1,3 +1,12 @@
+FROM ubuntu:latest
+
+RUN sudo dpkg --add-architecture i386 \
+    && sudo mkdir -pm755 /etc/apt/keyrings \
+    && sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
+    && sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources \
+    && sudo apt update \
+    && sudo apt install --install-recommends winehq-stable
+
 # 기본 이미지 설정
 FROM node:20.12.2 as builder
 
@@ -15,13 +24,6 @@ COPY . .
 #     wine \
 #     && apt-get clean \
 #     && rm -rf /var/lib/apt/lists/*
-
-RUN sudo dpkg --add-architecture i386 \
-    && sudo mkdir -pm755 /etc/apt/keyrings \
-    && sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
-    && sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources \
-    && sudo apt update \
-    && sudo apt install --install-recommends winehq-stable
 
 # 애플리케이션 빌드
 RUN npm run build:pi
