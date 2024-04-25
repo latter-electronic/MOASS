@@ -8,6 +8,8 @@ import Alert from "./pages/alert";
 import Navbar from "./components/navbar/Navbar.jsx";
 import CallAlert from "./pages/common/CallAlertPage.jsx";
 
+import Nameplate from "./pages/nameplate/NameplatePage.jsx"
+
 export default function App() {
     return (
         <BrowserRouter>
@@ -24,6 +26,7 @@ export default function App() {
                 {/* Correct the className and use fixed or absolute positioning with right-0 to stick it to the right */}
                 <Navbar className="fixed inset-y-0 right-0"/>
             </div>
+            <Route path="/nameplate" element={<Nameplate />} />
         </BrowserRouter>
     );
 }
