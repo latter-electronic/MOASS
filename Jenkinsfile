@@ -17,9 +17,10 @@ pipeline {
                         envFileContent += "${key}=${value}\n"
                     }
 
-                    sh """
-                    echo '${envFileContent}' > env-file.txt
-                    docker run --rm -ti \
+                    writeFile file: 'env-file.txt', text: envFileContent
+                    
+                    sh '''
+                    docker run --rm -i \
                      --env-file env-file.txt \
                      --env ELECTRON_CACHE="/root/.cache/electron" \
                      --env ELECTRON_BUILDER_CACHE="/root/.cache/electron-builder" \
@@ -28,8 +29,7 @@ pipeline {
                      -v ~/.cache/electron:/root/.cache/electron \
                      -v ~/.cache/electron-builder:/root/.cache/electron-builder \
                      electronuserland/builder:wine
-                    """
-                    sh 'rm env-file.txt'
+                    '''
                     sh 'yarn && yarn dist'
                 }
             }
