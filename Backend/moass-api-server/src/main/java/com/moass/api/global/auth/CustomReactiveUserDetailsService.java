@@ -34,10 +34,15 @@ public class CustomReactiveUserDetailsService implements ReactiveUserDetailsServ
                 .switchIfEmpty(Mono.error(new CustomException("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<Authentication> authenticate(String userEmail, String password) {
+    public Mono<Authentication> authenticate(String userEmail, String password, boolean isEncrypted ) {
         return findByUserEmail(userEmail)
                 .flatMap(userDetails -> {
-                    if (passwordEncoder.matches(password, userDetails.getPassword())) {
+                    // 암호화된 비밀번호로 로그인하는 경우
+                    if (isEncrypted && password.equals(userDetails.getPassword())) {
+                        return Mono.just(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
+                    }
+                    // 일반적인 평문 비밀번호로 로그인하는 경우
+                    else if (!isEncrypted && passwordEncoder.matches(password, userDetails.getPassword())) {
                         return Mono.just(new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()));
                     } else {
                         return Mono.error(new CustomException("유효하지 않은 비밀번호입니다.", HttpStatus.UNAUTHORIZED));

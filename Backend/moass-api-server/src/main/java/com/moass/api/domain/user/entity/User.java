@@ -38,6 +38,7 @@ public class User {
     @Column("connect_flag")
     private Integer connectFlag;
 
-    @Column("card_serial_id")
-    private String cardSerialId;
+    @Column("position_name")
+    private String  positionName;
+
 }

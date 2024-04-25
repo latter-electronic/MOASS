@@ -1,5 +1,6 @@
 package com.moass.api.domain;
 
+import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
 import org.junit.jupiter.api.*;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -22,17 +24,18 @@ import java.util.Map;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("유저 컨트롤러 통합 테스트")
-public class UserTest {
+@DisplayName("기기 컨트롤러 통합 테스트")
+public class DeviceTest {
+
+
     @Autowired
     private WebTestClient webTestClient;
 
-    private UserSignUpDto userSignupDto;
-    private UserLoginDto userLoginDto;
+    private ReqDeviceLoginDto reqDeviceLoginDto;
+
     private String accessToken;
 
     private String refreshToken;
-
 
 
     UserSignUpDto signUp(UserSignUpDto userSignupDto){
@@ -65,103 +68,59 @@ public class UserTest {
     void setUp() throws Exception {
         TestContextManager testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
-        signUp(new UserSignUpDto("weon1009@com", "1058448", "ssafyout!!!"));
+        signUp(new UserSignUpDto("test04@com", "1000004", "ssafyout4"));
     }
 
 
     @Nested
-    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    @DisplayName("[POST] Signup /user/signup")
-    class 가입테스트 {
+    @DisplayName("[POST} 기기로그인 /device/login")
+    class 기기로그인{
 
         @Test
         @Order(1)
-        @DisplayName("[200] 정상가입")
-        void 회원가입성공() {
-            webTestClient.post().uri("/user/signup")
+        @DisplayName("[200] 정상로그인")
+        void 기기로그인성공(){
+            webTestClient.post().uri("/device/login")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test01@com", "1000001", "ssafyout001"))
+                    .bodyValue(new ReqDeviceLoginDto("DDDD4", "AAAA4"))
                     .exchange()
                     .expectStatus().isOk()
                     .expectBody()
-                    .jsonPath("$.status").isEqualTo("200");
+                    .jsonPath("$.status").isEqualTo(200);
         }
-
 
         @Test
         @Order(2)
-        @DisplayName("[409] 중복된 이메일로 가입")
-        void 중복된이메일회원가입() {
-            webTestClient.post().uri("/user/signup")
+        @DisplayName("[404] 없는 deviceId")
+        void 없는기기(){
+            webTestClient.post().uri("/device/login")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test01@com", "1000002", "ssafyout001"))
+                    .bodyValue(new ReqDeviceLoginDto("DDDA4", "AAAA4"))
                     .exchange()
-                    .expectStatus().isEqualTo(409)
+                    .expectStatus().isEqualTo(404)
                     .expectBody()
-                    .jsonPath("$.status").isEqualTo("409");
+                    .jsonPath("$.status").isEqualTo("404");
         }
 
         @Test
         @Order(3)
-        @DisplayName("[409] 중복된 학번으로 가입")
-        void 중복된학번회원가입() {
-            webTestClient.post().uri("/user/signup")
+        @DisplayName("[404] 없는 카드Id")
+        void 없는카드(){
+            webTestClient.post().uri("/device/login")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test2@com", "1000001", "ssafyout001"))
+                    .bodyValue(new ReqDeviceLoginDto("DDDA1", "AAAD4"))
                     .exchange()
-                    .expectStatus().isEqualTo(409)
+                    .expectStatus().isEqualTo(404)
                     .expectBody()
-                    .jsonPath("$.status").isEqualTo("409");
-        }
-
-        @Test
-        @Order(4)
-        @DisplayName("[200??]] 비밀번호가 비어있음")
-        void 비밀번호가비어있음() {
-            webTestClient.post().uri("/user/signup")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test2@com", "1000002", ""))
-                    .exchange()
-                    .expectStatus().isEqualTo(200)
-                    .expectBody()
-                    .jsonPath("$.status").isEqualTo("200");
+                    .jsonPath("$.status").isEqualTo("404");
         }
     }
 
     @Nested
-    @DisplayName("[GET] 조회 /user")
-    class 조회 {
+    @DisplayName("[POST] 로그아웃 /device/logout")
+    class 로그아웃{
 
 
-
-        @BeforeEach
-        void setup(){
-        // 사용자 로그인
-            login(new UserLoginDto("weon1009@com", "ssafyout!!!"));
-
-        }
-
-        @Test
-        @DisplayName("[200] 내 정보조회")
-        void 내정보조회(){
-            webTestClient.get().uri("/user")
-                    .header("Authorization", accessToken) // 설정된 accessToken 사용
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody()
-                    .jsonPath("$.status").isEqualTo("200");
-        }
-
-        @Test
-        @DisplayName("[400] 내 정보조회(잘못된 토큰제공)")
-        void 내정보조회실패(){
-            webTestClient.get().uri("/user")
-                    .header("Authorization", accessToken+"1") // 설정된 accessToken 사용
-                    .exchange()
-                    .expectStatus().isEqualTo(401)
-                    .expectBody()
-                    .jsonPath("$.status").isEqualTo("401");
-        }
     }
 
 }
