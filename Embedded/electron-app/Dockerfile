@@ -47,15 +47,15 @@ COPY . .
 RUN npm install
 RUN npm run build:win
 
-# 애플리케이션 실행을 위한 런타임 이미지 설정
-FROM node:20.12.2-slim
+# # 애플리케이션 실행을 위한 런타임 이미지 설정
+# FROM node:20.12.2-slim
 
-# 작업 디렉토리 설정
-WORKDIR /app
+# # 작업 디렉토리 설정
+# WORKDIR /app
 
-# 필요한 파일 복사
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+# # 필요한 파일 복사
+# COPY --from=builder /app/dist ./dist
+# COPY --from=builder /app/node_modules ./node_modules
 
-# 애플리케이션 실행
-CMD ["npm", "start"]
+# # 애플리케이션 실행
+# CMD ["npm", "start"]
