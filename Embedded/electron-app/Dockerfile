@@ -1,5 +1,5 @@
 # 기본 이미지 설정
-FROM node:20 as builder
+FROM node:20.12.2 as builder
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -17,7 +17,7 @@ RUN npm run build:win
 RUN npm run build:mac
 
 # 애플리케이션 실행을 위한 런타임 이미지 설정
-FROM node:20-slim
+FROM node:20.12.2-slim
 
 # 작업 디렉토리 설정
 WORKDIR /app
