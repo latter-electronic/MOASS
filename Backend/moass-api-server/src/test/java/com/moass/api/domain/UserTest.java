@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.Map;
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("유저 컨트롤러 통합 테스트")
 public class UserTest {
     @Autowired
@@ -30,6 +32,7 @@ public class UserTest {
     private String accessToken;
 
     private String refreshToken;
+
 
 
     UserSignUpDto signUp(UserSignUpDto userSignupDto){
@@ -43,9 +46,30 @@ public class UserTest {
         return userSignupDto;
     }
 
+    void login(UserLoginDto userLoginDto) {
+        Map responseBody = webTestClient.post().uri("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userLoginDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class) // 응답 본문을 Map으로 받음
+                .returnResult()
+                .getResponseBody();
+
+        Map<String, String> data = (Map<String, String>) responseBody.get("data");
+        this.accessToken = "Bearer " + data.get("accessToken");
+        this.refreshToken ="Bearer "  +  data.get("refreshToken");
+    }
+
+    @BeforeAll
+    void setUp() throws Exception {
+        TestContextManager testContextManager = new TestContextManager(getClass());
+        testContextManager.prepareTestInstance(this);
+        signUp(new UserSignUpDto("weon1009@com", "1058448", "ssafyout!!!"));
+    }
+
 
     @Nested
-    @Order(1)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("[POST] Signup /user/signup")
     class 가입테스트 {
@@ -56,7 +80,7 @@ public class UserTest {
         void 회원가입성공() {
             webTestClient.post().uri("/user/signup")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test@com", "1058448", "ssafyout123"))
+                    .bodyValue(new UserSignUpDto("test01@com", "1000001", "ssafyout001"))
                     .exchange()
                     .expectStatus().isOk()
                     .expectBody()
@@ -70,7 +94,7 @@ public class UserTest {
         void 중복된이메일회원가입() {
             webTestClient.post().uri("/user/signup")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test@com", "1000001", "ssafyout123"))
+                    .bodyValue(new UserSignUpDto("test01@com", "1000002", "ssafyout001"))
                     .exchange()
                     .expectStatus().isEqualTo(409)
                     .expectBody()
@@ -83,7 +107,7 @@ public class UserTest {
         void 중복된학번회원가입() {
             webTestClient.post().uri("/user/signup")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test2@com", "1058448", "ssafyout123"))
+                    .bodyValue(new UserSignUpDto("test2@com", "1000001", "ssafyout001"))
                     .exchange()
                     .expectStatus().isEqualTo(409)
                     .expectBody()
@@ -96,7 +120,7 @@ public class UserTest {
         void 비밀번호가비어있음() {
             webTestClient.post().uri("/user/signup")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new UserSignUpDto("test2@com", "1000001", ""))
+                    .bodyValue(new UserSignUpDto("test2@com", "1000002", ""))
                     .exchange()
                     .expectStatus().isEqualTo(200)
                     .expectBody()
@@ -105,29 +129,18 @@ public class UserTest {
     }
 
     @Nested
-    @Order(2)
     @DisplayName("[GET] 조회 /user")
     class 조회 {
-        private String accessToken;
 
-        private String refreshToken;
+
+
         @BeforeEach
-        void setup() {
-            userLoginDto = new UserLoginDto("test@com", "ssafyout123");
-            Map responseBody = webTestClient.post().uri("/user/login")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(userLoginDto)
-                    .exchange()
-                    .expectStatus().isOk()
-                    .expectBody(Map.class) // 응답 본문을 Map으로 받음
-                    .returnResult()
-                    .getResponseBody();
+        void setup(){
+        // 사용자 로그인
+            login(new UserLoginDto("weon1009@com", "ssafyout!!!"));
 
-            // 추출된 토큰 저장
-            Map<String, String> data = (Map<String, String>) responseBody.get("data");
-            this.accessToken = "Bearer " + data.get("accessToken");
-            this.refreshToken ="Bearer "  +  data.get("refreshToken");
         }
+
         @Test
         @DisplayName("[200] 내 정보조회")
         void 내정보조회(){
