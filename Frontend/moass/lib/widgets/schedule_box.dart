@@ -25,11 +25,11 @@ class ScheduleBox extends StatelessWidget {
             )
           ]),
       clipBehavior: Clip.hardEdge,
-      width: 300,
+      width: 350,
       child: Row(
         children: [
           Container(
-              width: 200,
+              width: 230,
               decoration: const BoxDecoration(color: Color(0xFFD70000)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -39,7 +39,7 @@ class ScheduleBox extends StatelessWidget {
                 ),
               )),
           Container(
-            width: 100,
+            width: 120,
             decoration: const BoxDecoration(color: Colors.white),
             child: Padding(
               padding: const EdgeInsets.all(8.0),

@@ -7,8 +7,15 @@ import 'package:moass/widgets/top_bar.dart';
 import '../widgets/category_text.dart';
 import '../widgets/schedule_box.dart';
 
-class MainHomeScreen extends StatelessWidget {
+class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
+
+  @override
+  State<MainHomeScreen> createState() => _MainHomeScreenState();
+}
+
+class _MainHomeScreenState extends State<MainHomeScreen> {
+  bool selectSeatedState = true;
 
   @override
   Widget build(BuildContext context) {
@@ -26,52 +33,60 @@ class MainHomeScreen extends StatelessWidget {
                 decoration: const BoxDecoration(color: Colors.grey),
                 child: const Center(child: CategoryText(text: '기기 이미지 들어갈 곳'))),
           ),
-          const Flexible(flex: 2, child: CategoryText(text: '내 상태 설정')),
-          Row(
+          const CategoryText(text: '내 상태 설정'),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 30),
-                width: 80,
-                height: 80,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF3DB887),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: const Center(
-                    child: Text('착석 중', style: TextStyle(color: Colors.white))),
-              ),
-              Container(
-                width: 80,
-                height: 80,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFBC1F),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: const Center(
-                    child:
-                        Text('자리 비움', style: TextStyle(color: Colors.white))),
-              ),
-            ],
-          ),
-          const Column(
-            children: [
-              Text('사유를 입력하세요'),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  MyStateSelector(state: '취업면담'),
-                  MyStateSelector(state: '팀 미팅'),
-                  MyStateSelector(state: '기타'),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30),
+                    width: 80,
+                    height: 80,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF3DB887),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: const Center(
+                        child: Text('착석 중',
+                            style: TextStyle(color: Colors.white))),
+                  ),
+                  Container(
+                    width: 80,
+                    height: 80,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFFBC1F),
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                    child: const Center(
+                        child: Text('자리 비움',
+                            style: TextStyle(color: Colors.white))),
+                  ),
                 ],
-              )
+              ),
+              const Column(
+                children: [
+                  Text('사유를 입력하세요'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MyStateSelector(state: '취업면담'),
+                      MyStateSelector(state: '팀 미팅'),
+                      MyStateSelector(state: '기타'),
+                    ],
+                  )
+                ],
+              ),
             ],
           ),
           const CategoryText(text: '다음 일정'),
-          const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ScheduleBox(title: '[Live] 생성형 AI 특강', time: '14:00-15:00'),
-            ],
+          const Center(
+            child: Column(
+              children: [
+                ScheduleBox(title: '[Live] 생성형 AI 특강', time: '14:00-15:00'),
+              ],
+            ),
           ),
           const CategoryText(text: '할 일 목록'),
           Padding(
@@ -96,8 +111,9 @@ class MainHomeScreen extends StatelessWidget {
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add),
+                      Icon(Icons.add_box_outlined),
                       Text('할 일 추가'),
                     ],
                   )
@@ -106,11 +122,13 @@ class MainHomeScreen extends StatelessWidget {
             ),
           ),
           const CategoryText(text: '오늘 내 예약'),
-          const Column(
-            children: [
-              ScheduleBox(title: '플립보드 1', time: '10:00 - 11:00'),
-              ScheduleBox(title: '팀 미팅', time: '11:00 - 12:00'),
-            ],
+          const Center(
+            child: Column(
+              children: [
+                ScheduleBox(title: '플립보드 1', time: '10:00 - 11:00'),
+                ScheduleBox(title: '팀 미팅', time: '11:00 - 12:00'),
+              ],
+            ),
           )
         ],
       ),
