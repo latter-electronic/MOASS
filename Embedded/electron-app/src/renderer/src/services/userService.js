@@ -3,6 +3,9 @@ import { moassApiAxios } from './apiConfig.js';
 // 기본 사용자 관련 API 경로
 const API_URL = '/api/user';
 
+// 내 정보 조회
+export const fetchUserInfo = () => moassApiAxios().get(API_URL);
+
 // 사용자 로그인
 export const login = credentials => moassApiAxios().post(`${API_URL}/login`, credentials);
 
