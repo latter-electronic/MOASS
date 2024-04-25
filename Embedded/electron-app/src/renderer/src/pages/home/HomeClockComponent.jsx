@@ -31,9 +31,9 @@ export default function HomeClockComponent() {
     });
 
     return (
-        <div className="text-white rounded-lg p-4">
-            <div className="text-sm opacity-70">
-                {formattedDate}
+        <div className="text-white rounded-lg p-4 text-center">
+            <div className="text-lg opacity-70">
+                {formattedDate} ☀
             </div>
             <div className="text-5xl font-semibold">
                 {formattedTime}
