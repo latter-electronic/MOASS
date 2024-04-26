@@ -25,7 +25,7 @@ class BottomNavBar extends StatelessWidget {
             icon: Icon(Icons.edit_calendar_outlined), label: 'Reservation'),
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.event_seat_outlined), label: 'Seat'),
+            icon: Icon(Icons.calendar_view_month_rounded), label: 'Seat'),
         BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined), label: 'Board'),
       ],
