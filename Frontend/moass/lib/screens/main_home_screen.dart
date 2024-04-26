@@ -41,12 +41,25 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TopBar(title: '메인'),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          // height: 3000,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            appBar: const TopBar(
+        title: '메인',
+        icon: Icons.home_rounded,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const CategoryText(
+            text: '내 기기 상태',
+          ),
+          Expanded(
+            child: Container(
+                height: 800,
+                decoration: const BoxDecoration(color: Colors.grey),
+                child: const Center(child: CategoryText(text: '기기 이미지 들어갈 곳'))),
+          ),
+          const CategoryText(text: '내 상태 설정'),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const CategoryText(
                 text: '내 기기 상태',
