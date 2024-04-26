@@ -8,7 +8,7 @@ import lowestIcon from '../../assets/images/jira/p-low.svg'
 
 export default function JiraIssueCard() {
     return (
-        <div className="flex flex-col mt-3 bg-white rounded-lg shadow p-3 px-5 gap-1">
+        <div className="flex flex-col mt-2 bg-white rounded-lg shadow p-3 px-5 gap-1">
 
             <div className="font-medium text-gray-700">Electron 개발 초기 환경 테스트</div>
             
