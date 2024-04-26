@@ -4,9 +4,7 @@ pipeline {
     stages {
         stage('Backend Build') {
             steps {
-                dir('/var/jenkins_home/workspace/Moass/Backend/moass-api-server') {
-                    sh 'docker build -t backend .'
-                }
+                sh 'docker build -t backend .'
             }
         }
     }
