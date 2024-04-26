@@ -18,6 +18,8 @@ FROM electronuserland/builder:latest as macos-builder
 # 작업 디렉토리 설정
 WORKDIR /app
 
+RUN npm install -g electron-builder
+
 # 필요한 파일 복사
 COPY . .
 
