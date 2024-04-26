@@ -11,7 +11,7 @@ const profileImages = [profile1, profile2, profile3, profile4, profile5, profile
 
 export default function JiraPage() {
     return (
-        <div className=" mx-auto p-6 h-screen">
+        <div className=" mx-auto p-6 h-screen overflow-hidden">
             <div className="flex items-center text-white font-extrabold text-2xl mb-5">
                 <div>S10P31E203 보드</div>
 
@@ -23,7 +23,7 @@ export default function JiraPage() {
                 </div>
 
             </div>
-            <div className="grid grid-cols-3 gap-5 h-full w-[88vw] ml-3">
+            <div className="grid grid-cols-3 gap-5 h-full w-[88vw] ml-4">
 
                 {/* 해야 할 일 */}
                 <div className="flex flex-col scrollbar-hide">
