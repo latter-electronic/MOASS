@@ -1,5 +1,5 @@
 # 베이스 이미지 설정
-FROM node:14 AS builder
+FROM node:20.12.2 AS builder
 
 # 작업 디렉토리 생성 및 설정
 WORKDIR /app
