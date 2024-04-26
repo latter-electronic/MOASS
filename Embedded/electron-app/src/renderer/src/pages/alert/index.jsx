@@ -11,6 +11,10 @@ export default function Alert() {
         navigate(`/nameplate`);
     };
 
+    const callTagNFCFunction = () => {
+        navigate(`/tagnfc`);
+    }
+
     return (
         <>
             <div className="text-4xl font-extrabold mb-8">알림 모아쓰 탭</div>
@@ -25,6 +29,12 @@ export default function Alert() {
                 className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
             >
                 개발용 명패
+            </button>
+            <button 
+                onClick={() => callTagNFCFunction()}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
+            >
+                개발용 NFC
             </button>
         </>
     );
