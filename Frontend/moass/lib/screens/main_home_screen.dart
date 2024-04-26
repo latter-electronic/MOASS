@@ -61,8 +61,106 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                           height: 150,
                           width: double.infinity,
                           decoration: const BoxDecoration(color: Colors.white),
-                          child: const Row(
-                            children: [],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                  flex: 1,
+                                  child: Image.asset(
+                                      'assets/img/logo_ssafy_white.png')),
+                              Flexible(
+                                flex: 3,
+                                child: Transform.translate(
+                                  offset: const Offset(0, -10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Transform.translate(
+                                        offset: const Offset(0, 20),
+                                        child: const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text('E203 싸피전자'),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          const Text(
+                                            '김싸피',
+                                            style: TextStyle(
+                                                fontSize: 80,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                          Transform.translate(
+                                            offset: const Offset(0, -10),
+                                            child: Container(
+                                              width: 30,
+                                              decoration: const BoxDecoration(
+                                                  color: Color(0xFFD93030),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(50))),
+                                              child: const Center(
+                                                  child: Text(
+                                                'FE',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                  flex: 1,
+                                  child: Container(
+                                    width: 50,
+                                    height: double.infinity,
+                                    decoration: BoxDecoration(
+                                        color: selectedSeatedState == 'here'
+                                            ? const Color(0xFF3DB887)
+                                            : const Color(0xFFFFBC1F)),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: selectedSeatedState == 'here'
+                                              ? const EdgeInsets.all(14.0)
+                                              : const EdgeInsets.all(17.0),
+                                          child: selectedSeatedState == 'here'
+                                              ? const Text(
+                                                  '착석중',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.w900),
+                                                )
+                                              : const Text(
+                                                  '자리비움',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.w900),
+                                                ),
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                            ],
                           )),
                     ],
                   )),
@@ -122,7 +220,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     child: Column(
                       children: selectedSeatedState == 'notHere'
                           ? [
-                              const Text('사유를 입력하세요'),
+                              const Text('사유를 선택하세요'),
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
