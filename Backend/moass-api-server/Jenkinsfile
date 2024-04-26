@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Backend Build') {
             steps {
+                sh 'ls'
                 sh 'docker build -t backend .'
             }
         }
