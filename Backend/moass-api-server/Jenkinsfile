@@ -5,8 +5,8 @@ pipeline {
         stage('Backend Build') {
             steps {
                 dir('Backend/moass-api-server') {
-                    sh 'ls'
                     sh 'docker build -t backend .'
+                    sh 'docker image prune'
                 }
             }
         }

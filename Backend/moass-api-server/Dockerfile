@@ -16,6 +16,8 @@ RUN gradle build --no-daemon -x test
 # 두 번째 스테이지: 빌드된 JAR를 실행할 OpenJDK 기반의 JRE 이미지
 FROM openjdk:17-oracle
 
+ENV JAVA_OPTS "-XX:+AllowRedefinitionToAddDeleteMethods"
+
 # 작업 디렉토리 설정
 WORKDIR /app
 
@@ -23,4 +25,4 @@ WORKDIR /app
 COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 
 # 애플리케이션 실행
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "${JAVA_OPTS} -jar", "app.jar"]
