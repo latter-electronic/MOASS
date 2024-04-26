@@ -15,7 +15,7 @@ RUN apt-get update && \
     libglu1-mesa
 
 # Flutter SDK 다운로드 및 설치
-RUN curl -O https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
+RUN curl -O https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
     tar xf flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
     rm flutter_linux_${FLUTTER_VERSION}-stable.tar.xz && \
     flutter doctor
