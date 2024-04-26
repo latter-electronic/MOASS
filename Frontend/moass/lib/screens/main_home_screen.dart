@@ -7,6 +7,7 @@ import 'package:moass/widgets/top_bar.dart';
 
 import '../widgets/category_text.dart';
 import '../widgets/schedule_box.dart';
+import '../widgets/to_do_list.dart';
 
 class MainHomeScreen extends StatefulWidget {
   const MainHomeScreen({super.key});
@@ -248,37 +249,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 ),
               ),
               const CategoryText(text: '할 일 목록'),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: const Color(0xFF6ECEF5), width: 2.0)),
-                  child: const Column(
-                    children: [
-                      Row(
-                        children: [
-                          CheckboxWidget(text: '현욱이 괴롭히기'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          CheckboxWidget(text: '끝장나게 자기'),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_box_outlined),
-                          Text('할 일 추가'),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              const ToDoList(),
               const CategoryText(text: '오늘 내 예약'),
               const SizedBox(
                 height: 200,
