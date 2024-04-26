@@ -10,5 +10,14 @@ COPY . .
 # 애플리케이션 의존성 설치
 RUN npm install
 
-# 애플리케이션 빌드
-RUN npm run build:pi
+# macOS용 애플리케이션 빌드
+RUN npm run build:mac
+
+# Windows용 애플리케이션 빌드
+RUN npm run build:win
+
+# Linux용 애플리케이션 빌드
+RUN npm run build:linux
+
+# 최종 빌드 디렉토리 구조 확인
+RUN ls -l /app/dist
