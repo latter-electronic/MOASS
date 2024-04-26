@@ -2,6 +2,7 @@ package com.moass.api.domain.user.controller;
 
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
+import com.moass.api.domain.user.dto.UserUpdateDto;
 import com.moass.api.domain.user.service.UserService;
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.AuthManager;
@@ -14,11 +15,17 @@ import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.nio.ByteBuffer;
 
 @Slf4j
 @RestController
@@ -45,6 +52,7 @@ public class UserController {
                     CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
                     UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
                     sseService.notifyTeam(userInfo.getTeamCode(),"로그인성공 :"+userInfo.getUserName());
+                    sseService.notifyUser(userInfo.getUserId(),"로그인성공 :"+userInfo.getUserName());
                     return jwtService.generateTokens(userInfo);
                 })
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공", tokens))
@@ -74,8 +82,32 @@ public class UserController {
     @GetMapping
     public Mono<ResponseEntity<ApiResponse>> userDetailData(@Login UserInfo userInfo){
         return userService.getUserDetail(userInfo.getUserEmail())
-                .flatMap(userDetail -> ApiResponse.ok("조회완료",userDetail))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : ", e.getStatus()));
+                .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("조회완료",reqFilteredUserDetailDto))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : "+e.getMessage(), e.getStatus()));
     }
 
+    /**
+     * Todo
+     * SSE
+     * @param userInfo
+     * @param userUpdateDto
+     * @return
+     */
+    @PatchMapping("/status")
+    public Mono<ResponseEntity<ApiResponse>> changeUserStatus(@Login UserInfo userInfo, @RequestBody UserUpdateDto userUpdateDto){
+        return userService.UserUpdate(userInfo,userUpdateDto)
+                .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("수정완료",reqFilteredUserDetailDto))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
+    }
+
+
+    /**
+    @PostMapping(value = "/profileImg")
+    public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestPart("file") Flux<ByteBuffer> file){
+        return userService.updateProfileImg(userInfo,headers,file)
+                .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
+    }
+
+*/
 }

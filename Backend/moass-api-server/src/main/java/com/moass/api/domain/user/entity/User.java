@@ -41,4 +41,10 @@ public class User {
     @Column("position_name")
     private String  positionName;
 
+    public User(String userEmail,String userId, String password){
+        this.userEmail = userEmail;
+        this.userId = userId;
+        this.password = password;
+    }
+
 }

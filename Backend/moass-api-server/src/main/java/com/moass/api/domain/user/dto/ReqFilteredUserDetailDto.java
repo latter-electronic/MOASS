@@ -34,6 +34,7 @@ public class ReqFilteredUserDetailDto {
 
     private String userName;
 
+    private String positionName;
     public ReqFilteredUserDetailDto(User user, SsafyUser ssafyUser){
         this.userId = user.getUserId();
         this.userEmail = user.getUserEmail();
@@ -42,6 +43,7 @@ public class ReqFilteredUserDetailDto {
         this.backgroundImg = user.getBackgroundImg();
         this.rayout = user.getRayout();
         this.connectFlag = user.getConnectFlag();
+        this.positionName = user.getPositionName();
         this.jobCode = ssafyUser.getJobCode();
         this.teamCode = ssafyUser.getTeamCode();
         this.userName = ssafyUser.getUserName();
@@ -58,6 +60,9 @@ public class ReqFilteredUserDetailDto {
         this.jobCode = userDetail.getJobCode();
         this.teamCode = userDetail.getTeamCode();
         this.userName = userDetail.getUserName();
+        this.positionName = userDetail.getPositionName();
     }
+
+
 
 }

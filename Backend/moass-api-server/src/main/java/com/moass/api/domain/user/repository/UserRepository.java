@@ -22,5 +22,6 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
             "VALUES (:#{#user.userId}, :#{#user.userEmail}, :#{#user.password}) RETURNING *")
     Mono<User> saveForce(User user);
 
+    Mono<User>  findByUserId(String userId);
 }
 
