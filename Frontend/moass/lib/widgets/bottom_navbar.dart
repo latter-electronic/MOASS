@@ -1,4 +1,4 @@
-// 장현욱 작성
+// 장현욱
 // 바텀 네비게이션 위젯
 
 import 'package:flutter/material.dart';

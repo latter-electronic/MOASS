@@ -1,35 +1,43 @@
+// 장현욱
+
 import 'package:flutter/material.dart';
+import 'package:moass/widgets/category_text.dart';
+import 'package:moass/widgets/schedule_box.dart';
+import 'package:moass/widgets/top_bar.dart';
 
 class WorkScreen extends StatelessWidget {
   const WorkScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        shadowColor: Colors.black,
-        elevation: 2,
-        backgroundColor: Colors.blue.shade900,
-        foregroundColor: Colors.blue.shade100,
-        title: Row(
-          mainAxisSize:
-              MainAxisSize.min, // 이 속성으로 인해 아이템들이 타이틀 중간이 아닌 시작 부분에 위치
-          children: [
-            Icon(Icons.work_outline, color: Colors.blue.shade100), // 아이콘 색상 조정
-            const SizedBox(width: 10), // 아이콘과 텍스트 사이 간격
-            const Text(
-              "업무",
-              style: TextStyle(
-                fontSize: 30,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: false,
+    return const Scaffold(
+      // 앱 바
+      appBar: TopBar(
+        title: '업무',
+        icon: Icons.work_outline_rounded,
       ),
-      body: const Center(
-        child: Text('Work Screen Content'),
+
+      // 바디
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 싸피 스케줄
+          CategoryText(text: 'SSAFY 스케줄'),
+          Align(
+            alignment: Alignment.topRight, // 오른쪽 끝에 텍스트 정렬
+            child: Text('2222. 02. 22(금)'),
+          ),
+          // 들어오는 데이터에 따라 반복문 구현(일정들)
+          ScheduleBox(title: '[Live] 생성형 AI 특강', time: '14:00-15:00'),
+
+          // 스케줄과 지라 사이 간격 주기
+          SizedBox(
+            height: 20,
+          ),
+
+          // 나의 지라
+          CategoryText(text: '나의 Jira'),
+        ],
       ),
     );
   }
