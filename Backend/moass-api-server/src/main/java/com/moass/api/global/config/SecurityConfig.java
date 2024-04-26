@@ -54,6 +54,14 @@ public class SecurityConfig {
         return source;
     }
 
+    /**
+     * Todo
+     * 접근권한 수정필요(테스트용으로 넣어둔거 빼기)
+     * @param http
+     * @param jwtAuthConverter
+     * @param jwtAuthManager
+     * @return
+     */
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
             ServerHttpSecurity http , AuthConverter jwtAuthConverter, AuthManager jwtAuthManager) {
@@ -67,6 +75,7 @@ public class SecurityConfig {
                                 .pathMatchers("/user/refresh").permitAll()
                                 .pathMatchers("/user/signup").permitAll()
                                 .pathMatchers("/stream/**").permitAll()
+                                .pathMatchers("/user/profileImg").permitAll()
                                 .pathMatchers("/**").authenticated()
                                 .anyExchange().permitAll()
                 )
