@@ -14,7 +14,7 @@ class WorkScreen extends StatelessWidget {
       // 앱 바
       appBar: TopBar(
         title: '업무',
-        icon: Icons.work_outline_rounded,
+        icon: Icons.work_rounded,
       ),
 
       // 바디

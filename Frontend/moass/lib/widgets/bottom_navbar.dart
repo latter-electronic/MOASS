@@ -19,8 +19,7 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onItemSelected,
       items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.work_outline_outlined), label: 'Work'),
+        BottomNavigationBarItem(icon: Icon(Icons.work_rounded), label: 'Work'),
         BottomNavigationBarItem(
             icon: Icon(Icons.edit_calendar_outlined), label: 'Reservation'),
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
