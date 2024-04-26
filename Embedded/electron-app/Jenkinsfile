@@ -3,8 +3,8 @@ pipeline {
 
     stages {
         stage('Embedded Build') {
-	          steps {
-				        dir('/var/jenkins_home/workspace/Moass/Embedded/electron-app') {
+	        steps {
+				dir('Embedded/electron-app') {
                     sh 'docker build -t embedded .'
                 }
             }
