@@ -1,4 +1,4 @@
-// 장현욱 작성
+// 장현욱
 // 바텀 네비게이션 위젯
 
 import 'package:flutter/material.dart';
@@ -19,13 +19,12 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onItemSelected,
       items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.work_outline_outlined), label: 'Work'),
+        BottomNavigationBarItem(icon: Icon(Icons.work_rounded), label: 'Work'),
         BottomNavigationBarItem(
             icon: Icon(Icons.edit_calendar_outlined), label: 'Reservation'),
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.event_seat_outlined), label: 'Seat'),
+            icon: Icon(Icons.calendar_view_month_rounded), label: 'Seat'),
         BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined), label: 'Board'),
       ],

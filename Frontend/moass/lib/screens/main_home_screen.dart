@@ -40,7 +40,10 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TopBar(title: '메인'),
+      appBar: const TopBar(
+        title: '메인',
+        icon: Icons.home_rounded,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
