@@ -2,10 +2,12 @@ pipeline {
     agent any
     
     stages {
-        stage('Spring Build') {
+        stage('Backend Build') {
             steps {
-                // Spring Boot 백엔드 빌드
-                sh './gradlew build'
+                dir('Backend/moass-api-server') {
+                    sh 'ls'
+                    sh 'docker build -t backend .'
+                }
             }
         }
     }
