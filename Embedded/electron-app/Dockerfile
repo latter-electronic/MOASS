@@ -36,3 +36,9 @@ RUN npm install
 
 # Windows용 애플리케이션 빌드
 RUN npm run build:win
+
+# # Linux용 애플리케이션 빌드
+RUN npm run build:pi
+
+# # 최종 빌드 디렉토리 구조 확인
+RUN ls -l /app/dist
