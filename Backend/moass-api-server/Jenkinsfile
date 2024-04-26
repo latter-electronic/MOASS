@@ -4,8 +4,10 @@ pipeline {
     stages {
         stage('Backend Build') {
             steps {
-                sh 'ls'
-                sh 'docker build -t backend .'
+                dir('Backend/moass-api-server') {
+                    sh 'ls'
+                    sh 'docker build -t backend .'
+                }
             }
         }
     }
