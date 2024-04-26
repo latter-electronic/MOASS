@@ -1,5 +1,5 @@
 # 기본 이미지를 선택
-FROM ubuntu:20.04.6
+FROM ubuntu:20.04
 
 # 환경 변수 설정
 ENV FLUTTER_VERSION=3.19.6
