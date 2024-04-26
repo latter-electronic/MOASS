@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CheckboxWidget extends StatefulWidget {
-  const CheckboxWidget({super.key});
+  final String text;
+  const CheckboxWidget({
+    super.key,
+    required this.text,
+  });
 
   @override
   State<CheckboxWidget> createState() => _CheckboxWidgetState();
@@ -23,15 +27,20 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
       return const Color(0xFF6ECEF5);
     }
 
-    return Checkbox(
-      checkColor: Colors.black,
-      fillColor: MaterialStateProperty.resolveWith(getColor),
-      value: isChecked,
-      onChanged: (bool? value) {
-        setState(() {
-          isChecked = value!;
-        });
-      },
+    return Row(
+      children: [
+        Checkbox(
+          checkColor: Colors.black,
+          fillColor: MaterialStateProperty.resolveWith(getColor),
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value!;
+            });
+          },
+        ),
+        Text(widget.text)
+      ],
     );
   }
 }

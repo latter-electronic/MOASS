@@ -260,14 +260,12 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     children: [
                       Row(
                         children: [
-                          CheckboxWidget(),
-                          Text('현욱이 괴롭히기'),
+                          CheckboxWidget(text: '현욱이 괴롭히기'),
                         ],
                       ),
                       Row(
                         children: [
-                          CheckboxWidget(),
-                          Text('끝장나게 자기'),
+                          CheckboxWidget(text: '끝장나게 자기'),
                         ],
                       ),
                       Row(
