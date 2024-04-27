@@ -3,11 +3,14 @@ package com.moass.api.domain.schedule.service;
 import com.moass.api.domain.schedule.dto.TodoCreateDto;
 import com.moass.api.domain.schedule.dto.TodoDeleteDto;
 import com.moass.api.domain.schedule.dto.TodoDetailDto;
+import com.moass.api.domain.schedule.dto.TodoUpdateDto;
 import com.moass.api.domain.schedule.entity.Todo;
 import com.moass.api.domain.schedule.repository.TodoRepository;
 import com.moass.api.global.auth.dto.UserInfo;
+import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -42,11 +45,39 @@ public class ScheduleService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo를 찾을 수 없습니다.")));
     }
 
-    public Mono<TodoDetailDto> DeleteTodo(UserInfo userInfo, TodoDeleteDto todoDeleteDto) {
-        return todoRepository.findByTodoIdAndUserId(todoDeleteDto.getTodoId(),userInfo.getUserId())
+    public Mono<TodoDetailDto> DeleteTodo(UserInfo userInfo, String todoId) {
+        return todoRepository.findByTodoIdAndUserId(todoId,userInfo.getUserId())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo를 찾을 수 없습니다.")))
                 .flatMap(todo -> todoRepository.delete(todo)
                         .thenReturn(todo)
                         .map(deletedTodo -> new TodoDetailDto(deletedTodo)));
+    }
+
+    public Mono<Object> UpdateDto(UserInfo userInfo, TodoUpdateDto todoUpdateDto) {
+        return todoRepository.findByTodoIdAndUserId(todoUpdateDto.getTodoId(),userInfo.getUserId())
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo를 찾을 수 없습니다.")))
+                .flatMap(todo -> {
+                    boolean isUpdated = false;
+                    if(todoUpdateDto.getContent() != null&&!todo.getContent().equals(todoUpdateDto.getContent())){
+                        todo.setContent(todoUpdateDto.getContent());
+                        isUpdated = true;
+                    }
+                    if(todoUpdateDto.getCompletedFlag() != null&&todo.getCompletedFlag()!=todoUpdateDto.getCompletedFlag()){
+                        todo.setCompletedFlag(todoUpdateDto.getCompletedFlag());
+                        isUpdated=true;
+                        if(todoUpdateDto.getCompletedFlag()){
+                            todo.setCompletedAt(LocalDateTime.now());
+                        }else{
+                            todo.setCompletedAt(null);
+                        }
+                    }
+                    if(isUpdated) {
+                        todo.setUpdatedAt(LocalDateTime.now());
+                        return todoRepository.save(todo)
+                                .map(savedTodo -> new TodoDetailDto(savedTodo));
+                    }else{
+                        return Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST));
+                    }
+                });
     }
 }
