@@ -33,8 +33,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return ApiResponse.error(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler(InternalError.class)
-	public Mono<ResponseEntity<ApiResponse>> InternalErrorException(DataAccessException e) {
+	@ExceptionHandler(NullPointerException.class)
+	public Mono<ResponseEntity<ApiResponse>> NullPointerException(NullPointerException e) {
 		log.warn("dataAccessException: ", e);
 		return ApiResponse.error(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 	}
