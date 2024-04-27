@@ -75,7 +75,7 @@ public class DeviceTest {
 
 
     @Nested
-    @DisplayName("[POST} 기기로그인 /device/login")
+    @DisplayName("[POST] 기기로그인 /device/login")
     class 기기로그인{
 
         @Test
