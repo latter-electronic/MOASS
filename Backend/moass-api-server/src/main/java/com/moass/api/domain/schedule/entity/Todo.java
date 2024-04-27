@@ -22,7 +22,8 @@ public class Todo {
     private String userId;
 
     @Field("completed_flag")
-    private boolean completedFlag;
+    @NonNull
+    private Boolean completedFlag;
 
     @Field("completed_at")
     private LocalDateTime completedAt;
