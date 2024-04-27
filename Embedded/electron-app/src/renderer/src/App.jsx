@@ -6,7 +6,7 @@ import Layout from "./components/Layout.jsx";
 import Home from "./pages/home/HomePage.jsx";
 import Board from "./pages/board/BoardPage.jsx";
 import Jira from "./pages/jira/JiraPage.jsx";
-import Alert from "./pages/alert";
+import Alert from "./pages/noti/NotiPage.jsx";
 import CallAlert from "./pages/common/CallAlertPage.jsx";
 
 import Nameplate from "./pages/nameplate/NameplatePage.jsx"
