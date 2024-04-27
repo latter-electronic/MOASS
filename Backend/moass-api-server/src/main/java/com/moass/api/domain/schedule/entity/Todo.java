@@ -2,6 +2,7 @@ package com.moass.api.domain.schedule.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -17,6 +18,7 @@ public class Todo {
     private String todoId;
 
     @Field("user_id")
+    @NonNull
     private String userId;
 
     @Field("completed_flag")
@@ -32,6 +34,7 @@ public class Todo {
     private LocalDateTime updatedAt;
 
     @Field("content")
+    @NonNull
     private String content;
 
 
