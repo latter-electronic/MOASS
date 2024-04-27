@@ -9,4 +9,6 @@ import reactor.core.publisher.Mono;
 public interface TodoRepository extends ReactiveMongoRepository<Todo, String> {
 
     Flux<Todo> findAllByUserId(String userId, Sort sort);
+
+    Mono<Todo> findByTodoIdAndUserId(String todoId, String userId);
 }

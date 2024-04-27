@@ -1,6 +1,7 @@
 package com.moass.api.domain.schedule.service;
 
 import com.moass.api.domain.schedule.dto.TodoCreateDto;
+import com.moass.api.domain.schedule.dto.TodoDeleteDto;
 import com.moass.api.domain.schedule.dto.TodoDetailDto;
 import com.moass.api.domain.schedule.entity.Todo;
 import com.moass.api.domain.schedule.repository.TodoRepository;
@@ -38,6 +39,14 @@ public class ScheduleService {
         return todoRepository.findAllByUserId(userInfo.getUserId(),Sort.by(Sort.Direction.ASC,"createdAt"))
                 .collectList()
                 .map(todos -> todos.stream().map(TodoDetailDto::new).toList())
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo not found")));
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo를 찾을 수 없습니다.")));
+    }
+
+    public Mono<TodoDetailDto> DeleteTodo(UserInfo userInfo, TodoDeleteDto todoDeleteDto) {
+        return todoRepository.findByTodoIdAndUserId(todoDeleteDto.getTodoId(),userInfo.getUserId())
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo를 찾을 수 없습니다.")))
+                .flatMap(todo -> todoRepository.delete(todo)
+                        .thenReturn(todo)
+                        .map(deletedTodo -> new TodoDetailDto(deletedTodo)));
     }
 }
