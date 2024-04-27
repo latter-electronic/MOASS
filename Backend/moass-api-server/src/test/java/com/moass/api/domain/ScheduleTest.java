@@ -1,6 +1,11 @@
 package com.moass.api.domain;
 
 
+import com.moass.api.domain.schedule.dto.TodoCreateDto;
+import com.moass.api.domain.schedule.dto.TodoDeleteDto;
+import com.moass.api.domain.schedule.dto.TodoDetailDto;
+import com.moass.api.domain.schedule.dto.TodoUpdateDto;
+import com.moass.api.domain.schedule.entity.Todo;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
 import org.junit.jupiter.api.*;
@@ -28,6 +33,7 @@ public class ScheduleTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    private TodoCreateDto todoCreateDto;
     private String accessToken;
 
     private String refreshToken;
@@ -58,6 +64,20 @@ public class ScheduleTest {
         this.refreshToken = data.get("refreshToken");
     }
 
+    String todoCreate(TodoCreateDto todoCreateDto){
+        Map responseBody = webTestClient.post().uri("/schedule/todo")
+                .header("Authorization", accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(todoCreateDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class) // 응답 본문을 Map으로 받음
+                .returnResult()
+                .getResponseBody();
+        Map<String, String> data =  (Map<String, String>) responseBody.get("data");
+        return data.get("todoId");
+    }
+
     @BeforeAll
     void setUp() throws Exception {
         TestContextManager testContextManager = new TestContextManager(getClass());
@@ -74,15 +94,134 @@ public class ScheduleTest {
         @Test
         @Order(1)
         @DisplayName("[200] Todo 정상생성")
-        void Todo생성(){
+        void Todo생성성공(){
+            TodoCreateDto todoCreateDto = new TodoCreateDto();
+            todoCreateDto.setContent("Todo테스트");
             webTestClient.post().uri("/schedule/todo")
                     .header("Authorization", accessToken)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(new String("Todo테스트"))
+                    .bodyValue(todoCreateDto)
                     .exchange()
                     .expectStatus().isOk()
                     .expectBody()
                     .jsonPath("$.status").isEqualTo(200);
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[400] content 전달 X")
+        void Todo생성에러(){
+            webTestClient.post().uri("/schedule/todo")
+                    .header("Authorization", accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isEqualTo(400)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("400");
+        }
+
+    }
+
+    @Nested
+    @DisplayName("[Delete] Todo 삭제")
+    class Todo삭제{
+        @Test
+        @Order(1)
+        @DisplayName("[200] Todo 삭제 성공")
+        void Todo삭제성공(){
+
+            TodoCreateDto todoCreateDto = new TodoCreateDto();
+            todoCreateDto.setContent("Todo테스트2");
+            String todoId = todoCreate(todoCreateDto);
+
+            webTestClient.delete().uri("/schedule/todo/"+todoId)
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo(200);
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[404] 없는 Todo 삭제")
+        void Todo삭제실패(){
+
+
+            webTestClient.delete().uri("/schedule/todo/22")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(500)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("500");
+        }
+    }
+
+    @Nested
+    @DisplayName("[Patch] Todo 수정")
+    class Todo수정{
+
+        @Test
+        @Order(1)
+        @DisplayName("[200] 정상수정")
+        void Todo수정성공(){
+            TodoCreateDto todoCreateDto = new TodoCreateDto();
+            todoCreateDto.setContent("Todo테스트2");
+            String todoId = todoCreate(todoCreateDto);
+
+            TodoUpdateDto todoUpdateDto = new TodoUpdateDto();
+            todoUpdateDto.setTodoId(todoId);
+            todoUpdateDto.setContent("수정된 Todo");
+            webTestClient.patch().uri("/schedule/todo")
+                    .header("Authorization", accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(todoUpdateDto)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[400] 바뀐게 없을경우(내용이)")
+        void Todo수정실패(){
+            TodoCreateDto todoCreateDto = new TodoCreateDto();
+            todoCreateDto.setContent("Todo테스트2");
+            String todoId = todoCreate(todoCreateDto);
+
+            TodoUpdateDto todoUpdateDto = new TodoUpdateDto();
+            todoUpdateDto.setTodoId(todoId);
+            todoUpdateDto.setContent("Todo테스트2");
+            webTestClient.patch().uri("/schedule/todo")
+                    .header("Authorization", accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(todoUpdateDto)
+                    .exchange()
+                    .expectStatus().isEqualTo(400)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("400");
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[400] 바뀐게 없을경우(flag)")
+        void Todo수정실패2(){
+            TodoCreateDto todoCreateDto = new TodoCreateDto();
+            todoCreateDto.setContent("Todo테스트2");
+            String todoId = todoCreate(todoCreateDto);
+
+            TodoUpdateDto todoUpdateDto = new TodoUpdateDto();
+            todoUpdateDto.setTodoId(todoId);
+            todoUpdateDto.setCompletedFlag(false);
+            webTestClient.patch().uri("/schedule/todo")
+                    .header("Authorization", accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(todoUpdateDto)
+                    .exchange()
+                    .expectStatus().isEqualTo(400)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("400");
         }
     }
 }
