@@ -25,4 +25,4 @@ WORKDIR /app
 COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 
 # 애플리케이션 실행
-ENTRYPOINT ["java", "${JAVA_OPTS} -jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
