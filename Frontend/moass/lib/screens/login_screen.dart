@@ -151,7 +151,7 @@ class _Title extends StatelessWidget {
         Text(
           'Moass',
           style: TextStyle(
-            fontSize: 34,
+            fontSize: 36,
             fontWeight: FontWeight.w500,
             color: Colors.blue,
           ),
