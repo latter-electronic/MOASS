@@ -1,5 +1,6 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom' 
+import useAuthStore from '../../stores/AuthStore.js'
 import tagging_space from '../../assets/tag_nfc.png'
 
 export default function TagNFC() {
@@ -8,6 +9,32 @@ export default function TagNFC() {
   const callTagSuccessFunction = () => {
     navigate(`/tagsuccess`)
   }
+  const { login, isAuthenticated } = useAuthStore((state) => ({
+    login: state.login,
+    isAuthenticated: state.isAuthenticated
+  }))
+
+  useEffect(() => {
+    const handleNfcData = (data) => {
+      console.log('Received NFC data:', data)
+      try {
+        const parsedData = JSON.parse(data)
+        if (parsedData.accessToken && parsedData.refreshToken) {
+          login(parsedData.accessToken, parsedData.refreshToken)
+          navigate('/tagsuccess')
+        }
+      } catch (error) {
+        console.error('Error parsing NFC data:', error)
+      }
+    }
+
+    window.userAPI?.onNfcData(handleNfcData)
+
+    // 컴포넌트 언마운트 시에 이벤트 리스너 정리.
+    return () => {
+      window.userAPI?.removeNfcDataListener()
+    }
+  }, [login, navigate])
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
