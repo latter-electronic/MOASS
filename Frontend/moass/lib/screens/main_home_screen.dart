@@ -41,7 +41,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: const TopBar(
+      appBar: const TopBar(
         title: '메인',
         icon: Icons.home_rounded,
       ),
@@ -277,7 +277,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               )
             ],
           ),
-        ),
+        ],
       ),
     );
   }
