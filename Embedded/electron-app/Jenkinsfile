@@ -1,0 +1,13 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Embedded Build') {
+	        steps {
+				dir('Embedded/electron-app') {
+                    sh 'docker build -t embedded .'
+                }
+            }
+        }
+    }
+}
