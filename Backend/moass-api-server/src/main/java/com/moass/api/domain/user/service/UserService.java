@@ -21,6 +21,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -127,6 +128,13 @@ public class UserService {
                     }
                 })
                 .switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
+    }
+
+    public Mono<List<ReqFilteredUserDetailDto>> getTeam(UserInfo userInfo) {
+        return userRepository.findAllTeamUserByTeamCode(userInfo.getTeamCode())
+                .collectList()
+                .map(userDetail -> userDetail.stream().map(ReqFilteredUserDetailDto::new).toList())
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("팀원을 찾을 수 없습니다.")));
     }
 
 

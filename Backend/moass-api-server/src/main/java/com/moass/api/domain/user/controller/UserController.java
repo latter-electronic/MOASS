@@ -100,6 +100,12 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
 
+    @GetMapping("/team")
+    public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo){
+        return userService.getTeam(userInfo)
+                .flatMap(team -> ApiResponse.ok("조회완료",team))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
+    }
 
     /**
     @PostMapping(value = "/profileImg")
