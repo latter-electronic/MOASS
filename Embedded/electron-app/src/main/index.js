@@ -37,6 +37,23 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // nfc 로그인 기능 python script 실행
+  const pythonProcess = spawn('python3', [path.join(__dirname, '../../sensors/nfc_login.py')]);
+
+    // 로그인 정보 리액트로 전달
+    pythonProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        mainWindow.webContents.send('nfc-data', data.toString());
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
 }
 
 // This method will be called when Electron has finished
