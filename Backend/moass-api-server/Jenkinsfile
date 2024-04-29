@@ -5,7 +5,8 @@ pipeline {
         stage('Backend Build') {
             steps {
                 dir('Backend/moass-api-server') {
-                    sh 'docker builder prune'
+                    sh 'docker rm backend'
+                    sh 'docker rmi backend'
                     sh 'docker build --no-cache -t backend .'
                 }
             }
