@@ -2,9 +2,6 @@ import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import path from 'path';
 
-// Custom APIs for renderer
-const api = {}
-
 const userAPI = {
   joinPath: (...paths) => path.join(...paths),
   onNfcData: (callback) => {
@@ -12,6 +9,12 @@ const userAPI = {
   },
   removeNfcDataListener: () => {
       ipcRenderer.removeAllListeners('nfc-data');
+  },
+  onStatus: (type, callback) => {
+    ipcRenderer.on(`${type}-status`, (event, message) => callback(message));
+  },
+  removeStatusListener: (type) => {
+    ipcRenderer.removeAllListeners(`${type}-status`);
   }
 };
 
@@ -21,13 +24,11 @@ const userAPI = {
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
     contextBridge.exposeInMainWorld('userAPI', userAPI)
   } catch (error) {
     console.error(error)
   }
 } else {
   window.electron = electronAPI
-  window.api = api
   window.userAPI = userAPI
 }
