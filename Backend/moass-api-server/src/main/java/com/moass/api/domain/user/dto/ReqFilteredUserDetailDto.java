@@ -24,7 +24,7 @@ public class ReqFilteredUserDetailDto {
 
     private String backgroundImg;
 
-    private Integer rayout;
+    private Integer layout;
 
     private Integer connectFlag;
 
@@ -41,7 +41,7 @@ public class ReqFilteredUserDetailDto {
         this.statusId = user.getStatusId();
         this.profileImg = user.getProfileImg();
         this.backgroundImg = user.getBackgroundImg();
-        this.rayout = user.getRayout();
+        this.layout = user.getLayout();
         this.connectFlag = user.getConnectFlag();
         this.positionName = user.getPositionName();
         this.jobCode = ssafyUser.getJobCode();
@@ -55,7 +55,7 @@ public class ReqFilteredUserDetailDto {
         this.statusId = userDetail.getStatusId();
         this.profileImg = userDetail.getProfileImg();
         this.backgroundImg = userDetail.getBackgroundImg();
-        this.rayout = userDetail.getRayout();
+        this.layout = userDetail.getLayout();
         this.connectFlag= userDetail.getConnectFlag();
         this.jobCode = userDetail.getJobCode();
         this.teamCode = userDetail.getTeamCode();

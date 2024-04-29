@@ -79,12 +79,6 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : ", e.getStatus()));
     }
 
-    @GetMapping
-    public Mono<ResponseEntity<ApiResponse>> userDetailData(@Login UserInfo userInfo){
-        return userService.getUserDetail(userInfo.getUserEmail())
-                .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("조회완료",reqFilteredUserDetailDto))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : "+e.getMessage(), e.getStatus()));
-    }
 
     /**
      * Todo
@@ -101,12 +95,52 @@ public class UserController {
     }
 
     @GetMapping("/team")
-    public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo){
-        return userService.getTeam(userInfo)
-                .flatMap(team -> ApiResponse.ok("조회완료",team))
+    public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo, @RequestParam(name = "teamcode", required = false) String teamCode){
+        if(teamCode != null) {
+            return userService.getTeam(userInfo,teamCode)
+                    .flatMap(team -> ApiResponse.ok("조회완료", team))
+                    .onErrorResume(CustomException.class, e -> ApiResponse.error("팀원 조회 실패 : " + e.getMessage(), e.getStatus()));
+        }else {
+            return userService.getTeam(userInfo)
+                    .flatMap(team -> ApiResponse.ok("조회완료", team))
+                    .onErrorResume(CustomException.class, e -> ApiResponse.error("팀원 조회 실패 : " + e.getMessage(), e.getStatus()));
+        }
+    }
+
+    @GetMapping
+    public Mono<ResponseEntity<ApiResponse>> getUserDetails(@Login UserInfo userInfo, @RequestParam(required = false) String username) {
+        if(username != null) {
+            System.out.println(username);
+            return userService.findByUsername(userInfo, username)
+                    .flatMap(userDetail -> ApiResponse.ok("사용자 정보 조회 성공", userDetail))
+                    .onErrorResume(CustomException.class,e -> ApiResponse.error("사용자 정보 조회 실패: "+e.getMessage(), e.getStatus()));
+        }
+        else{
+            return userService.getUserDetail(userInfo.getUserEmail())
+                    .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("조회완료",reqFilteredUserDetailDto))
+                    .onErrorResume(CustomException.class,e -> ApiResponse.error("사용자 정보 조회 실패: "+e.getMessage(), e.getStatus()));
+        }
+    }
+
+    @GetMapping("/class")
+    public Mono<ResponseEntity<ApiResponse>> getClassInfo(@Login UserInfo userInfo,
+                                                          @RequestParam(name = "classcode", required = true) String classCode){
+        return userService.getClassInfo(classCode)
+                .flatMap(classInfo -> ApiResponse.ok("조회완료",classInfo))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
     }
 
+    /**
+    @GetMapping("/all")
+    public Mono<ResponseEntity<ApiResponse>> getAllUsers(@Login UserInfo userInfo){
+        return userService.getAllUsers(userInfo)
+                .flatMap(users -> ApiResponse.ok("조회완료",users))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
+    }
+    */
+    /**
+    @GetMapping("/all")
+    public Mono<ResponseEntity<
     /**
     @PostMapping(value = "/profileImg")
     public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestPart("file") Flux<ByteBuffer> file){

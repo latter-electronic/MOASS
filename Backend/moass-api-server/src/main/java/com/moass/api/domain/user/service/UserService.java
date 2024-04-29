@@ -6,8 +6,7 @@ import com.moass.api.domain.user.dto.UserSignUpDto;
 import com.moass.api.domain.user.dto.UserUpdateDto;
 import com.moass.api.domain.user.entity.User;
 import com.moass.api.domain.user.entity.UserDetail;
-import com.moass.api.domain.user.repository.SsafyUserRepository;
-import com.moass.api.domain.user.repository.UserRepository;
+import com.moass.api.domain.user.repository.*;
 import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.Tokens;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -21,13 +20,20 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TeamRepository teamRepository;
+    private final ClassRepository classRepository;
+    private final LocationRepository locationRepository;
+
     private final SsafyUserRepository ssafyUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
@@ -107,8 +113,8 @@ public class UserService {
                         isUpdated = true;
                     }
                     // 추가 필드 업데이트
-                    if (userUpdateDto.getRayout() != null && !userUpdateDto.getRayout().equals(user.getRayout())) {
-                        user.setRayout(userUpdateDto.getRayout());
+                    if (userUpdateDto.getRayout() != null && !userUpdateDto.getRayout().equals(user.getLayout())) {
+                        user.setLayout(userUpdateDto.getRayout());
                         isUpdated = true;
                     }
                     if (userUpdateDto.getConnectFlag() != null && !userUpdateDto.getConnectFlag().equals(user.getConnectFlag())) {
@@ -133,9 +139,56 @@ public class UserService {
     public Mono<List<ReqFilteredUserDetailDto>> getTeam(UserInfo userInfo) {
         return userRepository.findAllTeamUserByTeamCode(userInfo.getTeamCode())
                 .collectList()
-                .map(userDetail -> userDetail.stream().map(ReqFilteredUserDetailDto::new).toList())
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("팀원을 찾을 수 없습니다.")));
+                .flatMap(userDetail -> {
+                    if (userDetail.isEmpty()) {
+                        return Mono.error(new CustomException("팀원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+                    }
+                    return Mono.just(userDetail.stream().map(ReqFilteredUserDetailDto::new).toList());
+                });
     }
+
+    public Mono<List<ReqFilteredUserDetailDto>> getTeam(UserInfo userInfo,String teamCode) {
+        return userRepository.findAllTeamUserByTeamCode(teamCode)
+                .collectList()
+                .flatMap(userDetail -> {
+                    if (userDetail.isEmpty()) {
+                        return Mono.error(new CustomException("팀원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+                    }
+                    return Mono.just(userDetail.stream().map(ReqFilteredUserDetailDto::new).toList());
+                });
+    }
+
+    public Mono<List<ReqFilteredUserDetailDto>> findByUsername(UserInfo userInfo,String username) {
+        return ssafyUserRepository.findAllUserDetailByuserName(username,userInfo.getJobCode())
+                .collectList()
+                .flatMap(userDetails -> {
+                    if (userDetails.isEmpty()) {
+                        return Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
+                    }
+                    return Mono.just(userDetails.stream().map(ReqFilteredUserDetailDto::new).toList());
+                });
+    }
+
+    public Mono<Map<String,Map<String,Object>>> getClassInfo(String classCode) {
+        return teamRepository.findAllTeamByclassCode(classCode)
+                .flatMap(team -> userRepository.findAllTeamUserByTeamCode(team.getTeamCode())
+                        .collectList()
+                        .map(userDetails -> {
+                            Map<String, Object> teamInfo = new HashMap<>();
+                            teamInfo.put("팀명", team.getTeamName());
+                            teamInfo.put("users", userDetails.stream().map(ReqFilteredUserDetailDto::new).collect(Collectors.toList()));
+                            return Map.entry(team.getTeamCode(), teamInfo);
+                        }))
+                .collectMap(Map.Entry::getKey, Map.Entry::getValue);
+    }
+
+    /**
+    public Mono<Object> getAllUsers(UserInfo userInfo) {
+        return ssafyUserRepository.findAll
+    }
+
+     */
+
 
 
     /**
