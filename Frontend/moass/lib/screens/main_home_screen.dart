@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/widgets/check_box.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -41,9 +42,37 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TopBar(
-        title: '메인',
-        icon: Icons.home_rounded,
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        shadowColor: Colors.black,
+        elevation: 1,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.blue,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    // fullscreenDialog: true,
+                    builder: (context) => const SettingScreen(),
+                  ),
+                );
+              },
+              icon: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border:
+                          Border.all(color: const Color(0xFF6ECEF5), width: 2)),
+                  child: const Icon(
+                    Icons.settings,
+                    color: Color(0xFF6ECEF5),
+                  ))),
+        ],
+        title: Image.asset('assets/img/logo_basic.png'),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
