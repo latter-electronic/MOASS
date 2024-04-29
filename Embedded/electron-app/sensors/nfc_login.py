@@ -8,8 +8,9 @@ import busio
 import time
 import json
 import sys
-from adafruit_pn532.i2c import PN532_I2C
 import requests
+from adafruit_pn532.i2c import PN532_I2C
+from gpiozero import MotionSensor
 
 def get_serial_number():
     with open('/proc/cpuinfo', 'r') as f:
@@ -25,6 +26,9 @@ i2c = busio.I2C(board.SCL, board.SDA) # I2C 연결 설정
 pn532 = PN532_I2C(i2c, debug=False) # PN532 모듈 초기화
 pn532.SAM_configuration() # SAM 구성
 
+
+pir = MotionSensor(17)  # GPIO 17번 핀에 연결된 PIR 센서 HC-SR501
+motion_detected_time = time.time()
 
 logged_in = False
 print("Waiting for NFC card...")
@@ -56,14 +60,26 @@ while True:
                     print(json.dumps(response_data))  # 로그인 데이터 출력
                     # sys.stdout.flush()  # stdout을 즉시 플러시
                     logged_in = True
-                    time.sleep(pause_duration)  # 로그인 성공, 일시 중지
+                    motion_detected_time = time.time()  # 움직임 감지 시간 초기화
                 else:
                     print("Login failed:", response_data.get('message'))
             except Exception as e:
                 print(f"Failed to send/receive data: {e}")
-    else:   # 로그인이 되어 있는 경우
-        line = sys.stdin.readline().strip()
-        time.sleep(1)
-        if line == 'logout':
-            logged_in = False
-            print("Logged out. Ready for next NFC tag.")
+
+        elif pir.motion_detected:
+            motion_detected_time = time.time()  # 움직임 감지 시간 업데이트
+
+    elif logged_in:   # 로그인 상태
+        if pir.motion_detected:
+            motion_detected_time = time.time()  # 움직임 감지 시간 업데이트
+            print("Motion detected.")
+
+        if time.time() - motion_detected_time > 300:  # 5분 동안 움직임 없음
+            print("No motion detected for 5 minutes, sending away status.")
+            sys.stdout.write("AWAY\n")  # 자리 비움 신호 출력
+            sys.stdout.flush()  # stdout을 즉시 플러시
+    
+    # 로그아웃 기능 추가!!!!!!
+    
+    time.sleep(1)  # 검사 간격 조정
+       
