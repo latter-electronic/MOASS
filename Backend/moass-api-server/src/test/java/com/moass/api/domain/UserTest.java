@@ -134,8 +134,6 @@ public class UserTest {
     @DisplayName("[GET] 조회 /user")
     class 조회 {
 
-
-
         @BeforeEach
         void setup(){
         // 사용자 로그인
@@ -163,6 +161,17 @@ public class UserTest {
                     .expectStatus().isEqualTo(401)
                     .expectBody()
                     .jsonPath("$.status").isEqualTo("401");
+        }
+
+        @Test
+        @DisplayName("[200] 내 팀조회")
+        void 내팀조회(){
+            webTestClient.get().uri("/user/team")
+                    .header("Authorization", accessToken) // 설정된 accessToken 사용
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
         }
     }
 
