@@ -61,6 +61,7 @@ flutter:
     assets:
         - assets/img/logo_basic.png
         - assets/img/logo_ssafy_white.png
+        - assets/img/crying_mozzi.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
