@@ -25,6 +25,7 @@ module.exports = {
       },
       colors: {
         mmBlue: '#28427B',
+        gitlabRed: '#E14328'
       },
     },
   },

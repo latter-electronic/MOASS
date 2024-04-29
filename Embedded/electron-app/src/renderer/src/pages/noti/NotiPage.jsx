@@ -1,5 +1,6 @@
 import NotiComponent from './NotiComponent.jsx'
 import NotiMM from './NotiMMComponent.jsx'
+import NotiGitlab from './NotiGitlabComponent.jsx'
 
 export default function NotiPage() {
     return (
@@ -14,6 +15,7 @@ export default function NotiPage() {
             <NotiComponent />
             <NotiComponent />
             <NotiMM />
+            <NotiGitlab />
           </div>
         </div>
   

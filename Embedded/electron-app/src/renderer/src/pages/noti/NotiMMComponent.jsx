@@ -3,7 +3,7 @@ import mattermostIcon from './testImg/mattermost-icon.svg';
 
 export default function NotiMMComponent() {
   return (
-    <div className="flex items-center p-3 bg-mmBlue/60 rounded-lg overflow-hidden shadow-md">
+    <div className="flex items-center p-3 bg-mmBlue/60 rounded-2xl overflow-hidden shadow-md mb-2">
 
       {/* 팀 아이콘 */}
       <div className="flex-shrink-0 mr-3 bg-white rounded-md">
