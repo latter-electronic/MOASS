@@ -40,7 +40,7 @@ pir = MotionSensor(17)  # GPIO 17번 핀에 연결된 PIR 센서 HC-SR501
 motion_detected_time = time.time()
 
 logged_in = False
-print("Waiting for NFC card...")
+print("Waiting for NFC card...", file=sys.stderr)
 
 # 설정된 시간 정의
 NO_MOTION_TIMEOUT = 300  # 5분
@@ -54,7 +54,7 @@ while True:
         if uid is not None:
             # 카드 UID를 헥사 문자열로 변환
             card_serial_id = ''.join(["{0:x}".format(i).zfill(2) for i in uid])
-            print("card UID:", card_serial_id)
+            # print("card UID:", card_serial_id)
             
             # 라즈베리파이 시리얼 넘버
             device_id = get_serial_number()
