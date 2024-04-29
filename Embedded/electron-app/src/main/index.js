@@ -48,7 +48,7 @@ function createWindow() {
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
-    const pythonProcess = spawn('python', [join(__dirname, '../../sensors/nfc_login.py')]);
+    const pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')]);
 
     pythonProcess.stdout.on('data', (data) => {
       const output = data.toString();
