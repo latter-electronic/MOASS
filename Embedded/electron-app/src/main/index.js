@@ -44,22 +44,30 @@ function createWindow() {
   setupPythonProcess(mainWindow)
 }
 
-// nfc 로그인 기능 python script 실행
+// python script 실행
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
     const pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')]);
 
     pythonProcess.stdout.on('data', (data) => {
-      const output = data.toString();
+      const output = data.toString().trim();
       console.log(`stdout: ${output}`);
-
-      // "AWAY" 메세지 확인
-      if (output.trim() === "AWAY") {
-        mainWindow.webContents.send('away-status', "AWAY");
-      } else {
+      
+      try {
+        // 데이터를 JSON으로 파싱
+        const jsonData = JSON.parse(output);
+        // 로그인 성공 메시지 처리
+        if (jsonData.message === "로그인 성공") {
+          mainWindow.webContents.send('login-success', jsonData);
+        } else if (jsonData.type === "AWAY" || jsonData.type === "AOD" || jsonData.type === "LONG_SIT") { // 메시지에 따라 다른 이벤트 전송
+          mainWindow.webContents.send(jsonData.type.toLowerCase() + '-status', jsonData);
+        }
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+        // JSON 파싱 실패 시 기본 처리
         mainWindow.webContents.send('nfc-data', output);
-      } 
+      }
     });
 
     pythonProcess.stderr.on('data', (data) => {
