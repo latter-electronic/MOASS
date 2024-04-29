@@ -25,7 +25,7 @@ export default function CallAlert() {
         <div className="flex-1 flex items-center justify-center">
           <div></div>
         </div>
-        <div className="flex-1 flex items-center justify-center text-5xl font-bold">호출</div>
+        <div className="flex-1 flex items-center justify-center text-12xl font-bold">호출</div>
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-gray-500 bg-opacity-50 py-2 px-4 rounded-full inline-block">
             <span>지수님 필드트립 관련 잠깐 로비로 나와주실 수 있으실까요?</span>
