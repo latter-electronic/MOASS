@@ -21,7 +21,9 @@ export default function TagNFC() {
         const parsedData = JSON.parse(data)
         if (parsedData.accessToken && parsedData.refreshToken) {
           login(parsedData.accessToken, parsedData.refreshToken)
+          console.log('navigate 시작')
           navigate('/tagsuccess')
+          console.log('navigate 실행 완료')
         }
       } catch (error) {
         console.error('Error parsing NFC data:', error)
