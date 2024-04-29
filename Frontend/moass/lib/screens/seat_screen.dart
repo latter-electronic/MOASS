@@ -31,8 +31,33 @@ class SeatScreen extends StatelessWidget {
                   leading: Icon(Icons.search),
                 ),
               ),
-              const UserBox(
-                  username: '김싸피', team: 'E203', role: 'FE', userstatus: 'here')
+              const SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      UserBox(
+                          username: '김싸피',
+                          team: 'E203',
+                          role: 'FE',
+                          userstatus: 'here'),
+                      UserBox(
+                          username: '김싸피',
+                          team: 'E203',
+                          role: 'FE',
+                          userstatus: 'here'),
+                      UserBox(
+                          username: '김싸피',
+                          team: 'E203',
+                          role: 'FE',
+                          userstatus: 'here'),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ));
