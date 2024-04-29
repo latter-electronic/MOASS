@@ -30,6 +30,7 @@ export default function TagNFC() {
       }
     }
 
+    console.log(window.userAPI);
     window.userAPI?.onNfcData(handleNfcData)
 
     // 컴포넌트 언마운트 시에 이벤트 리스너 정리.

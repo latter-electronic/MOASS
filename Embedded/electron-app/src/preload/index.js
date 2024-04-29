@@ -5,10 +5,14 @@ import path from 'path';
 const userAPI = {
   joinPath: (...paths) => path.join(...paths),
   onNfcData: (callback) => {
-      ipcRenderer.on('nfc-data', (event, data) => callback(data));
+    ipcRenderer.on('nfc-data', (event, data) => {
+      callback(data);
+      console.log(data);
+    });
+    console.log('ipcRenderer on');
   },
   removeNfcDataListener: () => {
-      ipcRenderer.removeAllListeners('nfc-data');
+    ipcRenderer.removeAllListeners('nfc-data');
   },
   onStatus: (type, callback) => {
     ipcRenderer.on(`${type}-status`, (event, data) => callback(data));

@@ -61,7 +61,7 @@ function setupPythonProcess(mainWindow) {
         // 로그인 성공 메시지 처리
         if (jsonData.status === 200) {
           mainWindow.webContents.send('nfc-data', jsonData.data);
-          
+          console.log('login success');  
         } else if (["AWAY", "AOD", "LONG_SIT"].includes(jsonData.type)) { // 메시지에 따라 다른 이벤트 전송
           mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData);
         }
