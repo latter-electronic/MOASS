@@ -61,12 +61,14 @@ public class UserTest {
         this.refreshToken ="Bearer "  +  data.get("refreshToken");
     }
 
+
     @BeforeAll
     void setUp() throws Exception {
         TestContextManager testContextManager = new TestContextManager(getClass());
         testContextManager.prepareTestInstance(this);
-        signUp(new UserSignUpDto("weon1009@com", "1058448", "ssafyout!!!"));
+        signUp(new UserSignUpDto("test5@com", "1000005", "ssafyout!!!"));
     }
+
 
 
     @Nested
@@ -137,7 +139,7 @@ public class UserTest {
         @BeforeEach
         void setup(){
         // 사용자 로그인
-            login(new UserLoginDto("weon1009@com", "ssafyout!!!"));
+            login(new UserLoginDto("test5@com", "ssafyout!!!"));
 
         }
 
