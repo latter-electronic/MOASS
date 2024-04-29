@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:moass/model/token_interceptor.dart';
 import 'package:moass/screens/home_screen.dart';
+import 'package:moass/screens/signup_screen.dart';
 import 'package:moass/widgets/custom_login_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   // 에러 메시지를 위한 상태 변수
   String? _errorMessage;
 
+  // 로그인 버튼 함수
   Future<void> _login() async {
     final dio = Dio();
     // 인스턴스추가
@@ -47,16 +49,26 @@ class _LoginScreenState extends State<LoginScreen> {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       // isLoggedIn 즉 로그인 유무에 true값 저장
       await prefs.setBool('isLoggedIn', true);
-      // 토큰 저장
-      final accessToken = response.data['accessToken'];
-      final refreshToken = response.data['refreshToken'];
-      await prefs.setString('accessToken', accessToken);
-      await prefs.setString('refreshToken', refreshToken);
-      // 홈 화면으로 이동
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      // 로그인 성공 처리
+      final accessToken = response.data['data']['accessToken'] as String?;
+      final refreshToken = response.data['data']['refreshToken'] as String?;
+
+      if (accessToken != null && refreshToken != null) {
+        // SharedPreferences에 토큰 저장
+        await prefs.setString('accessToken', accessToken);
+        await prefs.setString('refreshToken', refreshToken);
+
+        // 홈 화면으로 이동
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      } else {
+        // accessToken이나 refreshToken이 null인 경우
+        setState(() {
+          _errorMessage = '토큰이 반환되지 않았습니다. 서버 설정을 확인하세요.';
+        });
+      }
     } on DioException catch (e) {
       // DioError를 캐치하여 에러 메시지를 업데이트
       if (e.response?.statusCode == 401) {
@@ -69,6 +81,17 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
     }
+  }
+
+  // 회원가입 함수
+  void _signup() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SignUpScreen(),
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   @override
@@ -122,6 +145,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 24, // '로그인' 텍스트의 크기를 20폰트로 설정합니다.
                       color: Colors.black, // '로그인' 텍스트의 색상을 검정색으로 설정합니다.
                       fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextButton(
+                onPressed: _signup,
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.black,
+                ),
+                child: const Text(
+                  '회원가입',
                 ),
               ),
               if (_errorMessage != null)

@@ -6,6 +6,9 @@ class CustomLoginFormField extends StatelessWidget {
   final bool obscureText;
   final bool autofocus;
   final ValueChanged<String>? onChanged;
+  final FocusNode? focusNode; // FocusNode 추가
+  final Function(String)? onFieldSubmitted; // onFieldSubmitted 추가
+  final TextInputAction? textInputAction; // TextInputAction 추가
 
   const CustomLoginFormField({
     required this.onChanged,
@@ -13,6 +16,9 @@ class CustomLoginFormField extends StatelessWidget {
     this.autofocus = false,
     this.hintText,
     this.errorText,
+    this.focusNode, // constructor에 FocusNode 추가
+    this.onFieldSubmitted, // constructor에 onFieldSubmitted 추가
+    this.textInputAction = TextInputAction.next, // 기본값으로 next 설정
     super.key,
   });
 
@@ -34,6 +40,9 @@ class CustomLoginFormField extends StatelessWidget {
       // 값이 바뀔때마다 상태가 변하는거
       onChanged: onChanged,
       cursorColor: Colors.blue.shade400,
+      focusNode: focusNode, // TextFormField에 focusNode 설정
+      onFieldSubmitted: onFieldSubmitted, // onFieldSubmitted 설정
+      textInputAction: textInputAction, // 키보드 액션 설정
       // 텍스트 폼 '안' 에서의 스타일
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(10),
