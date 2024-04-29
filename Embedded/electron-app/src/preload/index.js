@@ -12,6 +12,12 @@ const userAPI = {
   },
   removeNfcDataListener: () => {
       ipcRenderer.removeAllListeners('nfc-data');
+  },
+  onAwayStatus: (callback) => {
+    ipcRenderer.on('away-status', (event, message) => callback(message));
+  },
+  removeAwayStatusListener: () => {
+    ipcRenderer.removeAllListeners('away-status');
   }
 };
 

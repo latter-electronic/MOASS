@@ -51,8 +51,15 @@ function setupPythonProcess(mainWindow) {
     const pythonProcess = spawn('python', [join(__dirname, '../../sensors/nfc_login.py')]);
 
     pythonProcess.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-        mainWindow.webContents.send('nfc-data', data.toString());
+      const output = data.toString();
+      console.log(`stdout: ${output}`);
+
+      // "AWAY" 메세지 확인
+      if (output.trim() === "AWAY") {
+        mainWindow.webContents.send('away-status', "AWAY");
+      } else {
+        mainWindow.webContents.send('nfc-data', output);
+      } 
     });
 
     pythonProcess.stderr.on('data', (data) => {
