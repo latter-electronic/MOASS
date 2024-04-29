@@ -58,20 +58,18 @@ function setupPythonProcess(mainWindow) {
         // 데이터를 JSON으로 파싱
         const jsonData = JSON.parse(output);
         // 로그인 성공 메시지 처리
-        if (jsonData.message === "로그인 성공") {
-          mainWindow.webContents.send('login-success', jsonData);
+        if (jsonData.type === "LOGIN_SUCCESS") {
+          mainWindow.webContents.send('nfc-data', jsonData.data);
         } else if (jsonData.type === "AWAY" || jsonData.type === "AOD" || jsonData.type === "LONG_SIT") { // 메시지에 따라 다른 이벤트 전송
           mainWindow.webContents.send(jsonData.type.toLowerCase() + '-status', jsonData);
         }
       } catch (error) {
         console.error('Error parsing JSON:', error);
-        // JSON 파싱 실패 시 기본 처리
-        mainWindow.webContents.send('nfc-data', output);
       }
     });
 
     pythonProcess.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
+      console.log('Python log:', data.toString());  // stderr를 통해 로그 출력
     });
 
     pythonProcess.on('close', (code) => {
