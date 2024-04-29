@@ -1,5 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:moass/screens/setting_related_account.dart';
+import 'package:moass/screens/setting_user_info.dart';
+import 'package:moass/screens/setting_widget_photo.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -90,18 +94,39 @@ class SettingScreen extends StatelessWidget {
               decoration: BoxDecoration(
                   border: Border(
                       bottom: BorderSide(color: Colors.grey.withOpacity(0.5)))),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: CategoryText(text: '명패 설정'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          // fullscreenDialog: true,
+                          builder: (context) => const SettingUserInfoScreen(),
+                        ),
+                      );
+                    },
+                    child: const CategoryText(text: '회원 정보 관리')),
               )),
           Container(
               width: double.infinity,
               decoration: BoxDecoration(
                   border: Border(
                       bottom: BorderSide(color: Colors.grey.withOpacity(0.5)))),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: CategoryText(text: '위젯 사진 설정'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          // fullscreenDialog: true,
+                          builder: (context) =>
+                              const SettingWidgetPhotoScreen(),
+                        ),
+                      );
+                    },
+                    child: const CategoryText(text: '위젯 사진 설정')),
               )),
           Container(
               width: double.infinity,
