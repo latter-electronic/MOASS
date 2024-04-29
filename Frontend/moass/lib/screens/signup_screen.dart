@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moass/widgets/custom_login_form.dart';
+import 'package:moass/services/account_api.dart';
+import 'package:dio/dio.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -14,10 +16,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String password = '';
   String confirmPassword = ''; // 비밀번호 확인을 위한 상태 변수
   String? passwordErrorText; // 비밀번호 오류 메시지
-  final FocusNode _ssafyFocus = FocusNode();
-  final FocusNode _emailFocus = FocusNode();
-  final FocusNode _passwordFocus = FocusNode();
-  final FocusNode _confirmPasswordFocus = FocusNode();
+  final AccountApi _accountApi = AccountApi(dio: Dio());
 
   void checkPassword() {
     if (password != confirmPassword) {
@@ -31,12 +30,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  // 다음 폼으로 넘어가기 위한 함수
-  @override
-  void dispose() {
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
-    super.dispose();
+  void signUp() async {
+    if (password == confirmPassword) {
+      bool isSignedUp = await _accountApi.signUp(ssafy, email, password);
+      if (isSignedUp) {
+        // 회원가입 성공, 로그인 화면으로 이동 혹은 로그인 자동 실행
+        Navigator.pop(context);
+        print('회원가입 성공');
+      } else {
+        // 회원가입 실패 처리
+        setState(() {
+          passwordErrorText = '회원가입에 실패하였습니다.';
+        });
+      }
+    } else {
+      setState(() {
+        passwordErrorText = '비밀번호가 일치하지 않습니다.';
+      });
+    }
   }
 
   @override
@@ -60,9 +71,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ssafy = value;
                 },
                 obscureText: false,
-                // focusNode: _ssafyFocus,
-                // onFieldSubmitted: (_) =>
-                //     FocusScope.of(context).requestFocus(_emailFocus),
                 textInputAction: TextInputAction.next, // 비밀번호 입력 후 다음 필드로 이동
               ),
               const SizedBox(height: 20.0), // 필드 사이 간격 추가
@@ -73,9 +81,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   email = value;
                 },
                 obscureText: false, // 이메일 입력 필드이므로 가릴 필요 없음
-                // focusNode: _emailFocus,
-                // onFieldSubmitted: (_) =>
-                //     FocusScope.of(context).requestFocus(_passwordFocus),
                 textInputAction: TextInputAction.next, // 비밀번호 입력 후 다음 필드로 이동
               ),
               const SizedBox(height: 20.0), // 필드 사이 간격 추가
@@ -88,9 +93,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   password = value;
                 },
                 obscureText: true, // 비밀번호 필드는 가려야 함
-                // focusNode: _passwordFocus,
-                // onFieldSubmitted: (_) =>
-                //     FocusScope.of(context).requestFocus(_confirmPasswordFocus),
                 textInputAction: TextInputAction.next, // 비밀번호 입력 후 다음 필드로 이동
               ),
               const SizedBox(height: 20.0),
@@ -103,16 +105,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 },
                 obscureText: true,
                 errorText: passwordErrorText, // 비밀번호 일치 오류 메시지
-                // focusNode: _confirmPasswordFocus,
                 textInputAction: TextInputAction.done, // 비밀번호 입력 후 다음 필드로 이동
               ),
               const SizedBox(height: 40.0), // 버튼 전 간격 추가
               ElevatedButton(
-                onPressed: () {
-                  // 회원가입 로직 구현 필요
-                },
+                onPressed: signUp,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // 버튼 색상 설정
+                  backgroundColor: Colors.blue,
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   textStyle: const TextStyle(fontSize: 20),
                 ),

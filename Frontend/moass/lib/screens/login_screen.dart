@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moass/model/token_interceptor.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/signup_screen.dart';
+import 'package:moass/services/account_api.dart';
 import 'package:moass/widgets/custom_login_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final AccountApi _accountApi = AccountApi(dio: Dio());
   // 이메일과 비밀번호
   String username = '';
   String password = '';
@@ -23,63 +25,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // 로그인 버튼 함수
   Future<void> _login() async {
-    final dio = Dio();
-    // 인스턴스추가
-    final prefs = await SharedPreferences.getInstance();
-    dio.interceptors.add(TokenInterceptor(dio, prefs));
-
-    // 요청할 기본 주소
-    const ip = 'https://k10e203.p.ssafy.io';
-
-    try {
-      final response = await dio.post(
-        '$ip/api/user/login',
-        data: {
-          "userEmail": username,
-          "password": password,
-        },
+    bool isLoggedIn = await _accountApi.login(username, password);
+    if (isLoggedIn) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-
-      // 로그인 성공 처리 (예: 토큰 저장, 홈 화면으로 이동 등)
-      print(response.data);
+    } else {
       setState(() {
-        _errorMessage = null; // 에러 메시지를 초기화
+        _errorMessage = '로그인에 실패했습니다. 이메일, 비밀번호를 확인해주세요';
       });
-      // 로그인 유지를 위해 SharedPreferences 를 불러옴
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      // isLoggedIn 즉 로그인 유무에 true값 저장
-      await prefs.setBool('isLoggedIn', true);
-      // 로그인 성공 처리
-      final accessToken = response.data['data']['accessToken'] as String?;
-      final refreshToken = response.data['data']['refreshToken'] as String?;
-
-      if (accessToken != null && refreshToken != null) {
-        // SharedPreferences에 토큰 저장
-        await prefs.setString('accessToken', accessToken);
-        await prefs.setString('refreshToken', refreshToken);
-
-        // 홈 화면으로 이동
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      } else {
-        // accessToken이나 refreshToken이 null인 경우
-        setState(() {
-          _errorMessage = '토큰이 반환되지 않았습니다. 서버 설정을 확인하세요.';
-        });
-      }
-    } on DioException catch (e) {
-      // DioError를 캐치하여 에러 메시지를 업데이트
-      if (e.response?.statusCode == 401) {
-        setState(() {
-          _errorMessage = '이메일 또는 비밀번호가 틀렸습니다';
-        });
-      } else {
-        setState(() {
-          _errorMessage = '로그인 실패: ${e.message}';
-        });
-      }
     }
   }
 
