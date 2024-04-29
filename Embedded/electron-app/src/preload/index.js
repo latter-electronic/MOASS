@@ -11,7 +11,7 @@ const userAPI = {
       ipcRenderer.removeAllListeners('nfc-data');
   },
   onStatus: (type, callback) => {
-    ipcRenderer.on(`${type}-status`, (event, message) => callback(message));
+    ipcRenderer.on(`${type}-status`, (event, data) => callback(data));
   },
   removeStatusListener: (type) => {
     ipcRenderer.removeAllListeners(`${type}-status`);

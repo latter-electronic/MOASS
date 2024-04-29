@@ -70,7 +70,7 @@ while True:
                 # print("Server response:", response_data)
 
                 if response.status_code == 200 and response_data.get('message') == '로그인 성공':
-                    print(json.dumps({"type": "LOGIN_SUCCESS", "data": response_data}))  # 로그인 데이터 출력
+                    print(json.dumps(response_data))  # 로그인 데이터 출력
                     logged_in = True
                     motion_detected_time = time.time()  # 움직임 감지 시간 초기화
                 else:
@@ -81,7 +81,7 @@ while True:
         elif pir.motion_detected:
             # 로그아웃 상태에서 감지 시 AOD 화면 출력
             print("Motion detected in logged out state.")
-            sys.stdout.write("AOD\n")
+            sys.stdout.write(json.dumps({"type": "AOD"}))
             sys.stdout.flush()
 
     elif logged_in: # 로그인 상태
@@ -94,14 +94,14 @@ while True:
         if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
             # 자리 비움 상태 전달
             print("No motion detected for 5 minutes, sending away status.")
-            sys.stdout.write("AWAY\n")
+            sys.stdout.write(json.dumps({"type": "AWAY"}))
             sys.stdout.flush()
             motion_detected_time = current_time  # 타이머 리셋
 
         if current_time - last_motion_time > LONG_SIT_TIMEOUT:
             # 오래 앉아 있음 상태 전달
             print("Continuous motion detected for 2 hours, sending long sit status.")
-            sys.stdout.write("LONG_SIT\n")
+            sys.stdout.write(json.dumps({"type": "LONG_SIT"}))
             sys.stdout.flush()
             last_motion_time = current_time  # 타이머 리셋
     
