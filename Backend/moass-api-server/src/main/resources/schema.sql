@@ -45,7 +45,7 @@ CREATE TABLE `User`(
                        `password` VARCHAR (255)NOT NULL,
                        `profile_img` VARCHAR(255) NULL,
                        `background_img` VARCHAR(255) NULL,
-                       `rayout` INT NOT NULL DEFAULT 1,
+                       `layout` INT NOT NULL DEFAULT 1,
                        `connect_flag` INT NULL DEFAULT 0,
                         `position_name` VARCHAR(20) NULL,
                        PRIMARY KEY (`user_id`),
