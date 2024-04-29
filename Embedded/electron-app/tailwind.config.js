@@ -22,7 +22,10 @@ module.exports = {
         'www': '1rem',
         'wwww': '3rem',
         'ww2': '2rem',
-      }
+      },
+      colors: {
+        mmBlue: '#28427B',
+      },
     },
   },
   plugins: [require("tailwind-scrollbar-hide")],
