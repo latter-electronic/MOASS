@@ -54,6 +54,7 @@ public class JWTService {
                     .claim("userEmail", userInfo.getUserEmail())
                     .claim("userId", userInfo.getUserId())
                     .claim("userName", userInfo.getUserName())
+                    .claim("jobCode", userInfo.getJobCode())
                     .claim("teamCode", userInfo.getTeamCode())
                     .setIssuedAt(nowDate)
                     .setExpiration(expirationDateForAccessToken)
@@ -65,6 +66,7 @@ public class JWTService {
                     .claim("userEmail", userInfo.getUserEmail())
                     .claim("userId", userInfo.getUserId())
                     .claim("userName", userInfo.getUserName())
+                    .claim("jobCode", userInfo.getJobCode())
                     .claim("teamCode", userInfo.getTeamCode())
                     .setIssuedAt(nowDate)
                     .setExpiration(expirationDateForRefreshToken)
@@ -84,6 +86,7 @@ public class JWTService {
         return new UserInfo(claims.get("userId", String.class),
                 claims.get("userName", String.class),
                 claims.get("userEmail", String.class),
+                claims.get("jobCode", Integer.class),
                 claims.get("teamCode",String.class));
     }
 
@@ -92,6 +95,7 @@ public class JWTService {
         return new UserInfo(claims.get("userId", String.class),
                 claims.get("userName", String.class),
                 claims.get("userEmail", String.class),
+                claims.get("jobCode", Integer.class),
         claims.get("teamCode",String.class));
     }
 
