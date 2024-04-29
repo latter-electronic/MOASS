@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import LogoutButton from '../../components/buttons/LogoutButton';
 
 export default function Alert() {
     const navigate = useNavigate();
@@ -36,11 +37,7 @@ export default function Alert() {
             >
                 개발용 NFC
             </button>
-            <button 
-                className="bg-sky-400 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out"
-            >
-                로그아웃
-            </button>
+            <LogoutButton />
         </>
     );
 }
