@@ -1,7 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { spawn } from 'child_process';
 import icon from '../../resources/icon.png?asset'
+
+let mainWindow;
 
 function createWindow() {
   // Create the browser window.
@@ -15,7 +18,9 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      nodeIntegration: true,
+      contextIsolation: false
     }
   })
 
@@ -35,7 +40,33 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  setupPythonProcess(mainWindow)
 }
+
+// nfc 로그인 기능 python script 실행
+function setupPythonProcess(mainWindow) {
+  // 'linux' 플랫폼에서만 Python 스크립트 실행
+  if (process.platform === 'linux') {
+    const pythonProcess = spawn('python', [join(__dirname, '../../sensors/nfc_login.py')]);
+
+    pythonProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
+        mainWindow.webContents.send('nfc-data', data.toString());
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+    });
+  } else {
+    console.log('Python script is not supported on this platform.')
+  }
+}
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
