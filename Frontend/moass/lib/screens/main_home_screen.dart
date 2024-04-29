@@ -45,19 +45,10 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         title: '메인',
         icon: Icons.home_rounded,
       ),
-      body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const CategoryText(
-          text: '내 기기 상태',
-        ),
-        Expanded(
-          child: Container(
-              height: 800,
-              decoration: const BoxDecoration(color: Colors.grey),
-              child: const Center(child: CategoryText(text: '기기 이미지 들어갈 곳'))),
-        ),
-        const CategoryText(text: '내 상태 설정'),
-        Column(
+      body: SingleChildScrollView(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const CategoryText(
               text: '내 기기 상태',
@@ -271,7 +262,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             )
           ],
         ),
-      ]),
+      ),
     );
   }
 }
