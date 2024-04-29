@@ -45,7 +45,7 @@ public class UserService {
                                             .password(passwordEncoder.encode(userDto.getPassword()))
                                             .build();
                                     return userRepository.saveForce(newUser)
-                                            .map(savedUser -> new UserDetail(newUser, ssafyUser));
+                                            .thenReturn(new UserDetail(newUser, ssafyUser));
                                 })
                 );
     }
