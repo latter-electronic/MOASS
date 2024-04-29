@@ -279,13 +279,15 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             const ToDoList(),
             const CategoryText(text: '오늘 내 예약'),
             const SizedBox(
-              height: 200,
               child: Center(
-                child: Column(
-                  children: [
-                    ScheduleBox(title: '플립보드 1', time: '10:00 - 11:00'),
-                    ScheduleBox(title: '팀 미팅', time: '11:00 - 12:00'),
-                  ],
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    children: [
+                      ScheduleBox(title: '플립보드 1', time: '10:00 - 11:00'),
+                      ScheduleBox(title: '팀 미팅', time: '11:00 - 12:00'),
+                    ],
+                  ),
                 ),
               ),
             )
