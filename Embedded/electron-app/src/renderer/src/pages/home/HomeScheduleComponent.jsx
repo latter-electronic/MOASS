@@ -84,9 +84,9 @@ export default function HomeScheduleComponent() {
             {schedules.map((schedule) => (
                 <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md w-full bg-white max-w-screen-sm ml-8`}>
                     <div className={`border-l-4 ${schedule.color} pl-4`}>
-                        <p className="text-gray-800 font-bold text-xl mb-1">{schedule.type} {schedule.title}</p>
+                        <p className="text-gray-800 font-bold text-test mb-1">{schedule.type} {schedule.title}</p>
                         <div className="flex items-center justify-between">
-                            <p className="text-gray-600 text-lg">{schedule.location}</p>
+                            <p className="text-gray-600 text-xl">{schedule.location}</p>
                             {schedule.avatars && (
                                 <div className="flex -space-x-2 ml-4">
                                     {schedule.avatars.map((avatar, index) => (
@@ -99,7 +99,7 @@ export default function HomeScheduleComponent() {
                             )}
                         </div>
                     </div>
-                    <div className="ml-auto text-gray-600 text-lg mr-2">{schedule.time}</div>
+                    <div className="ml-auto text-gray-600 text-xl mr-2">{schedule.time}</div>
                 </div>
             ))}
         </div>
