@@ -1,9 +1,20 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/model/token_interceptor.dart';
 import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
+import 'package:moass/services/account_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  const storage = FlutterSecureStorage();
+  final dio = Dio();
+  dio.interceptors.add(TokenInterceptor(dio, storage));
+
+  final accountApi = AccountApi(dio: dio, storage: storage);
+
   runApp(const MyApp());
 }
 

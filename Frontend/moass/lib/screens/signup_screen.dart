@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moass/widgets/custom_login_form.dart';
 import 'package:moass/services/account_api.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dio/dio.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,12 +12,21 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  late final AccountApi _accountApi;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
   String ssafy = '';
   String email = '';
   String password = '';
-  String confirmPassword = ''; // 비밀번호 확인을 위한 상태 변수
-  String? passwordErrorText; // 비밀번호 오류 메시지
-  final AccountApi _accountApi = AccountApi(dio: Dio());
+  String confirmPassword = '';
+  String? passwordErrorText;
+
+  @override
+  void initState() {
+    super.initState();
+    final dio = Dio();
+    _accountApi = AccountApi(dio: dio, storage: _storage);
+  }
 
   void checkPassword() {
     if (password != confirmPassword) {
@@ -31,21 +41,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void signUp() async {
-    if (password == confirmPassword) {
+    if (password == confirmPassword && password.isNotEmpty) {
       bool isSignedUp = await _accountApi.signUp(ssafy, email, password);
       if (isSignedUp) {
-        // 회원가입 성공, 로그인 화면으로 이동 혹은 로그인 자동 실행
         Navigator.pop(context);
-        print('회원가입 성공');
+        // You might want to automatically navigate to the login screen or show a message
       } else {
-        // 회원가입 실패 처리
         setState(() {
           passwordErrorText = '회원가입에 실패하였습니다.';
         });
       }
     } else {
       setState(() {
-        passwordErrorText = '비밀번호가 일치하지 않습니다.';
+        passwordErrorText = '비밀번호를 확인해주세요.';
       });
     }
   }

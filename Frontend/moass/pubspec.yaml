@@ -39,6 +39,8 @@ dependencies:
     dio: ^5.4.3+1
     # 로그인 유지를 위한 라이브러리
     shared_preferences: ^2.2.3
+    # 토큰 거장과 보안 유지를 위한 라이브러리
+    flutter_secure_storage: ^5.0.2
 
 
 dev_dependencies:

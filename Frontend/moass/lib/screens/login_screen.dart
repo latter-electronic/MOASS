@@ -1,11 +1,11 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:moass/model/token_interceptor.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/signup_screen.dart';
 import 'package:moass/services/account_api.dart';
 import 'package:moass/widgets/custom_login_form.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:dio/dio.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,15 +15,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final AccountApi _accountApi = AccountApi(dio: Dio());
-  // 이메일과 비밀번호
+  late final AccountApi _accountApi;
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String username = '';
   String password = '';
-
-  // 에러 메시지를 위한 상태 변수
   String? _errorMessage;
 
-  // 로그인 버튼 함수
+  @override
+  void initState() {
+    super.initState();
+    final dio = Dio();
+    dio.interceptors.add(TokenInterceptor(dio, _storage));
+    _accountApi = AccountApi(dio: dio, storage: _storage);
+  }
+
   Future<void> _login() async {
     bool isLoggedIn = await _accountApi.login(username, password);
     if (isLoggedIn) {
@@ -38,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // 회원가입 함수
   void _signup() {
     Navigator.push(
       context,
@@ -63,8 +67,6 @@ class _LoginScreenState extends State<LoginScreen> {
               const _Title(),
               const SizedBox(height: 16.0),
               const _SubTitleId(),
-              // 여기서부턴 이미같은거 넣을경우 넣으면됨
-              // 로그인 폼
               CustomLoginFormField(
                 hintText: 'e-mail',
                 onChanged: (String value) {
@@ -86,30 +88,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue.shade300,
                   shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(3), // 버튼의 각 꼭지점을 둥글게 만듭니다.
+                    borderRadius: BorderRadius.circular(3),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 20,
-                  ), // 버튼의 패딩을 조절할 수 있습니다.
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 ),
                 child: const Text(
                   '로그인',
                   style: TextStyle(
-                      fontSize: 24, // '로그인' 텍스트의 크기를 20폰트로 설정합니다.
-                      color: Colors.black, // '로그인' 텍스트의 색상을 검정색으로 설정합니다.
+                      fontSize: 24,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold),
                 ),
               ),
               TextButton(
                 onPressed: _signup,
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.black,
-                ),
-                child: const Text(
-                  '회원가입',
-                ),
+                style: TextButton.styleFrom(foregroundColor: Colors.black),
+                child: const Text('회원가입'),
               ),
               if (_errorMessage != null)
                 Padding(
@@ -138,10 +133,7 @@ class _Title extends StatelessWidget {
         Text(
           'Moass',
           style: TextStyle(
-            fontSize: 36,
-            fontWeight: FontWeight.w500,
-            color: Colors.blue,
-          ),
+              fontSize: 36, fontWeight: FontWeight.w500, color: Colors.blue),
         ),
       ],
     );
