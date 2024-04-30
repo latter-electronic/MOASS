@@ -14,7 +14,7 @@ import Nameplate from "./pages/nameplate/NameplatePage.jsx"
 export default function App() {
     return (
         <BrowserRouter>
-            <div className="flex min-h-screen font-noto-sans">
+            <div className="flex min-h-screen font-noto-sans ml-1">
                     <Routes>
                         <Route path="/" element={<Layout />}>
                             <Route index element={<Home />} />
