@@ -49,7 +49,7 @@ CREATE TABLE `User`(
                        `connect_flag` INT NULL DEFAULT 0,
                         `position_name` VARCHAR(20) NULL,
                        PRIMARY KEY (`user_id`),
-                       CONSTRAINT `FK_SSAFYUser_TO_User_1` FOREIGN KEY (`user_id`) REFERENCES `SSAFYUser` (`user_id`)
+                       CONSTRAINT `FK_SSAFYUser_TO_User_1` FOREIGN KEY (`user_id`) REFERENCES `SsafyUser` (`user_id`)
 );
 
 CREATE TABLE `Device` (
