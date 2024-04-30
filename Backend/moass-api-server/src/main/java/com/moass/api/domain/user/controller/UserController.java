@@ -15,17 +15,12 @@ import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.nio.ByteBuffer;
 
 @Slf4j
 @RestController
@@ -125,7 +120,8 @@ public class UserController {
                 // teamCode만 제공된 경우
                 return userService.getTeamInfo(teamCode)
                         .flatMap(team -> ApiResponse.ok("조회완료", team))
-                        .onErrorResume(CustomException.class, e -> ApiResponse.error("팀원 조회 실패 : " + e.getMessage(), e.getStatus()));
+                        .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND))
+                        .onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
             } else if (classCode != null) {
                 // classCode만 제공된 경우
                 return userService.getClassInfo(classCode)
