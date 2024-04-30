@@ -20,11 +20,11 @@ export default function HomeTodoListComponent() {
     };
 
     return (
-        <div className="bg-white/5 p-6 rounded-lg max-w-sm">
+        <div className="bg-white/5 p-6 rounded-lg max-w-sm mt-5">
             <h1 className="text-white text-2xl font-bold mb-4">To do List ✨</h1>
             <ul>
                 {todos.map((todo) => (
-                    <li key={todo.id} className="flex items-center mb-2 mr-12">
+                    <li key={todo.id} className="flex items-center mb-2 mr-12 text-xl">
                         <input
                             type="checkbox"
                             checked={todo.isCompleted}

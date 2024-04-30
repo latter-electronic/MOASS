@@ -80,9 +80,9 @@ export default function HomeScheduleComponent() {
         ];
 
     return (
-        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide">
+        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
             {schedules.map((schedule) => (
-                <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md bg-white max-w-screen-sm ml-12`}>
+                <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md w-full bg-white max-w-screen-sm ml-8`}>
                     <div className={`border-l-4 ${schedule.color} pl-4`}>
                         <p className="text-gray-800 font-semibold text-xl mb-1">{schedule.type} {schedule.title}</p>
                         <div className="flex items-center justify-between">
@@ -99,7 +99,7 @@ export default function HomeScheduleComponent() {
                             )}
                         </div>
                     </div>
-                    <div className="ml-auto text-gray-600 text-lg">{schedule.time}</div>
+                    <div className="ml-auto text-gray-600 text-lg mr-2">{schedule.time}</div>
                 </div>
             ))}
         </div>
