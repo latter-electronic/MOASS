@@ -2,7 +2,6 @@ package com.moass.api.domain.file.controller;
 
 import com.moass.api.domain.file.dto.UploadResult;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
-import com.moass.api.global.response.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +11,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.core.SdkResponse;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
+import software.amazon.awssdk.core.async.AsyncResponseTransformer;
+import software.amazon.awssdk.http.SdkHttpResponse;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -61,16 +64,55 @@ public class FileController {
 
         return Mono.fromFuture(future)
                 .map((response) -> {
-                    checkResult(response);
+                    checkUploadResult(response);
                     return ResponseEntity
                             .status(HttpStatus.CREATED)
                             .body(new UploadResult(HttpStatus.CREATED, new String[] {fileKey}));
                 });
     }
 
-    private static void checkResult(SdkResponse result) {
+    @GetMapping(path="/{filekey}")
+    Mono<ResponseEntity<Flux<ByteBuffer>>> downloadFile(@PathVariable("filekey") String filekey) {
+        GetObjectRequest request = GetObjectRequest.builder()
+                .bucket(s3config.getBucket())
+                .key(filekey)
+                .build();
+
+        return Mono.fromFuture(s3client.getObject(request, AsyncResponseTransformer.toPublisher()))
+                .map(response -> {
+                    checkDownloadResult(response.response());
+                    String filename = getMetadataItem(response.response(),"filename",filekey);
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_TYPE, response.response().contentType())
+                            .header(HttpHeaders.CONTENT_LENGTH, Long.toString(response.response().contentLength()))
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                            .body(Flux.from(response));
+                });
+    }
+
+    private String getMetadataItem(GetObjectResponse sdkResponse, String key, String defaultValue) {
+        for (Map.Entry<String, String> entry : sdkResponse.metadata()
+                .entrySet()) {
+            if (entry.getKey()
+                    .equalsIgnoreCase(key)) {
+                return entry.getValue();
+            }
+        }
+        return defaultValue;
+    }
+
+    private static void checkUploadResult(SdkResponse result) {
         if (result.sdkHttpResponse() == null || !result.sdkHttpResponse().isSuccessful()) {
             throw new UploadFailedException(result);
         }
+    }
+
+    private static void checkDownloadResult(GetObjectResponse response) {
+        SdkHttpResponse sdkResponse = response.sdkHttpResponse();
+        if (sdkResponse != null && sdkResponse.isSuccessful()) {
+            return;
+        }
+
+        throw new DownloadFailedException(response);
     }
 }
