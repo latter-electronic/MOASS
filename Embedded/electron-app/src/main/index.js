@@ -63,7 +63,7 @@ function setupPythonProcess(mainWindow) {
           mainWindow.webContents.send('nfc-data', jsonData.data);
           console.log('login success');  
         } else if (["AWAY", "AOD", "LONG_SIT"].includes(jsonData.type)) { // 메시지에 따라 다른 이벤트 전송
-          mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData);
+          mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData.type);
         }
       } catch (error) {
         console.error('Error parsing JSON:', error);

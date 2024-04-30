@@ -66,17 +66,23 @@ while True:
 
             try:
                 response = requests.post(url, json=payload, headers=headers)
+                response.raise_for_status()
                 response_data = response.json()
                 # print("Server response:", response_data)
 
-                if response.status_code == 200 and response_data.get('message') == '로그인 성공':
+                if response_data.get('message') == '로그인 성공':
                     print(json.dumps(response_data))  # 로그인 데이터 출력
                     logged_in = True
                     motion_detected_time = time.time()  # 움직임 감지 시간 초기화
                 else:
                     print("Login failed:", response_data.get('message'))
+                    
+            except requests.exceptions.HTTPError as e:
+                print(f"HTTP error occurred: {e}")  # HTTP 에러 출력
+            except requests.exceptions.RequestException as e:
+                print(f"Request error: {e}")  # 요청 에러 출력
             except Exception as e:
-                print(f"Failed to receive data: {e}")
+                print(f"An error occurred: {e}")  # 기타 예외 처리
 
         elif pir.motion_detected:
             # 로그아웃 상태에서 감지 시 AOD 화면 출력

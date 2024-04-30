@@ -27,12 +27,12 @@ const userAPI = {
 // just add to the DOM global.
 if (process.contextIsolated) {
   try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('userAPI', userAPI)
+    contextBridge.exposeInMainWorld('electron', electronAPI);
+    contextBridge.exposeInMainWorld('userAPI', userAPI);
   } catch (error) {
     console.error(error)
   }
 } else {
-  window.electron = electronAPI
-  window.userAPI = userAPI
+  window.electron = electronAPI;
+  window.userAPI = userAPI;
 }
