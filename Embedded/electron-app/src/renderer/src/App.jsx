@@ -10,6 +10,8 @@ import Alert from "./pages/noti/NotiPage.jsx";
 import CallAlert from "./pages/common/CallAlertPage.jsx";
 
 import Nameplate from "./pages/nameplate/NameplatePage.jsx"
+import TagNFC from "./pages/common/TagNFCPage.jsx";
+import TagSuccess from "./pages/common/TagSuccessPage.jsx";
 
 export default function App() {
     return (
@@ -23,7 +25,9 @@ export default function App() {
                             <Route path="alert" element={<Alert />} />
                         </Route>
                         <Route path="/nameplate" element={<Nameplate />} />
-                        <Route path="callalert" element={<CallAlert />} />
+                        <Route path="/callalert" element={<CallAlert />} />
+                        <Route path="/tagnfc" element={<TagNFC />} />
+                        <Route path="/tagsuccess" element={<TagSuccess />} />
                     </Routes>
             </div>
         </BrowserRouter>

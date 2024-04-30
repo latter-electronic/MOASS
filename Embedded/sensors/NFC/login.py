@@ -36,6 +36,7 @@ while True:
         
         # 라즈베리파이 시리얼 넘버
         device_id = get_serial_number()
+        print(device_id)
         
         # POST 요청 보내기
         url = f'{server_url}/api/device/login'
