@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { fetchAllUsers } from '../../services/userService.js';
 import useUIStore from '../../stores/UIStore.js';
 import {
@@ -29,6 +29,8 @@ import alertIcon_w from './navbar_icon_alert_white.svg';
 import testProfileImg from './profileImageTest.jpg';
 
 export default function Navbar() {
+    const navigate = useNavigate()
+
     const { activeTab, setActiveTab } = useUIStore();  // 네브바 선택 아이콘
     const [users, setUsers] = useState([]); // 사용자 데이터 저장할곳
 
@@ -119,17 +121,25 @@ export default function Navbar() {
         loadUsers(); // 컴포넌트 마운트 시 사용자 데이터 불러오기
     }, []); // 빈 의존성 배열을 제공하여 컴포넌트가 마운트될 때 한 번만 호출되도록 설정
 
+    const callLoginFunction = () => {
+        navigate(`/tagnfc`);
+    };
+
+    const callLogoutFunction = () => {  // 개발용
+        navigate(`/callalert`);
+    };
+
     return (
-        <nav className="flex flex-col justify-between w-navbarWidth h-screen bg-gray-800 text-white p-4">
+        <nav className="flex flex-col justify-between w-navbarWidth h-screen bg-gray-800 text-white p-4 ">
             <div className="flex flex-col items-center">
-                <div 
+                <div
                     tabIndex={0}
                     ref={refs.setReference}
                     aria-labelledby="select-label"
                     aria-autocomplete="none"
                     className={`mt-2 relative flex justify-center items-center size-20 rounded-full ${backgroundColor}`}
                     {...getReferenceProps()}>
-                    <img src={ testProfileImg } alt={selectedItemLabel || "Select..."} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 rounded-full" />
+                    <img src={testProfileImg} alt={selectedItemLabel || "Select..."} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 rounded-full" />
                 </div>
             </div>
             <div className="flex flex-col items-center gap-3">
@@ -147,74 +157,90 @@ export default function Navbar() {
                 </NavLink>
             </div>
             {isOpen && (
-    <FloatingPortal>
-        <FloatingFocusManager context={context} modal={false}>
-            <div
-                ref={refs.setFloating}
-                style={{
-                    ...floatingStyles,
-                    overflowY: "auto",
-                    background: "#fff",
-                    minWidth: 100,
-                    borderRadius: 8,
-                    outline: 0,
-                }}
-                {...getFloatingProps()}
-            >
-                {statusOptions.map((value, i) => (
-                    <div
-                        key={value}
-                        ref={(node) => {
-                            listRef.current[i] = node;
-                        }}
-                        role="option"
-                        tabIndex={i === activeIndex ? 0 : -1}
-                        aria-selected={i === selectedIndex && i === activeIndex}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: '10px 20px', // Padding을 좌우로 증가시켜 주어 좀 더 넓은 간격을 제공
-                            cursor: "default",
-                            color: "#000",
-                            background: i === activeIndex ? "gainsboro" : "",
-                        }}
-                        {...getItemProps({
-                            onClick() {
-                                handleSelect(i);
-                            },
-                            onKeyDown(event) {
-                                if (event.key === "Enter") {
-                                    event.preventDefault();
-                                    handleSelect(i);
-                                }
-                                if (event.key === " " && !isTypingRef.current) {
-                                    event.preventDefault();
-                                    handleSelect(i);
-                                }
-                            },
-                        })}
-                    >
-                        <span style={{ display: 'flex', alignItems: 'center' }}> {/* 상태 원과 텍스트를 함께 묶어 정렬 */}
-                            <span // 상태 색상을 나타내는 원
-                                className={`h-2.5 w-2.5 rounded-full mr-4 ${backgroundColors[value]}`}
-                            ></span>
-                            {value}
-                        </span>
-                        <span
-                            aria-hidden
+                <FloatingPortal>
+                    <FloatingFocusManager context={context} modal={false}>
+                        <div
+                            ref={refs.setFloating}
                             style={{
-                                marginLeft: '20px', // 체크 마크와 옵션명 사이의 간격을 추가
+                                ...floatingStyles,
+                                overflowY: "auto",
+                                background: "#fff",
+                                minWidth: 100,
+                                borderRadius: 8,
+                                outline: 0,
                             }}
+                            {...getFloatingProps()}
                         >
-                            {i === selectedIndex ? " ✓" : ""}
-                        </span>
-                    </div>
-                ))}
-            </div>
-        </FloatingFocusManager>
-    </FloatingPortal>
-)}
+                            {statusOptions.map((value, i) => (
+                                <div
+                                    key={value}
+                                    ref={(node) => {
+                                        listRef.current[i] = node;
+                                    }}
+                                    role="option"
+                                    tabIndex={i === activeIndex ? 0 : -1}
+                                    aria-selected={i === selectedIndex && i === activeIndex}
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '10px 20px', // Padding을 좌우로 증가시켜 주어 좀 더 넓은 간격을 제공
+                                        cursor: "default",
+                                        color: "#000",
+                                        background: i === activeIndex ? "gainsboro" : "",
+                                    }}
+                                    {...getItemProps({
+                                        onClick() {
+                                            handleSelect(i);
+                                        },
+                                        onKeyDown(event) {
+                                            if (event.key === "Enter") {
+                                                event.preventDefault();
+                                                handleSelect(i);
+                                            }
+                                            if (event.key === " " && !isTypingRef.current) {
+                                                event.preventDefault();
+                                                handleSelect(i);
+                                            }
+                                        },
+                                    })}
+                                >
+                                    <span style={{ display: 'flex', alignItems: 'center' }}> {/* 상태 원과 텍스트를 함께 묶어 정렬 */}
+                                        <span // 상태 색상을 나타내는 원
+                                            className={`h-2.5 w-2.5 rounded-full mr-4 ${backgroundColors[value]}`}
+                                        ></span>
+                                        {value}
+                                    </span>
+                                    <span
+                                        aria-hidden
+                                        style={{
+                                            marginLeft: '20px', // 체크 마크와 옵션명 사이의 간격을 추가
+                                        }}
+                                    >
+                                        {i === selectedIndex ? " ✓" : ""}
+                                    </span>
+                                </div>
+                            ))}
+                            <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none"/>
+                            <span className="text-indigo-950 font-bold ml-3">개발용</span>
+                            <div className="flex flex-col justify-around mt-2">
+                                <button
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={() => callLoginFunction()}
+                                >
+                                    로그인
+                                </button>
+                                <button
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={() => console.log('로그아웃 처리')}
+                                >
+                                    로그아웃
+                                </button>
+                            </div>
+                        </div>
+                    </FloatingFocusManager>
+                </FloatingPortal>
+            )}
         </nav>
     );
 }
