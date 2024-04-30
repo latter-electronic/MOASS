@@ -21,6 +21,7 @@ export const deviceLogin = (loginData) => {
  * @returns {Promise} 로그아웃 결과
  */
 export const deviceLogout = () => {
+    console.log(moassApiAxios)
     return axios.post(`${prefix}/logout`);
 };
 

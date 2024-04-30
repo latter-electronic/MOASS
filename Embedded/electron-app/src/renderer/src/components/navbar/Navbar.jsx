@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { deviceLogout } from '../../services/deviceService';
 import { fetchAllUsers } from '../../services/userService.js';
 import useUIStore from '../../stores/UIStore.js';
 import {
@@ -125,8 +126,14 @@ export default function Navbar() {
         navigate(`/tagnfc`);
     };
 
-    const callLogoutFunction = () => {  // 개발용
-        navigate(`/callalert`);
+    const handleLogout = async () => {
+        try {
+            await deviceLogout();
+            console.log('Logged out successfully');
+            navigate('/login'); // Redirect to login page or home page after logout
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
     };
 
     return (
@@ -232,7 +239,7 @@ export default function Navbar() {
                                 </button>
                                 <button
                                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() => console.log('로그아웃 처리')}
+                                    onClick={handleLogout}
                                 >
                                     로그아웃
                                 </button>
