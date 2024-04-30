@@ -104,12 +104,19 @@ public class UserController {
         }
     }
 
+    @GetMapping("/team")
+    public Mono<ResponseEntity<ApiResponse>> getMyTeam(@Login UserInfo userInfo){
+        return userService.getTeamInfo(userInfo.getTeamCode())
+                .flatMap(team -> ApiResponse.ok("조회완료", team))
+                .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
     @GetMapping("/search")
     public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo,
                                                      @RequestParam(name = "teamcode", required = false) String teamCode,
                                                      @RequestParam(name = "classcode", required = false) String classCode,
                                                      @RequestParam(name = "locationcode", required = false) String locationCode) {
-        log.info("Search request received: teamCode={}, classCode={}, locationCode={}", teamCode, classCode, locationCode);
         int paramCount = 0;
         if (teamCode != null) paramCount++;
         if (classCode != null) paramCount++;
@@ -133,7 +140,12 @@ public class UserController {
                         .flatMap(locationInfo -> ApiResponse.ok("조회완료", locationInfo))
                         .onErrorResume(CustomException.class, e -> ApiResponse.error("지역 조회 실패 : " + e.getMessage(), e.getStatus()));
             }
-        } else {  // 매개변수가 너무 많거나 하나도 없는 경우
+        }else if(paramCount==0){
+            return userService.getTeamInfo(userInfo.getTeamCode())
+                    .flatMap(team -> ApiResponse.ok("조회완료", team))
+                    .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND)).onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
+        }
+        else {  // 매개변수가 너무 많거나 하나도 없는 경우
             return ApiResponse.error("정확히 하나의 매개변수만 제공해야 합니다.", HttpStatus.BAD_REQUEST);
         }
     }
