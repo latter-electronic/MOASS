@@ -6,7 +6,9 @@ pipeline {
             steps {
                 dir('Backend/moass-api-server') {
                     sh 'docker build --no-cache -t backend .'
-                    sh 'docker rmi -f $(docker images -f "dangling=true" -q)'
+                    sh '''
+                        docker rmi -f $(docker images -f "dangling=true" -q)
+                    '''
                 }
             }
         }
