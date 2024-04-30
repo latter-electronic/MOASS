@@ -7,7 +7,6 @@ import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.http.async.SdkAsyncHttpClient;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3AsyncClientBuilder;
 import software.amazon.awssdk.services.s3.S3Configuration;
@@ -19,7 +18,7 @@ import java.time.Duration;
 public class S3ClientConfiguration {
 
     @Bean
-    public S3AsyncClient s3client(S3ClientConfigurarionProperties s3props, AwsCredentialsProvider credentialsProvider) {
+    public S3AsyncClient s3client(S3ClientConfigurationProperties s3props, AwsCredentialsProvider credentialsProvider) {
         SdkAsyncHttpClient httpClient = NettyNioAsyncHttpClient.builder()
                 .writeTimeout(Duration.ZERO)
                 .maxConcurrency(64)
@@ -31,7 +30,7 @@ public class S3ClientConfiguration {
                 .build();
 
         S3AsyncClientBuilder b = S3AsyncClient.builder().httpClient(httpClient)
-                .region(Region.of(s3props.getRegion()))
+                .region(s3props.getRegion())
                 .credentialsProvider(credentialsProvider)
                 .serviceConfiguration(serviceConfiguration);
 
@@ -39,7 +38,7 @@ public class S3ClientConfiguration {
     }
 
     @Bean
-    public AwsCredentialsProvider awsCredentialsProvider(S3ClientConfigurarionProperties s3props) {
+    public AwsCredentialsProvider awsCredentialsProvider(S3ClientConfigurationProperties s3props) {
         if (StringUtils.isBlank(s3props.getAccessKeyId())) {
             return DefaultCredentialsProvider.create();
         } else {
