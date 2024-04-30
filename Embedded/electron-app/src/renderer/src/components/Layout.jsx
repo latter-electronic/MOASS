@@ -3,11 +3,11 @@ import { Outlet } from "react-router-dom";
 
 function Layout() {
   return (
-    <div>
+    <div className="flex w-screen">
       <div className="flex-grow">
         <main><Outlet /></main>
       </div>
-      <div className="fixed inset-y-0 right-0">
+      <div className="w-auto">
         <Navbar />
       </div>
     </div>

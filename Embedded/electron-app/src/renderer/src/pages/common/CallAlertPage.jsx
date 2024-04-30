@@ -1,8 +1,16 @@
 import garden from '../../assets/call_garden.svg'
 import mozzy from '../../assets/call_mozzy.svg';
+import { useNavigate } from 'react-router-dom';
+
 export default function CallAlert() {
+  const navigate = useNavigate();
+
+  const handlePageClick = () => { // 개발용 뒤로가기
+    navigate(-1);
+  };
+
   return (
-    <div className="flex flex-row justify-between h-dvh w-full bg-teal-600 p-12 text-center text-white">
+    <div className="flex flex-row justify-between h-dvh w-full bg-teal-600 p-12 text-center text-white" onClick={handlePageClick}>
       <div className="flex-1 flex items-start justify-start">
         <div className="bg-white rounded-full flex items-center px-4 py-2">
           <img

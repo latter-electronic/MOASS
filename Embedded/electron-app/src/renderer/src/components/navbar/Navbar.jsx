@@ -120,19 +120,19 @@ export default function Navbar() {
     }, []); // 빈 의존성 배열을 제공하여 컴포넌트가 마운트될 때 한 번만 호출되도록 설정
 
     return (
-        <nav className="flex flex-col justify-between w-24 h-screen bg-gray-800 text-white p-4">
+        <nav className="flex flex-col justify-between w-navbarWidth h-screen bg-gray-800 text-white p-4">
             <div className="flex flex-col items-center">
                 <div 
                     tabIndex={0}
                     ref={refs.setReference}
                     aria-labelledby="select-label"
                     aria-autocomplete="none"
-                    className={`mt-2 relative flex justify-center items-center w-16 h-16 rounded-full ${backgroundColor}`}
+                    className={`mt-2 relative flex justify-center items-center size-20 rounded-full ${backgroundColor}`}
                     {...getReferenceProps()}>
-                    <img src={ testProfileImg } alt={selectedItemLabel || "Select..."} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full" />
+                    <img src={ testProfileImg } alt={selectedItemLabel || "Select..."} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 rounded-full" />
                 </div>
             </div>
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-3">
                 <NavLink to="/" onClick={() => setActiveTab('/')} className={activeTab === '/' ? '' : 'opacity-50'}>
                     <img src={activeTab === '/' ? mainIcon : mainIcon_w} alt="Main" className="p-2 hover:bg-gray-700 rounded size-24" />
                 </NavLink>

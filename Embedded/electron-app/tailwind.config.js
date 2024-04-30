@@ -16,12 +16,22 @@ module.exports = {
         '16xl': '16rem',
         '18xl': '18rem',      // 224px
         '20xl': '20rem',      // 256px
+        'clock': '5rem',
+        'test': '1.35rem',
       },
       letterSpacing: {
         'ww': '0.5rem',
         'www': '1rem',
         'wwww': '3rem',
         'ww2': '2rem',
+      },
+      colors: {
+        mmBlue: '#28427B',
+        gitlabRed: '#E14328',
+        primary: '#6ECEF5'
+      },
+      width:{
+        navbarWidth: '6.5rem',
       }
     },
   },

@@ -19,23 +19,23 @@ export default function HomeClockComponent() {
     // 현재 시간을 포맷에 맞게 표시
     const formattedTime = currentTime.toLocaleTimeString('ko-KR', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        hour12: false
     });
 
     // 현재 날짜를 포맷에 맞게 표시
     const formattedDate = currentTime.toLocaleDateString('ko-KR', {
-        year: 'numeric',
         month: 'long',
         day: 'numeric',
         weekday: 'long',
     });
 
     return (
-        <div className="text-white rounded-lg p-4 text-center">
-            <div className="text-lg opacity-70">
+        <div className="text-white rounded-lg p-4 text-center font-noto-sans">
+            <div className="text-2xl opacity-70 ml-2`  ">
                 {formattedDate} ☀
             </div>
-            <div className="text-5xl font-semibold">
+            <div className="text-clock leading-none font-semibold">
                 {formattedTime}
             </div>
         </div>

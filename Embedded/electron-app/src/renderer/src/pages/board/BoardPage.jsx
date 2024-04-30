@@ -7,8 +7,8 @@ export default function BoardPage() {
     return(
         <div className="p-6 h-screen w-[91vw]">
             <div className="flex justify-start items-center mb-4 gap-2">
-                <h1 className="text-3xl font-medium">이음보드</h1>
-                <img src={headerIcon} alt="Board Header Icon" className="mt-1" />
+                <h1 className="text-4xl font-medium">이음보드</h1>
+                <img src={headerIcon} alt="Board Header Icon" className="size-8 mt-1" />
             </div>
             <div className="grid grid-cols-2 gap-10 mt-14 ml-6">
                 <div className="flex flex-col gap-8 items-center justify-center h-96 bg-cyan-200/40 rounded-2xl p-4 shadow-lg border-2 border-dashed border-white/45">

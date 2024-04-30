@@ -9,7 +9,7 @@ const statusStyles = {
     const { message, bgColor } = statusStyles[statusId] || statusStyles[0];
   
     return (
-      <div className={`${bgColor} w-32 h-screen flex items-center justify-center`}>
+      <div className={`${bgColor} w-36 h-screen flex items-center justify-center`}>
         <span className="text-white text-6xl font-medium tracking-ww2 [writing-mode:vertical-lr]">
           {message}
         </span>
