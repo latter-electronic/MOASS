@@ -5,9 +5,10 @@ pipeline {
         stage('Backend Build') {
             steps {
                 dir('Backend/moass-api-server') {
-                    sh 'docker stop backend && docker rm backend'
-                    sh 'docker rmi backend'
                     sh 'docker build --no-cache -t backend .'
+                    sh '''
+                        docker rmi -f $(docker images -f "dangling=true" -q)
+                    '''
                 }
             }
         }
