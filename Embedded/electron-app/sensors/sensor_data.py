@@ -40,7 +40,7 @@ pir = MotionSensor(17)  # GPIO 17번 핀에 연결된 PIR 센서 HC-SR501
 motion_detected_time = time.time()
 
 logged_in = False
-print("Waiting for NFC card...")
+print("Waiting for NFC card...", file=sys.stderr)
 
 # 설정된 시간 정의
 NO_MOTION_TIMEOUT = 300  # 5분
@@ -54,7 +54,7 @@ while True:
         if uid is not None:
             # 카드 UID를 헥사 문자열로 변환
             card_serial_id = ''.join(["{0:x}".format(i).zfill(2) for i in uid])
-            print("card UID:", card_serial_id)
+            # print("card UID:", card_serial_id)
             
             # 라즈베리파이 시리얼 넘버
             device_id = get_serial_number()
@@ -66,22 +66,28 @@ while True:
 
             try:
                 response = requests.post(url, json=payload, headers=headers)
+                response.raise_for_status()
                 response_data = response.json()
-                print("Server response:", response_data)
+                # print("Server response:", response_data)
 
-                if response.status_code == 200 and response_data.get('message') == '로그인 성공':
+                if response_data.get('message') == '로그인 성공':
                     print(json.dumps(response_data))  # 로그인 데이터 출력
                     logged_in = True
                     motion_detected_time = time.time()  # 움직임 감지 시간 초기화
                 else:
                     print("Login failed:", response_data.get('message'))
+                    
+            except requests.exceptions.HTTPError as e:
+                print(f"HTTP error occurred: {e}")  # HTTP 에러 출력
+            except requests.exceptions.RequestException as e:
+                print(f"Request error: {e}")  # 요청 에러 출력
             except Exception as e:
-                print(f"Failed to receive data: {e}")
+                print(f"An error occurred: {e}")  # 기타 예외 처리
 
         elif pir.motion_detected:
             # 로그아웃 상태에서 감지 시 AOD 화면 출력
             print("Motion detected in logged out state.")
-            sys.stdout.write("AOD\n")
+            sys.stdout.write(json.dumps({"type": "AOD"}))
             sys.stdout.flush()
 
     elif logged_in: # 로그인 상태
@@ -94,14 +100,14 @@ while True:
         if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
             # 자리 비움 상태 전달
             print("No motion detected for 5 minutes, sending away status.")
-            sys.stdout.write("AWAY\n")
+            sys.stdout.write(json.dumps({"type": "AWAY"}))
             sys.stdout.flush()
             motion_detected_time = current_time  # 타이머 리셋
 
         if current_time - last_motion_time > LONG_SIT_TIMEOUT:
             # 오래 앉아 있음 상태 전달
             print("Continuous motion detected for 2 hours, sending long sit status.")
-            sys.stdout.write("LONG_SIT\n")
+            sys.stdout.write(json.dumps({"type": "LONG_SIT"}))
             sys.stdout.flush()
             last_motion_time = current_time  # 타이머 리셋
     
