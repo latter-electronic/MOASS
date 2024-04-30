@@ -2,10 +2,37 @@ pipeline {
     agent any
     
     stages {
+        stage('Remove Backend Container') {
+            steps {
+                script {
+                    def backendExists = sh(script: 'docker ps -a --format "{{.Names}}" | grep -q "backend" && echo "true" || echo "false"', returnStdout: true).trim()
+
+                    if (backendExists == 'true') {
+                        sh 'docker rm -f backend'
+                    }
+                }
+            }
+        }
+        stage('Remove Backend Image') {
+            steps {
+                script {
+                    def backendExists = sh(script: 'docker images -q backend', returnStatus: true)
+
+                    if (backendExists == 'true') {
+                        sh 'docker rmi -f backend'
+                    }
+                }
+            }
+        }
         stage('Backend Build') {
             steps {
                 dir('Backend/moass-api-server') {
-                    sh 'docker stop backend && docker rm backend'
+                    def backendExists = sh(script: 'docker ps -a --format "{{.Names}}" | grep -q "backend" && echo "true" || echo "false"', returnStdout: true).trim()
+
+                    if (backendExists == 'true') {
+                        sh 'docker rm -f backend'
+                    }
+
                     sh 'docker rmi backend'
                     sh 'docker build --no-cache -t backend .'
                 }
