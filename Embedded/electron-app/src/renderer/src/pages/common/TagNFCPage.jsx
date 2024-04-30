@@ -81,6 +81,14 @@ export default function TagNFC() {
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
+      <div className="absolute top-0 left-0 m-4">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-xl bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          뒤로가기
+        </button>
+      </div>
       <div className="flex-1 flex items-center justify-center">
       <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg">
           <div className="mb-4">
