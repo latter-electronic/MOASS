@@ -29,6 +29,9 @@ module.exports = {
         gitlabRed: '#E14328',
         primary: '#6ECEF5'
       },
+      width:{
+        navbarWidth: '6.5rem',
+      }
     },
   },
   plugins: [require("tailwind-scrollbar-hide")],
