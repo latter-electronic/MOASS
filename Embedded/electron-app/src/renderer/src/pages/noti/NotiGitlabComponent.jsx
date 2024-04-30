@@ -2,16 +2,16 @@ import gitlabIcon from './testImg/gitlab-icon.png';
 
 export default function NotiGitlabComponent() {
     return (
-      <div className="flex items-center p-3 bg-gitlabRed/60 rounded-2xl overflow-hidden shadow-md mb-2">
+      <div className="flex items-center h-20 p-3 bg-gitlabRed/60 rounded-2xl overflow-hidden shadow-md mb-2">
   
   
         {/* 알림 내용 */}
-        <div className="flex-grow">
+        <div className="flex-grow ml-1">
           <div className="flex items-baseline">
-            <span className="text-sm font-medium text-white mr-2">[Gitlab] 알림</span>
-            <span className="text-xs text-gray-400">오전 9:00</span>
+            <span className="text-base font-medium text-white mr-2">[Gitlab] 알림</span>
+            <span className="text-sm text-gray-400">오전 9:00</span>
           </div>
-          <div className="text-white text-sm">
+          <div className="text-white text-base">
               <span className="font-light">한성주 pushed new branch EM/feat/sensors …</span>
           </div>
         </div>
