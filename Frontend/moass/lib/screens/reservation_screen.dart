@@ -8,7 +8,7 @@ class ReservationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: TopBar(
-        title: '예약',
+        title: '유저 예약',
         icon: Icons.edit_calendar_outlined,
       ),
     );

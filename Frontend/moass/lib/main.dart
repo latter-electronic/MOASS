@@ -24,25 +24,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Moass',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        // home: const HomeScreen(),
-        // FutureBuilder로 비동기 작업의 결과에 따라 다른 페이지 표시
-        home: FutureBuilder(
-            // _getLoginStatus 함수의 결과를 기다림
-            future: _getLoginStatus(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return snapshot.data == true
-                    ? const HomeScreen()
-                    : const LoginScreen();
-              } else {
-                return const CircularProgressIndicator();
-              }
-            }));
+      title: 'Moass',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      // home: const HomeScreen(),
+      // FutureBuilder로 비동기 작업의 결과에 따라 다른 페이지 표시
+      home: FutureBuilder(
+          // _getLoginStatus 함수의 결과를 기다림
+          future: _getLoginStatus(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return snapshot.data == true
+                  ? const HomeScreen()
+                  : const LoginScreen();
+            } else {
+              return const CircularProgressIndicator();
+            }
+          }),
+    );
   }
 
   // SharedPreferences 라이브러리를 사용해서 저장된 로그인 상태를 불러옴
