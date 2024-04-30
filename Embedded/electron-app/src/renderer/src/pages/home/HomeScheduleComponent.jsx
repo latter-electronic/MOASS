@@ -84,22 +84,22 @@ export default function HomeScheduleComponent() {
             {schedules.map((schedule) => (
                 <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md bg-white max-w-screen-sm ml-12`}>
                     <div className={`border-l-4 ${schedule.color} pl-4`}>
-                        <p className="text-gray-800 font-semibold">{schedule.type} {schedule.title}</p>
+                        <p className="text-gray-800 font-semibold text-xl mb-1">{schedule.type} {schedule.title}</p>
                         <div className="flex items-center justify-between">
-                            <p className="text-gray-600">{schedule.location}</p>
+                            <p className="text-gray-600 text-lg">{schedule.location}</p>
                             {schedule.avatars && (
                                 <div className="flex -space-x-2 ml-4">
                                     {schedule.avatars.map((avatar, index) => (
-                                        <img key={index} src={avatar} alt={`participant ${index + 1}`} className="w-6 h-6 rounded-full border-2 border-white shadow-sm" />
+                                        <img key={index} src={avatar} alt={`participant ${index + 1}`} className="size-8 rounded-full border-2 border-white shadow-sm" />
                                     ))}
                                     {schedule.participants > schedule.avatars.length && (
-                                        <span className="w-7 h-7 rounded-full text-xs text-black bg-gray-200 flex items-center justify-center border-2 border-white shadow-sm">+{schedule.participants - schedule.avatars.length}</span>
+                                        <span className="size-8 rounded-full text-sm text-black bg-gray-200 flex items-center justify-center border-2 border-white shadow-sm">+{schedule.participants - schedule.avatars.length}</span>
                                     )}
                                 </div>
                             )}
                         </div>
                     </div>
-                    <div className="ml-auto text-gray-600">{schedule.time}</div>
+                    <div className="ml-auto text-gray-600 text-lg">{schedule.time}</div>
                 </div>
             ))}
         </div>

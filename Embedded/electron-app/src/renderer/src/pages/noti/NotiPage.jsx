@@ -7,7 +7,7 @@ import mozzySleep from './testImg/mozzy-sleep.svg'
 
 export default function NotiPage() {
     return (
-        <div className="flex h-screen w-[99vw]">
+        <div className="flex h-screen">
         {/* 왼쪽 섹션: 알림 목록 */}
         <div className="w-1/3 bg-navy p-6 flex flex-col">
           <div className="flex justify-between items-center mb-4">

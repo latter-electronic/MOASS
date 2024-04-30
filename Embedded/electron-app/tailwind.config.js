@@ -16,6 +16,7 @@ module.exports = {
         '16xl': '16rem',
         '18xl': '18rem',      // 224px
         '20xl': '20rem',      // 256px
+        'clock': '5rem'
       },
       letterSpacing: {
         'ww': '0.5rem',
