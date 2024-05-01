@@ -1,5 +1,6 @@
 package com.moass.api.domain;
 
+import com.moass.api.domain.user.dto.UserCreateDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
 import org.junit.jupiter.api.*;
@@ -175,4 +176,54 @@ public class UserTest {
         }
     }
 
+    @Nested
+    @DisplayName("[POST] 유저 등록")
+    class 유저등록 {
+
+        @BeforeEach
+        void setup(){
+            // 사용자 로그인
+            login(new UserLoginDto("master@com", "1234"));
+
+        }
+        @Test
+        @DisplayName("[200] 유저등록")
+        void 유저등록성공(){
+            webTestClient.post().uri("/user/create")
+                    .header("Authorization", accessToken) // 설정된 accessToken 사용
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new UserCreateDto("1100001",1,"E207","정종길",null))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @DisplayName("[403] 등록권한 부족")
+        void 유저등록권한부족(){
+            login(new UserLoginDto("weon1009@gmail.com", "1234"));
+            webTestClient.post().uri("/user/create")
+                    .header("Authorization", accessToken) // 설정된 accessToken 사용
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new UserCreateDto("1100002",1,"E207","정종길",null))
+                    .exchange()
+                    .expectStatus().isEqualTo(403)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("403");
+        }
+
+        @Test
+        @DisplayName("[409] 이미 존재하는 학번")
+        void 유저학번중복(){
+            webTestClient.post().uri("/user/create")
+                    .header("Authorization", accessToken) // 설정된 accessToken 사용
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new UserCreateDto("1100001",1,"E207","정종길",null))
+                    .exchange()
+                    .expectStatus().isEqualTo(409)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("409");
+        }
+    }
 }
