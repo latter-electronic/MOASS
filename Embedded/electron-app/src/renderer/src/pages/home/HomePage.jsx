@@ -5,6 +5,8 @@ import Calendar from './CalendarWidget.jsx'
 import TodoList from './HomeTodoListComponent.jsx'
 import Schedule from './HomeScheduleComponent.jsx'
 
+import testImg1 from './test/swiper-slide-test-img-1.png'
+import testImg2 from './test/swiper-slide-test-img-2.jpg'
 import Mozzy from '../../assets/Mozzy.svg'
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -31,17 +33,17 @@ export default function HomePage() {
             {/* 전체 레이아웃을 3열로 분할하고, 각 열을 화면 높이와 동일하게 설정 */}
             <div className="grid grid-cols-[0.5fr,2.5fr,1fr] gap-8 h-full">
                 {/* 1열: 시계, 달력 위아래로 배치 */}
-                <div className="ml-1 flex flex-col space-y-8">
+                <div className="ml-1 flex flex-col space-y-8 gap-12">
                     <div onClick={() => callAlertFunction()}>
                         <Clock />
                     </div>
-                    <div className="flex h-96 w-56 justify-center ml-3" >
+                    <div className="flex h-80 w-56 justify-center ml-3" >
                         <Swiper
                             style={{
                                 "--swiper-theme-color": "#6ECEF5", /* 선택된 동그란 바의 색상 */
                                 "--swiper-pagination-bullet-inactive-color": "#FFFFFF", /* 선택되지 않은 동그란 바의 색상 */
                                 "--swiper-pagination-bullet-width": "12px",
-                                "--swiper-pagination-bullet-height": "15px",
+                                "--swiper-pagination-bullet-height": "12px",
                                 display: 'flex',
                                 flexDirection: 'column'
                             }}
@@ -52,8 +54,8 @@ export default function HomePage() {
                             className="mySwiper"
                         >
                             <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><Calendar /></SwiperSlide>
-                            <SwiperSlide>Slide 2</SwiperSlide>
-                            <SwiperSlide>Slide 3</SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src={testImg1} alt="테스트이미지1" className="mb-14 rounded-md" /></SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src={testImg2} alt="테스트이미지2" className="mb-14 rounded-md" /></SwiperSlide>
                         </Swiper>
                     </div>
                 </div>

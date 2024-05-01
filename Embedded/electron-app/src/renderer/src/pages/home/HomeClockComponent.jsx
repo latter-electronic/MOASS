@@ -45,7 +45,7 @@ export default function HomeClockComponent() {
     });
 
     return (
-        <div className="text-white rounded-lg p-4 text-center font-noto-sans">
+        <div className="text-white rounded-lg p-4 text-center font-noto-sans mt-2">
             <div className="flex flex-row text-2xl opacity-70 ml-2">
                 <span className="ml-4">{formattedDate}</span> {weatherIcon? <img src={weatherIcon} alt="Weather Icon" className="size-8"/> : '☀'}
             </div>
