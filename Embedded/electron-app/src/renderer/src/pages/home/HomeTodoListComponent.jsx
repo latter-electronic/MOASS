@@ -37,6 +37,14 @@ export default function HomeTodoListComponent() {
         loadTodos();
     }, []);
 
+    // const toggleTodo = (todoId) => {     // 보여주기용 todo
+    //     setTodos(
+    //         todos.map((todo) =>
+    //             todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
+    //         )
+    //     );
+    // };
+
     const toggleTodo = async (todoId) => {
         const todo = todos.find(t => t.todoId === todoId);
         const updatedTodo = {
