@@ -31,6 +31,7 @@ dependencies:
     flutter:
         sdk: flutter
     http: ^1.2.1
+    image_picker: ^1.1.0
 
     # The following adds the Cupertino Icons font to your application.
     # Use with the CupertinoIcons class for iOS style icons.
@@ -62,6 +63,9 @@ flutter:
         - assets/img/logo_basic.png
         - assets/img/logo_ssafy_white.png
         - assets/img/crying_mozzi.png
+        - assets/img/logo_mattermost.png
+        - assets/img/logo_jira.png
+        - assets/img/logo_gitlab.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
