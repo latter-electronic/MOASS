@@ -40,4 +40,9 @@ public interface SsafyUserRepository extends ReactiveCrudRepository<SsafyUser, I
 
     @Query("SELECT EXISTS(SELECT 1 FROM SsafyUser WHERE user_name = :userName AND job_code <= :jobCode)")
     Mono<Boolean> exisisByUserName(String userName, Integer jobCode);
+
+    // saveForce 코드 완성하기
+    @Query("INSERT INTO `SsafyUser` (user_id, job_code, team_code,user_name,card_serial_id) " +
+            "VALUES (:#{#ssafyUser.userId}, :#{#ssafyUser.jobCode}, :#{#ssafyUser.teamCode}, :#{#ssafyUser.userName}, :#{#ssafyUser.cardSerialId})")
+    Mono<SsafyUser> saveForce(SsafyUser ssafyUser);
 }
