@@ -2,6 +2,7 @@ package com.moass.api.domain.file.controller;
 
 import com.moass.api.domain.file.dto.UploadResult;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/upload")
+@Slf4j
 public class FileController {
     private final S3AsyncClient s3client;
     private final S3ClientConfigurationProperties s3config;
@@ -44,7 +46,6 @@ public class FileController {
             throw new UploadFailedException(HttpStatus.BAD_REQUEST.value(), Optional.of("required header missing: Content-Length"));
         }
 
-        String fileKey = UUID.randomUUID().toString();
         Map<String, String> metadata = new HashMap<String, String>();
         MediaType mediaType = headers.getContentType();
 
@@ -52,11 +53,14 @@ public class FileController {
             mediaType = MediaType.APPLICATION_OCTET_STREAM;
         }
 
+        String fileKey = UUID.randomUUID().toString() + "." + mediaType.getSubtype();
+
+        log.info("[I95] uploadHandler: mediaType{}, length={}", mediaType, length);
         CompletableFuture<PutObjectResponse> future = s3client
                 .putObject(PutObjectRequest.builder()
                                 .bucket(s3config.getBucket())
                                 .contentLength(length)
-                                .key(fileKey.toString())
+                                .key(fileKey)
                                 .contentType(mediaType.toString())
                                 .metadata(metadata)
                                 .build(),
