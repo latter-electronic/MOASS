@@ -13,7 +13,7 @@ public interface SsafyUserRepository extends ReactiveCrudRepository<SsafyUser, I
     Mono<SsafyUser> findByCardSerialId(String cardSerialId);
 
     @Query("SELECT u.user_id, u.user_email, u.status_id, u.password, u.profile_img, u.background_img, " +
-            "u.rayout, u.connect_flag, s.card_serial_id, s.job_code, s.team_code, s.user_name,u.position_name " +
+            "u.layout, u.connect_flag, s.card_serial_id, s.job_code, s.team_code, s.user_name,u.position_name " +
             "FROM SsafyUser s INNER JOIN User u ON u.user_id = s.user_id " +
             "WHERE s.card_serial_id = :cardSerialId")
     Mono<UserDetail> findUserDetailByCardSerialId(String cardSerialId);;

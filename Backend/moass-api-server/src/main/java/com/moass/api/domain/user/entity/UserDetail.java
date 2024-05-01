@@ -23,7 +23,7 @@ public class UserDetail {
 
     private String backgroundImg;
 
-    private Integer rayout;
+    private Integer layout;
 
     private Integer connectFlag;
 
@@ -44,7 +44,7 @@ public class UserDetail {
         this.password = user.getPassword();
         this.profileImg = user.getProfileImg();
         this.backgroundImg = user.getBackgroundImg();
-        this.rayout = user.getRayout();
+        this.layout = user.getLayout();
         this.connectFlag = user.getConnectFlag();
         this.positionName = user.getPositionName();
         this.cardSerialId = ssafyUser.getCardSerialId();

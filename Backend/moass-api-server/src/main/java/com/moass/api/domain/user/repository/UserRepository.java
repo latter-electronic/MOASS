@@ -10,13 +10,13 @@ import reactor.core.publisher.Mono;
 public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
 
     @Query("SELECT u.user_id, u.user_email, u.status_id, u.password, u.profile_img, u.background_img, " +
-            "u.rayout, u.connect_flag, s.card_serial_id, s.job_code, s.team_code, s.user_name ,u.position_name " +
+            "u.layout, u.connect_flag, s.card_serial_id, s.job_code, s.team_code, s.user_name ,u.position_name " +
             "FROM User u INNER JOIN SsafyUser s ON u.user_id = s.user_id " +
             "WHERE u.user_email = :userEmail")
     Mono<UserDetail> findUserDetailByUserEmail(String userEmail);
 
     @Query("SELECT u.user_id, u.user_email, u.status_id, u.password, u.profile_img, u.background_img, " +
-            "u.rayout, u.connect_flag, s.card_serial_id, s.job_code, s.team_code, s.user_name, u.position_name " +
+            "u.layout, u.connect_flag, s.card_serial_id, s.job_code, s.team_code, s.user_name, u.position_name " +
             "FROM User u INNER JOIN SsafyUser s ON u.user_id = s.user_id " +
             "WHERE s.team_code = :teamCode " +
             "ORDER BY s.user_name ASC")

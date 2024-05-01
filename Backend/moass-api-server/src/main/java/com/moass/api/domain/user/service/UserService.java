@@ -107,8 +107,8 @@ public class UserService {
                         isUpdated = true;
                     }
                     // 추가 필드 업데이트
-                    if (userUpdateDto.getRayout() != null && !userUpdateDto.getRayout().equals(user.getRayout())) {
-                        user.setRayout(userUpdateDto.getRayout());
+                    if (userUpdateDto.getLayout() != null && !userUpdateDto.getLayout().equals(user.getLayout())) {
+                        user.setLayout(userUpdateDto.getLayout());
                         isUpdated = true;
                     }
                     if (userUpdateDto.getConnectFlag() != null && !userUpdateDto.getConnectFlag().equals(user.getConnectFlag())) {
