@@ -40,6 +40,8 @@ export default function HomePage() {
                             style={{
                                 "--swiper-theme-color": "#6ECEF5", /* 선택된 동그란 바의 색상 */
                                 "--swiper-pagination-bullet-inactive-color": "#FFFFFF", /* 선택되지 않은 동그란 바의 색상 */
+                                "--swiper-pagination-bullet-width": "12px",
+                                "--swiper-pagination-bullet-height": "15px",
                                 display: 'flex',
                                 flexDirection: 'column'
                             }}
