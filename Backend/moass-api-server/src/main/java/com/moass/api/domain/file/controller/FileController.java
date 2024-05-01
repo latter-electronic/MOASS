@@ -56,7 +56,7 @@ public class FileController {
                 .putObject(PutObjectRequest.builder()
                                 .bucket(s3config.getBucket())
                                 .contentLength(length)
-                                .key(fileKey)
+                                .key(fileKey.toString())
                                 .contentType(mediaType.toString())
                                 .metadata(metadata)
                                 .build(),

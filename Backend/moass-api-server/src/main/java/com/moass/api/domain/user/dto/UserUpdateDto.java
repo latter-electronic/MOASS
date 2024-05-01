@@ -19,7 +19,7 @@ public class UserUpdateDto {
 
     private String backgroundImg;
 
-    private Integer rayout;
+    private Integer layout;
 
     private Integer connectFlag;
 
