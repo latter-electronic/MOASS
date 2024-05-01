@@ -5,18 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.AuthConverter;
 import com.moass.api.global.auth.AuthManager;
-import com.moass.api.global.auth.CustomReactiveUserDetailsService;
-import com.moass.api.global.auth.CustomUserDetails;
+import com.moass.api.global.handler.CustomAccessDeniedHandler;
 import com.moass.api.global.handler.CustomAuthenticationEntryPoint;
 import com.moass.api.global.handler.CustomAuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -25,12 +23,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.util.pattern.PathPatternParser;
-import reactor.core.publisher.Mono;
+
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebFluxSecurity
-
+@EnableReactiveMethodSecurity
 public class SecurityConfig {
     private final UserRepository userRepository;
 
@@ -85,8 +83,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .exceptionHandling(authenticationManager -> authenticationManager
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(new ObjectMapper())))
-                // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(new ObjectMapper()))
+                        .accessDeniedHandler(new CustomAccessDeniedHandler(new ObjectMapper())))
                 .build();
     }
 
