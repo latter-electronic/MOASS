@@ -1,5 +1,6 @@
 package com.moass.api.global.config;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -15,6 +16,7 @@ import software.amazon.awssdk.utils.StringUtils;
 import java.time.Duration;
 
 @Configuration
+@EnableConfigurationProperties(S3ClientConfigurationProperties.class)
 public class S3ClientConfiguration {
 
     @Bean
@@ -29,10 +31,15 @@ public class S3ClientConfiguration {
                 .chunkedEncodingEnabled(true)
                 .build();
 
-        S3AsyncClientBuilder b = S3AsyncClient.builder().httpClient(httpClient)
+        S3AsyncClientBuilder b = S3AsyncClient.builder()
+                .httpClient(httpClient)
                 .region(s3props.getRegion())
                 .credentialsProvider(credentialsProvider)
                 .serviceConfiguration(serviceConfiguration);
+
+        if (s3props.getEndpoint() != null) {
+            b = b.endpointOverride(s3props.getEndpoint());
+        }
 
         return b.build();
     }
