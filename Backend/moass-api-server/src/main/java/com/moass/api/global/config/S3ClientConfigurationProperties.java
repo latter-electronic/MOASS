@@ -1,5 +1,6 @@
 package com.moass.api.global.config;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,16 +9,14 @@ import software.amazon.awssdk.regions.Region;
 
 import java.net.URI;
 
-@Getter
-@Setter
-@Component
 @ConfigurationProperties(prefix = "aws.s3")
+@Data
 public class S3ClientConfigurationProperties {
 
-    private Region region;
+    private Region region = Region.AP_NORTHEAST_2;
     private String accessKeyId;
     private String secretAccessKey;
-//    private URI endpoint;
+    private URI endpoint = null;
     private String bucket;
 
 }
