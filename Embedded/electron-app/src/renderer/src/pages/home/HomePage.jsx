@@ -35,11 +35,13 @@ export default function HomePage() {
                     <div onClick={() => callAlertFunction()}>
                         <Clock />
                     </div>
-                    <div className="flex h-96 w-56 justify-center p-4 ml-3 bg-primary/20" >
+                    <div className="flex h-96 w-56 justify-center ml-3" >
                         <Swiper
                             style={{
                                 "--swiper-theme-color": "#6ECEF5", /* 선택된 동그란 바의 색상 */
                                 "--swiper-pagination-bullet-inactive-color": "#FFFFFF", /* 선택되지 않은 동그란 바의 색상 */
+                                display: 'flex',
+                                flexDirection: 'column'
                             }}
                             pagination={{
                                 dynamicBullets: true,
@@ -47,7 +49,7 @@ export default function HomePage() {
                             modules={[Pagination]}
                             className="mySwiper"
                         >
-                            <SwiperSlide><Calendar /></SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><Calendar /></SwiperSlide>
                             <SwiperSlide>Slide 2</SwiperSlide>
                             <SwiperSlide>Slide 3</SwiperSlide>
                         </Swiper>
