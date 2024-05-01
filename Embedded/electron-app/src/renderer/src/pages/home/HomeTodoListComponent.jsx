@@ -37,12 +37,28 @@ export default function HomeTodoListComponent() {
         loadTodos();
     }, []);
 
-    const toggleTodo = (todoId) => {
-        setTodos(
-            todos.map((todo) =>
-                todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
-            )
-        );
+    const toggleTodo = async (todoId) => {
+        const todo = todos.find(t => t.todoId === todoId);
+        const updatedTodo = {
+            ...todo,
+            completedFlag: !todo.completedFlag
+        };
+
+        try {
+            const response = await updateTodo({
+                todoId: updatedTodo.todoId,
+                completedFlag: updatedTodo.completedFlag
+            });
+            if (response.data && response.status === 200) {
+                setTodos(
+                    todos.map(t => t.todoId === todoId ? updatedTodo : t)
+                );
+            } else {
+                throw new Error("Server responded with no error but no data or unexpected status");
+            }
+        } catch (err) {
+            setError("Todo 상태를 업데이트하는데 실패했습니다: " + err.message);
+        }
     };
 
     if (isLoading) return <div>로딩중...</div>;
@@ -57,7 +73,7 @@ export default function HomeTodoListComponent() {
                         <input
                             id={`todo-${todo.todoId}`}
                             type="checkbox"
-                            checked={todo.isCompleted}
+                            checked={todo.completedFlag}
                             onChange={() => toggleTodo(todo.todoId)}
                             className="form-checkbox h-5 w-5 text-blue-600"
                         />
