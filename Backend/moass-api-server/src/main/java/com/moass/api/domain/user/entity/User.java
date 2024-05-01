@@ -32,8 +32,8 @@ public class User {
     @Column("background_img")
     private String backgroundImg;
 
-    @Column("rayout")
-    private Integer rayout;
+    @Column("layout")
+    private Integer layout;
 
     @Column("connect_flag")
     private Integer connectFlag;
