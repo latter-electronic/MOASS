@@ -74,6 +74,7 @@ public class SecurityConfig {
                                 .pathMatchers("/user/signup").permitAll()
                                 .pathMatchers("/stream/**").permitAll()
                                 .pathMatchers("/user/profileImg").permitAll()
+                                .pathMatchers("/upload/**").permitAll()
                                 .pathMatchers("/**").authenticated()
                                 .anyExchange().permitAll()
                 )
