@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactor.blockhound. BlockHound;
+import reactor.core.publisher.Hooks;
 
 import java.util.TimeZone;
 
@@ -17,7 +18,7 @@ public class MoassApiServerApplication {
     }
 
     public static void main(String[] args) {
-
+        Hooks.onOperatorDebug();
         BlockHound.install(new BlockHoundCustomConfiguration());
         SpringApplication.run(MoassApiServerApplication.class, args);
     }
