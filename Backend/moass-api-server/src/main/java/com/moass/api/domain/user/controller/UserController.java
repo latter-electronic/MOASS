@@ -79,7 +79,7 @@ public class UserController {
         String refreshToken = authHeader.substring(7);
         return userService.refreshAccessToken(refreshToken)
                 .flatMap(tokens -> ApiResponse.ok("토큰이 정상적으로 갱신되었습니다.", tokens))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : ", e.getStatus()));
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : "+e.getMessage(), e.getStatus()));
     }
 
 
