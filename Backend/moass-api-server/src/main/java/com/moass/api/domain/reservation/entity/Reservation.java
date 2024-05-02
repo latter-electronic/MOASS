@@ -1,5 +1,6 @@
 package com.moass.api.domain.reservation.entity;
 
+import com.moass.api.domain.reservation.dto.ReservationCreateDto;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -30,5 +31,13 @@ public class Reservation {
 
     @Column("color_code")
     private String colorCode;
+
+    public Reservation(ReservationCreateDto reservationCreateDto){
+        this.classCode=reservationCreateDto.getClassCode();
+        this.category=reservationCreateDto.getCategory();
+        this.timeLimit=reservationCreateDto.getTimeLimit();
+        this.reservationName=reservationCreateDto.getReservationName();
+        this.colorCode=reservationCreateDto.getColorCode();
+    }
 }
 

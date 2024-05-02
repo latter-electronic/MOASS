@@ -94,24 +94,24 @@ CREATE TABLE `Reservation` (
 
 
 CREATE TABLE `ReservationInfo` (
-                                   `reservation_info_id` INT NOT NULL AUTO_INCREMENT,
+                                   `info_id` INT NOT NULL AUTO_INCREMENT,
                                    `reservation_id` INT NOT NULL,
                                    `user_id` VARCHAR(20) NOT NULL,
-                                   `reservation_info_state` INT NOT NULL,
-                                   `reservation_info_name` VARCHAR(8) NOT NULL,
-                                   `reservation_info_date` DATE NOT NULL,
-                                   `reservation_info_time` INT NOT NULL,
+                                   `info_state` INT NOT NULL,
+                                   `info_name` VARCHAR(8) NOT NULL,
+                                   `info_date` DATE NOT NULL,
+                                   `info_time` INT NOT NULL,
                                    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                    `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                   PRIMARY KEY (`reservation_info_id`),
+                                   PRIMARY KEY (`info_id`),
                                    FOREIGN KEY (`reservation_id`) REFERENCES `Reservation`(`reservation_id`),
                                    FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
 );
 
 CREATE TABLE `UserReservationInfo` (
-                                       `reservation_info_id` INT NOT NULL,
+                                       `info_id` INT NOT NULL,
                                        `user_id` VARCHAR(20) NOT NULL,
-                                       PRIMARY KEY (`reservation_info_id`, `user_id`),
-                                       FOREIGN KEY (`reservation_info_id`) REFERENCES `ReservationInfo` (`reservation_info_id`),
+                                       PRIMARY KEY (`info_id`, `user_id`),
+                                       FOREIGN KEY (`info_id`) REFERENCES `ReservationInfo` (`info_id`),
                                        FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );

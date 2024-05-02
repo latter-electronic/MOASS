@@ -24,4 +24,7 @@ public interface ClassRepository extends ReactiveCrudRepository<Class, Integer> 
             "JOIN User u ON su.user_id = u.user_id " +
             "WHERE c.class_code = :classCode")
     Flux<UserSearchDetail> findAllTeamsAndUsersByClassCode(String classCode);
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Class WHERE class_code = :classCode)")
+    Mono<Boolean> existsByClassCode(String classCode);
 }

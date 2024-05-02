@@ -19,8 +19,8 @@ import java.time.LocalDate;
 public class ReservationInfo extends Auditable {
 
     @Id
-    @Column("reservation_info_id")
-    private Integer reservationInfoId;
+    @Column("info_id")
+    private Integer infoId;
 
     @Column("reservation_id")
     private Integer reservationId;
@@ -28,17 +28,17 @@ public class ReservationInfo extends Auditable {
     @Column("user_id")
     private String userId;
 
-    @Column("reservation_info_state")
-    private Integer reservationInfoState;
+    @Column("info_state")
+    private Integer infoState;
 
-    @Column("reservation_info_name")
-    private String reservationInfoName;
+    @Column("info_name")
+    private String infoName;
 
-    @Column("reservation_info_date")
-    private LocalDate reservationInfoDate;
+    @Column("info_date")
+    private LocalDate infoDate;
 
-    @Column("reservation_info_time")
-    private Integer reservationInfoTime;
+    @Column("info_time")
+    private Integer infoTime;
 
 
 }
