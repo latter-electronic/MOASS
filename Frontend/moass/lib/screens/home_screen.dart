@@ -17,11 +17,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 2;
 
-  static const List<Widget> _widgetOptions = [
-    WorkScreen(),
-    ReservationScreen(),
-    MainHomeScreen(),
-    SeatScreen(),
+  static final List<Widget> _widgetOptions = [
+    const WorkScreen(),
+    const ReservationScreen(),
+    const MainHomeScreen(),
+    const SeatScreen(),
     BoardScreen(),
   ];
 
