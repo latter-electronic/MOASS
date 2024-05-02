@@ -6,6 +6,7 @@ pipeline {
 	        steps {
 				dir('Embedded/electron-app') {
                     sh 'docker build -t embedded .'
+                    sh 'docker run --name embedded embedded'
                 }
             }
         }
