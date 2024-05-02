@@ -5,7 +5,11 @@ pipeline {
         stage('Embedded Build') {
 	        steps {
 				dir('Embedded/electron-app') {
-                    sh 'docker build -t dongho416/embedded:test .'
+                    sh 'docker build --no-cache -t dongho416/embedded:test .'
+                    sh '''
+                        docker rmi -f $(docker images -f "dangling=true" -q)
+                    '''
+                    sh 'docker push dongho416/embedded:test'
                 }
             }
         }
