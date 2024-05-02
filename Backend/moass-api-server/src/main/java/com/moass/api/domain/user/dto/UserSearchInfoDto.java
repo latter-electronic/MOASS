@@ -28,6 +28,8 @@ public class UserSearchInfoDto {
     private String profileImg;
     private Integer jobCode;
     private Integer connectFlag;
+    private Integer xCoord;
+    private Integer yCoord;
 
     public UserSearchInfoDto(UserSearchDetail userSearchDetail){
         this.locationCode = userSearchDetail.getLocationCode();
@@ -43,6 +45,8 @@ public class UserSearchInfoDto {
         this.profileImg = userSearchDetail.getProfileImg();
         this.jobCode = userSearchDetail.getJobCode();
         this.connectFlag = userSearchDetail.getConnectFlag();
+        this.xCoord = userSearchDetail.getXCoord();
+        this.yCoord = userSearchDetail.getYCoord();
     }
 
     public UserSearchInfoDto(Location location, Class classEntity, Team team, UserSearchDetail userSearchDetail){
