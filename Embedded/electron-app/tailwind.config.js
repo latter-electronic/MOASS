@@ -32,6 +32,7 @@ module.exports = {
       },
       width:{
         navbarWidth: '6.5rem',
+        '76': '19rem'
       }
     },
   },
