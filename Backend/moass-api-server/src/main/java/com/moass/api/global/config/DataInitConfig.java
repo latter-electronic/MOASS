@@ -33,7 +33,7 @@ public class DataInitConfig implements CommandLineRunner {
             insertUsers("ghehd1125@gmail.com","1057753","1234");
             insertUsers("kain9101@naver.com","1053374","1234");
             insertUsers("chiru7080@daum.net","1055605","1234");
-
+            insertUsers("master@com","1000000","1234");
         }
     }
 

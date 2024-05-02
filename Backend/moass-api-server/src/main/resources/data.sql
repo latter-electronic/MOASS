@@ -34,6 +34,7 @@ INSERT INTO `Team` (`team_code`, `team_name`, `class_code`) VALUES
     ('Z901','Z901','Z9'),('Z902','Z902','Z9'),('Z903','Z903','Z9'),('Z904','Z904','Z9');
 
 INSERT INTO `SsafyUser` (`user_id`, `job_code`, `team_code`, `user_name`,`card_serial_id`) VALUES
+                                                                                               ('1000000',4,'A101','마스타','MASTERKEY'),
                                                                                                ('1058448',1,'E203','원종현','04fc4ccc780000'),
                                                                                                ('1053374',1,'E203','손종민','0422a6bd790000'),
                                                                                                ('1052881',1,'E203','한성주','043d2bcc780000'),

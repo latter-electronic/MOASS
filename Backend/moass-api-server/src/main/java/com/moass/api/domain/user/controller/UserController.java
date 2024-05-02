@@ -1,5 +1,7 @@
 package com.moass.api.domain.user.controller;
 
+import com.moass.api.domain.file.controller.FileController;
+import com.moass.api.domain.user.dto.UserCreateDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
 import com.moass.api.domain.user.dto.UserUpdateDto;
@@ -12,14 +14,20 @@ import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
+import com.moass.api.global.service.S3Service;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.nio.ByteBuffer;
 
 
 @Slf4j
@@ -122,20 +130,17 @@ public class UserController {
         if (classCode != null) paramCount++;
         if (locationCode != null) paramCount++;
 
-        if (paramCount == 1) {  // 하나의 매개변수만 제공된 경우
+        if (paramCount == 1) {
             if (teamCode != null) {
-                // teamCode만 제공된 경우
                 return userService.getTeamInfo(teamCode)
                         .flatMap(team -> ApiResponse.ok("조회완료", team))
                         .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND))
                         .onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
             } else if (classCode != null) {
-                // classCode만 제공된 경우
                 return userService.getClassInfo(classCode)
                         .flatMap(classInfo -> ApiResponse.ok("조회완료", classInfo))
                         .onErrorResume(CustomException.class, e -> ApiResponse.error("클래스 조회 실패 : " + e.getMessage(), e.getStatus()));
             } else {
-                // locationCode만 제공된 경우
                 return userService.getLocationInfo(locationCode)
                         .flatMap(locationInfo -> ApiResponse.ok("조회완료", locationInfo))
                         .onErrorResume(CustomException.class, e -> ApiResponse.error("지역 조회 실패 : " + e.getMessage(), e.getStatus()));
@@ -145,7 +150,7 @@ public class UserController {
                     .flatMap(team -> ApiResponse.ok("조회완료", team))
                     .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND)).onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
         }
-        else {  // 매개변수가 너무 많거나 하나도 없는 경우
+        else {
             return ApiResponse.error("정확히 하나의 매개변수만 제공해야 합니다.", HttpStatus.BAD_REQUEST);
         }
     }
@@ -158,6 +163,14 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/create")
+    public Mono<ResponseEntity<ApiResponse>> createUser(@Login UserInfo userInfo, @RequestBody UserCreateDto userCreateDto){
+        return userService.createUser(userInfo, userCreateDto)
+                .flatMap(user -> ApiResponse.ok("생성완료",user))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("생성 실패 : "+e.getMessage(), e.getStatus()));
+    }
+
     /**
     @GetMapping("/all")
     public Mono<ResponseEntity<ApiResponse>> getAllUsers(@Login UserInfo userInfo){
@@ -166,16 +179,13 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
     }
     */
-    /**
-    @GetMapping("/all")
-    public Mono<ResponseEntity<
-    /**
+
+
     @PostMapping(value = "/profileImg")
-    public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestPart("file") Flux<ByteBuffer> file){
-        return userService.updateProfileImg(userInfo,headers,file)
+    public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
+        return userService.profileImgUpload(userInfo,headers,file)
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
 
-*/
 }

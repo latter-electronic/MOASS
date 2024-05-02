@@ -9,12 +9,17 @@ import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.Tokens;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
+import com.moass.api.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +37,7 @@ public class UserService {
     private final SsafyUserRepository ssafyUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
-
+    private final S3Service s3Service;
     public Mono<UserDetail> signUp(UserSignUpDto userDto) {
         return userRepository.findByUserEmailOrUserId(userDto.getUserEmail(), userDto.getUserId()).flatMap(dbUser -> Mono.<UserDetail>error(new CustomException("사용자가 이미 존재합니다.", HttpStatus.CONFLICT))).switchIfEmpty(ssafyUserRepository.findByUserId(userDto.getUserId()).switchIfEmpty(Mono.error(new CustomException("등록되어 있지 않는 사용자입니다.", HttpStatus.BAD_REQUEST))).flatMap(ssafyUser -> {
             User newUser = User.builder().userId(ssafyUser.getUserId()).userEmail(userDto.getUserEmail()).password(passwordEncoder.encode(userDto.getPassword())).build();
@@ -209,7 +214,32 @@ public class UserService {
                 );
     }
 
+    public Mono<Object> createUser(UserInfo userInfo, UserCreateDto userCreateDto) {
+        // 문법오류 해결
+        return ssafyUserRepository.findByUserId(userCreateDto.getUserId())
+                .flatMap(existingUser -> Mono.error(new CustomException("이미 존재하는 사용자입니다.", HttpStatus.CONFLICT)))
+                        .switchIfEmpty(Mono.defer(() -> {
+                            SsafyUser newSsafyUser = new SsafyUser(userCreateDto);
+                            return ssafyUserRepository.saveForce(newSsafyUser)
+                                    .then(Mono.just(newSsafyUser));
+                        }));
+    }
 
+    // 이미지 업로드 후, status가 CREATED일 경우,, userInfo를 통해, userRepository 불러와서 profiileImg에 저장
+    public Mono<String> profileImgUpload(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
+        return s3Service.uploadHandler(headers, file)
+                .flatMap(uploadResult -> {
+                    if (uploadResult.getStatus() != HttpStatus.CREATED) {
+                        return Mono.error(new CustomException("Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR));
+                    }
+                    String fileKey = uploadResult.getKeys()[0];
+                    return userRepository.findByUserId(userInfo.getUserId())
+                            .flatMap(user -> {
+                                user.setProfileImg(fileKey);
+                                return userRepository.save(user).thenReturn(fileKey);
+                            });
+                });
+    }
 
     /**
      public Mono<Object> getAllUsers(UserInfo userInfo) {
