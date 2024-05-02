@@ -6,10 +6,8 @@ pipeline {
 	        steps {
 				dir('Embedded/electron-app') {
                     sh "docker build --no-cache -t dongho416/embedded:${currentBuild.number} ."
-                    sh '''
-                        docker rmi -f $(docker images -f "dangling=true" -q)
-                    '''
-                    sh 'docker push dongho416/embedded:${currentBuild.number}'
+                    sh "docker push dongho416/embedded:${currentBuild.number}"
+                    sh "docker rmi dongho416/embedded:${currentBuild.number}"
                 }
             }
         }
