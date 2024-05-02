@@ -15,7 +15,7 @@ export default function BoardTest() {
             ></iframe>
             <button 
                 onClick={goBack} 
-                className="absolute top-5 left-50 z-10 text-white bg-blue-500 hover:bg-blue-700 font-medium py-2 px-4 rounded"
+                className="absolute top-5 ml-20 z-10 text-white bg-blue-500 hover:bg-blue-700 font-medium py-2 px-4 rounded"
             >
                 뒤로 가기
             </button>
