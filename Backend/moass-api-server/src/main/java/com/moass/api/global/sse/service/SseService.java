@@ -1,5 +1,7 @@
 package com.moass.api.global.sse.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
@@ -9,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 public class SseService {
 
@@ -86,5 +89,25 @@ public class SseService {
                 sink.next(message);
             }
         }
+    }
+
+    @Scheduled(fixedRate = 10000)  // 10000ms = 10 seconds
+    public void sendTestMessages() {
+        log.info("userSinks size: {}", userSinks.size());
+        log.info("teamSinks size: {}", teamSinks.size());
+        log.info("classSinks size: {}", classSinks.size());
+
+        userSinks.forEach((userId, sinks) -> {
+            log.info("User ID '{}' has {} sinks.", userId, sinks.size());
+            sinks.forEach(sink -> sink.next("Test message to user: " + userId));
+        });
+        teamSinks.forEach((teamCode, sinks) -> {
+            log.info("Team code '{}' has {} sinks.", teamCode, sinks.size());
+            sinks.forEach(sink -> sink.next("Test message to team: " + teamCode));
+        });
+        classSinks.forEach((classCode, sinks) -> {
+            log.info("Class code '{}' has {} sinks.", classCode, sinks.size());
+            sinks.forEach(sink -> sink.next("Test message to class: " + classCode));
+        });
     }
 }

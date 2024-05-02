@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS `UserReservationInfo`;
+DROP TABLE IF EXISTS `ReservationInfo`;
+DROP TABLE IF EXISTS `Reservation`;
 DROP TABLE IF EXISTS `Position`;
 DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
@@ -73,7 +76,42 @@ CREATE TABLE `Device` (
 CREATE TABLE `Position`
 (
     `position_name` VARCHAR(20) NOT NULL,
-    `color_code`    VARCHAR(8)  NOT NULL DEFAULT '#3DB887',
+    `color_code`    VARCHAR(8)  NOT NULL DEFAULT '#6ECEF5',
     PRIMARY KEY (`position_name`)
 );
 
+
+CREATE TABLE `Reservation` (
+                               `reservation_id`	INT	NOT NULL  AUTO_INCREMENT,
+                               `class_code`	VARCHAR(5)	NOT NULL,
+                               `category`	VARCHAR(40)	NOT NULL,
+                               `time_limit`	INT	NOT NULL	DEFAULT 2,
+                               `reservation_name`	VARCHAR(40)	NOT NULL,
+                               `color_code`	VARCHAR(8)	NOT NULL	DEFAULT '#6ECEF5',
+    PRIMARY KEY (`reservation_id`),
+    FOREIGN KEY (`class_code`) REFERENCES `Class` (`class_code`)
+);
+
+
+CREATE TABLE `ReservationInfo` (
+                                   `reservation_info_id` INT NOT NULL AUTO_INCREMENT,
+                                   `reservation_id` INT NOT NULL,
+                                   `user_id` VARCHAR(20) NOT NULL,
+                                   `reservation_info_state` INT NOT NULL,
+                                   `reservation_info_name` VARCHAR(8) NOT NULL,
+                                   `reservation_info_date` DATE NOT NULL,
+                                   `reservation_info_time` INT NOT NULL,
+                                   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                   PRIMARY KEY (`reservation_info_id`),
+                                   FOREIGN KEY (`reservation_id`) REFERENCES `Reservation`(`reservation_id`),
+                                   FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
+);
+
+CREATE TABLE `UserReservationInfo` (
+                                       `reservation_info_id` INT NOT NULL,
+                                       `user_id` VARCHAR(20) NOT NULL,
+                                       PRIMARY KEY (`reservation_info_id`, `user_id`),
+                                       FOREIGN KEY (`reservation_info_id`) REFERENCES `ReservationInfo` (`reservation_info_id`),
+                                       FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
