@@ -1,7 +1,7 @@
-import NotiComponent from './NotiComponent.jsx'
 import NotiMM from './NotiMMComponent.jsx'
 import NotiGitlab from './NotiGitlabComponent.jsx'
 import NotiSsafy from './NotiSsafyComponent.jsx'
+import NotiDetail from './NotiDetailComponent.jsx'
 
 import checkIcon from './testImg/check-icon.svg'
 import mozzySleep from './testImg/mozzy-sleep.svg'
@@ -56,11 +56,12 @@ export default function NotiPage() {
       </div>
 
       {/* 오른쪽 섹션: 상세 페이지 */}
-      <div className="flex flex-col w-2/3 bg-gray-800/50 p-6 justify-center text-center items-center">
-        <div className="mb-4">
+      <div className="flex flex-col w-2/3 bg-gray-800/50 justify-center text-center items-center">
+        {/* <div className="mb-4">
           <img src={mozzySleep} alt="모찌잠" className="ml-16 size-80 opacity-50" />
           <span className="text-2xl text-primary/60">현재는 고정된 알림이 없어요</span>
-        </div>
+        </div> */}
+        <NotiDetail />
       </div>
     </div>
   );
