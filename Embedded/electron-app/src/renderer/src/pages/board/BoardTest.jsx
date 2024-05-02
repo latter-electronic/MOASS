@@ -9,7 +9,7 @@ export default function BoardTest() {
             <iframe
                 src="https://wbo.ophir.dev/boards/moass"
                 title="Embedded Board"
-                className="w-full h-full"
+                className="w-full h-full bg-white"
                 frameBorder="0"
                 allowFullScreen
             ></iframe>

@@ -8,6 +8,7 @@ import mozzySleep from './testImg/mozzy-sleep.svg'
 export default function NotiPage() {
     return (
         <div className="flex h-screen">
+
         {/* 왼쪽 섹션: 알림 목록 */}
         <div className="w-1/3 bg-navy p-6 flex flex-col">
           <div className="flex justify-between items-center mb-4">
@@ -28,8 +29,10 @@ export default function NotiPage() {
   
         {/* 오른쪽 섹션: 상세 페이지 */}
         <div className="flex flex-col w-2/3 bg-gray-800/50 p-6 justify-center text-center items-center">
-          <img src={mozzySleep} alt="모찌잠" className="size-80 opacity-50" />
-          <span className="text-2xl mr-16 text-primary/60">현재는 Pin된 목록이 없어요</span>
+          <div className="mb-4">
+          <img src={mozzySleep} alt="모찌잠" className="ml-16 size-80 opacity-50" />
+          <span className="text-2xl text-primary/60">현재는 고정된 알림이 없어요</span>
+          </div>
         </div>
       </div>
     );

@@ -56,6 +56,7 @@ export default function HomePage() {
                             <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><Calendar /></SwiperSlide>
                             <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src={testImg1} alt="테스트이미지1" className="mb-14 rounded-md" /></SwiperSlide>
                             <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src={testImg2} alt="테스트이미지2" className="mb-14 rounded-md" /></SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src="https://moassbucket.s3.ap-northeast-2.amazonaws.com/92c6b77e-2c4f-4ae6-b223-7cd471ce097d.jpeg" alt="테스트이미지2" className="mb-14 rounded-md" /></SwiperSlide>
                         </Swiper>
                     </div>
                 </div>
