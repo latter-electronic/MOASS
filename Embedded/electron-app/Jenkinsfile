@@ -5,9 +5,9 @@ pipeline {
         stage('Embedded Build') {
 	        steps {
 				dir('Embedded/electron-app') {
-                    sh "docker build --no-cache -t dongho416/embedded:${currentBuild.number} ."
-                    sh "docker push dongho416/embedded:${currentBuild.number}"
-                    sh "docker rmi dongho416/embedded:${currentBuild.number}"
+                    sh 'docker build -t embedded .'
+                    sh 'docker tag embedded dongho416/embedded'
+                    sh 'docker push dongho416/embedded'
                 }
             }
         }
