@@ -1,17 +1,9 @@
 package com.moass.ws.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
+import com.moass.ws.dto.BoardMessage;
 
-@Service
-public class BoardService {
+public interface BoardService {
 
-    @Autowired
-    private SimpMessagingTemplate template;
-
-    public void enter() {
-        template.convertAndSend("/sub/board/enter", "Enter");
-    }
-    public void exit() {}
+    void enter(BoardMessage boardMessage);
+    void exit(BoardMessage boardMessage);
 }
