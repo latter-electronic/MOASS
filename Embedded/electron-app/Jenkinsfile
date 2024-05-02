@@ -5,15 +5,11 @@ pipeline {
         stage('Embedded Build') {
 	        steps {
 				dir('Embedded/electron-app') {
-                    def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    def gitBranch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    def dockerTag = "${gitBranch}-${gitCommit}"
-
-                    sh 'docker build --no-cache -t dongho416/embedded:${dockerTag} .'
+                    sh 'docker build --no-cache -t dongho416/embedded:${currentBuild.number} .'
                     sh '''
                         docker rmi -f $(docker images -f "dangling=true" -q)
                     '''
-                    sh 'docker push dongho416/embedded:${dockerTag}'
+                    sh 'docker push dongho416/embedded:${currentBuild.number}'
                 }
             }
         }
