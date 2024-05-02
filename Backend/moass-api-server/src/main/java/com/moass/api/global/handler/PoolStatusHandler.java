@@ -14,7 +14,7 @@ public class PoolStatusHandler {
     @Autowired
     private ConnectionPool connectionPool;
 
-    @Scheduled(fixedRate = 10000) // 5000ms = 5 seconds
+    //@Scheduled(fixedRate = 10000) // 5000ms = 5 seconds
     public void logPoolStatus() {
         if (connectionPool.getMetrics().isPresent()) {
             var metrics = connectionPool.getMetrics().get();
