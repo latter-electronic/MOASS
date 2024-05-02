@@ -5,6 +5,7 @@ import Layout from "./components/Layout.jsx";
 
 import Home from "./pages/home/HomePage.jsx";
 import Board from "./pages/board/BoardPage.jsx";
+import BoardTest from "./pages/board/BoardTest.jsx";
 import Jira from "./pages/jira/JiraPage.jsx";
 import Alert from "./pages/noti/NotiPage.jsx";
 import CallAlert from "./pages/common/CallAlertPage.jsx";
@@ -21,6 +22,7 @@ export default function App() {
                         <Route path="/" element={<Layout />}>
                             <Route index element={<Home />} />
                             <Route path="board" element={<Board />} />
+                            <Route path="test" element={<BoardTest />} />
                             <Route path="jira" element={<Jira />} />
                             <Route path="alert" element={<Alert />} />
                         </Route>
