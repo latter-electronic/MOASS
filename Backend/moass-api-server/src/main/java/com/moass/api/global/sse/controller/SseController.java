@@ -18,6 +18,11 @@ public class SseController {
 
     private final SseService sseService;
 
+    @GetMapping("/class/{classCode}")
+    public Flux<ServerSentEvent<String>> streamClassEvents(@PathVariable String teamCode) {
+        return sseService.subscribeClass(teamCode)
+                .map(data -> ServerSentEvent.builder(data).build());
+    }
 
     // 팀 코드별로 SSE 스트림 구독
     @GetMapping("/team/{teamCode}")

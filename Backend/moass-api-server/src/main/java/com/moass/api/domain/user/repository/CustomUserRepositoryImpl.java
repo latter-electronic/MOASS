@@ -18,12 +18,13 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     @Override
     public Flux<UserSearchDetail> findAllTeamUserByTeamCode(String teamCode) {
         String query = "SELECT l.location_code, l.location_name, c.class_code, t.team_code, t.team_name, " +
-                "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.profile_img, su.job_code, u.connect_flag " +
+                "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.profile_img, su.job_code, u.connect_flag, se.x_coord, se.y_coord " +
                 "FROM Team t " +
                 "INNER JOIN Class c ON t.class_code = c.class_code " +
                 "INNER JOIN Location l ON c.location_code = l.location_code " +
                 "INNER JOIN SsafyUser su ON t.team_code = su.team_code " +
                 "INNER JOIN User u ON su.user_id = u.user_id " +
+                "INNER JOIN Seat se ON u.user_id = se.user_id " +
                 "WHERE t.team_code = :teamCode";
 
         return r2dbcEntityTemplate.getDatabaseClient()
@@ -42,7 +43,9 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
                         row.get("status_id", Integer.class),
                         row.get("profile_img", String.class),
                         row.get("job_code", Integer.class),
-                        row.get("connect_flag", Integer.class)))
+                        row.get("connect_flag", Integer.class),
+                        row.get("x_coord", Integer.class),
+                        row.get("y_coord", Integer.class)))
                 .all();
     }
 }

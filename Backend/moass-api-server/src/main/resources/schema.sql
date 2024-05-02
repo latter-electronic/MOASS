@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS `Position`;
 DROP TABLE IF EXISTS `Device`;
+DROP TABLE IF EXISTS `Seat`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `SsafyUser`;
 
@@ -50,6 +51,15 @@ CREATE TABLE `User`(
                         `position_name` VARCHAR(20) NULL,
                        PRIMARY KEY (`user_id`),
                        CONSTRAINT `FK_SSAFYUser_TO_User_1` FOREIGN KEY (`user_id`) REFERENCES `SsafyUser` (`user_id`)
+);
+
+CREATE TABLE `Seat` (
+                       `seat_id` INT NOT NULL AUTO_INCREMENT,
+                       `user_id` VARCHAR(20) NULL,
+                       `x_coord` VARCHAR(40) NULL,
+                       `y_coord` VARCHAR(20) NULL,
+                       PRIMARY KEY (`seat_id`),
+                       FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
 CREATE TABLE `Device` (
