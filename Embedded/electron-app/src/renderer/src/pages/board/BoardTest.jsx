@@ -5,7 +5,7 @@ export default function BoardTest() {
     }
 
     return (
-        <div className="w-screen h-screen">
+        <div className="w-screen h-screen bg-white">
             <iframe
                 src="https://wbo.ophir.dev/boards/moass"
                 title="Embedded Board"
