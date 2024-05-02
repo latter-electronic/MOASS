@@ -5,8 +5,7 @@ pipeline {
         stage('Embedded Build') {
 	        steps {
 				dir('Embedded/electron-app') {
-                    sh 'docker build -t embedded .'
-                    sh 'docker run --name embedded embedded'
+                    sh 'docker build -t dongho416/embedded:test .'
                 }
             }
         }
