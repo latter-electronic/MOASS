@@ -29,7 +29,7 @@ class ReservationScreen extends StatelessWidget {
               title: Text(
                   'Name: ${userProfile?.userName}'), // userName을 MyProfile에서 가져옵니다.
               subtitle: Text(
-                  'Email: ${userProfile?.userEmail}'), // userEmail을 MyProfile에서 가져옵니다.
+                  'Email: ${userProfile?.userEmail}, \n 전체: $userProfile'), // userEmail을 MyProfile에서 가져옵니다.
             );
           } else {
             return const Center(child: Text('No data available'));
