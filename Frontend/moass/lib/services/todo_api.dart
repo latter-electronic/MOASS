@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:moass/model/to_do_list.dart';
+import 'package:moass/model/to_do.dart';
 
 class ToDoListApi {
   final Dio dio;
@@ -9,12 +11,13 @@ class ToDoListApi {
 
   ToDoListApi({required this.dio, required this.storage});
 
-  Future<ToDoList?> getUserToDoList() async {
+  Future<List<ToDo>> getUserToDoList() async {
+    List<ToDo> todoInstances = [];
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
         print('No access token available');
-        return null;
+        return [];
       }
       print(accessToken);
       // API요청, 헤더에 토큰 넣기
@@ -24,14 +27,22 @@ class ToDoListApi {
       );
 
       if (response.statusCode == 200) {
-        return ToDoList.fromJson(response.data['data']);
+        // print('데이터 : ${response.data['data']}');
+        final List<dynamic> todos = response.data['data'];
+        // print(todos);
+        for (var todo in todos) {
+          // print(todo);
+          todoInstances.add(ToDo.fromJson(todo));
+        }
+        // print('투두인스턴스 : $todoInstances');
+        return todoInstances;
       } else {
         print('Failed to load user profile');
-        return null;
+        return [];
       }
     } on DioException catch (e) {
       print('Error fetching user profile: ${e.message}');
-      return null;
+      return [];
     }
   }
 }
