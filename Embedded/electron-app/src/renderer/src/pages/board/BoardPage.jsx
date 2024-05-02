@@ -7,15 +7,17 @@ export default function BoardPage() {
     const navigate = useNavigate();
 
     const callTestFunction = () => {
-        navigate(`/test`);
+        navigate(`/board/test`);
     };
 
     const goToHistory = () => {
-        navigate(`/history`);
+        console.log("Navigating to history");
+
+        navigate(`/board/history`);
     };
 
     return(
-        <div className="flex flex-col p-6 h-screen w-[91vw]">
+        <div className="flex flex-col p-6 h-screen">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
                     <h1 className="text-4xl font-medium">이음보드</h1>
