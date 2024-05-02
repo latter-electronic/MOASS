@@ -5,7 +5,7 @@ pipeline {
         stage('Embedded Build') {
 	        steps {
 				dir('Embedded/electron-app') {
-                    sh 'docker build --no-cache -t dongho416/embedded:${currentBuild.number} .'
+                    sh "docker build --no-cache -t dongho416/embedded:${currentBuild.number} ."
                     sh '''
                         docker rmi -f $(docker images -f "dangling=true" -q)
                     '''
