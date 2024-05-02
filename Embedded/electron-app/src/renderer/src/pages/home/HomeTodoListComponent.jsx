@@ -27,7 +27,7 @@ export default function HomeTodoListComponent() {
                     { todoId: 1, userId: "1058448", content: 'BRENA 투어', completedFlag: false, createdAt: "2024-04-27T16:22:41.575", updatedAt: "2024-04-27T16:22:41.575", completedAt: null },
                     { todoId: 2, userId: "1058448", content: '2주차 KPT 회고', completedFlag: false, createdAt: "2024-04-27T16:22:43.876", updatedAt: "2024-04-27T16:22:43.876", completedAt: null },
                     { todoId: 3, userId: "1058448", content: '코치님한테 여쭤볼거', completedFlag: false, createdAt: "2024-04-27T16:22:46.746", updatedAt: "2024-04-27T16:22:46.746", completedAt: null },
-                    { todoId: 4, userId: "1058448", content: '노트북 챙기기', completedFlag: false, createdAt: "2024-04-27T16:23:46.746", updatedAt: "2024-04-27T16:24:46.746", completedAt: null }
+                    { todoId: 4, userId: "1058448", content: '노트북 챙기기', completedFlag: false, createdAt: "2024-04-27T16:23:46.746", updatedAt: "2024-04-27T16:24:46.746", completedAt: null },
                 ]);
             } finally {
                 setIsLoading(false);  // 로딩 상태 해제
