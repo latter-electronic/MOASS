@@ -9,7 +9,7 @@ pipeline {
                     sh '''
                         docker rmi -f $(docker images -f "dangling=true" -q)
                     '''
-                    sh 'docker push dongho416/embedded:test'
+                    sh 'docker push -f dongho416/embedded:test'
                 }
             }
         }
