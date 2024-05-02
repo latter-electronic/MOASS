@@ -1,17 +1,38 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/setting_related_account.dart';
 import 'package:moass/screens/setting_user_info.dart';
 import 'package:moass/screens/setting_widget_photo.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
+import 'package:moass/services/account_api.dart';
+import 'package:moass/screens/login_screen.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AccountApi accountApi = AccountApi(
+      dio: Dio(), // 이 부분은 실제 앱 설정에 따라 변경 가능
+      storage: const FlutterSecureStorage(),
+    );
+
+    void performLogout(BuildContext context) async {
+      bool loggedOut = await accountApi.logout();
+      if (loggedOut) {
+        Navigator.pushReplacementNamed(context, '/loginScreen');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("로그아웃 실패. 다시 시도해주세요.")),
+        );
+      }
+    }
+
     return Scaffold(
       appBar: const TopBar(
         title: '설정',
@@ -178,7 +199,11 @@ class SettingScreen extends StatelessWidget {
                                 child: const Text('취소'),
                               ),
                               TextButton(
-                                onPressed: () => Navigator.pop(context, '확인'),
+                                onPressed: () {
+                                  Navigator.pop(context); // 대화 상자 닫기
+                                  performLogout(context); // 로그아웃 실행
+                                },
+                                // onPressed: () => Navigator.pop(context, '확인'),
                                 child: const Text('확인'),
                               ),
                             ],

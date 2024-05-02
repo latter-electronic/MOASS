@@ -10,6 +10,7 @@ class AccountApi {
 
   AccountApi({required this.dio, required this.storage});
 
+  // 로그인 함수
   Future<bool> login(String userEmail, String password) async {
     const apiUrl = '$baseUrl/api/user/login';
     try {
@@ -24,14 +25,35 @@ class AccountApi {
         await storage.write(key: 'accessToken', value: data['accessToken']);
         await storage.write(key: 'refreshToken', value: data['refreshToken']);
         return true;
+      } else {
+        throw Exception(response.data['message'] ?? "로그인 실패");
       }
-      return false;
     } on DioException catch (e) {
-      print('Login failed with error: ${e.response?.statusCode}');
-      return false;
+      throw Exception(e.response?.data['message'] ?? '로그인에 실패했습니다.');
+    }
+  }
+  // 수정전
+  //     return false;
+  //   } on DioException catch (e) {
+  //     print('Login failed with error: ${e.response?.statusCode}');
+  //     return false;
+  //   }
+  // }
+
+  // 로그아웃 함수
+  Future<bool> logout() async {
+    try {
+      await storage.delete(key: 'isLoggedIn');
+      await storage.delete(key: 'accessToken');
+      await storage.delete(key: 'refreshToken');
+      return true; // 로그아웃 성공
+    } catch (e) {
+      print('Logout failed: $e');
+      return false; // 로그아웃 실패
     }
   }
 
+  // 회원가입 함수
   Future<bool> signUp(String ssafy, String email, String password) async {
     const String apiUrl = '$baseUrl/api/user/signup';
     try {
@@ -52,64 +74,3 @@ class AccountApi {
     }
   }
 }
-
-
-// import 'package:dio/dio.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:moass/model/token_interceptor.dart';
-
-// class AccountApi {
-//   final Dio dio;
-
-//   AccountApi({required this.dio}) {
-//     _initializeInterceptors();
-//   }
-
-//   void _initializeInterceptors() async {
-//     final prefs = await SharedPreferences.getInstance();
-//     dio.interceptors.add(TokenInterceptor(dio, prefs));
-//   }
-
-//   Future<bool> login(String userEmail, String password) async {
-//     const apiUrl = 'https://k10e203.p.ssafy.io/api/user/login';
-//     try {
-//       final response = await dio.post(apiUrl, data: {
-//         'userEmail': userEmail,
-//         'password': password,
-//       });
-
-//       if (response.statusCode == 200) {
-//         final data = response.data['data'];
-//         final SharedPreferences prefs = await SharedPreferences.getInstance();
-//         await prefs.setBool('isLoggedIn', true);
-//         await prefs.setString('accessToken', data['accessToken']);
-//         await prefs.setString('refreshToken', data['refreshToken']);
-//         return true;
-//       }
-//       return false;
-//     } on DioException catch (e) {
-//       print('Login failed with error: ${e.response?.statusCode}');
-//       return false;
-//     }
-//   }
-
-//   Future<bool> signUp(String ssafy, String email, String password) async {
-//     const String apiUrl = 'https://k10e203.p.ssafy.io/api/user/signup';
-//     try {
-//       final response = await dio.post(apiUrl, data: {
-//         "userEmail": email,
-//         "userId": ssafy,
-//         "password": password,
-//       });
-
-//       if (response.statusCode == 200) {
-//         // 성공적으로 회원가입 처리됨, 필요한 경우 추가 처리
-//         return true;
-//       }
-//       return false;
-//     } on DioException catch (e) {
-//       print('Sign Up failed with error: ${e.response?.statusCode}');
-//       return false;
-//     }
-//   }
-// }
