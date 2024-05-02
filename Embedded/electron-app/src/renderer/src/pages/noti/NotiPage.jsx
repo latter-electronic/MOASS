@@ -19,6 +19,17 @@ export default function NotiPage() {
     title: '공지가',
     content: '[운영] 2학기 자율프로젝트 4주차 안내',
     date: '오후 4:00'
+  }, {
+    id: 3,
+    title: '설문이',
+    content: '(240503) 10기 자율프로젝트 4주차 만족도 설문',
+    date: '오후 6:00'
+  },
+  {
+    id: 4,
+    title: '공지가',
+    content: '[운영] 2학기 자율프로젝트 4주차 안내',
+    date: '오후 4:00'
   }]
 
   return (
@@ -34,7 +45,7 @@ export default function NotiPage() {
             <span className="text-lg text-white">모두 읽음 처리</span>
           </button>
         </div>
-        <div className="flex-grow overflow-auto mt-4">
+        <div className="flex-grow overflow-auto mt-4 scrollbar-hide">
           {/* 알림 컴포넌트들을 여기에 렌더링 */}
           <NotiMM />
           <NotiGitlab />
