@@ -3,35 +3,37 @@ import { deviceLogin } from '../../services/deviceService.js';
 import AuthStore from '../../stores/AuthStore.js';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function TestLoginPage() {
     const navigate = useNavigate();
 
     const [deviceId, setDeviceId] = useState('');
     const [cardSerialId, setCardSerialId] = useState('');
-    const { login, accessToken, refreshToken } = AuthStore(state => ({
-        login: state.login,
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken
-    }));
 
+    // Use AuthStore to manage login state
+    const { login } = AuthStore(state => ({
+        login: state.login
+    }));
 
     const handleLogin = async () => {
         try {
+            // Perform the login via deviceLogin service
             const response = await deviceLogin({ deviceId, cardSerialId });
             const { accessToken, refreshToken } = response.data.data;
+
+            // If login is successful, store the access and refresh tokens
             login(accessToken, refreshToken);
+
+            // Notify the user and navigate to home page or dashboard
             alert(`로그인 성공: \nAccessToken: ${accessToken}\nRefreshToken: ${refreshToken}`);
-            console.log(accessToken);
-            console.log(refreshToken);
             navigate(`/`);
         } catch (error) {
+            // Handle errors, such as wrong credentials or server issues
             alert(`로그인 실패: ${error.response?.data?.message}`);
         }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen  w-screen">
+        <div className="flex items-center justify-center min-h-screen w-screen">
             <div className="p-8 bg-white shadow-md rounded">
                 <h1 className="text-2xl font-bold text-center mb-6 text-black">로그인테스트</h1>
                 <input

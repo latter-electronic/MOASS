@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { deviceLogout } from '../../services/deviceService';
-import { fetchAllUsers } from '../../services/userService.js';
+import { fetchUserInfo } from '../../services/userService.js';
 import useUIStore from '../../stores/UIStore.js';
 import {
     useFloating,
@@ -112,7 +112,7 @@ export default function Navbar() {
     useEffect(() => {
         const loadUsers = async () => {
             try {
-                const userData = await fetchAllUsers();
+                const userData = await fetchUserInfo();
                 setUsers(userData); // API 호출 결과를 상태에 저장
             } catch (error) {
                 console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error);

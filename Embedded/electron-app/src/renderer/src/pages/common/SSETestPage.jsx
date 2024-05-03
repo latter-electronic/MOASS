@@ -13,42 +13,29 @@ export default function SSETestPage() {
     }));
 
     useEffect(() => {
-        console.log('useEffect 시작')
+        console.log('1. useEffect 함')
         if (accessToken) {
-            console.log('accessToken: ' + accessToken)
-            // EventService 인스턴스 생성하고 헤더에 토큰을 포함
-            const eventService = new EventService('https://k10e203.p.ssafy.io/api/stream/user', {
+            console.log('2. 어세스토큰 있음')
+            const eventService = new EventService('https://k10e203.p.ssafy.io/api/stream/team', {
                 'Authorization': `Bearer ${accessToken}`
             });
 
-            // EventService를 통해 SSE 데이터 수신 시작
-            eventService.onmessage((newData) => {
+            eventService.startListening((newData) => {
                 updateData(newData);
-                console.log('수신중~')
+                console.log('New data received:', newData);
             });
 
-            // 컴포넌트 언마운트 시 EventService를 통해 연결 종료
-            return () => {
-                eventService.stopListening();
-            };
+            return () => eventService.stopListening();
         }
-    }, [updateData, accessToken]); // 의존성 배열에 accessToken 추가
-
-    // 데이터를 안전하게 렌더링하는 함수
-    const renderData = (data) => {
-        // 데이터 타입 확인 후 적절하게 렌더링
-        if (typeof data === 'string' || typeof data === 'number') {
-            return data; // 문자열 또는 숫자는 직접 렌더링
-        } else {
-            return <pre>{JSON.stringify(data, null, 2)}</pre>; // 객체 또는 배열은 JSON 형태로 렌더링
-        }
-    };
+    }, [updateData, accessToken]);
 
     return (
         <div className="p-4 w-screen flex items-center justify-center">
             <div className="p-8 bg-white shadow-md rounded w-2/5">
                 <h1 className="text-xl font-semibold text-gray-800 mb-4">SSE Data Received</h1>
-                <div>{renderData(data)}</div>  // 데이터 렌더링
+                <div className="text-gray-800">
+                    {data ? <pre>{JSON.stringify(data, null, 2)}</pre> : <p>No data received yet.</p>}
+                </div>
             </div>
         </div>
     );

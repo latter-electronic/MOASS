@@ -1,4 +1,5 @@
 import { moassApiAxios } from './apiConfig';
+import AuthStore from '../stores/AuthStore.js';
 
 const axios = moassApiAxios();
 const prefix = 'api/schedule/todo';
@@ -9,7 +10,14 @@ const prefix = 'api/schedule/todo';
  * @returns {Promise} Todo 목록 조회 결과
  */
 export const fetchTodos = () => {
-    return axios.get(prefix);
+    const { accessToken } = AuthStore.getState();  // Get the access token from AuthStore
+
+    return axios.get(prefix, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,  // Add the token to the request header
+            'Content-Type': 'application/json'
+        }
+    });
 };
 
 /**
@@ -19,7 +27,12 @@ export const fetchTodos = () => {
  * @returns {Promise} Todo 수정 결과
  */
 export const updateTodo = (updateData) => {
+    const { accessToken } = AuthStore.getState();  // Get the access token from AuthStore
+
     return axios.patch(prefix, updateData, {
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,  // Add the token to the request header
+            'Content-Type': 'application/json'
+        }
     });
 };

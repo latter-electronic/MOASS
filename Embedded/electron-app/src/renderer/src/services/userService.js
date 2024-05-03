@@ -1,31 +1,67 @@
-import { moassApiAxios } from './apiConfig.js';
+// deviceService.js
+import { moassApiAxios } from './apiConfig';
+import AuthStore from '../stores/AuthStore.js'; 
 
 const axios = moassApiAxios();
-const API_URL = '/api/user';
+const prefix = 'api/device';
 
 /**
- * 사용자 정보 조회
- *
- * @returns {Promise} 사용자 정보 결과
+ * 기기 로그인
+ * 
+ * @param {Object} loginData 로그인 데이터
+ * @returns {Promise} 로그인 결과
  */
-export const fetchUserInfo = () => {
-    return axios.get(API_URL, {
+export const deviceLogin = (loginData) => {
+    const { accessToken } = AuthStore.getState();
+    return axios.post(`${prefix}/login`, loginData, {
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+};
+
+/**
+ * 기기 로그아웃
+ * 
+ * @returns {Promise} 로그아웃 결과
+ */
+export const deviceLogout = () => {
+    const { accessToken } = AuthStore.getState();
+    return axios.post(`${prefix}/logout`, {}, {
         headers: {
-            'Authorization': 'Bearer ~~~~~~~',
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+};
+
+/**
+ * 기기 정보 조회
+ * 
+ * @returns {Promise} 기기 정보
+ */
+export const fetchDeviceInfo = () => {
+    const { accessToken } = AuthStore.getState();
+    return axios.get(prefix, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
     });
 };
 
 /**
- * 액세스 토큰 갱신
- *
- * @returns {Promise} 갱신된 토큰 정보
+ * 기기 호출
+ * 
+ * @param {string} studentId 학생 ID
+ * @returns {Promise} 호출 결과
  */
-export const refreshToken = () => {
-    return axios.post(`${API_URL}/refresh`, {}, {
+export const callDevice = (studentId) => {
+    const { accessToken } = AuthStore.getState();
+    return axios.post(`${prefix}/call`, { studentId }, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`
         }
     });
 };
