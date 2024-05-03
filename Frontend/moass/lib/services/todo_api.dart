@@ -19,7 +19,7 @@ class ToDoListApi {
         print('No access token available');
         return [];
       }
-      print(accessToken);
+      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/schedule/todo',
@@ -38,6 +38,33 @@ class ToDoListApi {
         return todoInstances;
       } else {
         print('Failed to load user profile');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('Error fetching user profile: ${e.message}');
+      return [];
+    }
+  }
+
+  postUserToDoList(var content) async {
+    final formData = FormData.fromMap({'content': content});
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.post('$baseUrl/api/schedule/todo',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: formData);
+
+      if (response.statusCode == 200) {
+        print('할 일 등록 성공!');
+        return;
+      } else {
+        print('To Do 등록 실패');
         return [];
       }
     } on DioException catch (e) {
