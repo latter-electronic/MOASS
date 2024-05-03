@@ -30,28 +30,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    try {
-      bool isLoggedIn = await _accountApi.login(username, password);
-      if (isLoggedIn) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
-        );
-      }
-    } catch (e) {
+    bool isLoggedIn = await _accountApi.login(username, password);
+    if (isLoggedIn) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (Route<dynamic> route) => false, // 모든 그 전의 경로를 삭제
+      );
+    } else {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = '로그인에 실패했습니다. 이메일, 비밀번호를 확인해주세요';
       });
-      // bool isLoggedIn = await _accountApi.login(username, password);
-      // if (isLoggedIn) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => const HomeScreen()),
-      //   );
-      // } else {
-      //   setState(() {
-      //     _errorMessage = '로그인에 실패했습니다. 이메일, 비밀번호를 확인해주세요';
-      //   });
     }
   }
 
