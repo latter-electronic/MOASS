@@ -23,14 +23,14 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
-  String selectedSeatedState = 'here';
+  late int selectedSeatedState;
 
 // 내상태 설정
 // 자리비움으로 바꾸기
   void setStateNotHere() {
     setState(() {
-      if (selectedSeatedState == 'here') {
-        selectedSeatedState = 'notHere';
+      if (selectedSeatedState == 1) {
+        selectedSeatedState = 0;
       }
     });
   }
@@ -38,8 +38,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 // 착석으로 바꾸기
   void setStateHere() {
     setState(() {
-      if (selectedSeatedState == 'notHere') {
-        selectedSeatedState = 'here';
+      if (selectedSeatedState == 0) {
+        selectedSeatedState = 1;
       }
     });
   }
@@ -120,9 +120,12 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
                     var userProfile = snapshot.data;
+
+                    selectedSeatedState = userProfile!.statusId;
+
                     return Column(
                       children: [
-                        userProfile?.connectFlag == 0
+                        userProfile.connectFlag == 0
                             ? Container(
                                 height: 200,
                                 width: double.infinity,
@@ -163,7 +166,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                                 .spaceBetween,
                                                         children: [
                                                           Text(
-                                                              '${userProfile?.teamCode} ${userProfile?.teamName}'),
+                                                              '${userProfile.teamCode} ${userProfile.teamName}'),
                                                         ],
                                                       ),
                                                     ),
@@ -173,7 +176,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                               .end,
                                                       children: [
                                                         Text(
-                                                          '${userProfile?.userName}',
+                                                          userProfile.userName,
                                                           style: const TextStyle(
                                                               fontSize: 80,
                                                               fontWeight:
@@ -192,10 +195,10 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                                     .all(Radius
                                                                         .circular(
                                                                             50))),
-                                                            child: const Center(
+                                                            child: Center(
                                                                 child: Text(
-                                                              'FE',
-                                                              style: TextStyle(
+                                                              '${userProfile.positionName}',
+                                                              style: const TextStyle(
                                                                   color: Colors
                                                                       .white),
                                                             )),
@@ -215,7 +218,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                   decoration: BoxDecoration(
                                                       color:
                                                           selectedSeatedState ==
-                                                                  'here'
+                                                                  1
                                                               ? const Color(
                                                                   0xFF3DB887)
                                                               : const Color(
@@ -231,14 +234,14 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                       Padding(
                                                         padding:
                                                             selectedSeatedState ==
-                                                                    'here'
+                                                                    1
                                                                 ? const EdgeInsets
                                                                     .all(14.0)
                                                                 : const EdgeInsets
                                                                     .all(17.0),
                                                         child:
                                                             selectedSeatedState ==
-                                                                    'here'
+                                                                    1
                                                                 ? const Text(
                                                                     '착석중',
                                                                     style: TextStyle(
@@ -280,7 +283,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                     const Text('명패에 태그하면 기기 상태를 확인할 수 있어요!')
                                   ],
                                 )),
-                        userProfile?.connectFlag == 1
+                        userProfile.connectFlag == 0
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -295,7 +298,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                               MainAxisAlignment.center,
                                           children: [
                                             GestureDetector(
-                                              onTap: setStateHere,
+                                              onTap: () async {
+                                                await myInfoApi
+                                                    .patchUserStatus(1);
+                                                setState(() {
+                                                  myInfoApi.fetchUserProfile();
+                                                });
+                                              },
                                               child: Container(
                                                 margin:
                                                     const EdgeInsets.symmetric(
@@ -310,7 +319,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                             Radius
                                                                 .circular(10)),
                                                     border: selectedSeatedState ==
-                                                            'here'
+                                                            1
                                                         ? Border.all(
                                                             color: const Color(
                                                                 0xFF6ECEF5),
@@ -324,7 +333,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: setStateNotHere,
+                                              onTap: () async {
+                                                await myInfoApi
+                                                    .patchUserStatus(0);
+                                                setState(() {
+                                                  myInfoApi.fetchUserProfile();
+                                                });
+                                              },
                                               child: Container(
                                                 width: 80,
                                                 height: 80,
@@ -336,7 +351,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                             Radius
                                                                 .circular(10)),
                                                     border: selectedSeatedState ==
-                                                            'notHere'
+                                                            0
                                                         ? Border.all(
                                                             color: const Color(
                                                                 0xFF6ECEF5),
@@ -352,32 +367,32 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                           ],
                                         ),
                                       ),
-                                      SizedBox(
-                                        height: selectedSeatedState == 'notHere'
-                                            ? 70
-                                            : 0,
-                                        child: Column(
-                                          children:
-                                              selectedSeatedState == 'notHere'
-                                                  ? [
-                                                      const Text('사유를 선택하세요'),
-                                                      const Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          MyStateSelector(
-                                                              state: '취업면담'),
-                                                          MyStateSelector(
-                                                              state: '팀 미팅'),
-                                                          MyStateSelector(
-                                                              state: '기타'),
-                                                        ],
-                                                      )
-                                                    ]
-                                                  : [],
-                                        ),
-                                      ),
+                                      // SizedBox(
+                                      //   height: selectedSeatedState == 'notHere'
+                                      //       ? 70
+                                      //       : 0,
+                                      //   child: Column(
+                                      //     children:
+                                      //         selectedSeatedState == 'notHere'
+                                      //             ? [
+                                      //                 const Text('사유를 선택하세요'),
+                                      //                 const Row(
+                                      //                   mainAxisAlignment:
+                                      //                       MainAxisAlignment
+                                      //                           .center,
+                                      //                   children: [
+                                      //                     MyStateSelector(
+                                      //                         state: '취업면담'),
+                                      //                     MyStateSelector(
+                                      //                         state: '팀 미팅'),
+                                      //                     MyStateSelector(
+                                      //                         state: '기타'),
+                                      //                   ],
+                                      //                 )
+                                      //               ]
+                                      //             : [],
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ],

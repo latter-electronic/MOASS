@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
@@ -33,6 +35,35 @@ class MyInfoApi {
       }
     } on DioException catch (e) {
       print('Error fetching user profile: ${e.message}');
+      return null;
+    }
+  }
+
+  // 유저 상태 수정
+  patchUserStatus(int statusId) async {
+    try {
+      Map data = {'statusId': statusId};
+      var body = json.encode(data);
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.patch('$baseUrl/api/user/status',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('유저 상태변경 성공!');
+        return response;
+      } else {
+        print('유저 상태변경 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('Error fetching user status: ${e.message}');
       return null;
     }
   }
