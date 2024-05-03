@@ -141,6 +141,8 @@ Widget _buildMemberImages(List<MemberImage> memberImages) {
   );
 }
 
+
+// APi가 왔을때 사용할 코드
 // class BoardScreen extends StatelessWidget {
 //   final BoardApi apiService = BoardApi();
 
