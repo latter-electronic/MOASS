@@ -40,8 +40,7 @@ public class ReservationInfoService {
         return reservationRepository.findById(reservationInfoCreateDto.getReservationId())
                 .switchIfEmpty(Mono.error(new CustomException("예약 항목을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
                 .flatMap(reservation -> {
-                    int timeLimit = reservation.getTimeLimit();
-                    return checkUserReservationTime(reservationInfoCreateDto.getInfoUsers(), reservationInfoCreateDto.getReservationId(), reservationInfoCreateDto.getInfoDate(), reservationInfoCreateDto.getInfoTimes(), timeLimit)
+                    return checkUserReservationTime(reservationInfoCreateDto, reservation.getTimeLimit())
                             .flatMap(overLimitUsers -> {
                                 if (!overLimitUsers.isEmpty()) {
                                     return Mono.error(new CustomException("일부 사용자의 예약 시간이 제한을 초과합니다: " + overLimitUsers, HttpStatus.CONFLICT));
@@ -51,22 +50,21 @@ public class ReservationInfoService {
                 });
     }
 
-    private Mono<List<String>> checkUserReservationTime(List<String> userIds, Integer reservationId, LocalDate infoDate, List<Integer> infoTimes,Integer timeLimit) {
-        return userReservationInfoRepository.countByReservationIdAndDate(reservationId, infoDate)
+    // 유저들이 해당 날짜와 해당 예약항목에서 더 예약할 수 있는지 확인
+    private Mono<List<String>> checkUserReservationTime(ReservationInfoCreateDto resInfoCreateDto,Integer timeLimit) {
+        return userReservationInfoRepository.countByReservationIdAndDate(resInfoCreateDto.getReservationId(), resInfoCreateDto.getInfoDate())
                 .collectList()
                 .map(userCounts -> {
                     Map<String,Integer> MapUserCounts = new HashMap<>();
                     for(UserCount count : userCounts){
                         MapUserCounts.put(count.getUserId(),count.getCount().intValue());
                     }
+                    int infoTimesLength = resInfoCreateDto.getInfoTimes().size();
                     List<String> overLimitUsers = new ArrayList<>();
-                    for (String userId : userIds) {
-                        log.info(Integer.toString(infoTimes.size()));
-                        log.info(userIds.toString());
-                        log.info(MapUserCounts.toString());
-                        if(MapUserCounts.containsKey(userId)&&infoTimes.size()+MapUserCounts.get(userId)>timeLimit){
+                    for (String userId : resInfoCreateDto.getInfoUsers()) {
+                        if(MapUserCounts.containsKey(userId)&&infoTimesLength+MapUserCounts.get(userId)>timeLimit){
                             overLimitUsers.add(userId);
-                        }else if(infoTimes.size()>timeLimit&&!overLimitUsers.contains(userId)){
+                        }else if(infoTimesLength>timeLimit&&!overLimitUsers.contains(userId)){
                             overLimitUsers.add(userId);
                         }
                     }
