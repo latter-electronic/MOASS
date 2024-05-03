@@ -133,4 +133,8 @@ public class ReservationInfoService {
         // 시간 문자열 형식: HH:mm~HH:mm
         return String.format("%d:%02d~%d:%02d", startHour, startMinute, endHour, endMinute);
     }
+/**
+    public Mono<List<>> getTodayReservationInfo(UserInfo userInfo) {
+    }
+ */
 }
