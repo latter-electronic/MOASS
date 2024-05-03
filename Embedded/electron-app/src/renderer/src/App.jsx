@@ -1,5 +1,5 @@
 // App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Layout from "./components/Layout.jsx";
 
@@ -17,23 +17,23 @@ import TagSuccess from "./pages/common/TagSuccessPage.jsx";
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <div className="flex min-h-screen font-noto-sans ml-1">
-                <Routes>
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<Home />} />
-                        <Route path="board" element={<Board />} />
-                            <Route path="board/test" element={<BoardTest />} />
-                            <Route path="board/history" element={<BoardHistory />} />
-                        <Route path="jira" element={<Jira />} />
-                        <Route path="alert" element={<Alert />} />
-                    </Route>
-                    <Route path="/nameplate" element={<Nameplate />} />
-                    <Route path="/callalert" element={<CallAlert />} />
-                    <Route path="/tagnfc" element={<TagNFC />} />
-                    <Route path="/tagsuccess" element={<TagSuccess />} />
-                </Routes>
-            </div>
-        </BrowserRouter>
-    );
+      <HashRouter>
+        <div className="flex min-h-screen font-noto-sans ml-1">
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="board" element={<Board />} />
+              <Route path="board/test" element={<BoardTest />} />
+              <Route path="board/history" element={<BoardHistory />} />
+              <Route path="jira" element={<Jira />} />
+              <Route path="alert" element={<Alert />} />
+            </Route>
+            <Route path="/nameplate" element={<Nameplate />} />
+            <Route path="/callalert" element={<CallAlert />} />
+            <Route path="/tagnfc" element={<TagNFC />} />
+            <Route path="/tagsuccess" element={<TagSuccess />} />
+          </Routes>
+        </div>
+      </HashRouter>
+    )
 }
