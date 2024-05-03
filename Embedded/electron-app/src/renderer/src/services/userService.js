@@ -1,40 +1,31 @@
 import { moassApiAxios } from './apiConfig.js';
 
-// 기본 사용자 관련 API 경로
+const axios = moassApiAxios();
 const API_URL = '/api/user';
 
-// 내 정보 조회
-export const fetchUserInfo = () => moassApiAxios().get(API_URL);
+/**
+ * 사용자 정보 조회
+ *
+ * @returns {Promise} 사용자 정보 결과
+ */
+export const fetchUserInfo = () => {
+    return axios.get(API_URL, {
+        headers: {
+            'Authorization': 'Bearer ~~~~~~~',
+            'Content-Type': 'application/json'
+        }
+    });
+};
 
-// 사용자 로그인
-export const login = credentials => moassApiAxios().post(`${API_URL}/login`, credentials);
-
-// 사용자 회원가입
-export const signUp = userData => moassApiAxios().post(`${API_URL}/signup`, userData);
-
-// 엑세스 토큰 갱신
-export const refreshToken = () => moassApiAxios().post(`${API_URL}/refresh`);
-
-// 사용자 정보 수정
-export const updateUser = (userId, updateData) => moassApiAxios().patch(`${API_URL}/${userId}`, updateData);
-
-// 사용자 상태 수정
-export const updateStatus = (userId, statusData) => moassApiAxios().post(`${API_URL}/${userId}/status`, statusData);
-
-// 사용자 로그아웃
-export const logout = () => moassApiAxios().post(`${API_URL}/logout`);
-
-// 모든 사용자 조회
-export const fetchAllUsers = () => moassApiAxios().get(`${API_URL}/alluser`);
-
-// 내 팀 조회
-export const fetchMyTeam = () => moassApiAxios().get(`${API_URL}/team`);
-
-// 관리자 권한으로 사용자 정보 수정
-export const adminUpdateUser = (studentId, updateData) => moassApiAxios().patch(`${API_URL}/${studentId}`, updateData);
-
-// 사용자 삭제
-export const deleteUser = userId => moassApiAxios().delete(`${API_URL}/${userId}`);
-
-// 관리자 권한으로 새 사용자 등록
-export const adminCreateUser = userData => moassApiAxios().post(`${API_URL}/create`, userData);
+/**
+ * 액세스 토큰 갱신
+ *
+ * @returns {Promise} 갱신된 토큰 정보
+ */
+export const refreshToken = () => {
+    return axios.post(`${API_URL}/refresh`, {}, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+};
