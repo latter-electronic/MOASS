@@ -247,6 +247,21 @@ public class UserService {
                 });
     }
 
+    public Mono<String> backgroundImgUpload(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
+        return s3Service.uploadHandler(headers, file)
+                .flatMap(uploadResult -> {
+                    if (uploadResult.getStatus() != HttpStatus.CREATED) {
+                        return Mono.error(new CustomException("Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR));
+                    }
+                    String fileKey = uploadResult.getKeys()[0];
+                    return userRepository.findByUserId(userInfo.getUserId())
+                            .flatMap(user -> {
+                                user.setBackgroundImg(fileKey);
+                                return userRepository.save(user).thenReturn(fileKey);
+                            });
+                });
+    }
+
     /**
      public Mono<Object> getAllUsers(UserInfo userInfo) {
      return ssafyUserRepository.findAll

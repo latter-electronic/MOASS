@@ -4,12 +4,12 @@ import com.moass.api.domain.file.controller.DownloadFailedException;
 import com.moass.api.domain.file.controller.UploadFailedException;
 import com.moass.api.domain.file.dto.UploadResult;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
+import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -26,7 +26,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -42,7 +41,10 @@ public class S3Service {
     public Mono<UploadResult> uploadHandler(@RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> body) {
         long length = headers.getContentLength();
         if (length < 0) {
-            throw new UploadFailedException(HttpStatus.BAD_REQUEST.value(), Optional.of("required header missing: Content-Length"));
+            throw new CustomException("컨텐츠 길이 헤더가 누락되었습니다.", HttpStatus.BAD_REQUEST);
+        }
+        else if(length >5*1024*1024){
+            throw new CustomException("파일 크기가 최대 허용 범위(5MB)를 초과합니다.", HttpStatus.BAD_REQUEST);
         }
 
         Map<String, String> metadata = new HashMap<String, String>();
