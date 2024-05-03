@@ -1,32 +1,42 @@
 from bluepy.btle import Scanner, DefaultDelegate
+import time
 
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
 
-    # def handleDiscovery(self, dev, isNewDev, isNewData):
-    #     if isNewDev:
-    #         print("Discovered device", dev.addr)
-    #     elif isNewData:
-    #         print("Received new data from", dev.addr)
+def calculate_distance(rssi, tx_power):
+    """
+    Calculate the estimated distance from the RSSI value.
+    """
+    if rssi == 0:
+        return -1.0  # unable to determine distance
+    ratio = rssi * 1.0 / tx_power
+    if ratio < 1.0:
+        return ratio ** 10
+    else:
+        return (0.89976) * (ratio ** 7.7095) + 0.111
 
-print("Scan Start...")
 scanner = Scanner().withDelegate(ScanDelegate())
-devices = scanner.scan(10.0)
 
-# 원하는 비콘의 MAC 주소 설정
-desired_mac = "c3:00:00:1c:6e:ed"
+# 세 개의 비콘 MAC 주소 설정
+beacon_macs = {
+    "beacon1": "c3:00:00:1c:6e:e3",
+    "beacon2": "c3:00:00:1c:6e:ce",
+    "beacon3": "c3:00:00:1c:6e:ed"  
+}
 
-for dev in devices:
-    # 특정 MAC 주소로 필터링
-    if dev.addr.lower() == desired_mac.lower():
-        print(f"Device {dev.addr} matched MAC address.")
-        rssi = dev.rssi
-        measured_power = -59  # 캘리브레이션된 1m에서의 RSSI 값
-        N = 2.0  # 환경 상수
-        distance = 10 ** ((measured_power - rssi) / (10 * N))
-        print("Distance: %.2f m" % distance)
-        # 거리에 따른 점유 상태 판단
-        occupied = distance < 1.0  # 1미터 이내면 점유로 간주
-        print("Seat Occupied:", occupied)
-        # 이후 서버로 데이터 전송 로직 구현할 수 있습니다.
+while True:
+    print("Scanning...")
+    devices = scanner.scan(10.0)  # 10초 동안 BLE 장치를 스캔
+
+    for dev in devices:
+        if dev.addr.lower() in [mac.lower() for mac in beacon_macs.values()]:
+            rssi = dev.rssi
+            measured_power = -59  # 캘리브레이션된 1m에서의 RSSI 값 (실제 값 필요)
+            N = 2.0  # 환경 상수
+            distance = calculate_distance(rssi, measured_power)
+            beacon_id = [key for key, value in beacon_macs.items() if value.lower() == dev.addr.lower()][0]
+            print(f"Distance to {beacon_id}: {distance:.2f} m")
+
+    time.sleep(5)  # 30초 동안 대기 후 다시 스캔
