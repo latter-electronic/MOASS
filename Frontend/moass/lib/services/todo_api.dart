@@ -46,29 +46,31 @@ class ToDoListApi {
     }
   }
 
-  postUserToDoList(var content) async {
-    final formData = FormData.fromMap({'content': content});
+  postUserToDoList(String content) async {
     try {
+      Map data = {'content': content};
+      var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
+        // print('No access token available');
         return [];
       }
       // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.post('$baseUrl/api/schedule/todo',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
-          data: formData);
+          data: body);
+      // print('응답: $response');
 
       if (response.statusCode == 200) {
         print('할 일 등록 성공!');
-        return;
+        return response;
       } else {
         print('To Do 등록 실패');
         return [];
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
+      print('유저 todo 등록 에러: ${e.message}');
       return [];
     }
   }

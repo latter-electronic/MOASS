@@ -17,9 +17,13 @@ class ToDoListWidget extends StatefulWidget {
 }
 
 class _ToDoListState extends State<ToDoListWidget> {
-  final Future<List<ToDo>> toDoList =
+  Future<List<ToDo>> toDoList =
       ToDoListApi(dio: Dio(), storage: const FlutterSecureStorage())
           .getUserToDoList();
+
+  final _formKey = GlobalKey<FormState>();
+
+  String _textFormFieldValue = '';
 
   bool isAddInputAvailable = false;
 
@@ -74,11 +78,39 @@ class _ToDoListState extends State<ToDoListWidget> {
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 30.0),
-                                child: TextFormField(
-                                  decoration: const InputDecoration.collapsed(
-                                      border: UnderlineInputBorder(),
-                                      hintText: '오늘 할 일은 뭔가요?'),
-                                  textInputAction: TextInputAction.done,
+                                child: Form(
+                                  key: _formKey,
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return '한 글자 이상 입력해주세요';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration.collapsed(
+                                        border: UnderlineInputBorder(),
+                                        hintText: '오늘 할 일은 뭔가요?'),
+                                    textInputAction: TextInputAction.done,
+                                    onSaved: (value) async {
+                                      setState(() {
+                                        _textFormFieldValue = value!;
+                                      });
+                                      // print('텍스트 인풋 : $_textFormFieldValue');
+                                      await ToDoListApi(
+                                              dio: Dio(),
+                                              storage:
+                                                  const FlutterSecureStorage())
+                                          .postUserToDoList(
+                                              _textFormFieldValue);
+                                      setState(() {
+                                        toDoList = ToDoListApi(
+                                                dio: Dio(),
+                                                storage:
+                                                    const FlutterSecureStorage())
+                                            .getUserToDoList();
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                             )
@@ -86,7 +118,13 @@ class _ToDoListState extends State<ToDoListWidget> {
                     ),
                     isAddInputAvailable
                         ? GestureDetector(
-                            onTap: completeAddToDo,
+                            onTap: () {
+                              final formKeyState = _formKey.currentState!;
+                              if (formKeyState.validate()) {
+                                formKeyState.save();
+                              }
+                              completeAddToDo();
+                            },
                             child: Container(
                               decoration:
                                   const BoxDecoration(color: Color(0xFF3DB887)),
