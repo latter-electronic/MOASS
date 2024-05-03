@@ -36,6 +36,7 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
 
     Mono<User>  findByUserId(String userId);
 
-
+    @Query("SELECT EXISTS(SELECT 1 FROM User WHERE user_id = :userId)")
+    Mono<Boolean> existsByUserId(String userId);
 }
 
