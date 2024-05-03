@@ -136,6 +136,10 @@ export default function Navbar() {
         }
     };
 
+    const callTestLogin = () => {
+        navigate(`/testlogin`);
+    };
+
     return (
         <nav className="flex flex-col justify-between w-navbarWidth h-screen bg-gray-800 text-white p-4 ">
             <div className="flex flex-col items-center">
@@ -236,6 +240,12 @@ export default function Navbar() {
                                     onClick={() => callLoginFunction()}
                                 >
                                     로그인
+                                </button>
+                                <button
+                                    className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={() => callTestLogin()}
+                                >
+                                    로그인(SSE용)
                                 </button>
                                 <button
                                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
