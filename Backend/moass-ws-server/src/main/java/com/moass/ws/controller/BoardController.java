@@ -1,17 +1,26 @@
 package com.moass.ws.controller;
 
 import com.moass.ws.dto.BoardRequestDto;
+import com.moass.ws.entity.Board;
 import com.moass.ws.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
+
+    @GetMapping
+    public List<Board> getBoards() {
+        return null;
+    }
 
     @MessageMapping("/board/create")
     public void createBoard(@Payload Integer userId) {
