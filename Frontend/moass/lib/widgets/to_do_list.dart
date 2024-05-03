@@ -68,7 +68,10 @@ class _ToDoListState extends State<ToDoListWidget> {
                         : Column(
                             children: [
                               for (var todo in userToDoList)
-                                CheckboxWidget(text: todo.content),
+                                CheckboxWidget(
+                                    text: todo.content,
+                                    completedFlag: todo.completedFlag,
+                                    todoId: todo.todoId),
                             ],
                           ),
                     Container(

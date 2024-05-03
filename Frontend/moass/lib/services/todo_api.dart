@@ -37,11 +37,11 @@ class ToDoListApi {
         // print('투두인스턴스 : $todoInstances');
         return todoInstances;
       } else {
-        print('Failed to load user profile');
+        print('Failed to load user todo list');
         return [];
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
+      print('Error fetching user todo list: ${e.message}');
       return [];
     }
   }
@@ -63,14 +63,67 @@ class ToDoListApi {
       // print('응답: $response');
 
       if (response.statusCode == 200) {
-        print('할 일 등록 성공!');
+        print('todo 등록 성공!');
         return response;
       } else {
-        print('To Do 등록 실패');
+        print('todo 등록 실패');
         return [];
       }
     } on DioException catch (e) {
-      print('유저 todo 등록 에러: ${e.message}');
+      print('todo 등록 에러: ${e.message}');
+      return [];
+    }
+  }
+
+  deleteUserToDoList(var todoId) async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.delete('$baseUrl/api/schedule/todo/$todoId',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+
+      if (response.statusCode == 200) {
+        print('todo 삭제 성공!');
+        return response;
+      } else {
+        print('todo 삭제 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('todo 삭제 에러: ${e.message}');
+      return [];
+    }
+  }
+
+  patchUserToDoList(String todoId, bool completedFlag) async {
+    try {
+      Map data = {'todoId': todoId, 'completedFlag': completedFlag};
+      var body = json.encode(data);
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.patch('$baseUrl/api/schedule/todo',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('todo 상태변경 성공!');
+        return response;
+      } else {
+        print('todo 상태변경 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('todo 상태변경 에러: ${e.message}');
       return [];
     }
   }
