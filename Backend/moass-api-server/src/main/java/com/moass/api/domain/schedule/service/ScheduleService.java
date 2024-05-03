@@ -55,7 +55,7 @@ public class ScheduleService {
 
     public Mono<Object> UpdateDto(UserInfo userInfo, TodoUpdateDto todoUpdateDto) {
         return todoRepository.findByTodoIdAndUserId(todoUpdateDto.getTodoId(),userInfo.getUserId())
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Todo를 찾을 수 없습니다.")))
+                .switchIfEmpty(Mono.error(new CustomException("Todo를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
                 .flatMap(todo -> {
                     boolean isUpdated = false;
                     if(todoUpdateDto.getContent() != null&&!todo.getContent().equals(todoUpdateDto.getContent())){

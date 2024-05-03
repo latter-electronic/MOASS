@@ -46,6 +46,8 @@ public interface SsafyUserRepository extends ReactiveCrudRepository<SsafyUser, I
             "VALUES (:#{#ssafyUser.userId}, :#{#ssafyUser.jobCode}, :#{#ssafyUser.teamCode}, :#{#ssafyUser.userName}, :#{#ssafyUser.cardSerialId})")
     Mono<SsafyUser> saveForce(SsafyUser ssafyUser);
 
+    @Query("SELECT s.team_code FROM SsafyUser s " +
+            "WHERE s.user_id = :userId")
     Mono<String> findTeamCodeByUserId(String userId);
 
     @Query("SELECT c.class_code FROM SsafyUser s " +

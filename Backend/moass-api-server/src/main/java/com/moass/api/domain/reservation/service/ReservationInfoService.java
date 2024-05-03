@@ -64,7 +64,6 @@ public class ReservationInfoService {
                         log.info(Integer.toString(infoTimes.size()));
                         log.info(userIds.toString());
                         log.info(MapUserCounts.toString());
-                        //log.info(Integer.toString(MapUserCounts.get(userId)));
                         if(MapUserCounts.containsKey(userId)&&infoTimes.size()+MapUserCounts.get(userId)>timeLimit){
                             overLimitUsers.add(userId);
                         }else if(infoTimes.size()>timeLimit&&!overLimitUsers.contains(userId)){
@@ -98,12 +97,11 @@ public class ReservationInfoService {
                                     .build()))
                             .collectList()
                             .flatMap(reservationInfos -> {
-                                // UserReservationInfo에 유저 저장
                                 return Flux.fromIterable(reservationInfos)
                                         .flatMap(reservationInfo ->
                                                 Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
                                                         .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
-                                        ).then(Mono.just(reservationInfos.get(0))); // 예약 정보 중 첫 번째 반환
+                                        ).then(Mono.just(reservationInfos.get(0)));
                             });
                 });
     }
