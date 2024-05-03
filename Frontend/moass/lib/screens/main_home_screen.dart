@@ -125,7 +125,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
                     return Column(
                       children: [
-                        userProfile.connectFlag == 0
+                        userProfile.connectFlag == 1
                             ? Container(
                                 height: 200,
                                 width: double.infinity,
@@ -283,7 +283,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                     const Text('명패에 태그하면 기기 상태를 확인할 수 있어요!')
                                   ],
                                 )),
-                        userProfile.connectFlag == 0
+                        userProfile.connectFlag == 1
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -299,11 +299,14 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                           children: [
                                             GestureDetector(
                                               onTap: () async {
-                                                await myInfoApi
-                                                    .patchUserStatus(1);
-                                                setState(() {
-                                                  myInfoApi.fetchUserProfile();
-                                                });
+                                                if (userProfile.statusId == 0) {
+                                                  await myInfoApi
+                                                      .patchUserStatus(1);
+                                                  setState(() {
+                                                    myInfoApi
+                                                        .fetchUserProfile();
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 margin:
@@ -334,11 +337,14 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () async {
-                                                await myInfoApi
-                                                    .patchUserStatus(0);
-                                                setState(() {
-                                                  myInfoApi.fetchUserProfile();
-                                                });
+                                                if (userProfile.statusId == 1) {
+                                                  await myInfoApi
+                                                      .patchUserStatus(0);
+                                                  setState(() {
+                                                    myInfoApi
+                                                        .fetchUserProfile();
+                                                  });
+                                                }
                                               },
                                               child: Container(
                                                 width: 80,
