@@ -1,113 +1,145 @@
 package com.moass.api.global.sse.service;
 
+import com.moass.api.domain.user.repository.SsafyUserRepository;
+import com.moass.api.domain.user.repository.UserRepository;
+import com.moass.api.global.auth.dto.UserInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
+import reactor.core.publisher.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SseService {
 
-    private final Map<String, List<FluxSink<String>>> userSinks = new ConcurrentHashMap<>();
-    private final Map<String, List<FluxSink<String>>> teamSinks = new ConcurrentHashMap<>();
-    private final Map<String, List<FluxSink<String>>> classSinks = new ConcurrentHashMap<>();
+    private final Map<String, Sinks.Many<String>> userSinks = new ConcurrentHashMap<>();
+    private final Map<String, Sinks.Many<String>> teamSinks = new ConcurrentHashMap<>();
+    private final Map<String, Sinks.Many<String>> classSinks = new ConcurrentHashMap<>();
 
+    private final UserRepository userRepository;
+    private final SsafyUserRepository ssafyUserRepository;
+    public Mono<Boolean> userExists(String userId) {return userRepository.existsByUserId(userId);}
+    public Mono<String> getTeamCode(String userId) {return ssafyUserRepository.findTeamCodeByUserId(userId);}
 
-    public Flux<String> subscribeUser(String teamCode) {
-        return Flux.create(sink -> {
-            userSinks.computeIfAbsent(teamCode, k -> new ArrayList<>()).add(sink);
-            sink.next(teamCode + " 개인 채널 구독");
-            sink.onDispose(() -> {
-                userSinks.get(teamCode).remove(sink);
-                if (userSinks.get(teamCode).isEmpty()) {
-                    userSinks.remove(teamCode);
-                }
-            });
-        }, FluxSink.OverflowStrategy.LATEST);
+    public Mono<String> getClassCode(String userId) {return ssafyUserRepository.findClassCodeByUserId(userId);}
+    public Flux<String> subscribeUser(UserInfo userInfo) {
+        return userExists(userInfo.getUserId())
+                .flatMapMany(exists -> {
+                    if (exists) {
+                        Sinks.Many<String> sink = userSinks.computeIfAbsent(userInfo.getUserId(), k -> Sinks.many().multicast().onBackpressureBuffer());
+                        return sink.asFlux()
+                                .doOnSubscribe(subscription -> {
+                                    sink.tryEmitNext("개인채널 구독 완료 : "+userInfo.getUserId());
+                                })
+                                .doFinally(signalType -> {
+                                    if (sink.currentSubscriberCount() == 0) {
+                                        userSinks.remove(userInfo.getUserId());
+                                    }
+                                });
+                    } else {
+                        return Flux.error(new RuntimeException("사용자 정보를 찾을 수 없습니다."));
+                    }
+                });
     }
 
     // 팀 구독 메소드
-    public Flux<String> subscribeTeam(String teamCode) {
-        return Flux.create(sink -> {
-            teamSinks.computeIfAbsent(teamCode, k -> new ArrayList<>()).add(sink);
-            sink.next(teamCode + " 팀 채널 구독");
-            sink.onDispose(() -> {
-                teamSinks.get(teamCode).remove(sink);
-                if (teamSinks.get(teamCode).isEmpty()) {
-                    teamSinks.remove(teamCode);
-                }
-            });
-        }, FluxSink.OverflowStrategy.LATEST);
+    public Flux<String> subscribeTeam(UserInfo userInfo) {
+        return getTeamCode(userInfo.getUserId())
+                .flatMapMany(teamCode -> {
+                    if (teamCode == null || teamCode.isEmpty()) {
+                        return Flux.error(new RuntimeException("팀 코드를 찾을 수 없습니다: " + userInfo.getUserId()));
+                    }
+                        Sinks.Many<String> sink = teamSinks.computeIfAbsent(teamCode, k -> Sinks.many().multicast().onBackpressureBuffer());
+                        return sink.asFlux()
+                                .doOnSubscribe(subscription -> {
+                                    sink.tryEmitNext("팀채널 구독 완료 : "+teamCode);
+                                })
+                                .doFinally(signalType -> {
+                                    if (sink.currentSubscriberCount() == 0) {
+                                        teamSinks.remove(teamCode);
+                                    }
+                                });
+
+                });
     }
 
-    // 반 구독 메소드
-    public Flux<String> subscribeClass(String classCode) {
-        return Flux.create(sink -> {
-            classSinks.computeIfAbsent(classCode, k -> new ArrayList<>()).add(sink);
-            sink.next(classCode + " 반 채널 구독");
-            sink.onDispose(() -> {
-                classSinks.get(classCode).remove(sink);
-                if (classSinks.get(classCode).isEmpty()) {
-                    classSinks.remove(classCode);
-                }
-            });
-        }, FluxSink.OverflowStrategy.LATEST);
+
+    public Flux<String> subscribeClass(UserInfo userInfo) {
+        return getClassCode(userInfo.getUserId())
+                .flatMapMany(classCode -> {
+                    if (classCode == null || classCode.isEmpty()) {
+                        return Flux.error(new RuntimeException("반 코드를 찾을 수 없습니다: " + userInfo.getUserId()));
+                    }
+                    Sinks.Many<String> sink = classSinks.computeIfAbsent(classCode, k -> Sinks.many().multicast().onBackpressureBuffer());
+                    return sink.asFlux()
+                            .doOnSubscribe(subscription -> {
+                                sink.tryEmitNext("반채널 구독 완료 : "+classCode);
+                            })
+                            .doFinally(signalType -> {
+                                if (sink.currentSubscriberCount() == 0) {
+                                    classSinks.remove(classCode);
+                                }
+                            });
+
+                });
     }
 
     // 사람에게 알림 보내기
-    public void notifyUser(String userId, String message) {
-        if (teamSinks.containsKey(userId)) {
-            List<FluxSink<String>> sinks = teamSinks.get(userId);
-            for (FluxSink<String> sink : sinks) {
-                sink.next(message);
+    public Mono<Void> notifyUser(String userId, String message) {
+        return Mono.fromRunnable(() -> {
+            Sinks.Many<String> sink = userSinks.get(userId);
+            if (sink != null) {
+                sink.tryEmitNext(message);
             }
-        }
+        });
     }
 
-    // 팀에게 알림 보내기
-    public void notifyTeam(String teamCode, String message) {
-        if (teamSinks.containsKey(teamCode)) {
-            List<FluxSink<String>> sinks = teamSinks.get(teamCode);
-            for (FluxSink<String> sink : sinks) {
-                sink.next(message);
+    public Mono<Void> notifyTeam(String teamCode, String message) {
+        return Mono.fromRunnable(() -> {
+            Sinks.Many<String> sink = teamSinks.get(teamCode);
+            if (sink != null) {
+                sink.tryEmitNext(message);
             }
-        }
+        });
     }
 
-    // 반에 알림보내기
-    public void notifyClass(String classCode, String message) {
-        if (classSinks.containsKey(classCode)) {
-            List<FluxSink<String>> sinks = userSinks.get(classCode);
-            for (FluxSink<String> sink : sinks) {
-                sink.next(message);
+    public Mono<Void> notifyClass(String classCode, String message) {
+        return Mono.fromRunnable(() -> {
+            Sinks.Many<String> sink = classSinks.get(classCode);
+            if (sink != null) {
+                sink.tryEmitNext(message);
             }
-        }
+        });
     }
 
-    @Scheduled(fixedRate = 10000)  // 10000ms = 10 seconds
+
+    @Scheduled(fixedRate = 10000)  // 10 seconds
     public void sendTestMessages() {
         log.info("userSinks size: {}", userSinks.size());
         log.info("teamSinks size: {}", teamSinks.size());
         log.info("classSinks size: {}", classSinks.size());
 
-        userSinks.forEach((userId, sinks) -> {
-            log.info("User ID '{}' has {} sinks.", userId, sinks.size());
-            sinks.forEach(sink -> sink.next("Test message to user: " + userId));
+        // 각 사용자에게 테스트 메시지 전송
+        userSinks.forEach((userId, sink) -> {
+            log.info("User ID '{}' has {} subscribers.", userId, sink.currentSubscriberCount());
+            sink.tryEmitNext("Test message to user: " + userId);
         });
-        teamSinks.forEach((teamCode, sinks) -> {
-            log.info("Team code '{}' has {} sinks.", teamCode, sinks.size());
-            sinks.forEach(sink -> sink.next("Test message to team: " + teamCode));
+
+        // 각 팀에게 테스트 메시지 전송
+        teamSinks.forEach((teamCode, sink) -> {
+            log.info("Team code '{}' has {} subscribers.", teamCode, sink.currentSubscriberCount());
+            sink.tryEmitNext("Test message to team: " + teamCode);
         });
-        classSinks.forEach((classCode, sinks) -> {
-            log.info("Class code '{}' has {} sinks.", classCode, sinks.size());
-            sinks.forEach(sink -> sink.next("Test message to class: " + classCode));
+
+        // 각 반에게 테스트 메시지 전송
+        classSinks.forEach((classCode, sink) -> {
+            log.info("Class code '{}' has {} subscribers.", classCode, sink.currentSubscriberCount());
+            sink.tryEmitNext("Test message to class: " + classCode);
         });
     }
 }
