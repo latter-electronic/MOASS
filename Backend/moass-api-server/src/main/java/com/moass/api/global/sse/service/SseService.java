@@ -3,8 +3,10 @@ package com.moass.api.global.sse.service;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
+import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.*;
@@ -54,17 +56,19 @@ public class SseService {
                     if (teamCode == null || teamCode.isEmpty()) {
                         return Flux.error(new RuntimeException("팀 코드를 찾을 수 없습니다: " + userInfo.getUserId()));
                     }
-                        Sinks.Many<String> sink = teamSinks.computeIfAbsent(teamCode, k -> Sinks.many().multicast().onBackpressureBuffer());
-                        return sink.asFlux()
-                                .doOnSubscribe(subscription -> {
-                                    sink.tryEmitNext("팀채널 구독 완료 : "+teamCode);
-                                })
-                                .doFinally(signalType -> {
-                                    if (sink.currentSubscriberCount() == 0) {
-                                        teamSinks.remove(teamCode);
-                                    }
-                                });
-
+                    Sinks.Many<String> sink = teamSinks.computeIfAbsent(teamCode, k -> Sinks.many().multicast().onBackpressureBuffer());
+                    return sink.asFlux()
+                            .doOnSubscribe(subscription -> {
+                                log.info("Subscribing to team: " + teamCode + " by user: " + userInfo.getUserId());
+                                sink.tryEmitNext("팀채널 구독 완료 : " + teamCode);
+                            })
+                            .doFinally(signalType -> {
+                                log.info("Subscription ended or cancelled for team: " + teamCode + " by user: " + userInfo.getUserId());
+                                if (sink.currentSubscriberCount() == 0) {
+                                    log.info("Removing sink for team: " + teamCode);
+                                    teamSinks.remove(teamCode);
+                                }
+                            });
                 });
     }
 
@@ -90,32 +94,36 @@ public class SseService {
     }
 
     // 사람에게 알림 보내기
-    public Mono<Void> notifyUser(String userId, String message) {
-        return Mono.fromRunnable(() -> {
+    public Mono<Boolean> notifyUser(String userId, String message) {
+        return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = userSinks.get(userId);
             if (sink != null) {
-                sink.tryEmitNext(message);
+                return sink.tryEmitNext(message).isSuccess();
             }
+            throw new RuntimeException("No active sinks found for user: " + userId);
         });
     }
 
-    public Mono<Void> notifyTeam(String teamCode, String message) {
-        return Mono.fromRunnable(() -> {
+    public Mono<Boolean> notifyTeam(String teamCode, String message) {
+        return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = teamSinks.get(teamCode);
             if (sink != null) {
-                sink.tryEmitNext(message);
+                return sink.tryEmitNext(message).isSuccess();
             }
+            throw new CustomException("No active sinks found for class: " + teamCode, HttpStatus.BAD_REQUEST);
         });
     }
 
-    public Mono<Void> notifyClass(String classCode, String message) {
-        return Mono.fromRunnable(() -> {
+    public Mono<Boolean> notifyClass(String classCode, String message) {
+        return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = classSinks.get(classCode);
             if (sink != null) {
-                sink.tryEmitNext(message);
+                return sink.tryEmitNext(message).isSuccess();
             }
+            throw new CustomException("No active sinks found for class: " + classCode, HttpStatus.BAD_REQUEST);
         });
     }
+
 
 
     @Scheduled(fixedRate = 10000)  // 10 seconds

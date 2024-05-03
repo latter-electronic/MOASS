@@ -2,6 +2,7 @@ package com.moass.api.global.sse.controller;
 
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.dto.UserInfo;
+import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.sse.dto.MessageDto;
 import com.moass.api.global.sse.service.SseService;
@@ -53,17 +54,24 @@ public class SseController {
             return ApiResponse.error("메시지가 필요합니다.", HttpStatus.NO_CONTENT);
         }
 
+        Mono<Boolean> notificationResult;
         if (teamCode != null) {
-            return sseService.notifyTeam(teamCode, messageDto.getMessage())
-                    .then(ApiResponse.ok("팀 메시지 전송 완료"));
+            notificationResult = sseService.notifyTeam(teamCode, messageDto.getMessage());
         } else if (classCode != null) {
-            return sseService.notifyClass(classCode, messageDto.getMessage())
-                    .then(ApiResponse.ok("반 메시지 전송 완료"));
+            notificationResult = sseService.notifyClass(classCode, messageDto.getMessage());
         } else if (userId != null) {
-            return sseService.notifyUser(userId, messageDto.getMessage())
-                    .then(ApiResponse.ok("사용자 메시지 전송 완료"));
+            notificationResult = sseService.notifyUser(userId, messageDto.getMessage());
         } else {
             return ApiResponse.error("팀 코드, 반 코드 또는 사용자 ID 중 하나가 필요합니다.", HttpStatus.BAD_REQUEST);
         }
+        return notificationResult
+                .flatMap(success -> {
+                    if (success) {
+                        return ApiResponse.ok("메시지 전송 성공");
+                    } else {
+                        return ApiResponse.error("메시지 전송 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                })
+                .onErrorResume(e -> ApiResponse.error("내부 서버 오류: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

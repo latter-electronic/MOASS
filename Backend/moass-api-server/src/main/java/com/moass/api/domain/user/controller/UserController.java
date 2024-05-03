@@ -192,7 +192,7 @@ public class UserController {
     public Mono<ResponseEntity<ApiResponse>> updatebackgroundImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.backgroundImgUpload(userInfo,headers,file)
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }
