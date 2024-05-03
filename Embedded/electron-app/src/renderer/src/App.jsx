@@ -15,6 +15,7 @@ import Nameplate from "./pages/nameplate/NameplatePage.jsx"
 import TagNFC from "./pages/common/TagNFCPage.jsx";
 import TagSuccess from "./pages/common/TagSuccessPage.jsx";
 import TestLoginPage from "./pages/common/TestLoginPage.jsx";
+import SSETestPage from "./pages/common/SSETestPage.jsx";
 
 export default function App() {
     return (
@@ -34,6 +35,7 @@ export default function App() {
                     <Route path="/tagnfc" element={<TagNFC />} />
                     <Route path="/tagsuccess" element={<TagSuccess />} />
                     <Route path="/testlogin" element={<TestLoginPage />} />
+                    <Route path="/ssetest" element={<SSETestPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

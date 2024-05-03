@@ -22,6 +22,8 @@ export default function TestLoginPage() {
             const { accessToken, refreshToken } = response.data.data;
             login(accessToken, refreshToken);
             alert(`로그인 성공: \nAccessToken: ${accessToken}\nRefreshToken: ${refreshToken}`);
+            console.log(accessToken);
+            console.log(refreshToken);
             navigate(`/`);
         } catch (error) {
             alert(`로그인 실패: ${error.response?.data?.message}`);

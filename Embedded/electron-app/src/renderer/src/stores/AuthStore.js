@@ -6,8 +6,8 @@ import { create } from 'zustand'
 
 const AuthStore = create(set => ({
   isAuthenticated: false,  // 로그인 상태
-  accessToken: null,  // 액세스 토큰
-  refreshToken: null, // 리프레시 토큰
+  accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDU4NzA2IiwidXNlckVtYWlsIjoiZGlkdWVkaWR1ZUBuYXZlci5jb20iLCJ1c2VySWQiOiIxMDU4NzA2IiwidXNlck5hbWUiOiLshJzsp4DsiJgiLCJqb2JDb2RlIjoxLCJ0ZWFtQ29kZSI6IkUyMDMiLCJpYXQiOjE3MTQ3MTY3OTYsImV4cCI6MTcxNDcyNzU5Nn0.1mz4_pH6qACdjwdngAX-GiGz2TTgqFPkz4ehyGRhHZU',  // 액세스 토큰
+  refreshToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDU4NzA2IiwidXNlckVtYWlsIjoiZGlkdWVkaWR1ZUBuYXZlci5jb20iLCJ1c2VySWQiOiIxMDU4NzA2IiwidXNlck5hbWUiOiLshJzsp4DsiJgiLCJqb2JDb2RlIjoxLCJ0ZWFtQ29kZSI6IkUyMDMiLCJpYXQiOjE3MTQ3MTY3OTYsImV4cCI6MTcxNTMyMTU5Nn0.YHzyhefYDjnvcBswvd50PMR613IRFCncGh0F8PAQ-sI', // 리프레시 토큰
 
   login: (accessToken, refreshToken) => set({
     isAuthenticated: true,

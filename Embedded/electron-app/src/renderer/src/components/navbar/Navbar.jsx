@@ -129,15 +129,19 @@ export default function Navbar() {
     const handleLogout = async () => {
         try {
             await deviceLogout();
-            console.log('Logged out successfully');
-            navigate('/login'); // Redirect to login page or home page after logout
+            console.log('로그아웃 성공!');
+            navigate('/');
         } catch (error) {
-            console.error('Logout failed:', error);
+            console.error('로그아웃 실패:', error);
         }
     };
 
     const callTestLogin = () => {
         navigate(`/testlogin`);
+    };
+
+    const callSSETest = () => {
+        navigate(`/ssetest`);
     };
 
     return (
@@ -252,6 +256,12 @@ export default function Navbar() {
                                     onClick={handleLogout}
                                 >
                                     로그아웃
+                                </button>
+                                <button
+                                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={callSSETest}
+                                >
+                                    SSE 테스트
                                 </button>
                             </div>
                         </div>
