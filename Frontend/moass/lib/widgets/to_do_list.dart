@@ -56,7 +56,17 @@ class _ToDoListState extends State<ToDoListWidget> {
                         Border.all(color: const Color(0xFF6ECEF5), width: 2.0)),
                 child: Column(
                   children: [
-                    // for (var todo in userToDoList) CheckboxWidget(text: todo),
+                    userToDoList!.isEmpty
+                        ? const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
+                            child: Text('등록된 할 일이 없습니다'),
+                          )
+                        : Column(
+                            children: [
+                              for (var todo in userToDoList)
+                                CheckboxWidget(text: todo.content),
+                            ],
+                          ),
                     Container(
                       child: isAddInputAvailable
                           ? SizedBox(
@@ -89,7 +99,12 @@ class _ToDoListState extends State<ToDoListWidget> {
                                       Icons.check_circle,
                                       color: Color(0xFF3DB887),
                                     ),
-                                    Text('완료!'),
+                                    Text(
+                                      '할 일 등록하기',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ],
                                 ),
                               ),
