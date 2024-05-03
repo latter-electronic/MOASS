@@ -6,14 +6,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Builder
 public class Board {
+
+    public Board() {}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    private Integer boardId;
+
+    private String BoardUrl;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    private String BoardName;
 }

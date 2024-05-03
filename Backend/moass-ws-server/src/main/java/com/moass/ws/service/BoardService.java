@@ -1,9 +1,10 @@
 package com.moass.ws.service;
 
-import com.moass.ws.dto.BoardMessage;
+import com.moass.ws.dto.BoardRequestDto;
 
 public interface BoardService {
 
-    void enter(BoardMessage boardMessage);
-    void exit(BoardMessage boardMessage);
+    void createBoard(Integer userId);
+    void enterBoard(BoardRequestDto dto);
+    void quitBoard(BoardRequestDto dto);
 }

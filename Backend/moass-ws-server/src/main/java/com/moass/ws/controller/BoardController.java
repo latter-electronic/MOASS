@@ -1,20 +1,36 @@
 package com.moass.ws.controller;
 
-import com.moass.ws.dto.BoardMessage;
+import com.moass.ws.dto.BoardRequestDto;
+import com.moass.ws.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
 
-    @MessageMapping("/ws/enter")
-    public void enter(BoardMessage dto) {}
+    private final BoardService boardService;
 
-    @MessageMapping("/ws/exit")
-    public void exit(BoardMessage dto) {}
+    @MessageMapping("/board/create")
+    public void createBoard(@Payload Integer userId) {
+        boardService.createBoard(userId);
+    }
 
-    @MessageMapping("/ws/draw")
-    public void draw(BoardMessage dto) {}
+    @MessageMapping("/board/enter")
+    public void enterBoard(@Payload BoardRequestDto dto) {
+        boardService.enterBoard(dto);
+    }
+
+    @MessageMapping("/board/quit")
+    public void quitBoard(@Payload BoardRequestDto dto) {
+        boardService.quitBoard(dto);
+    }
+
+    @MessageMapping("/board/draw")
+    public void draw(BoardRequestDto dto) {}
+
+    @MessageMapping("board/screenshot")
+    public void screenshot(BoardRequestDto dto) {}
 }

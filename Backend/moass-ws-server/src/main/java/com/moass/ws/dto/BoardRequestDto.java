@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardMessage {
-    private MessageType type;
-    private Long boardId;
-    private String sender;
-    private Point point;
+public class BoardRequestDto {
+    private Integer boardId;
+    private Integer userId;
 }
