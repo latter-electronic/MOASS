@@ -122,7 +122,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                     var userProfile = snapshot.data;
                     return Column(
                       children: [
-                        userProfile?.connectFlag == 1
+                        userProfile?.connectFlag == 0
                             ? Container(
                                 height: 200,
                                 width: double.infinity,
