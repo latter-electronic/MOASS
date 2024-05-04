@@ -6,25 +6,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Board {
+public class Screenshot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer screenshotId;
+
+    private String screenshotUrl;
+
     private Integer boardId;
-
-    private String boardName;
-
-    private String boardUrl;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 }

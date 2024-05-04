@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 //import com.cute.gawm.common.exception.S3FileDeleteException;
 //import com.cute.gawm.common.exception.S3FileUploadException;
+import com.moass.ws.exception.S3FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class S3Uploader {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucketName}")
+    @Value("${aws.s3.bucket}")
     private String bucketName; // S3 버킷 이름 설정
 
     @Autowired
@@ -50,15 +51,6 @@ public class S3Uploader {
             return fileName;
         }catch(Exception e){
             throw new S3FileUploadException("파일 업로드에 실패했습니다. :"+e.getMessage());
-        }
-    }
-
-    public boolean deleteFile(String fileName) {
-        try {
-            amazonS3.deleteObject(new DeleteObjectRequest(bucketName, fileName));
-            return true; // 삭제 성공
-        } catch (Exception e) {
-            throw new S3FileDeleteException("파일 삭제에 실패했습니다. 원인: " + e.getMessage());
         }
     }
 }

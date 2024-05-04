@@ -28,10 +28,15 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3'
     implementation("com.amazonaws:aws-java-sdk-s3:1.12.174")
     compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+configurations.all {
+    exclude group: 'commons-logging', module: 'commons-logging'
 }
