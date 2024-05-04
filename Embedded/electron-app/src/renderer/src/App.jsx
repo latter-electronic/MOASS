@@ -1,5 +1,5 @@
 // App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "./components/Layout.jsx";
 
@@ -22,6 +22,8 @@ export default function App() {
         <BrowserRouter>
             <div className="flex min-h-screen font-noto-sans ml-1">
                 <Routes>
+                    <Route path="/" element={<Navigate replace to="/testlogin" />} />
+                    <Route path="/testlogin" element={<TestLoginPage />} />
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
                         <Route path="board" element={<Board />} />
@@ -34,7 +36,6 @@ export default function App() {
                     <Route path="/callalert" element={<CallAlert />} />
                     <Route path="/tagnfc" element={<TagNFC />} />
                     <Route path="/tagsuccess" element={<TagSuccess />} />
-                    <Route path="/testlogin" element={<TestLoginPage />} />
                     <Route path="/ssetest" element={<SSETestPage />} />
                 </Routes>
             </div>
