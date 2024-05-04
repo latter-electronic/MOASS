@@ -24,11 +24,11 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Navigate replace to="/testlogin" />} />
                     <Route path="/testlogin" element={<TestLoginPage />} />
-                    <Route path="/" element={<Layout />}>
+                    <Route path="/home" element={<Layout />}>
                         <Route index element={<Home />} />
                         <Route path="board" element={<Board />} />
-                            <Route path="board/test" element={<BoardTest />} />
-                            <Route path="board/history" element={<BoardHistory />} />
+                        <Route path="board/test" element={<BoardTest />} />
+                        <Route path="board/history" element={<BoardHistory />} />
                         <Route path="jira" element={<Jira />} />
                         <Route path="alert" element={<Alert />} />
                     </Route>
