@@ -128,9 +128,13 @@ export default function Navbar() {
 
     const handleLogout = async () => {
         try {
-            await deviceLogout();
+            const logoutData = {
+                deviceId: "DDDD2", // deviceId 나중에 실제로 가져오기
+                userId: "1058706" // userId 나중에 실제로 가져오기
+            };
+            await deviceLogout(logoutData);
             console.log('로그아웃 성공!');
-            navigate('/');
+            navigate('/testlogin');
         } catch (error) {
             console.error('로그아웃 실패:', error);
         }
@@ -236,7 +240,7 @@ export default function Navbar() {
                                     </span>
                                 </div>
                             ))}
-                            <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none"/>
+                            <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
                             <span className="text-indigo-950 font-bold ml-3">개발용</span>
                             <div className="flex flex-col justify-around mt-2">
                                 <button

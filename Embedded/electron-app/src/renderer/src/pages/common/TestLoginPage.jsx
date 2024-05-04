@@ -32,6 +32,11 @@ export default function TestLoginPage() {
         }
     };
 
+    // Function to handle navigation to the main page
+    const handleGoHome = () => {
+        navigate('/');
+    };
+
     return (
         <div className="flex items-center justify-center min-h-screen w-screen">
             <div className="p-8 bg-white shadow-md rounded">
@@ -51,9 +56,14 @@ export default function TestLoginPage() {
                     onChange={(e) => setCardSerialId(e.target.value)}
                 />
                 <button 
-                    className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                    className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-4"
                     onClick={handleLogin}>
                     로그인
+                </button>
+                <button 
+                    className="w-full p-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+                    onClick={handleGoHome}>
+                    메인 화면으로 이동
                 </button>
             </div>
         </div>
