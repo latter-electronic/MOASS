@@ -16,7 +16,7 @@ public class MongoConfig {
     @Bean
     CommandLineRunner commandLineRunner(ReactiveMongoTemplate reactiveMongoTemplate) {
         return args -> {
-            resetData();
+            //resetData();
         };
     }
 

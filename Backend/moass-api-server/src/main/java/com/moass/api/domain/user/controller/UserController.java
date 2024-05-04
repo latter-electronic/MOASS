@@ -79,7 +79,7 @@ public class UserController {
         String refreshToken = authHeader.substring(7);
         return userService.refreshAccessToken(refreshToken)
                 .flatMap(tokens -> ApiResponse.ok("토큰이 정상적으로 갱신되었습니다.", tokens))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : ", e.getStatus()));
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : "+e.getMessage(), e.getStatus()));
     }
 
 
@@ -186,6 +186,13 @@ public class UserController {
         return userService.profileImgUpload(userInfo,headers,file)
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping(value = "/backgroundImg")
+    public Mono<ResponseEntity<ApiResponse>> updatebackgroundImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
+        return userService.backgroundImgUpload(userInfo,headers,file)
+                .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }

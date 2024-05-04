@@ -16,9 +16,10 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
     Mono<UserDetail> findUserDetailByUserEmail(String userEmail);
 
     @Query("SELECT l.location_code, l.location_name, c.class_code, t.team_code, t.team_name, " +
-            "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.profile_img, su.job_code, u.connect_flag " +
+            "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.profile_img, su.job_code, u.connect_flag , se.x_coord, se.y_coord " +
             "FROM User u " +
             "INNER JOIN SsafyUser su ON u.user_id = su.user_id " +
+            "LEFT JOIN Seat se ON u.user_id = se.user_id " +
             "INNER JOIN Team t ON t.team_code = su.team_code " +
             "INNER JOIN Class c ON c.class_code = t.class_code " +
             "INNER JOIN Location l ON l.location_code = c.location_code " +
@@ -35,6 +36,7 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
 
     Mono<User>  findByUserId(String userId);
 
-
+    @Query("SELECT EXISTS(SELECT 1 FROM User WHERE user_id = :userId)")
+    Mono<Boolean> existsByUserId(String userId);
 }
 

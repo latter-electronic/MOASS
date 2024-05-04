@@ -19,6 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
+import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -66,10 +69,17 @@ public class SecurityConfig {
         AuthenticationWebFilter jwtFilter = new AuthenticationWebFilter(jwtAuthManager);
         jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler(new ObjectMapper()));
         jwtFilter.setServerAuthenticationConverter(jwtAuthConverter);
+        OrServerWebExchangeMatcher pathsToExclude = new OrServerWebExchangeMatcher(
+                new PathPatternParserServerWebExchangeMatcher("/user/login"),
+                new PathPatternParserServerWebExchangeMatcher("/user/refresh"),
+                new PathPatternParserServerWebExchangeMatcher("/user/signup")
+        );
+        NegatedServerWebExchangeMatcher pathsToInclude = new NegatedServerWebExchangeMatcher(pathsToExclude);
+        jwtFilter.setRequiresAuthenticationMatcher(pathsToInclude);
         return http
                 .authorizeExchange(auth ->
                         auth.pathMatchers("/user/login").permitAll()
-                                .pathMatchers("/device/login").permitAll()
+                                .pathMatchers("/device/login","/device/islogin").permitAll()
                                 .pathMatchers("/user/refresh").permitAll()
                                 .pathMatchers("/user/signup").permitAll()
                                 .pathMatchers("/stream/**").permitAll()

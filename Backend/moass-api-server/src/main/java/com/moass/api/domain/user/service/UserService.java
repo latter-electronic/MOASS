@@ -62,7 +62,11 @@ public class UserService {
 
 
     public Mono<UserSearchInfoDto> getUserDetail(String userEmail) {
-        return userRepository.findByUserEmail(userEmail).switchIfEmpty(Mono.error(new CustomException("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND))).flatMap(team -> userRepository.findUserSearchDetailByUserEmail(userEmail).switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND))).flatMap(userSearchDetail -> Mono.just(new UserSearchInfoDto(userSearchDetail))));
+        return userRepository.findByUserEmail(userEmail)
+                .switchIfEmpty(Mono.error(new CustomException("존재하지 않는 사용자입니다.", HttpStatus.NOT_FOUND)))
+                .flatMap(team -> userRepository.findUserSearchDetailByUserEmail(userEmail)
+                        .switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
+                        .flatMap(userSearchDetail -> Mono.just(new UserSearchInfoDto(userSearchDetail))));
     }
 
     /**
@@ -121,7 +125,9 @@ public class UserService {
 
 
     public Mono<List<UserSearchInfoDto>> findByUsername(UserInfo userInfo, String userName) {
-        return ssafyUserRepository.exisisByUserName(userName, userInfo.getJobCode()).switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND))).flatMap(userExist -> ssafyUserRepository.findAllUserSearchDetailByuserName(userName, userInfo.getJobCode()).collectList().flatMap(userSearchDetails -> {
+        return ssafyUserRepository.exisisByUserName(userName, userInfo.getJobCode())
+                .switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
+                .flatMap(userExist -> ssafyUserRepository.findAllUserSearchDetailByuserName(userName, userInfo.getJobCode()).collectList().flatMap(userSearchDetails -> {
             if (userSearchDetails.isEmpty()) {
                 return Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
             }
@@ -236,6 +242,21 @@ public class UserService {
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
                                 user.setProfileImg(fileKey);
+                                return userRepository.save(user).thenReturn(fileKey);
+                            });
+                });
+    }
+
+    public Mono<String> backgroundImgUpload(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
+        return s3Service.uploadHandler(headers, file)
+                .flatMap(uploadResult -> {
+                    if (uploadResult.getStatus() != HttpStatus.CREATED) {
+                        return Mono.error(new CustomException("Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR));
+                    }
+                    String fileKey = uploadResult.getKeys()[0];
+                    return userRepository.findByUserId(userInfo.getUserId())
+                            .flatMap(user -> {
+                                user.setBackgroundImg(fileKey);
                                 return userRepository.save(user).thenReturn(fileKey);
                             });
                 });

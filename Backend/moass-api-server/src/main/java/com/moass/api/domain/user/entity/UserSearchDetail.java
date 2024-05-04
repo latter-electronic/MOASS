@@ -51,4 +51,10 @@ public class UserSearchDetail {
         @Column("connect_flag")
         private Integer connectFlag;
 
+        @Column("x_coord")
+        private Integer xCoord;
+
+        @Column("y_coord")
+        private Integer yCoord;
+
 }

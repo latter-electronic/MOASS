@@ -1,14 +1,19 @@
 package com.moass.api.global.sse.controller;
 
+import com.moass.api.global.annotaion.Login;
+import com.moass.api.global.auth.dto.UserInfo;
+import com.moass.api.global.exception.CustomException;
+import com.moass.api.global.response.ApiResponse;
+import com.moass.api.global.sse.dto.MessageDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
@@ -18,18 +23,55 @@ public class SseController {
 
     private final SseService sseService;
 
+    @GetMapping("/class")
+    public Flux<ServerSentEvent<String>> streamClassEvents(@Login UserInfo userInfo) {
+        return sseService.subscribeClass(userInfo)
+                .map(data -> ServerSentEvent.builder(data).build());
+    }
 
     // 팀 코드별로 SSE 스트림 구독
-    @GetMapping("/team/{teamCode}")
-    public Flux<ServerSentEvent<String>> streamTeamEvents(@PathVariable String teamCode) {
-        return sseService.subscribeTeam(teamCode)
+    @GetMapping("/team")
+    public Flux<ServerSentEvent<String>> streamTeamEvents(@Login UserInfo userInfo) {
+        return sseService.subscribeTeam(userInfo)
                 .map(data -> ServerSentEvent.builder(data).build());
     }
 
     // 개인 사용자의 이벤트 스트림 구독
-    @GetMapping("/user/{userId}")
-    public Flux<ServerSentEvent<String>> streamUserEvents(@PathVariable String userId) {
-        return sseService.subscribeUser(userId)
+    @GetMapping("/user")
+    public Flux<ServerSentEvent<String>> streamUserEvents(@Login UserInfo userInfo) {
+        return sseService.subscribeUser(userInfo)
                 .map(data -> ServerSentEvent.builder(data).build());
+    }
+
+
+    @PostMapping("/send")
+    public Mono<ResponseEntity<ApiResponse>> sendMessage(
+            @RequestParam(required = false) String teamCode,
+            @RequestParam(required = false) String classCode,
+            @RequestParam(required = false) String userId,
+            @RequestBody MessageDto messageDto) {
+        if (messageDto.getMessage() == null) {
+            return ApiResponse.error("메시지가 필요합니다.", HttpStatus.NO_CONTENT);
+        }
+
+        Mono<Boolean> notificationResult;
+        if (teamCode != null) {
+            notificationResult = sseService.notifyTeam(teamCode, messageDto.getMessage());
+        } else if (classCode != null) {
+            notificationResult = sseService.notifyClass(classCode, messageDto.getMessage());
+        } else if (userId != null) {
+            notificationResult = sseService.notifyUser(userId, messageDto.getMessage());
+        } else {
+            return ApiResponse.error("팀 코드, 반 코드 또는 사용자 ID 중 하나가 필요합니다.", HttpStatus.BAD_REQUEST);
+        }
+        return notificationResult
+                .flatMap(success -> {
+                    if (success) {
+                        return ApiResponse.ok("메시지 전송 성공");
+                    } else {
+                        return ApiResponse.error("메시지 전송 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                })
+                .onErrorResume(e -> ApiResponse.error("내부 서버 오류: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
     }
 }

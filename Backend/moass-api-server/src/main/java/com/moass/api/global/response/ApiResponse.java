@@ -48,4 +48,9 @@ public class ApiResponse<T> {
 		ApiResponse response = new ApiResponse(null,message, status.value());
 		return Mono.just(ResponseEntity.status(status).body(response));
 	}
+
+	public static Mono<ResponseEntity<ApiResponse>> error(String message, HttpStatus status,Object data) {
+		ApiResponse response = new ApiResponse(data,message, status.value());
+		return Mono.just(ResponseEntity.status(status).body(response));
+	}
 }
