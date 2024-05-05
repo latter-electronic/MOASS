@@ -63,6 +63,7 @@
     "@electron-toolkit/utils": "^3.0.0",
     "@floating-ui/react": "^0.26.12",
     "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
     "electron-updater": "^6.1.7",
     "moment": "^2.30.1",
     "node-fetch": "^3.3.2",
