@@ -1,12 +1,15 @@
 package com.moass.api.domain.reservation.service;
 
+import com.moass.api.domain.reservation.dto.ReservationDetailDto;
 import com.moass.api.domain.reservation.dto.ReservationInfoCreateDto;
+import com.moass.api.domain.reservation.entity.Reservation;
 import com.moass.api.domain.reservation.entity.ReservationInfo;
 import com.moass.api.domain.reservation.entity.UserCount;
 import com.moass.api.domain.reservation.entity.UserReservationInfo;
 import com.moass.api.domain.reservation.repository.ReservationInfoRepository;
 import com.moass.api.domain.reservation.repository.ReservationRepository;
 import com.moass.api.domain.reservation.repository.UserReservationInfoRepository;
+import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
@@ -19,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +37,7 @@ public class ReservationInfoService {
     private final UserReservationInfoRepository userReservationInfoRepository;
     private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
-
+    private final SsafyUserRepository ssafyUserRepository;
 
     @Transactional
     public Mono<ReservationInfo> createReservationInfo(UserInfo userInfo, ReservationInfoCreateDto reservationInfoCreateDto) {
@@ -133,8 +137,37 @@ public class ReservationInfoService {
         // 시간 문자열 형식: HH:mm~HH:mm
         return String.format("%d:%02d~%d:%02d", startHour, startMinute, endHour, endMinute);
     }
-/**
-    public Mono<List<>> getTodayReservationInfo(UserInfo userInfo) {
+
+    public Mono<List<ReservationDetailDto>> getTodayReservationInfo(UserInfo userInfo) {
+        log.info(String.valueOf(LocalDate.now(ZoneId.of("Asia/Seoul"))));
+        return ssafyUserRepository.findClassCodeByUserId(userInfo.getUserId())
+                .switchIfEmpty(Mono.error(new CustomException("해당 사용자의 클래스 코드를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
+                .flatMapMany(classCode -> reservationRepository.findByClassCode(classCode))
+                .flatMap(reservation -> reservationInfoRepository.findByReservationIdAndInfoDate(reservation.getReservationId(), LocalDate.now(ZoneId.of("Asia/Seoul")))
+                        .collectList()
+                        .map(infos -> createReservationDetailDto(reservation, infos)))
+                .collectList();
     }
- */
+
+    private ReservationDetailDto createReservationDetailDto(Reservation reservation, List<ReservationInfo> infos) {
+        ReservationDetailDto dto = new ReservationDetailDto();
+        dto.setReservationId(reservation.getReservationId());
+        dto.setClassCode(reservation.getClassCode());
+        dto.setCategory(reservation.getCategory());
+        dto.setTimeLimit(reservation.getTimeLimit());
+        dto.setReservationName(reservation.getReservationName());
+        dto.setColorCode(reservation.getColorCode());
+        dto.setReservationInfoList(infos);
+        return dto;
+    }
+
+    public Mono<List<ReservationDetailDto>> searchReservationInfo(UserInfo userInfo, LocalDate searchDate) {
+        return ssafyUserRepository.findClassCodeByUserId(userInfo.getUserId())
+                .switchIfEmpty(Mono.error(new CustomException("해당 사용자의 클래스 코드를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
+                .flatMapMany(classCode -> reservationRepository.findByClassCode(classCode))
+                .flatMap(reservation -> reservationInfoRepository.findByReservationIdAndInfoDate(reservation.getReservationId(), searchDate)
+                        .collectList()
+                        .map(infos -> createReservationDetailDto(reservation, infos)))
+                .collectList();
+    }
 }

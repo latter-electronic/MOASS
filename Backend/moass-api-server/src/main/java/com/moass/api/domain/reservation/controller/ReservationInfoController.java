@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
+
 @Slf4j
 @RestController
 @RequestMapping("/reservationInfo")
@@ -26,13 +28,18 @@ public class ReservationInfoController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 정보 생성 실패 : " + e.getMessage(), e.getStatus()));
     }
 
-    /**
+
     @GetMapping("/today")
     public Mono<ResponseEntity<ApiResponse>> gettodayReservationInfo(@Login UserInfo userInfo){
         return reservationInfoService.getTodayReservationInfo(userInfo)
-                .collectList()
-                .flatMap(reservationInfos -> ApiResponse.ok("오늘 예약 정보 조회 성공", reservationInfos))
+                .flatMap(reservationDetailDtos -> ApiResponse.ok("오늘 예약 정보 조회 성공", reservationDetailDtos))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("오늘 예약 정보 조회 실패 : " + e.getMessage(), e.getStatus()));
     }
-    */
+
+    @GetMapping("/search")
+    public Mono<ResponseEntity<ApiResponse>> gettodayReservationInfo(@Login UserInfo userInfo, @RequestParam LocalDate date){
+        return reservationInfoService.searchReservationInfo(userInfo,date)
+                .flatMap(reservationDetailDtos -> ApiResponse.ok("오늘 예약 정보 조회 성공", reservationDetailDtos))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("오늘 예약 정보 조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
 }
