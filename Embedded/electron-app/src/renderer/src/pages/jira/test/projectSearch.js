@@ -1,11 +1,10 @@
-// CommonJS 스타일의 index.js
 (async () => {
     const { default: fetch } = await import('node-fetch');
   
     fetch('https://ssafy.atlassian.net/rest/api/3/project/search', {
       method: 'GET',
       headers: {
-        'Authorization': `Basic ${Buffer.from('diduedidue@naver.com:your_api_token').toString('base64')}`,
+        'Authorization': `Basic ${Buffer.from(`diduedidue@naver.com:${import.meta.env.VITE_JIRA_API_TOKEN}`).toString('base64')}`,
         'Accept': 'application/json'
       }
     })
