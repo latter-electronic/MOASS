@@ -17,11 +17,6 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping
-    public List<Board> getBoards() {
-        return null;
-    }
-
     @MessageMapping("/board/create")
     public void createBoard(@Payload Integer userId) {
         boardService.createBoard(userId);

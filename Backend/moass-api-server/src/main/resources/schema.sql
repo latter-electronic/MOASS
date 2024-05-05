@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS `Screenshot`;
+DROP TABLE IF EXISTS `BoardUser`;
+DROP TABLE IF EXISTS `Board`;
+
 DROP TABLE IF EXISTS `UserReservationInfo`;
 DROP TABLE IF EXISTS `ReservationInfo`;
 DROP TABLE IF EXISTS `Reservation`;
@@ -114,4 +118,33 @@ CREATE TABLE `UserReservationInfo` (
                                        PRIMARY KEY (`info_id`, `user_id`),
                                        FOREIGN KEY (`info_id`) REFERENCES `ReservationInfo` (`info_id`),
                                        FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
+
+CREATE TABLE `Board`
+(
+    `board_id` INT NOT NULL AUTO_INCREMENT,
+    `board_name` VARCHAR(255),
+    `board_url` VARCHAR(255),
+    `is_active` BOOLEAN,
+    `completed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`board_id`)
+);
+
+CREATE TABLE `BoardUser`
+(
+    `board_user_id` INT NOT NULL AUTO_INCREMENT,
+    `board_id` INT NOT NULL,
+    `user_id` VARCHAR(20) NOT NULL,
+    PRIMARY KEY (`board_user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`),
+    FOREIGN KEY (`board_id`) REFERENCES `Board` (`board_id`)
+);
+
+CREATE TABLE  `Screenshot`
+(
+    `screenshot_id` INT NOT NULL AUTO_INCREMENT,
+    `screenshot_url` VARCHAR(255),
+    `board_user_id` INT NOT NULL,
+    PRIMARY KEY (`screenshot_id`),
+    FOREIGN KEY (`board_user_id`) REFERENCES `BoardUser` (`board_user_id`)
 );
