@@ -9,7 +9,7 @@
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'Authorization': `Basic ${Buffer.from('diduedidue@naver.com:ATATT3xFfGF0CQg6pdozVLzR_9t-KbjN0eVvOCFboUHE9I7HGTj9ChXe7VV-HtdlfYFkcXFZ6QMELuo0uhFvnNNWk6alPHKA2vUz2FnHtr2dRUm-8q2_IzH8NWz-h_OjJpbsGRCFg42yH5p5tztaSoV6z-pzSB2PxwwnOJ390Qe0D8TENAxzlBg=A98212EB').toString('base64')}`,
+                'Authorization': `Basic ${Buffer.from(`diduedidue@naver.com:${import.meta.env.VITE_JIRA_API_TOKEN}`).toString('base64')}`,
                 'Accept': 'application/json'
             }
         });
