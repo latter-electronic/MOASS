@@ -2,9 +2,9 @@
     const { default: fetch } = await import('node-fetch');
     const { writeFile } = await import('fs/promises');
 
-    // 필요한 필드 ID를 정확히 알아내야 함 (예시: customfield_10010은 에픽, customfield_10020은 story point)
-    const fields = 'creator,summary,customfield_10010,priority,customfield_10020,status';
-    
+    // 필요한 필드 ID를 정확히 알아내야 함. 커스텀필드는 지정 불가
+    const fields = 'creator,summary,priority,status';
+
     // 원래는 project = 'S10P31E203' AND sprint IN openSprints() 인데 지금 열린 스프린트가 없어서 제일 최신 스프린트로 불러옴
     const jqlQuery = encodeURIComponent(`project = 'S10P31E203' AND sprint IN closedSprints() AND sprint NOT IN futureSprints() ORDER BY sprint DESC`);
     const url = `https://ssafy.atlassian.net/rest/api/3/search?jql=${jqlQuery}&fields=${fields}&maxResults=10`;
