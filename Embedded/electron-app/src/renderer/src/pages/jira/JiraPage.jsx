@@ -14,16 +14,26 @@ const profileImages = [profile1, profile2, profile3, profile4, profile5, profile
 
 export default function JiraPage() {
     const [issues, setIssues] = useState([]);
+    const [todoIssues, setTodoIssues] = useState([]);
+    const [inProgressIssues, setInProgressIssues] = useState([]);
+    const [doneIssues, setDoneIssues] = useState([]);
 
     useEffect(() => {
         fetchRecentClosedSprintIssues().then(data => {
-            setIssues(data.issues);
-            console.log(issues)
+            setIssues(data.issues || testIssue.issues);
+            filterIssues(data.issues || testIssue.issues);
         }).catch(error => {
             console.error('Failed to fetch issues:', error);
             setIssues(testIssue.issues);
+            filterIssues(testIssue.issues);
         });
     });
+
+    const filterIssues = (issues) => {
+        setTodoIssues(issues.filter(issue => issue.fields.status.name === '해야 할 일'));
+        setInProgressIssues(issues.filter(issue => issue.fields.status.name === '진행 중'));
+        setDoneIssues(issues.filter(issue => issue.fields.status.name === '완료'));
+    };
 
     return (
         <div className=" mx-auto p-6 h-screen overflow-hidden">
@@ -44,10 +54,10 @@ export default function JiraPage() {
                 <div className="flex flex-col">
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
                         <h3 className="text-white/70 text-lg ml-1 font-light mb-4">해야 할 일</h3>
-                        <div className="mt-2">
-                            {/* <IssueCard />
-                            <IssueCard />
-                            <IssueCard /> */}
+                        <div className="h-[76vh] overflow-auto scrollbar-hide">
+                            {todoIssues.map(issue => (
+                                <IssueCard key={issue.id} issue={issue} />
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -56,7 +66,11 @@ export default function JiraPage() {
                 <div className="flex flex-col">
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
                         <h3 className="text-white/70 text-lg ml-1 font-light">진행 중</h3>
-                        {/* Place for current tasks */}
+                        <div className="h-[76vh] overflow-auto scrollbar-hide">
+                            {inProgressIssues.map(issue => (
+                                <IssueCard key={issue.id} issue={issue} />
+                            ))}
+                        </div>
                     </div>
                 </div>
 
@@ -65,7 +79,7 @@ export default function JiraPage() {
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
                         <h3 className="text-white/70 text-lg ml-1 font-light mb-4">완료</h3>
                         <div className="h-[76vh] overflow-auto scrollbar-hide">
-                            {issues.map(issue => (
+                            {doneIssues.map(issue => (
                                 <IssueCard key={issue.id} issue={issue} />
                             ))}
                         </div>
