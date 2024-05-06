@@ -5,6 +5,7 @@ import com.moass.api.domain.reservation.dto.ReservationPatchDto;
 import com.moass.api.domain.reservation.service.ReservationService;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('CONSULTANT')")
     @PostMapping()
-    public Mono<ResponseEntity<ApiResponse>> createReservation(@RequestBody ReservationCreateDto reservationCreateDto){
+    public Mono<ResponseEntity<ApiResponse>> createReservation(@Valid @RequestBody ReservationCreateDto reservationCreateDto){
         return reservationService.createReservation(reservationCreateDto)
                 .flatMap(reservationId -> ApiResponse.ok("예약 생성 성공", reservationId))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
