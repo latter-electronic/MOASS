@@ -57,4 +57,11 @@ public class ReservationInfoController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 정보 삭제 실패 : " + e.getMessage(),e.getStatus()));
     }
 
+    @GetMapping
+    public Mono<ResponseEntity<ApiResponse>> getMyReservationInfos(@Login UserInfo userInfo){
+        return reservationInfoService.getReservationInfo(userInfo.getUserId())
+                .flatMap(reservationDetailDtos -> ApiResponse.ok("예약 정보 조회 성공", reservationDetailDtos))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 정보 조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
 }

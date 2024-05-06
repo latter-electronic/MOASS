@@ -1,5 +1,6 @@
 package com.moass.api.domain.reservation.service;
 
+import com.moass.api.domain.reservation.dto.MyReservationInfoDetailDto;
 import com.moass.api.domain.reservation.dto.ReservationDetailDto;
 import com.moass.api.domain.reservation.dto.ReservationInfoCreateDto;
 import com.moass.api.domain.reservation.entity.Reservation;
@@ -9,6 +10,7 @@ import com.moass.api.domain.reservation.entity.UserReservationInfo;
 import com.moass.api.domain.reservation.repository.ReservationInfoRepository;
 import com.moass.api.domain.reservation.repository.ReservationRepository;
 import com.moass.api.domain.reservation.repository.UserReservationInfoRepository;
+import com.moass.api.domain.user.dto.UserSearchInfoDto;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -23,10 +25,8 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -186,4 +186,24 @@ public class ReservationInfoService {
                 })
                 .then(Mono.just(weekReservationInfo));
     }
+
+    public Mono<List<MyReservationInfoDetailDto>> getReservationInfo(String userId) {
+        return reservationInfoRepository.findByUserReservationUserId(userId)
+                .flatMap(reservationInfo ->
+                        userReservationInfoRepository.findUserSearchDetailByInfoId(reservationInfo.getInfoId())
+                                .map(userSearchDetail -> new UserSearchInfoDto(userSearchDetail))
+                                .collectList()
+                                .map(userSearchInfoDtos -> new MyReservationInfoDetailDto(
+                                        reservationInfo,
+                                        userSearchInfoDtos
+                                ))
+                )
+                .collectList()
+                    .map(list -> list.stream()
+                .sorted(Comparator.comparing(MyReservationInfoDetailDto::getInfoDate)
+                        .thenComparing(MyReservationInfoDetailDto::getInfoTime))
+                .collect(Collectors.toList()));
+    }
+
+
 }
