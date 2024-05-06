@@ -1,8 +1,7 @@
-// jiraService.js
-import { jiraApiAxios } from './apiConfig';
+import { jiraApiAxios } from './apiConfig.js';
 
 const axios = jiraApiAxios();
-const prefix = 'rest/api/3';
+const prefix = '';
 
 /**
  * 현재 열려있는 스프린트의 이슈들 검색
