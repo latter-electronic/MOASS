@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -25,9 +28,15 @@ class SettingUserInfoScreen extends StatefulWidget {
 class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
   @override
   Widget build(BuildContext context) {
+    // 팀 명 수정을 위한 변수들
     String basicTeamName = '없음';
+
+    final formKey = GlobalKey<FormState>();
+
+    String textFormFieldValue = widget.teamName;
+
     // 회원 정보 내의 position index에 맞게 정해줄 것.
-    final List<bool> selectedRole = <bool>[true, false, false, false];
+    late List<bool> selectedRole = <bool>[false, false, false, false];
 
     void changeRoleState(int index) {
       setState(() {
@@ -62,15 +71,32 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
               SizedBox(
                 width: 250,
                 height: 50,
-                child: TextField(
-                  controller: TextEditingController(
-                    text: widget.teamName.isNotEmpty
-                        ? widget.teamName
-                        : basicTeamName,
-                  ),
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                child: Form(
+                  key: formKey,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return '한 글자 이상 입력해주세요';
+                      }
+                      return null;
+                    },
+                    controller: TextEditingController(
+                      text: widget.teamName.isNotEmpty
+                          ? widget.teamName
+                          : basicTeamName,
+                    ),
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    onSaved: (value) async {
+                      setState(() {
+                        textFormFieldValue = value!;
+                      });
+                      MyInfoApi(
+                              dio: Dio(), storage: const FlutterSecureStorage())
+                          .patchUserTeamName(textFormFieldValue);
+                    },
                   ),
                 ),
               ),
@@ -102,8 +128,13 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {},
-          child: const Text('완료'),
+          onPressed: () {
+            final formKeyState = formKey.currentState!;
+            if (formKeyState.validate()) {
+              formKeyState.save();
+            }
+          },
+          child: const Text('수정하기'),
         ),
       ),
     );
