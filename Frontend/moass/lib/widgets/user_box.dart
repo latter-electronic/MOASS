@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class UserBox extends StatelessWidget {
   // 유저 객체로 수정해줄 것
-  final String username, team, role, userstatus;
+  final String username, team;
+  final String? role;
+  final int userstatus;
   const UserBox({
     super.key,
     required this.username,
@@ -76,13 +78,20 @@ class UserBox extends StatelessWidget {
                               color: Color(0xffD93030),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(50))),
-                          child: const Center(
-                              child: Text(
-                            'FE',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white),
-                          )),
+                          child: Center(
+                              child: role == null
+                                  ? const Text(
+                                      '미정',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white),
+                                    )
+                                  : Text(
+                                      '$role',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white),
+                                    )),
                         )
                       ],
                     ),
@@ -92,9 +101,9 @@ class UserBox extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: userstatus == 'here'
+                        color: userstatus == 1
                             ? const Color(0xFF3DB887)
-                            : userstatus == 'nothere'
+                            : userstatus == 0
                                 ? const Color(0xFFFFBC1F)
                                 : Colors.grey),
                   )

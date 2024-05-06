@@ -43,6 +43,13 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
           _buildButton(),
         ],
       ),
+      bottomSheet: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () {},
+          child: const Text('수정하기'),
+        ),
+      ),
     );
   }
 

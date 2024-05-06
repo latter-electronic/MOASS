@@ -67,4 +67,33 @@ class MyInfoApi {
       return null;
     }
   }
+
+  patchUserTeamName(String teamName, String? currentRole) async {
+    try {
+      Map data = {'teamName': teamName, 'currentRole': currentRole};
+      var body = json.encode(data);
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.patch('$baseUrl/api/user/status',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('유저 정보 변경 성공!');
+        return response;
+      } else {
+        print('유저 정보 변경 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print(e.message);
+      print('Error fetching user status: ${e.message}');
+      return null;
+    }
+  }
 }

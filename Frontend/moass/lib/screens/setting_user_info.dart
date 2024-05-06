@@ -1,4 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -9,8 +13,14 @@ const List<Widget> roles = <Widget>[
   Text('FULL'),
 ];
 
+const List rolesString = ['FE', 'BE', 'EM', 'FULL'];
+
 class SettingUserInfoScreen extends StatefulWidget {
-  const SettingUserInfoScreen({super.key});
+  final String teamName;
+  final dynamic positionName;
+
+  const SettingUserInfoScreen(
+      {super.key, required this.teamName, required this.positionName});
 
   @override
   State<SettingUserInfoScreen> createState() => _SettingUserInfoScreenState();
@@ -19,20 +29,27 @@ class SettingUserInfoScreen extends StatefulWidget {
 class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
   @override
   Widget build(BuildContext context) {
-    // 회원 정보 내의 position index에 맞게 정해줄 것.
-    final List<bool> selectedRole = <bool>[true, false, false, false];
+    // 팀 명 수정을 위한 변수들
+    String basicTeamName = '없음';
 
-    void changeRoleState(int index) {
-      setState(() {
+    final formKey = GlobalKey<FormState>();
+
+    String textFormFieldValue = widget.teamName;
+
+    String? currentRole = widget.positionName;
+
+    // 회원 정보 내의 position index에 맞게 정해줄 것.
+    final List<bool> selectedRole = <bool>[false, false, false, false];
+
+    setState(() {
+      if (widget.positionName != null) {
         for (int i = 0; i < selectedRole.length; i++) {
-          if (index == i) {
+          if (selectedRole[i] == widget.positionName) {
             selectedRole[i] = true;
-          } else {
-            selectedRole[i] = false;
           }
         }
-      });
-    }
+      }
+    });
 
     return Scaffold(
       appBar: const TopBar(
@@ -43,9 +60,9 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CategoryText(text: '팀 이름 설정'),
-          const Row(
+          Row(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
                 child: Text(
                   '팀 이름',
@@ -55,10 +72,32 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
               SizedBox(
                 width: 250,
                 height: 50,
-                child: TextField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                child: Form(
+                  key: formKey,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return '한 글자 이상 입력해주세요';
+                      }
+                      return null;
+                    },
+                    controller: TextEditingController(
+                      text: widget.teamName.isNotEmpty
+                          ? widget.teamName
+                          : basicTeamName,
+                    ),
+                    obscureText: false,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    onSaved: (value) async {
+                      setState(() {
+                        textFormFieldValue = value!;
+                      });
+                      MyInfoApi(
+                              dio: Dio(), storage: const FlutterSecureStorage())
+                          .patchUserTeamName(textFormFieldValue, currentRole);
+                    },
                   ),
                 ),
               ),
@@ -71,7 +110,18 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
           Center(
             child: ToggleButtons(
               direction: Axis.horizontal,
-              onPressed: (int index) => {changeRoleState(index)},
+              onPressed: (int index) {
+                setState(() {
+                  for (int i = 0; i < selectedRole.length; i++) {
+                    if (index == i) {
+                      selectedRole[i] = i == index;
+                      print(selectedRole);
+                      currentRole = rolesString[i];
+                      print(currentRole);
+                    }
+                  }
+                });
+              },
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               selectedBorderColor: Colors.red[700],
               selectedColor: Colors.white,
@@ -90,8 +140,13 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {},
-          child: const Text('완료'),
+          onPressed: () {
+            final formKeyState = formKey.currentState!;
+            if (formKeyState.validate()) {
+              formKeyState.save();
+            }
+          },
+          child: const Text('수정하기'),
         ),
       ),
     );
