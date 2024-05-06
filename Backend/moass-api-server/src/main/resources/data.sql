@@ -75,6 +75,3 @@ INSERT INTO `Position` (`position_name`, `color_code`) VALUES
                                                            ('FE', '#FFD700'),
                                                            ('Infra', '#FF6347'),
                                                            ('PM', '#FF4500');
-
--- INSERT INTO `USER` (`user_id`, `status_id`, `user_email`, `password`, `profile_img`, `background_img`, `rayout`, `connect_flag`, `card_serial_id`) VALUES
---    ('1058448', 1, 'weon1009@gmail.com', '1234', NULL, NULL, 1, 0, NULL);in
