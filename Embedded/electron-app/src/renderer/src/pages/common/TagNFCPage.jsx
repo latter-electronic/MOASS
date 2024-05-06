@@ -15,7 +15,8 @@ export default function TagNFC() {
 
   const [deviceId, setDeviceId] = useState('');
   const [cardSerialId, setCardSerialId] = useState('');
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
+  const [pythondata, setPythondata] = useState('');
 
   // API 요청 함수
   const sendLoginRequest = async () => {
@@ -53,32 +54,42 @@ export default function TagNFC() {
 
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('pong', (event, args) => {
-      setMessage(args)
-      console.log(args)
-    })
-
-    const handleNfcData = (data) => {
-      console.log('Received NFC data:', data)
-      console.log('Type of data:', typeof data)
-      try {
-        const parsedData = JSON.parse(data)
-        if (parsedData.accessToken && parsedData.refreshToken) {
-          login(parsedData.accessToken, parsedData.refreshToken)
-          console.log('navigate 시작')
-          navigate('/tagsuccess')
-          console.log('navigate 실행 완료')
-        }
-      } catch (error) {
-        console.error('Error parsing NFC data:', error)
-      }
-    }
-
-    window.userAPI?.onNfcData(handleNfcData)
-
-    // 컴포넌트 언마운트 시에 이벤트 리스너 정리.
+    const handlePong = (event, args) => {
+      setMessage(args);
+      console.log(args);
+    };
+  
+    const handlePythonData = (event, message) => {
+      setPythondata(message);
+      console.log(message);
+    };
+  
+    window.electron.ipcRenderer.on('pong', handlePong);
+    window.electron.ipcRenderer.on('fromPython', handlePythonData);
+  
+    // 컴포넌트 언마운트 시에 이벤트 리스너 정리
     return () => {
-    }
+      window.electron.ipcRenderer.removeListener('pong', handlePong);
+      window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
+    };
+
+    // const handleNfcData = (data) => {
+    //   console.log('Received NFC data:', data)
+    //   console.log('Type of data:', typeof data)
+    //   try {
+    //     const parsedData = JSON.parse(data)
+    //     if (parsedData.accessToken && parsedData.refreshToken) {
+    //       login(parsedData.accessToken, parsedData.refreshToken)
+    //       console.log('navigate 시작')
+    //       navigate('/tagsuccess')
+    //       console.log('navigate 실행 완료')
+    //     }
+    //   } catch (error) {
+    //     console.error('Error parsing NFC data:', error)
+    //   }
+    // }
+
+    // window.userAPI?.onNfcData(handleNfcData)
   }, [login, navigate])
 
   return (
@@ -136,8 +147,14 @@ export default function TagNFC() {
           </button>
         </div>
         <div>
-          <div>Received Message:</div>
-          <div>{message}</div>
+          <div>
+            <h1>Received Message:</h1>
+            <p>{message}</p>
+          </div>
+          <div>
+            <h1>Python에서 받은 데이터:</h1>
+            <p>{pythondata}</p>
+          </div>
         </div>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center">
