@@ -6,6 +6,7 @@ import com.moass.api.domain.reservation.entity.UserReservationInfo;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 
@@ -21,4 +22,6 @@ public interface UserReservationInfoRepository   extends ReactiveCrudRepository<
             "GROUP BY uri.user_id")
     Flux<UserCount> countByReservationIdAndDate(Integer reservationId, LocalDate infoDate);
 
+    @Query("DELETE FROM userreservationInfo where info_id = :infoId")
+    Mono<Void> deleteByInfoId(Integer infoId);
 }

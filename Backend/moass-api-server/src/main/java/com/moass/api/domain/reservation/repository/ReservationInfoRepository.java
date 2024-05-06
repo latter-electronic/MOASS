@@ -17,4 +17,7 @@ public interface ReservationInfoRepository  extends ReactiveCrudRepository<Reser
 
     @Query("SELECT * FROM `ReservationInfo` WHERE reservation_id = :reservationId AND info_date = :infoDate  ORDER BY info_time")
     Flux<ReservationInfo> findByReservationIdAndInfoDate(Integer reservationId, LocalDate infoDate);
+
+    @Query("SELECT * FROM `ReservationInfo` WHERE info_id = :infoId AND user_id = :userId")
+    Mono<ReservationInfo> findByUserIdAndReservationInfoId(String userId, Integer infoId);
 }

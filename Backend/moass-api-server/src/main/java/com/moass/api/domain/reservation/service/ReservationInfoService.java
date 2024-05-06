@@ -55,20 +55,20 @@ public class ReservationInfoService {
     }
 
     // 유저들이 해당 날짜와 해당 예약항목에서 더 예약할 수 있는지 확인
-    private Mono<List<String>> checkUserReservationTime(ReservationInfoCreateDto resInfoCreateDto,Integer timeLimit) {
+    private Mono<List<String>> checkUserReservationTime(ReservationInfoCreateDto resInfoCreateDto, Integer timeLimit) {
         return userReservationInfoRepository.countByReservationIdAndDate(resInfoCreateDto.getReservationId(), resInfoCreateDto.getInfoDate())
                 .collectList()
                 .map(userCounts -> {
-                    Map<String,Integer> MapUserCounts = new HashMap<>();
-                    for(UserCount count : userCounts){
-                        MapUserCounts.put(count.getUserId(),count.getCount().intValue());
+                    Map<String, Integer> MapUserCounts = new HashMap<>();
+                    for (UserCount count : userCounts) {
+                        MapUserCounts.put(count.getUserId(), count.getCount().intValue());
                     }
                     int infoTimesLength = resInfoCreateDto.getInfoTimes().size();
                     List<String> overLimitUsers = new ArrayList<>();
                     for (String userId : resInfoCreateDto.getInfoUsers()) {
-                        if(MapUserCounts.containsKey(userId)&&infoTimesLength+MapUserCounts.get(userId)>timeLimit){
+                        if (MapUserCounts.containsKey(userId) && infoTimesLength + MapUserCounts.get(userId) > timeLimit) {
                             overLimitUsers.add(userId);
-                        }else if(infoTimesLength>timeLimit&&!overLimitUsers.contains(userId)){
+                        } else if (infoTimesLength > timeLimit && !overLimitUsers.contains(userId)) {
                             overLimitUsers.add(userId);
                         }
                     }
@@ -98,35 +98,28 @@ public class ReservationInfoService {
                                     .infoTime(infoTime)
                                     .build()))
                             .collectList()
-                            .flatMap(reservationInfos -> {
-                                return Flux.fromIterable(reservationInfos)
-                                        .flatMap(reservationInfo ->
-                                                Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
-                                                        .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
-                                        ).then(Mono.just(reservationInfos.get(0)));
-                            });
+                            .flatMap(reservationInfos -> Flux.fromIterable(reservationInfos)
+                                    .flatMap(reservationInfo ->
+                                            Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
+                                                    .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
+                                    ).then(Mono.just(reservationInfos.get(0))));
                 });
     }
 
     public String convertNumberToTimeSlot(int number) {
         if (number < 1 || number > 18) {
-            throw new IllegalArgumentException("Number must be between 1 and 18");
+            throw new IllegalArgumentException("숫자는 1부터 18사이의 값이어야 합니다.");
         }
 
-        // 기본 시작 시간: 9:00 (9시 0분)
         int baseHour = 9;
         int baseMinute = 0;
-
-        // 각 번호에 30분을 더함
         int totalMinutes = (number - 1) * 30;
         int hoursToAdd = totalMinutes / 60;
         int minutesToAdd = totalMinutes % 60;
 
-        // 시작 시간 계산
         int startHour = baseHour + hoursToAdd;
         int startMinute = baseMinute + minutesToAdd;
 
-        // 종료 시간 계산
         int endHour = startHour;
         int endMinute = startMinute + 30;
         if (endMinute == 60) {
@@ -134,7 +127,6 @@ public class ReservationInfoService {
             endMinute = 0;
         }
 
-        // 시간 문자열 형식: HH:mm~HH:mm
         return String.format("%d:%02d~%d:%02d", startHour, startMinute, endHour, endMinute);
     }
 
@@ -169,5 +161,29 @@ public class ReservationInfoService {
                         .collectList()
                         .map(infos -> createReservationDetailDto(reservation, infos)))
                 .collectList();
+    }
+
+    public Mono<String> deleteReservationInfo(UserInfo userInfo, Integer reservationInfoId) {
+        return reservationInfoRepository.findByUserIdAndReservationInfoId(userInfo.getUserId(), reservationInfoId)
+                .switchIfEmpty(Mono.error(new CustomException("예약 정보가 일치하지 않습니다. : " + reservationInfoId, HttpStatus.NOT_FOUND)))
+                .flatMap(reservationInfo ->
+                        userReservationInfoRepository.deleteByInfoId(reservationInfo.getInfoId())
+                                .then(reservationInfoRepository.delete(reservationInfo))
+                                .thenReturn(reservationInfo.getInfoId().toString())
+                                .onErrorResume(e -> Mono.error(new CustomException("삭제중 에러가 발생하였습니다. ", HttpStatus.INTERNAL_SERVER_ERROR)))
+                );
+    }
+
+    public Mono<Map<String,List<ReservationDetailDto>>> getWeekReservationInfo(UserInfo userInfo) {
+        Map<String, List<ReservationDetailDto>> weekReservationInfo = new HashMap<>();
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+
+        return Flux.range(0, 7)
+                .flatMap(day -> {
+                    LocalDate searchDate = today.plusDays(day);
+                    return searchReservationInfo(userInfo, searchDate)
+                            .doOnNext(reservationDetailDtos -> weekReservationInfo.put(searchDate.toString(), reservationDetailDtos));
+                })
+                .then(Mono.just(weekReservationInfo));
     }
 }
