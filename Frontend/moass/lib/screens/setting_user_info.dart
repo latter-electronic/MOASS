@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -10,7 +11,12 @@ const List<Widget> roles = <Widget>[
 ];
 
 class SettingUserInfoScreen extends StatefulWidget {
-  const SettingUserInfoScreen({super.key});
+  final String teamName;
+
+  const SettingUserInfoScreen({
+    super.key,
+    required this.teamName,
+  });
 
   @override
   State<SettingUserInfoScreen> createState() => _SettingUserInfoScreenState();
@@ -19,6 +25,7 @@ class SettingUserInfoScreen extends StatefulWidget {
 class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
   @override
   Widget build(BuildContext context) {
+    String basicTeamName = '없음';
     // 회원 정보 내의 position index에 맞게 정해줄 것.
     final List<bool> selectedRole = <bool>[true, false, false, false];
 
@@ -43,9 +50,9 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CategoryText(text: '팀 이름 설정'),
-          const Row(
+          Row(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
                 child: Text(
                   '팀 이름',
@@ -56,8 +63,13 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
                 width: 250,
                 height: 50,
                 child: TextField(
+                  controller: TextEditingController(
+                    text: widget.teamName.isNotEmpty
+                        ? widget.teamName
+                        : basicTeamName,
+                  ),
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                 ),

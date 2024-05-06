@@ -147,8 +147,9 @@ class SettingScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   // fullscreenDialog: true,
-                                  builder: (context) =>
-                                      const SettingUserInfoScreen(),
+                                  builder: (context) => SettingUserInfoScreen(
+                                    teamName: userProfile.teamName,
+                                  ),
                                 ),
                               );
                             },
@@ -244,7 +245,44 @@ class SettingScreen extends StatelessWidget {
                 ],
               );
             } else {
-              return const Center(child: Text('No data available'));
+              return Center(
+                  child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: GestureDetector(
+                    onTap: () => showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('기기 연결 해제'),
+                            content: SizedBox(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/img/crying_mozzi.png',
+                                    height: 200,
+                                  ),
+                                  const Text('앱에서 로그아웃 하시겠어요?'),
+                                ],
+                              ),
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, '취소'),
+                                child: const Text('취소'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context); // 대화 상자 닫기
+                                  performLogout(context); // 로그아웃 실행
+                                },
+                                // onPressed: () => Navigator.pop(context, '확인'),
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          ),
+                        ),
+                    child: const CategoryText(text: '로그아웃')),
+              ));
             }
           }),
     );
