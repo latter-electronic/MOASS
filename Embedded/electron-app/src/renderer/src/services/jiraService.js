@@ -28,8 +28,9 @@ export const fetchCurrentSprintIssues = async () => {
  */
 export const fetchRecentClosedSprintIssues = async () => {
     const fields = 'creator,summary,priority,status';
-    const jqlQuery = encodeURIComponent("project = 'S10P31E203' AND sprint IN closedSprints() AND sprint NOT IN futureSprints() ORDER BY sprint DESC");
-    const url = `${prefix}/search?jql=${jqlQuery}&fields=${fields}&maxResults=10`;
+    const jqlQuery = encodeURIComponent("project = 'S10P31E203' AND reporter = 'diduedidue@naver.com' AND sprint IN closedSprints() AND sprint NOT IN futureSprints() ORDER BY sprint DESC");
+    const maxResults = 50;  // 일단 50
+    const url = `${prefix}/search?jql=${jqlQuery}&fields=${fields}&maxResults=${maxResults}`;
 
     return axios.get(url)
         .then(response => response.data)
