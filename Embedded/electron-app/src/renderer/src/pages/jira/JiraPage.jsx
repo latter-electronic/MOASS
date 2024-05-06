@@ -17,15 +17,24 @@ export default function JiraPage() {
     const [todoIssues, setTodoIssues] = useState([]);
     const [inProgressIssues, setInProgressIssues] = useState([]);
     const [doneIssues, setDoneIssues] = useState([]);
+    const [loadingTodo, setLoadingTodo] = useState(true);
+    const [loadingInProgress, setLoadingInProgress] = useState(true);
+    const [loadingDone, setLoadingDone] = useState(true);
 
     useEffect(() => {
         fetchRecentClosedSprintIssues().then(data => {
             setIssues(data.issues || testIssue.issues);
             filterIssues(data.issues || testIssue.issues);
+            setLoadingTodo(false);
+            setLoadingInProgress(false);
+            setLoadingDone(false);
         }).catch(error => {
             console.error('Failed to fetch issues:', error);
             setIssues(testIssue.issues);
             filterIssues(testIssue.issues);
+            setLoadingTodo(false);
+            setLoadingInProgress(false);
+            setLoadingDone(false);
         });
     });
 
@@ -34,6 +43,18 @@ export default function JiraPage() {
         setInProgressIssues(issues.filter(issue => issue.fields.status.name === '진행 중'));
         setDoneIssues(issues.filter(issue => issue.fields.status.name === '완료'));
     };
+
+    const renderLoading = () => (
+        <div className="flex justify-center items-center h-full">
+            <div className="text-lg text-white/30 font-normal">로딩 중...</div>
+        </div>
+    );
+
+    const renderNoIssuesMessage = () => (
+        <div className="flex justify-center items-center h-full">
+            <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
+        </div>
+    );
 
     return (
         <div className=" mx-auto p-6 h-screen overflow-hidden">
@@ -55,9 +76,9 @@ export default function JiraPage() {
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
                         <h3 className="text-white/70 text-lg ml-1 font-light mb-4">해야 할 일</h3>
                         <div className="h-[76vh] overflow-auto scrollbar-hide">
-                            {todoIssues.map(issue => (
+                            {loadingTodo ? renderLoading() : todoIssues.length ? todoIssues.map(issue => (
                                 <IssueCard key={issue.id} issue={issue} />
-                            ))}
+                            )) : renderNoIssuesMessage()}
                         </div>
                     </div>
                 </div>
@@ -67,9 +88,9 @@ export default function JiraPage() {
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
                         <h3 className="text-white/70 text-lg ml-1 font-light">진행 중</h3>
                         <div className="h-[76vh] overflow-auto scrollbar-hide">
-                            {inProgressIssues.map(issue => (
+                            {loadingInProgress ? renderLoading() : inProgressIssues.length ? inProgressIssues.map(issue => (
                                 <IssueCard key={issue.id} issue={issue} />
-                            ))}
+                            )) : renderNoIssuesMessage()}
                         </div>
                     </div>
                 </div>
@@ -79,9 +100,9 @@ export default function JiraPage() {
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
                         <h3 className="text-white/70 text-lg ml-1 font-light mb-4">완료</h3>
                         <div className="h-[76vh] overflow-auto scrollbar-hide">
-                            {doneIssues.map(issue => (
+                            {loadingDone ? renderLoading() : doneIssues.length ? doneIssues.map(issue => (
                                 <IssueCard key={issue.id} issue={issue} />
-                            ))}
+                            )) : renderNoIssuesMessage()}
                         </div>
                     </div>
                 </div>
