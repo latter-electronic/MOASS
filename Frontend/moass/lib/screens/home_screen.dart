@@ -19,10 +19,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final List<Widget> _widgetOptions = [
     const WorkScreen(),
-    const ReservationScreen(),
+    ReservationScreen(),
     const MainHomeScreen(),
     const SeatScreen(),
-    BoardScreen(),
+    const BoardScreen(),
   ];
 
   void _onItemTapped(int index) {
