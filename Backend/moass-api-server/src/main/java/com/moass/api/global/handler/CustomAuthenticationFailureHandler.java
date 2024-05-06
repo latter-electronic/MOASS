@@ -28,7 +28,6 @@ public class CustomAuthenticationFailureHandler implements ServerAuthenticationF
         webFilterExchange.getExchange().getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
         try {
             String jsonResponse = objectMapper.writeValueAsString(apiResponse);
-            System.out.println("ggg");
             DataBuffer dataBuffer = webFilterExchange.getExchange().getResponse().bufferFactory().wrap(jsonResponse.getBytes(StandardCharsets.UTF_8));
             return webFilterExchange.getExchange().getResponse().writeWith(Mono.just(dataBuffer));
         } catch (JsonProcessingException e) {

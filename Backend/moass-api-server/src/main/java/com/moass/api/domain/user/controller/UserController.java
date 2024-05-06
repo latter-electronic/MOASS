@@ -50,16 +50,18 @@ public class UserController {
 
     @PostMapping("/login")
     public Mono<ResponseEntity<ApiResponse>> login(@RequestBody UserLoginDto loginDto) {
-        return userDetailsService.authenticate(loginDto.getUserEmail(), loginDto.getPassword(),false)
+        return userDetailsService.authenticate(loginDto.getUserEmail(), loginDto.getPassword(), false)
                 .flatMap(auth -> {
                     CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
                     UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
-                    sseService.notifyTeam(userInfo.getTeamCode(),"로그인성공 :"+userInfo.getUserName());
-                    sseService.notifyUser(userInfo.getUserId(),"로그인성공 :"+userInfo.getUserName());
-                    return jwtService.generateTokens(userInfo);
+
+                    Mono<Boolean> teamNotify = sseService.notifyTeam(userInfo.getTeamCode(), "로그인성공 :" + userInfo.getUserName());
+                    Mono<Boolean> userNotify = sseService.notifyUser(userInfo.getUserId(), "로그인성공 :" + userInfo.getUserName());
+
+                    return Mono.when(teamNotify, userNotify)  // 두 알림의 성공 여부를 동시에 확인
+                            .then(jwtService.generateTokens(userInfo));
                 })
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공", tokens))
-
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
     }
 

@@ -2,8 +2,10 @@ package com.moass.api.domain.reservation.repository;
 
 import com.moass.api.domain.reservation.entity.Reservation;
 import com.moass.api.domain.user.entity.Class;
+import org.reactivestreams.Publisher;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface ReservationRepository  extends ReactiveCrudRepository<Reservation, Integer> {
@@ -15,4 +17,6 @@ public interface ReservationRepository  extends ReactiveCrudRepository<Reservati
     Mono<Boolean> existsByReservationId(Integer reservationId);
 
     Mono<Reservation> findByReservationId(Integer reservationId);
+
+    Flux<Reservation> findByClassCode(String classCode);
 }

@@ -98,9 +98,14 @@ public class SseService {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = userSinks.get(userId);
             if (sink != null) {
-                return sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(message).isSuccess();
+                if (!result) {
+                    log.error("유저 SSE전송 실패 : " + userId);
+                }
+                return result;
             }
-            throw new RuntimeException("No active sinks found for user: " + userId);
+            log.error("활성화된 유저 없습니다. : " + userId);
+            return false;
         });
     }
 
@@ -108,9 +113,14 @@ public class SseService {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = teamSinks.get(teamCode);
             if (sink != null) {
-                return sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(message).isSuccess();
+                if (!result) {
+                    log.error("팀 SSE전송 실패 : " + teamCode);
+                }
+                return result;
             }
-            throw new CustomException("No active sinks found for class: " + teamCode, HttpStatus.BAD_REQUEST);
+            log.error("활성화된 팀이 없습니다. : " + teamCode);
+            return false;
         });
     }
 
@@ -118,9 +128,14 @@ public class SseService {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = classSinks.get(classCode);
             if (sink != null) {
-                return sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(message).isSuccess();
+                if (!result) {
+                    log.error("반 SSE전송 실패 : " + classCode);
+                }
+                return result;
             }
-            throw new CustomException("No active sinks found for class: " + classCode, HttpStatus.BAD_REQUEST);
+            log.error("활성화된 반이 없습니다. : " + classCode);
+            return false;
         });
     }
 
