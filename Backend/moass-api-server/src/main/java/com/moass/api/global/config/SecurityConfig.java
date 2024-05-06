@@ -36,7 +36,7 @@ public class SecurityConfig {
     private final UserRepository userRepository;
 
     @Bean
-    public PasswordEncoder passwordencoder(){
+    public PasswordEncoder passwordencoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -58,6 +58,7 @@ public class SecurityConfig {
     /**
      * Todo
      * 접근권한 수정필요(테스트용으로 넣어둔거 빼기)
+     *
      * @param http
      * @param jwtAuthConverter
      * @param jwtAuthManager
@@ -65,7 +66,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(
-            ServerHttpSecurity http , AuthConverter jwtAuthConverter, AuthManager jwtAuthManager) {
+            ServerHttpSecurity http, AuthConverter jwtAuthConverter, AuthManager jwtAuthManager) {
         AuthenticationWebFilter jwtFilter = new AuthenticationWebFilter(jwtAuthManager);
         jwtFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler(new ObjectMapper()));
         jwtFilter.setServerAuthenticationConverter(jwtAuthConverter);
@@ -79,7 +80,7 @@ public class SecurityConfig {
         return http
                 .authorizeExchange(auth ->
                         auth.pathMatchers("/user/login").permitAll()
-                                .pathMatchers("/device/login","/device/islogin").permitAll()
+                                .pathMatchers("/device/login", "/device/islogin").permitAll()
                                 .pathMatchers("/user/refresh").permitAll()
                                 .pathMatchers("/user/signup").permitAll()
                                 .pathMatchers("/stream/**").permitAll()
