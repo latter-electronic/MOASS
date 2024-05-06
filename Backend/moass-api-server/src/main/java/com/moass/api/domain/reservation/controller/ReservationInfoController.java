@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Slf4j
 @RestController
-@RequestMapping("/reservationInfo")
+@RequestMapping("/reservationinfo")
 @RequiredArgsConstructor
 public class ReservationInfoController {
 
