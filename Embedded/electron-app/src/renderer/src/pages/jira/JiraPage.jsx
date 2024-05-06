@@ -63,10 +63,12 @@ export default function JiraPage() {
                 {/* 완료 */}
                 <div className="flex flex-col">
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
-                        <h3 className="text-white/70 text-lg ml-1 font-light">완료</h3>
-                        {issues.map(issue => (
-                            <IssueCard key={issue.id} issue={issue} />
-                        ))}
+                        <h3 className="text-white/70 text-lg ml-1 font-light mb-4">완료</h3>
+                        <div className="h-[76vh] overflow-auto scrollbar-hide">
+                            {issues.map(issue => (
+                                <IssueCard key={issue.id} issue={issue} />
+                            ))}
+                        </div>
                     </div>
                 </div>
 
