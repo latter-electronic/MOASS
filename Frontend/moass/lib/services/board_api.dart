@@ -1,4 +1,4 @@
-// API 임시
+// API 임시 설정
 
 import 'package:dio/dio.dart';
 import 'package:moass/model/BoardModel.dart';
