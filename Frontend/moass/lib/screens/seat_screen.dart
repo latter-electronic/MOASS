@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/widgets/user_box.dart';
@@ -21,6 +24,9 @@ class _SeatScreenState extends State<SeatScreen> {
     });
   }
 
+  late String inputText;
+  List searchedUserList = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,10 +46,20 @@ class _SeatScreenState extends State<SeatScreen> {
                 decoration: const BoxDecoration(color: Colors.grey),
               ),
               const CategoryText(text: '교육생 조회'),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: SearchBar(
-                  leading: Icon(Icons.search),
+                  leading: const Icon(Icons.search),
+                  hintText: "교육생 이름을 입력하세요",
+                  onChanged: (value) {
+                    setState(() async {
+                      inputText = value;
+                      var response = await UserInfoApi(
+                              dio: Dio(), storage: const FlutterSecureStorage())
+                          .fetchUserProfile(inputText);
+                      searchedUserList = response;
+                    });
+                  },
                 ),
               ),
               SizedBox(
@@ -53,30 +69,39 @@ class _SeatScreenState extends State<SeatScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          openButtonWidget();
-                        },
-                        child: const UserBox(
-                            username: '김싸피',
-                            team: 'E203',
-                            role: 'FE',
-                            userstatus: 'here'),
-                      ),
-                      GestureDetector(
-                        child: const UserBox(
-                            username: '김싸피',
-                            team: 'E203',
-                            role: 'FE',
-                            userstatus: 'here'),
-                      ),
-                      const UserBox(
-                          username: '김싸피',
-                          team: 'E203',
-                          role: 'FE',
-                          userstatus: 'here'),
-                    ],
+                    children: searchedUserList.isEmpty
+                        ? [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Text('검색 결과가 없습니다'),
+                              ),
+                            )
+                          ]
+                        : [
+                            GestureDetector(
+                              onTap: () {
+                                openButtonWidget();
+                              },
+                              child: const UserBox(
+                                  username: '김싸피',
+                                  team: 'E203',
+                                  role: 'FE',
+                                  userstatus: 'here'),
+                            ),
+                            GestureDetector(
+                              child: const UserBox(
+                                  username: '김싸피',
+                                  team: 'E203',
+                                  role: 'FE',
+                                  userstatus: 'here'),
+                            ),
+                            const UserBox(
+                                username: '김싸피',
+                                team: 'E203',
+                                role: 'FE',
+                                userstatus: 'here'),
+                          ],
                   ),
                 ),
               ),
