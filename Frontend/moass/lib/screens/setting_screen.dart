@@ -149,6 +149,7 @@ class SettingScreen extends StatelessWidget {
                                   // fullscreenDialog: true,
                                   builder: (context) => SettingUserInfoScreen(
                                     teamName: userProfile.teamName,
+                                    positionName: userProfile.positionName,
                                   ),
                                 ),
                               );

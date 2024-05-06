@@ -13,13 +13,14 @@ const List<Widget> roles = <Widget>[
   Text('FULL'),
 ];
 
+const List rolesString = ['FE', 'BE', 'EM', 'FULL'];
+
 class SettingUserInfoScreen extends StatefulWidget {
   final String teamName;
+  final dynamic positionName;
 
-  const SettingUserInfoScreen({
-    super.key,
-    required this.teamName,
-  });
+  const SettingUserInfoScreen(
+      {super.key, required this.teamName, required this.positionName});
 
   @override
   State<SettingUserInfoScreen> createState() => _SettingUserInfoScreenState();
@@ -35,20 +36,20 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
 
     String textFormFieldValue = widget.teamName;
 
-    // 회원 정보 내의 position index에 맞게 정해줄 것.
-    late List<bool> selectedRole = <bool>[false, false, false, false];
+    String? currentRole = widget.positionName;
 
-    void changeRoleState(int index) {
-      setState(() {
+    // 회원 정보 내의 position index에 맞게 정해줄 것.
+    final List<bool> selectedRole = <bool>[false, false, false, false];
+
+    setState(() {
+      if (widget.positionName != null) {
         for (int i = 0; i < selectedRole.length; i++) {
-          if (index == i) {
+          if (selectedRole[i] == widget.positionName) {
             selectedRole[i] = true;
-          } else {
-            selectedRole[i] = false;
           }
         }
-      });
-    }
+      }
+    });
 
     return Scaffold(
       appBar: const TopBar(
@@ -95,7 +96,7 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
                       });
                       MyInfoApi(
                               dio: Dio(), storage: const FlutterSecureStorage())
-                          .patchUserTeamName(textFormFieldValue);
+                          .patchUserTeamName(textFormFieldValue, currentRole);
                     },
                   ),
                 ),
@@ -109,7 +110,18 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
           Center(
             child: ToggleButtons(
               direction: Axis.horizontal,
-              onPressed: (int index) => {changeRoleState(index)},
+              onPressed: (int index) {
+                setState(() {
+                  for (int i = 0; i < selectedRole.length; i++) {
+                    if (index == i) {
+                      selectedRole[i] = i == index;
+                      print(selectedRole);
+                      currentRole = rolesString[i];
+                      print(currentRole);
+                    }
+                  }
+                });
+              },
               borderRadius: const BorderRadius.all(Radius.circular(8)),
               selectedBorderColor: Colors.red[700],
               selectedColor: Colors.white,
