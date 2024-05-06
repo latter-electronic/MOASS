@@ -3,9 +3,7 @@ package com.moass.api.domain.device.service;
 
 import com.moass.api.domain.device.dto.DeviceIdDto;
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
-import com.moass.api.domain.device.dto.ReqDeviceLogoutDto;
 import com.moass.api.domain.device.repository.DeviceRepository;
-import com.moass.api.domain.user.dto.ReqFilteredUserDetailDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
@@ -20,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuples;
-
 @RequiredArgsConstructor
 @Service
 public class DeviceService {
