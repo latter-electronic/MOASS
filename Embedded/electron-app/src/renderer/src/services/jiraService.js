@@ -26,7 +26,7 @@ export const fetchCurrentSprintIssues = async () => {
  * @returns {Promise} 이슈 데이터
  */
 export const fetchRecentClosedSprintIssues = async () => {
-    const fields = 'creator,summary,priority,status, parent';
+    const fields = 'creator,summary,priority,status, customfield_10031, parent';
     const jqlQuery = encodeURIComponent("project = 'S10P31E203' AND reporter = 'diduedidue@naver.com' AND sprint IN closedSprints() AND sprint NOT IN futureSprints() ORDER BY sprint DESC");
     const maxResults = 50;  // 일단 50
     const url = `${prefix}/search?jql=${jqlQuery}&fields=${fields}&maxResults=${maxResults}`;

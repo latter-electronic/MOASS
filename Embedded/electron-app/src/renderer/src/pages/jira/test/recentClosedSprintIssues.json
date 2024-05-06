@@ -11,6 +11,7 @@
       "key": "S10P31E203-305",
       "fields": {
         "summary": "3주차 프로젝트 회고/종료 미팅 (4/26)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -92,6 +93,7 @@
       "key": "S10P31E203-304",
       "fields": {
         "summary": "기기/앱/서버간 통신 테스트",
+        "customfield_10031": 1,
         "parent": {
           "id": "846934",
           "key": "S10P31E203-228",
@@ -173,6 +175,7 @@
       "key": "S10P31E203-303",
       "fields": {
         "summary": "[EM] 알림 탭 gitlab 컴포넌트 생성",
+        "customfield_10031": 1,
         "parent": {
           "id": "846934",
           "key": "S10P31E203-228",
@@ -254,6 +257,7 @@
       "key": "S10P31E203-302",
       "fields": {
         "summary": "[EM] 알림 탭 mm 컴포넌트 생성",
+        "customfield_10031": 1,
         "parent": {
           "id": "846934",
           "key": "S10P31E203-228",
@@ -335,6 +339,7 @@
       "key": "S10P31E203-301",
       "fields": {
         "summary": "[EM] 알림 탭 내부 navbar 구성",
+        "customfield_10031": 2,
         "parent": {
           "id": "846934",
           "key": "S10P31E203-228",
@@ -416,6 +421,7 @@
       "key": "S10P31E203-300",
       "fields": {
         "summary": "[EM] 알림 탭 기본 구조 생성",
+        "customfield_10031": 1,
         "parent": {
           "id": "846934",
           "key": "S10P31E203-228",
@@ -497,6 +503,7 @@
       "key": "S10P31E203-299",
       "fields": {
         "summary": "[Live방송] 오전미팅/스크럼 (4/26)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -578,6 +585,7 @@
       "key": "S10P31E203-298",
       "fields": {
         "summary": "종료 미팅 (4/25)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -659,6 +667,7 @@
       "key": "S10P31E203-297",
       "fields": {
         "summary": "[EM] 메인화면 모지(Mozzi) 캐릭터 프로토타입 삽입",
+        "customfield_10031": 1,
         "parent": {
           "id": "846921",
           "key": "S10P31E203-226",
@@ -740,6 +749,7 @@
       "key": "S10P31E203-296",
       "fields": {
         "summary": "[EM] 메인화면 위젯 컴포넌트 생성",
+        "customfield_10031": 2,
         "parent": {
           "id": "846921",
           "key": "S10P31E203-226",
@@ -821,6 +831,7 @@
       "key": "S10P31E203-295",
       "fields": {
         "summary": "[EM] 메인화면 시간/날짜 컴포넌트 생성",
+        "customfield_10031": 1,
         "parent": {
           "id": "846921",
           "key": "S10P31E203-226",
@@ -902,6 +913,7 @@
       "key": "S10P31E203-294",
       "fields": {
         "summary": "[EM] 메인화면 Todo 컴포넌트 생성",
+        "customfield_10031": 2,
         "parent": {
           "id": "846921",
           "key": "S10P31E203-226",
@@ -983,6 +995,7 @@
       "key": "S10P31E203-293",
       "fields": {
         "summary": "[Live방송] 오전미팅/스크럼 (4/25)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -1064,6 +1077,7 @@
       "key": "S10P31E203-292",
       "fields": {
         "summary": "종료 미팅 (4/24)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -1145,6 +1159,7 @@
       "key": "S10P31E203-291",
       "fields": {
         "summary": "터치스크린에 대한 이해",
+        "customfield_10031": 1,
         "parent": {
           "id": "836496",
           "key": "S10P31E203-2",
@@ -1226,6 +1241,7 @@
       "key": "S10P31E203-290",
       "fields": {
         "summary": "[EM] 메일화면 스케줄 컴포넌트 수직 스크롤 설정",
+        "customfield_10031": 2,
         "parent": {
           "id": "846921",
           "key": "S10P31E203-226",
@@ -1307,6 +1323,7 @@
       "key": "S10P31E203-289",
       "fields": {
         "summary": "[EM] 메인화면 edussafy 스케줄 컴포넌트 생성",
+        "customfield_10031": 1,
         "parent": {
           "id": "846921",
           "key": "S10P31E203-226",
@@ -1388,6 +1405,7 @@
       "key": "S10P31E203-288",
       "fields": {
         "summary": "1차 개발 산출물 체크",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -1469,6 +1487,7 @@
       "key": "S10P31E203-287",
       "fields": {
         "summary": "개발 산출물 정리",
+        "customfield_10031": 1,
         "parent": {
           "id": "836501",
           "key": "S10P31E203-6",
@@ -1550,6 +1569,7 @@
       "key": "S10P31E203-286",
       "fields": {
         "summary": "[Live방송] 오전미팅/스크럼 (4/24)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -1631,6 +1651,7 @@
       "key": "S10P31E203-285",
       "fields": {
         "summary": "종료 미팅 (4/23)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -1712,6 +1733,7 @@
       "key": "S10P31E203-283",
       "fields": {
         "summary": "[EM] 명패 페이지 기본 구조 설정",
+        "customfield_10031": 1,
         "parent": {
           "id": "846884",
           "key": "S10P31E203-224",
@@ -1793,6 +1815,7 @@
       "key": "S10P31E203-282",
       "fields": {
         "summary": "[EM] 네브바 생성 및 기본 페이지 라우팅 설정",
+        "customfield_10031": 2,
         "parent": {
           "id": "847012",
           "key": "S10P31E203-233",
@@ -1874,6 +1897,7 @@
       "key": "S10P31E203-281",
       "fields": {
         "summary": "[EM] 일렉트론 초기환경 세팅",
+        "customfield_10031": 2,
         "parent": {
           "id": "845458",
           "key": "S10P31E203-130",
@@ -1955,6 +1979,7 @@
       "key": "S10P31E203-280",
       "fields": {
         "summary": "[EM] SSH 설정 및 고정 ip 설정",
+        "customfield_10031": 1,
         "parent": {
           "id": "845458",
           "key": "S10P31E203-130",
@@ -2036,6 +2061,7 @@
       "key": "S10P31E203-278",
       "fields": {
         "summary": "[Live방송] 오전미팅/스크럼 (4/23)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -2117,6 +2143,7 @@
       "key": "S10P31E203-252",
       "fields": {
         "summary": "종료 미팅 (4/22)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -2198,6 +2225,7 @@
       "key": "S10P31E203-251",
       "fields": {
         "summary": "WBS 작성",
+        "customfield_10031": 2,
         "parent": {
           "id": "836501",
           "key": "S10P31E203-6",
@@ -2279,6 +2307,7 @@
       "key": "S10P31E203-250",
       "fields": {
         "summary": "2차 교보재 신청",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -2360,6 +2389,7 @@
       "key": "S10P31E203-249",
       "fields": {
         "summary": "[자율PJT] 중간평가",
+        "customfield_10031": 3,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -2441,6 +2471,7 @@
       "key": "S10P31E203-248",
       "fields": {
         "summary": "오전미팅/스크럼 (4/22)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -2522,6 +2553,7 @@
       "key": "S10P31E203-85",
       "fields": {
         "summary": "임베디드 물품 정리 및 BOM 리스트 작성",
+        "customfield_10031": 2,
         "parent": {
           "id": "836500",
           "key": "S10P31E203-5",
@@ -2603,6 +2635,7 @@
       "key": "S10P31E203-81",
       "fields": {
         "summary": "개발 환경 세팅",
+        "customfield_10031": 2,
         "parent": {
           "id": "836501",
           "key": "S10P31E203-6",
@@ -2684,6 +2717,7 @@
       "key": "S10P31E203-72",
       "fields": {
         "summary": "종료미팅 (금)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -2765,6 +2799,7 @@
       "key": "S10P31E203-70",
       "fields": {
         "summary": "[공통] 프로젝트 설계 구체화",
+        "customfield_10031": 3,
         "parent": {
           "id": "836501",
           "key": "S10P31E203-6",
@@ -2846,6 +2881,7 @@
       "key": "S10P31E203-68",
       "fields": {
         "summary": "[자율PJT] 프로젝트 설계",
+        "customfield_10031": 3,
         "parent": {
           "id": "836501",
           "key": "S10P31E203-6",
@@ -2927,6 +2963,7 @@
       "key": "S10P31E203-58",
       "fields": {
         "summary": "종료미팅 (목)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -3008,6 +3045,7 @@
       "key": "S10P31E203-56",
       "fields": {
         "summary": "[자율PJT] 프로젝트 구체화",
+        "customfield_10031": 3,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -3089,6 +3127,7 @@
       "key": "S10P31E203-53",
       "fields": {
         "summary": "[자율PJT] 프로젝트 기획",
+        "customfield_10031": 3,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -3170,6 +3209,7 @@
       "key": "S10P31E203-51",
       "fields": {
         "summary": "[Live방송] 오전미팅/스크럼",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -3251,6 +3291,7 @@
       "key": "S10P31E203-49",
       "fields": {
         "summary": "[자율PJT] 팀 미팅",
+        "customfield_10031": 2,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
@@ -3332,6 +3373,7 @@
       "key": "S10P31E203-48",
       "fields": {
         "summary": "1주차 팀장 미팅",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -3413,6 +3455,7 @@
       "key": "S10P31E203-47",
       "fields": {
         "summary": "[특화PJT] 프로젝트 발표회",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -3494,6 +3537,7 @@
       "key": "S10P31E203-37",
       "fields": {
         "summary": "[특화PJT] 프로젝트 발표회",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -3575,6 +3619,7 @@
       "key": "S10P31E203-24",
       "fields": {
         "summary": "종료미팅 (월)",
+        "customfield_10031": 1,
         "parent": {
           "id": "836498",
           "key": "S10P31E203-4",
@@ -3656,6 +3701,7 @@
       "key": "S10P31E203-23",
       "fields": {
         "summary": "아이디어 회의",
+        "customfield_10031": 2,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -3737,6 +3783,7 @@
       "key": "S10P31E203-22",
       "fields": {
         "summary": "팀명 및 역할 분담",
+        "customfield_10031": 2,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -3818,6 +3865,7 @@
       "key": "S10P31E203-21",
       "fields": {
         "summary": "그라운드 룰 설정",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -3899,6 +3947,7 @@
       "key": "S10P31E203-18",
       "fields": {
         "summary": "[자율PJT] 컨설턴트/실습코치 미팅",
+        "customfield_10031": 1,
         "parent": {
           "id": "836497",
           "key": "S10P31E203-3",
@@ -3980,6 +4029,7 @@
       "key": "S10P31E203-16",
       "fields": {
         "summary": "[자율PJT] 분반이동",
+        "customfield_10031": 1,
         "parent": {
           "id": "836494",
           "key": "S10P31E203-1",
