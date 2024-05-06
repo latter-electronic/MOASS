@@ -41,7 +41,7 @@ class ReservationScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReservationUserStep1()),
+                        builder: (context) => ReservationUserStep1()),
                   );
                 },
                 child: const Text('시설/팀미팅 예약하기'),

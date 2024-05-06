@@ -10,11 +10,11 @@ class ReservationApi {
 
   ReservationApi({required this.dio, required this.storage});
 
-  // 로그인 함수
-  Future<bool> login(String userEmail, String password) async {
-    const apiUrl = '$baseUrl/api/user/login';
+  // 특정 날짜 예약조회
+  Future<bool> reservationinfoDay(String userEmail, String password) async {
+    const apiUrl = '$baseUrl/reservationinfo/search?date=';
     try {
-      final response = await dio.post(apiUrl, data: {
+      final response = await dio.get(apiUrl, data: {
         'userEmail': userEmail,
         'password': password,
       });
@@ -30,19 +30,6 @@ class ReservationApi {
       }
     } on DioException catch (e) {
       throw Exception(e.response?.data['message'] ?? '로그인에 실패했습니다.');
-    }
-  }
-
-  // 로그아웃 함수
-  Future<bool> logout() async {
-    try {
-      await storage.delete(key: 'isLoggedIn');
-      await storage.delete(key: 'accessToken');
-      await storage.delete(key: 'refreshToken');
-      return true; // 로그아웃 성공
-    } catch (e) {
-      print('Logout failed: $e');
-      return false; // 로그아웃 실패
     }
   }
 

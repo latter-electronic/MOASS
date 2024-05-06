@@ -44,6 +44,9 @@ dependencies:
     flutter_secure_storage: ^5.0.2
     # 스플레시 화면
     flutter_native_splash: ^2.4.0
+    # 날짜 관련 라이브러리
+    intl: ^0.19.0
+
 
 dev_dependencies:
     flutter_test:
