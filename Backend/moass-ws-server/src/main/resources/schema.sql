@@ -55,18 +55,18 @@ CREATE TABLE `User`(
                        `background_img` VARCHAR(255) NULL,
                        `layout` INT NOT NULL DEFAULT 1,
                        `connect_flag` INT NULL DEFAULT 0,
-                        `position_name` VARCHAR(20) NULL,
+                       `position_name` VARCHAR(20) NULL,
                        PRIMARY KEY (`user_id`),
                        CONSTRAINT `FK_SSAFYUser_TO_User_1` FOREIGN KEY (`user_id`) REFERENCES `SsafyUser` (`user_id`)
 );
 
 CREATE TABLE `Seat` (
-                       `seat_id` INT NOT NULL AUTO_INCREMENT,
-                       `user_id` VARCHAR(20) NULL,
-                       `x_coord` VARCHAR(40) NULL,
-                       `y_coord` VARCHAR(20) NULL,
-                       PRIMARY KEY (`seat_id`),
-                       FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+                        `seat_id` INT NOT NULL AUTO_INCREMENT,
+                        `user_id` VARCHAR(20) NULL,
+                        `x_coord` VARCHAR(40) NULL,
+                        `y_coord` VARCHAR(20) NULL,
+                        PRIMARY KEY (`seat_id`),
+                        FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
 CREATE TABLE `Device` (
@@ -92,8 +92,8 @@ CREATE TABLE `Reservation` (
                                `time_limit`	INT	NOT NULL	DEFAULT 2,
                                `reservation_name`	VARCHAR(40)	NOT NULL,
                                `color_code`	VARCHAR(8)	NOT NULL	DEFAULT '#6ECEF5',
-    PRIMARY KEY (`reservation_id`),
-    FOREIGN KEY (`class_code`) REFERENCES `Class` (`class_code`)
+                               PRIMARY KEY (`reservation_id`),
+                               FOREIGN KEY (`class_code`) REFERENCES `Class` (`class_code`)
 );
 
 
