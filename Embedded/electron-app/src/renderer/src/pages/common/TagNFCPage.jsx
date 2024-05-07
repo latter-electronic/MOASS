@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom' 
+import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../stores/AuthStore.js'
 import tagging_space from '../../assets/tag_nfc.png'
 import axios from "axios";
@@ -7,17 +7,16 @@ import axios from "axios";
 export default function TagNFC() {
   const MOASS_API_URL = import.meta.env.VITE_MOASS_API_URL;
   const navigate = useNavigate()
+  const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 
-  // const callTagSuccessFunction = () => {
-  //   navigate(`/tagsuccess`)
-  // }
-  const { login, isAuthenticated } = useAuthStore((state) => ({
+  const { login } = useAuthStore((state) => ({
     login: state.login,
-    isAuthenticated: state.isAuthenticated
   }))
 
   const [deviceId, setDeviceId] = useState('');
   const [cardSerialId, setCardSerialId] = useState('');
+  const [message, setMessage] = useState('');
+  const [pythondata, setPythondata] = useState('');
 
   // API 요청 함수
   const sendLoginRequest = async () => {
@@ -26,14 +25,14 @@ export default function TagNFC() {
       'deviceId': deviceId,
       'cardSerialId': cardSerialId,
     };
-  
+
     try {
       const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
-  
+
       const data = response.data; // axios는 자동으로 JSON 파싱을 처리합니다
       if (response.status === 200) { // axios는 response.ok 대신 직접 status 코드를 확인합니다
         await login(data.accessToken, data.refreshToken);
@@ -47,7 +46,7 @@ export default function TagNFC() {
       console.error('API call error:', error.message);
     }
   };
-  
+
   const handleSubmit = (event) => {
     event.preventDefault();
     sendLoginRequest();
@@ -55,9 +54,18 @@ export default function TagNFC() {
 
 
   useEffect(() => {
-    const handleNfcData = (data) => {
+    const handlePong = (event, message) => {
+      setMessage(message);
+      console.log(message);
+    };
+  
+    const handlePythonData = (event, message) => {
+      setPythondata(message);
+      console.log(message);
+    };
+  
+    const handleNfcData = (event, data) => {
       console.log('Received NFC data:', data)
-      console.log('Type of data:', typeof data)                 
       try {
         const parsedData = JSON.parse(data)
         if (parsedData.accessToken && parsedData.refreshToken) {
@@ -71,12 +79,17 @@ export default function TagNFC() {
       }
     }
 
-    window.userAPI?.onNfcData(handleNfcData)
+    window.electron.ipcRenderer.on('pong', handlePong);
+    window.electron.ipcRenderer.on('fromPython', handlePythonData);
+    window.electron.ipcRenderer.on('nfc-data', handleNfcData)
 
-    // 컴포넌트 언마운트 시에 이벤트 리스너 정리.
+    // 컴포넌트 언마운트 시에 이벤트 리스너 정리
     return () => {
-      window.userAPI?.removeNfcDataListener()
-    }
+          window.electron.ipcRenderer.removeListener('pong', handlePong);
+          window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
+          window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
+        };
+
   }, [login, navigate])
 
   return (
@@ -90,7 +103,7 @@ export default function TagNFC() {
         </button>
       </div>
       <div className="flex-1 flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg">
+        <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deviceId">
               Device ID
@@ -127,7 +140,23 @@ export default function TagNFC() {
           </div>
         </form>
       </div>
-      <div className="flex-1 flex flex-col"></div>
+      <div className="flex-1 flex flex-col">
+        <div>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={ipcHandle}>
+            ipc test
+          </button>
+        </div>
+        <div>
+          <div>
+            <h1>Received Message:</h1>
+            <p>{message}</p>
+          </div>
+          <div>
+            <h1>Python에서 받은 데이터:</h1>
+            <p>{pythondata}</p>
+          </div>
+        </div>
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center">
         <img
           className="flex justify-center items-center size-21"
