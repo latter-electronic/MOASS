@@ -11,7 +11,6 @@
 #        2-1. 사람 인식 후 AOD 화면 출력
 
 import os
-from dotenv import load_dotenv
 import board
 import busio
 import time
@@ -19,25 +18,18 @@ import json
 import sys
 import requests
 import io
+import traceback
+from dotenv import load_dotenv
 from adafruit_pn532.i2c import PN532_I2C
 from gpiozero import MotionSensor
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
-def get_serial_number():
-    with open('/proc/cpuinfo', 'r') as f:
-        for line in f:
-            if line.startswith('Serial'):
-                return line.split(':')[1].strip()
-    return None
-
 load_dotenv() # .env 파일 로드
-server_url = os.getenv('SERVER_URL')
 
+server_url = os.getenv('SERVER_URL')
 i2c = busio.I2C(board.SCL, board.SDA) # I2C 연결 설정
 pn532 = PN532_I2C(i2c, debug=False) # PN532 모듈 초기화
 pn532.SAM_configuration() # SAM 구성
-
 
 pir = MotionSensor(17)  # GPIO 17번 핀에 연결된 PIR 센서 HC-SR501
 motion_detected_time = time.time()
@@ -50,73 +42,82 @@ NO_MOTION_TIMEOUT = 300  # 5분
 LONG_SIT_TIMEOUT = 7200  # 2시간
 last_motion_time = time.time()
 
-while True:
-    if not  logged_in:  # 로그아웃 상태
-        # 카드의 UID 읽기
-        uid = pn532.read_passive_target(timeout=0.5)
-        if uid is not None:
-            # 카드 UID를 헥사 문자열로 변환
-            card_serial_id = ''.join(["{0:x}".format(i).zfill(2) for i in uid])
-            # print("card UID:", card_serial_id)
-            
-            # 라즈베리파이 시리얼 넘버
-            device_id = get_serial_number()
-            
-            # POST 요청 보내기
-            url = f'{server_url}/api/device/login'
-            payload = {'deviceId': device_id, 'cardSerialId': card_serial_id}
-            headers = {'Content-Type': 'application/json'}
+# -----------------------------------------------------------------
 
-            try:
-                response = requests.post(url, json=payload, headers=headers)
-                response.raise_for_status()
-                response_data = response.json()
-                # print("Server response:", response_data)
+# 기기 시리얼 넘버 
+def get_serial_number():
+    with open('/proc/cpuinfo', 'r') as f:
+        for line in f:
+            if line.startswith('Serial'):
+                return line.split(':')[1].strip()
+    return None
 
-                if response_data.get('message') == '로그인 성공':
-                    print("NFC 로그인 성공")
-                    sys.stdout.write(json.dumps(response_data))
+# NFC uid 읽기
+def read_uid():
+    uid = pn532.read_passive_target(timeout=0.5)
+    if uid is not None:
+        return ''.join(["{0:x}".format(i).zfill(2) for i in uid])
+    return None
+
+# 로그인 정보 송신(electron)
+def handle_login_response(device_id, card_serial_id):
+    if device_id and card_serial_id:
+        print("NFC 로그인 성공")
+        sys.stdout.write(json.dumps({"type": "NFC_DATA", "data": {'deviceId': device_id, 'cardSerialId': card_serial_id}}))
+        sys.stdout.flush()
+        return True
+    print("Login failed")
+    return False
+
+# 인체 감지 센서 로직
+def handle_motion_detection():
+    global motion_detected_time, last_motion_time
+    if pir.motion_detected:
+        motion_detected_time = last_motion_time = time.time()
+        print("Motion detected.")
+
+    current_time = time.time()
+    if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
+        print("자리 비움 상태")
+        sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AWAY"}}))
+        sys.stdout.flush()
+        motion_detected_time = current_time
+
+    if current_time - last_motion_time > LONG_SIT_TIMEOUT:
+        print("오래 앉아 있음 상태")
+        sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "LONG_SIT"}}))
+        sys.stdout.flush()
+        last_motion_time = current_time
+
+# -----------------------------------------------------------------
+
+# 메인 로직
+if __name__ == '__main__': 
+    device_id = get_serial_number()
+    
+    while True:
+        try:
+            line = sys.stdin.readline()
+            data = json.loads(line)
+            if data.get("action") == "login_success":
+                logged_in = True
+                print("Login status changed to True")
+
+            if not logged_in:   # 로그아웃 상태
+                card_serial_id = read_uid()
+                if card_serial_id:
+                    logged_in = handle_login_response(device_id, card_serial_id)
+                elif pir.motion_detected:
+                    print("AOD 상태")
+                    sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AOD"}}))
                     sys.stdout.flush()
-                    logged_in = True
-                    motion_detected_time = time.time()  # 움직임 감지 시간 초기화
-                else:
-                    print("Login failed:", response_data.get('message'))
-                    
-            except requests.exceptions.HTTPError as e:
-                print(f"HTTP error occurred: {e}")  # HTTP 에러 출력
-            except requests.exceptions.RequestException as e:
-                print(f"Request error: {e}")  # 요청 에러 출력
-            except Exception as e:
-                print(f"An error occurred: {e}")  # 기타 예외 처리
+            
+            else:   # 로그인 상태
+                handle_motion_detection()
 
-        elif pir.motion_detected:
-            # 로그아웃 상태에서 감지 시 AOD 화면 출력
-            print("AOD 상태")
-            sys.stdout.write(json.dumps({"type": "AOD"}))
-            sys.stdout.flush()
+        except json.JSONDecodeError as e:
+            print("JSON Decode Error:", str(e))
+        except Exception as e:
+            print("An error occurred:", traceback.format_exc())
 
-    elif logged_in: # 로그인 상태
-        if pir.motion_detected: # 움직임 감지
-            motion_detected_time = time.time()
-            last_motion_time = time.time()
-            print("Motion detected.")
-
-        current_time = time.time()
-        if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
-            # 자리 비움 상태 전달
-            print("자리 비움 상태")
-            sys.stdout.write(json.dumps({"type": "AWAY"}))
-            sys.stdout.flush()
-            motion_detected_time = current_time  # 타이머 리셋
-
-        if current_time - last_motion_time > LONG_SIT_TIMEOUT:
-            # 오래 앉아 있음 상태 전달
-            print("오래 앉아 있음 상태")
-            sys.stdout.write(json.dumps({"type": "LONG_SIT"}))
-            sys.stdout.flush()
-            last_motion_time = current_time  # 타이머 리셋
-    
-    # 로그아웃 기능 추가!!!!!!
-    
-    time.sleep(1)  # 검사 간격 조정
-       
+        time.sleep(1)
