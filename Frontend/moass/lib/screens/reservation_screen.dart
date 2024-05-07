@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/reservation_model.dart';
+import 'package:moass/screens/reservation_user_step1.dart';
 import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -108,7 +109,14 @@ class _ReservationScreenState extends State<ReservationScreen> {
                       const EdgeInsets.symmetric(
                           horizontal: 32.0, vertical: 10.0)),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // 여기에서 페이지 이동 로직 추가
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ReservationUserStep1()),
+                  );
+                },
                 child: const Text('시설/팀미팅 예약하기'),
               ),
             ),
