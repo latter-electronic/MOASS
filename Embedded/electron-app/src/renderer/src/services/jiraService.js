@@ -9,9 +9,9 @@ const prefix = '';
  * @returns {Promise} 이슈 데이터
  */
 export const fetchCurrentSprintIssues = async () => {
-    const fields = 'creator,summary,priority,status';
+    const fields = 'creator,summary,priority,status, customfield_10031, parent';
     const jqlQuery = encodeURIComponent("project = 'S10P31E203' AND sprint IN openSprints()");
-    const url = `${prefix}/search?jql=${jqlQuery}&fields=${fields}&maxResults=10`;
+    const url = `${prefix}/search?jql=${jqlQuery}&fields=${fields}&maxResults=240`;
 
     return axios.get(url)
         .then(response => response.data)
