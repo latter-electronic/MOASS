@@ -171,7 +171,8 @@ class SettingScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   // fullscreenDialog: true,
                                   builder: (context) =>
-                                      const SettingWidgetPhotoScreen(),
+                                      SettingWidgetPhotoScreen(
+                                          profileImg: userProfile.profileImg),
                                 ),
                               );
                             },

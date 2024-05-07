@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:moass/widgets/top_bar.dart';
 
 class SettingWidgetPhotoScreen extends StatefulWidget {
-  const SettingWidgetPhotoScreen({super.key});
+  final String? profileImg;
+  const SettingWidgetPhotoScreen({super.key, required this.profileImg});
 
   @override
   State<SettingWidgetPhotoScreen> createState() =>
@@ -47,7 +48,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {},
-          child: const Text('수정하기'),
+          child: const Text('위젯 이미지 수정하기'),
         ),
       ),
     );
@@ -60,11 +61,19 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
             height: 300,
             child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
           )
-        : Container(
-            width: 300,
-            height: 300,
-            color: Colors.grey,
-          );
+        : widget.profileImg != null
+            ? SizedBox(
+                width: 300,
+                height: 300,
+                child: Image.network(widget.profileImg.toString()))
+            : Container(
+                width: 300,
+                height: 300,
+                color: Colors.grey,
+                child: const Center(
+                  child: Text('등록된 프로필 이미지가 없습니다'),
+                ),
+              );
   }
 
   Widget _buildButton() {

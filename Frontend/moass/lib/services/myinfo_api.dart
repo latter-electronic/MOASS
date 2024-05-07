@@ -68,9 +68,9 @@ class MyInfoApi {
     }
   }
 
-  patchUserTeamName(String teamName, String? currentRole) async {
+  patchUserTeamName(String teamName, String? positionName) async {
     try {
-      Map data = {'teamName': teamName, 'currentRole': currentRole};
+      Map data = {'teamName': teamName, 'positionName': positionName};
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
