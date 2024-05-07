@@ -25,4 +25,6 @@ public class UserUpdateDto {
 
     private String  positionName;
 
+    private String teamName;
+
 }

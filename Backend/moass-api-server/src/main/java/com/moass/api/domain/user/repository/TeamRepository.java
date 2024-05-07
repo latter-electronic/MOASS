@@ -28,4 +28,11 @@ public interface TeamRepository  extends ReactiveCrudRepository<Team, String> {
             "INNER JOIN User u ON su.user_id = u.user_id " +
             "WHERE t.team_code = :teamCode")
     Flux<UserSearchDetail> findTeamUserByTeamCode(String teamCode);
+
+    @Query(" SELECT t.* " +
+            "FROM User u " +
+            "INNER JOIN SsafyUser su ON u.user_id = su.user_id " +
+            "INNER JOIN Team t ON su.team_code = t.team_code " +
+            "WHERE u.user_id = :userId")
+    Mono<Team> findByUserId(String userId);
 }

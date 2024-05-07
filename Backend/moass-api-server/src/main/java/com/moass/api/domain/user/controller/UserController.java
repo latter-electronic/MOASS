@@ -94,7 +94,7 @@ public class UserController {
      */
     @PatchMapping("/status")
     public Mono<ResponseEntity<ApiResponse>> changeUserStatus(@Login UserInfo userInfo, @RequestBody UserUpdateDto userUpdateDto){
-        return userService.UserUpdate(userInfo,userUpdateDto)
+        return userService.userUpdate(userInfo,userUpdateDto)
                 .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("수정완료",reqFilteredUserDetailDto))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
