@@ -23,8 +23,8 @@ export default function App() {
         <HashRouter>
             <div className="flex min-h-screen font-noto-sans ml-1">
                 <Routes>
-                    <Route path="/" element={<Navigate replace to="/testlogin" />} />
-                    <Route path="/testlogin" element={<TestLoginPage />} />
+                    <Route path="/" element={<Navigate replace to="/login" />} />
+                    <Route path="/login" element={<TagNFC />} />
                     <Route path="/home" element={<Layout />}>
                         <Route index element={<Home />} />
                         <Route path="board" element={<Board />} />

@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 import Clock from './HomeClockComponent.jsx'
 import Calendar from './CalendarWidget.jsx'
@@ -15,7 +16,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import { Pagination } from 'swiper/modules';
-
+import AuthStore from '../../stores/AuthStore.js';
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -27,6 +28,12 @@ export default function HomePage() {
     const callNamePlateFunction = () => {  // 개발용
         navigate(`/nameplate`);
     };
+
+    useEffect(() => {
+        const { accessToken, refreshToken } = AuthStore.getState();
+        console.log('AccessToken:', accessToken);
+        console.log('RefreshToken:', refreshToken);
+    }, []);
 
     return (
         <div className=" mx-auto p-4 h-screen">
