@@ -1,6 +1,9 @@
 import json
 import time
 import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 count = 0
 data = {
@@ -11,7 +14,7 @@ data = {
 while True:
     time.sleep(1)
     data['count'] = count  # 루프의 각 반복에서 count 값을 업데이트
-    json_data = json.dumps(data, ensure_ascii=False)  # 유니코드 유지
+    json_data = json.dumps(data, ensure_ascii=False) # 유니코드 유지
     sys.stdout.write(json_data + '\n')  # '\n'을 추가하여 줄 바꿈 처리
     sys.stdout.flush()  # 즉시 출력
     count += 1  # count 증가

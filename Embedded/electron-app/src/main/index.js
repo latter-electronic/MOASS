@@ -45,17 +45,12 @@ function createWindow() {
     input: pythonTest.stdout,
   });
 
-  rl.on('line', (line) => {
-    console.log(`Received line: ${line.toString()}`);
+  rl.on('line', (data) => {
+    console.log(`Received line: ${data.toString('utf8')}`);
     if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
-      mainWindow.webContents.send('fromPython', line.toString('utf8'));
+      mainWindow.webContents.send('fromPython', data.toString('utf8'));
     }
   });
-
-  // pythonTest.stdout.on('data', (data) => {
-  //   console.log(`python data: ${data}`);
-  //   mainWindow.webContents.send('fromPython', data.toString());
-  // });
 
   pythonTest.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);
