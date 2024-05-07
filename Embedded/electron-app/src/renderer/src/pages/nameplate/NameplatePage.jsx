@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchUserInfo } from '../../services/userService.js'
 
 import ssafyLogo from './ssafyLogo.png';
 import Status from './StatusComponent.jsx';
@@ -18,6 +19,15 @@ export default function NameplatePage() {
         return <div>로딩 중...</div>; // user 정보가 없을 경우 로딩 표시
     }
 
+    const positionColors = {
+        FE: 'bg-rose-800',
+        BE: 'bg-indigo-800',
+        EM: 'bg-emerald-800',
+        FULL: 'bg-yellow-800'
+    };
+
+    const positionBackground = user.positionName ? positionColors[user.positionName] : 'bg-stone-400';
+
     const handlePageClick = () => { // 개발용 뒤로가기
         navigate(-1);
     };
@@ -31,12 +41,12 @@ export default function NameplatePage() {
 
                 <div className="flex flex-col justify-center">
                     <div className="text-left">
-                        <div className="text-gray-400 font-normal text-6xl relative top-8 ml-10">{user.teamCode} 후자전자</div>
+                        <div className="text-gray-400 font-normal text-6xl relative top-8 ml-10">{user.teamCode} {user.teamName}</div>
                         <div className="flex">
                             <div className="font-extrabold text-16xl tracking-wwww text-gray-900">{user.userName}</div>
                             <div className="flex flex-col justify-end">
-                                <button className="bg-red-500 hover:bg-red-600 text-white text-2xl font-bold tracking-wider py-2 px-4 rounded-full mb-12">
-                                    {user.jobCode === 1 ? 'FE' : 'BE'} {/* 이 잡코드가 이 잡코드가 아님. 나중에 수정하기 */}
+                                <button className={`${positionBackground} text-white text-3xl font-semibold tracking-wider py-2 px-4 rounded-full mb-12`}>
+                                    {user.positionName || 'Null'}
                                 </button>
                             </div>
                         </div>

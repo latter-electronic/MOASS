@@ -12,9 +12,8 @@
      setUser: user => set({ user }),
      fetchUserInfo: async () => {
        try {
-        set({ user: testUser.data});
-        //  const response = await fetchUserInfo();
-        //  set({ user: response.data.data });
+         const response = await fetchUserInfo();
+         set({ user: response.data.data });
        } catch (error) {
          console.error('사용자 정보를 불러오는데 실패했습니다:', error);
          set({ user: null }); // 에러가 발생하면 user를 null로 설정

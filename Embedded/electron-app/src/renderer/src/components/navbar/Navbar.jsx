@@ -1,24 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { deviceLogout } from '../../services/deviceService'
-import { fetchUserInfo } from '../../services/userService.js'
+import { fetchUserInfo, updateUserStatus } from '../../services/userService.js'
 import useUIStore from '../../stores/UIStore.js'
 import AuthStore from '../../stores/AuthStore.js'; 
-import {
-  useFloating,
-  useClick,
-  useDismiss,
-  useRole,
-  useListNavigation,
-  useInteractions,
-  FloatingFocusManager,
-  useTypeahead,
-  offset,
-  flip,
-  size,
-  autoUpdate,
-  FloatingPortal
-} from '@floating-ui/react'
+import { useFloating, useClick, useDismiss, useRole, useListNavigation, useInteractions, FloatingFocusManager, useTypeahead, offset, flip, size, autoUpdate, FloatingPortal } from '@floating-ui/react';
 
 import mainIcon from './navbar_icon_main.svg'
 import mainIcon_w from './navbar_icon_main_white.svg'
@@ -43,7 +29,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
-  const statusOptions = ['착석중', '자리비움', '공가', '방해금지']
+  const statusOptions = [ '자리비움', '착석중', '공가', '방해금지']
 
   const backgroundColors = {
     착석중: 'bg-emerald-500',
@@ -107,25 +93,39 @@ export default function Navbar() {
     click
   ])
 
-  const handleSelect = (index) => {
-    setSelectedIndex(index)
-    setIsOpen(false)
-  }
+  const handleSelect = async (index) => {
+    setSelectedIndex(index);
+    setIsOpen(false);
+    // Patch the new statusId to the server
+    try {
+      const updateData = {
+        statusId: index.toString(), // Convert index to string if your backend expects a string
+      };
+      const response = await updateUserStatus(updateData);
+      console.log('Status update response:', response);
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      alert('Failed to update status');
+    }
+  };
 
-  const selectedItemLabel = selectedIndex !== null ? statusOptions[selectedIndex] : undefined
+  const selectedItemLabel = selectedIndex !== null ? statusOptions[selectedIndex] : '상태를 선택하세요';
 
   useEffect(() => {
     const loadUsers = async () => {
       try {
-        const userData = await fetchUserInfo()
-        setUsers(userData) // API 호출 결과를 상태에 저장
+        const userData = await fetchUserInfo();
+        setUsers(userData.data.data); // API 호출 결과를 상태에 저장
+        if (userData.data.data.statusId !== undefined) {
+          setSelectedIndex(userData.data.data.statusId); // Set selectedIndex based on statusId
+        }
       } catch (error) {
-        console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error)
+        console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error);
       }
-    }
+    };
 
-    loadUsers() // 컴포넌트 마운트 시 사용자 데이터 불러오기
-  }, []) // 빈 의존성 배열을 제공하여 컴포넌트가 마운트될 때 한 번만 호출되도록 설정
+    loadUsers();
+  }, []);
 
   const callLoginFunction = () => {
     navigate(`/tagnfc`)
