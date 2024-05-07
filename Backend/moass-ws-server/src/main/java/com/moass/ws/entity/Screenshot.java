@@ -1,9 +1,6 @@
 package com.moass.ws.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -15,10 +12,13 @@ import lombok.*;
 public class Screenshot {
 
     @Id
+    @Column(name = "screenshot_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer screenshotId;
 
+    @Column(name = "screenshot_url")
     private String screenshotUrl;
 
-    private Integer boardId;
+    @Column(name = "board_user_id")
+    private Integer boardUserId;
 }

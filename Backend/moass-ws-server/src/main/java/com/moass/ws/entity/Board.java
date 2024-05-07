@@ -1,9 +1,6 @@
 package com.moass.ws.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,14 +14,20 @@ import java.time.LocalDateTime;
 public class Board {
 
     @Id
+    @Column(name = "board_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer boardId;
 
+    @Column(name = "board_name")
     private String boardName;
 
+    @Column(name = "board_url")
     private String boardUrl;
 
-    private LocalDateTime createdAt;
+    @Column(name = "is_active")
+    private Boolean isActive;
 
-    private LocalDateTime updatedAt;
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
+
 }

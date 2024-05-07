@@ -3,8 +3,10 @@ package com.moass.ws.service;
 import com.moass.ws.dto.BoardRequestDto;
 import com.moass.ws.dto.BoardResponseDto;
 import com.moass.ws.entity.Board;
+import com.moass.ws.entity.BoardUser;
 import com.moass.ws.entity.User;
 import com.moass.ws.repository.BoardRepository;
+import com.moass.ws.repository.BoardUserRepository;
 import com.moass.ws.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,12 +22,14 @@ public class BoardServiceImpl implements BoardService {
     private final SimpMessagingTemplate template;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final BoardUserRepository boardUserRepository;
 
-    public void createBoard(Integer userId) {
+    public void createBoard(BoardRequestDto dto) {
         Board board = boardRepository.save(new Board());
+        boardUserRepository.save(new BoardUser(board.getBoardId(), dto.getUserId()));
 
         Set<User> users = new HashSet<>();
-        users.add(userRepository.findById(userId).orElseThrow());
+        users.add(userRepository.findById(dto.getUserId()).orElseThrow());
         boards.put(board.getBoardId(), users);
 
         template.convertAndSend("/topic/board/" + board.getBoardId(), BoardResponseDto.builder()
@@ -35,9 +39,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     public void enterBoard(BoardRequestDto dto) {
+        boardUserRepository.save(new BoardUser(dto.getBoardId(), dto.getUserId()));
+
         boards.get(dto.getBoardId()).add(userRepository.findById(dto.getUserId()).orElseThrow());
 
-        template.convertAndSend("/topic/board" + dto.getBoardId(), BoardResponseDto.builder()
+        template.convertAndSend("/topic/board/" + dto.getBoardId(), BoardResponseDto.builder()
                 .boardId(dto.getBoardId())
                 .users(boards.get(dto.getBoardId()))
                 .build());
@@ -46,7 +52,7 @@ public class BoardServiceImpl implements BoardService {
     public void quitBoard(BoardRequestDto dto) {
         boards.get(dto.getBoardId()).remove(userRepository.findById(dto.getUserId()).orElseThrow());
 
-        template.convertAndSend("/topic/board" + dto.getBoardId(), BoardResponseDto.builder()
+        template.convertAndSend("/topic/board/" + dto.getBoardId(), BoardResponseDto.builder()
                 .boardId(dto.getBoardId())
                 .users(boards.get(dto.getBoardId()))
                 .build());

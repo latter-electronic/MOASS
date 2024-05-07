@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BoardRequestDto {
     private Integer boardId;
-    private Integer userId;
+    private String userId;
 }
