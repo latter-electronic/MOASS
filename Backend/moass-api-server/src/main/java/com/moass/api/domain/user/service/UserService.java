@@ -8,6 +8,7 @@ import com.moass.api.domain.user.repository.*;
 import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.Tokens;
 import com.moass.api.global.auth.dto.UserInfo;
+import com.moass.api.global.config.S3ClientConfigurationProperties;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -33,6 +35,8 @@ public class UserService {
     private final ClassRepository classRepository;
     private final LocationRepository locationRepository;
     private final CustomUserRepository customUserRepository;
+    private final S3ClientConfigurationProperties s3config;
+
 
     private final SsafyUserRepository ssafyUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -77,7 +81,16 @@ public class UserService {
      * @param userUpdateDto
      * @return
      */
-    public Mono<UserSearchInfoDto> UserUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
+    @Transactional
+    public Mono<Boolean> userUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
+        return Mono.zip(userProfileUpdate(userInfo, userUpdateDto),
+                        teamNameUpdate(userInfo, userUpdateDto),
+                        (profileUpdated, teamUpdated) -> profileUpdated || teamUpdated)
+                .doOnSuccess(result -> log.info("result: {}", result))
+                .flatMap(result -> (result ? Mono.just(true): Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST))));
+    }
+
+    public Mono<Boolean> userProfileUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto){
         return userRepository.findByUserId(userInfo.getUserId()).flatMap(user -> {
             boolean isUpdated = false;
 
@@ -114,13 +127,21 @@ public class UserService {
                 user.setPositionName(userUpdateDto.getPositionName());
                 isUpdated = true;
             }
-
-            if (isUpdated) {
-                return userRepository.save(user).flatMap(saveUser -> getUserDetail(saveUser.getUserEmail()));
-            } else {
-                return Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST));
-            }
+            log.info("isUpdated: {}", isUpdated);
+            return (isUpdated ? userRepository.save(user).thenReturn(true) : Mono.just(false));
         }).switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
+    }
+
+    public Mono<Boolean> teamNameUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto){
+        return teamRepository.findByUserId(userInfo.getUserId()).flatMap(team -> {
+            boolean isUpdated = false;
+            if (userUpdateDto.getTeamName() != null && !userUpdateDto.getTeamName().equals(team.getTeamName())) {
+                team.setTeamName(userUpdateDto.getTeamName());
+                isUpdated = true;
+            }
+            log.info("isUpdated: {}", isUpdated);
+            return (isUpdated ? teamRepository.save(team).thenReturn(true) : Mono.just(false));
+        }).switchIfEmpty(Mono.error(new CustomException("팀이 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
     }
 
 
@@ -241,7 +262,7 @@ public class UserService {
                     String fileKey = uploadResult.getKeys()[0];
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
-                                user.setProfileImg(fileKey);
+                                user.setProfileImg(s3config.getImageUrl()+"/"+fileKey);
                                 return userRepository.save(user).thenReturn(fileKey);
                             });
                 });
@@ -256,7 +277,7 @@ public class UserService {
                     String fileKey = uploadResult.getKeys()[0];
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
-                                user.setBackgroundImg(fileKey);
+                                user.setBackgroundImg(s3config.getImageUrl()+"/"+fileKey);
                                 return userRepository.save(user).thenReturn(fileKey);
                             });
                 });
