@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/top_bar.dart';
 
 class SettingWidgetPhotoScreen extends StatefulWidget {
@@ -47,7 +50,10 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+                .postUserWidgetPhoto(_image!);
+          },
           child: const Text('위젯 이미지 수정하기'),
         ),
       ),
