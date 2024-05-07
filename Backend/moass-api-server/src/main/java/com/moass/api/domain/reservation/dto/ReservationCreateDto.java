@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
@@ -22,5 +24,6 @@ public class ReservationCreateDto {
 
     private String colorCode;
 
+    private List<Integer> infoTimes;
 
 }

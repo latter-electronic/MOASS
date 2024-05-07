@@ -3,10 +3,7 @@ package com.moass.api.domain.reservation.service;
 import com.moass.api.domain.reservation.dto.MyReservationInfoDetailDto;
 import com.moass.api.domain.reservation.dto.ReservationDetailDto;
 import com.moass.api.domain.reservation.dto.ReservationInfoCreateDto;
-import com.moass.api.domain.reservation.entity.Reservation;
-import com.moass.api.domain.reservation.entity.ReservationInfo;
-import com.moass.api.domain.reservation.entity.UserCount;
-import com.moass.api.domain.reservation.entity.UserReservationInfo;
+import com.moass.api.domain.reservation.entity.*;
 import com.moass.api.domain.reservation.repository.ReservationInfoRepository;
 import com.moass.api.domain.reservation.repository.ReservationRepository;
 import com.moass.api.domain.reservation.repository.UserReservationInfoRepository;
@@ -21,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
@@ -77,13 +75,24 @@ public class ReservationInfoService {
     }
 
     private Mono<ReservationInfo> checkAndSaveReservation(UserInfo userInfo, ReservationInfoCreateDto reservationInfoCreateDto) {
-        return reservationInfoRepository.findInfoTimeByReservationIdAndInfoDate(
-                        reservationInfoCreateDto.getReservationId(), reservationInfoCreateDto.getInfoDate())
-                .collectList()
-                .flatMap(alreadyInfoTimes -> {
+        Mono<List<Integer>> alreadyReservedTimes = reservationInfoRepository.findInfoTimeByReservationIdAndInfoDate(
+                reservationInfoCreateDto.getReservationId(), reservationInfoCreateDto.getInfoDate()
+        ).collectList();
+
+        Mono<List<Integer>> bannedTimes = reservationInfoRepository.findBannedInfoTimeByReservationIdAndInfoDate(
+                reservationInfoCreateDto.getReservationId()).collectList();
+
+        return Mono.zip(alreadyReservedTimes, bannedTimes)
+                .flatMap(tuple -> {
+                    List<Integer> alreadyInfoTimes = tuple.getT1();
+                    List<Integer> bannedInfoTimes = tuple.getT2();
+
                     for (Integer infoTime : reservationInfoCreateDto.getInfoTimes()) {
                         if (alreadyInfoTimes.contains(infoTime)) {
                             return Mono.error(new CustomException("이미 예약된 시간입니다: " + convertNumberToTimeSlot(infoTime), HttpStatus.CONFLICT));
+                        }
+                        if (bannedInfoTimes.contains(infoTime)) {
+                            return Mono.error(new CustomException("예약 금지된 시간입니다: " + convertNumberToTimeSlot(infoTime), HttpStatus.FORBIDDEN));
                         }
                     }
 
@@ -99,10 +108,10 @@ public class ReservationInfoService {
                                     .build()))
                             .collectList()
                             .flatMap(reservationInfos -> Flux.fromIterable(reservationInfos)
-                                    .flatMap(reservationInfo ->
-                                            Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
-                                                    .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
-                                    ).then(Mono.just(reservationInfos.get(0))));
+                                    .flatMap(reservationInfo -> Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
+                                            .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
+                                    ).then(Mono.just(reservationInfos.get(0)))
+                            );
                 });
     }
 
@@ -188,21 +197,31 @@ public class ReservationInfoService {
     }
 
     public Mono<List<MyReservationInfoDetailDto>> getReservationInfo(String userId) {
+        Hooks.onOperatorDebug();
         return reservationInfoRepository.findByUserReservationUserId(userId)
-                .flatMap(reservationInfo ->
-                        userReservationInfoRepository.findUserSearchDetailByInfoId(reservationInfo.getInfoId())
-                                .map(userSearchDetail -> new UserSearchInfoDto(userSearchDetail))
-                                .collectList()
-                                .map(userSearchInfoDtos -> new MyReservationInfoDetailDto(
-                                        reservationInfo,
-                                        userSearchInfoDtos
-                                ))
+                .flatMap(reservationInfoEntity ->
+                        Mono.zip(
+                                        Mono.just(reservationInfoEntity),
+                                        userReservationInfoRepository.findUserSearchDetailByInfoId(reservationInfoEntity.getInfoId()).map(userSearchDetail -> new UserSearchInfoDto(userSearchDetail)).collectList(),
+                                        reservationRepository.findById(reservationInfoEntity.getReservationId())
+                                )
+                                .map(tuple -> {
+                                    ReservationInfo reservationInfo = tuple.getT1();
+                                    List<UserSearchInfoDto> userSearchInfoDtos = tuple.getT2();
+                                    Reservation reservation = tuple.getT3();
+
+                                    return new MyReservationInfoDetailDto(
+                                            reservationInfo,
+                                            userSearchInfoDtos,
+                                            reservation
+                                    );
+                                })
                 )
                 .collectList()
-                    .map(list -> list.stream()
-                .sorted(Comparator.comparing(MyReservationInfoDetailDto::getInfoDate)
-                        .thenComparing(MyReservationInfoDetailDto::getInfoTime))
-                .collect(Collectors.toList()));
+                .map(list -> list.stream()
+                        .sorted(Comparator.comparing(MyReservationInfoDetailDto::getInfoDate)
+                                .thenComparing(MyReservationInfoDetailDto::getInfoTime))
+                        .collect(Collectors.toList()));
     }
 
 
