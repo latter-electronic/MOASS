@@ -7,16 +7,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/top_bar.dart';
 
-class SettingWidgetPhotoScreen extends StatefulWidget {
-  final String? profileImg;
-  const SettingWidgetPhotoScreen({super.key, required this.profileImg});
+class SettingBackgroundPhotoScreen extends StatefulWidget {
+  final String? backgroundImg;
+  const SettingBackgroundPhotoScreen({super.key, required this.backgroundImg});
 
   @override
-  State<SettingWidgetPhotoScreen> createState() =>
+  State<SettingBackgroundPhotoScreen> createState() =>
       _SettingWidgetPhotoScreenState();
 }
 
-class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
+class _SettingWidgetPhotoScreenState
+    extends State<SettingBackgroundPhotoScreen> {
   XFile? _image; //이미지를 담을 변수 선언
   final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
 
@@ -35,7 +36,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopBar(
-        title: '위젯 사진 설정',
+        title: '배경 사진 설정',
         icon: Icons.settings,
       ),
       body: Column(
@@ -70,11 +71,11 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
             height: 300,
             child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
           )
-        : widget.profileImg != null
+        : widget.backgroundImg != null
             ? SizedBox(
                 width: 300,
                 height: 300,
-                child: Image.network(widget.profileImg.toString()))
+                child: Image.network(widget.backgroundImg.toString()))
             : Container(
                 width: 300,
                 height: 300,

@@ -7,16 +7,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/top_bar.dart';
 
-class SettingWidgetPhotoScreen extends StatefulWidget {
+class SettingProfilePhotoScreen extends StatefulWidget {
   final String? profileImg;
-  const SettingWidgetPhotoScreen({super.key, required this.profileImg});
+  const SettingProfilePhotoScreen({super.key, required this.profileImg});
 
   @override
-  State<SettingWidgetPhotoScreen> createState() =>
+  State<SettingProfilePhotoScreen> createState() =>
       _SettingWidgetPhotoScreenState();
 }
 
-class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
+class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
   XFile? _image; //이미지를 담을 변수 선언
   final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
 
@@ -35,7 +35,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TopBar(
-        title: '위젯 사진 설정',
+        title: '프로필 사진 설정',
         icon: Icons.settings,
       ),
       body: Column(

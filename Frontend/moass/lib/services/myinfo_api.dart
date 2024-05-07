@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:moass/model/myprofile.dart';
 
 class MyInfoApi {
@@ -71,6 +75,10 @@ class MyInfoApi {
   patchUserTeamName(String teamName, String? positionName) async {
     try {
       Map data = {'teamName': teamName, 'positionName': positionName};
+<<<<<<< f519391973a8c0ce18fc07dda1f07de25bb3fbc0
+      print('수정 데이터 : $data');
+=======
+>>>>>>> 8b49b1033b055006fd21a2bb9afc645ca0c2bf3c
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
@@ -93,6 +101,45 @@ class MyInfoApi {
     } on DioException catch (e) {
       print(e.message);
       print('Error fetching user status: ${e.message}');
+      return null;
+    }
+  }
+
+  // 유저 위젯 사진 수정
+  postUserWidgetPhoto(XFile image) async {
+    try {
+      // String base64Image1 = "";
+      final mimeType = lookupMimeType(image.path);
+      Uint8List convertedImage = File(image.path).readAsBytesSync();
+      var len = convertedImage.length;
+      var type = ContentType(image.toString(), image.toString());
+
+      print('길이 : $len, 타입: $mimeType');
+
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.post('$baseUrl/api/user/profileimg',
+          options: Options(headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-type': mimeType,
+            'Content-Length': len,
+          }),
+          data: Stream.fromIterable(convertedImage.map((e) => [e])));
+
+      if (response.statusCode == 200) {
+        print('유저 프로필 이미지 변경 성공!');
+        return response;
+      } else {
+        print('유저 프로필 이미지 변경 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('프로필 이미지 에러: ${e.message}');
       return null;
     }
   }

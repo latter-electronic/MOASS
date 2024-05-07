@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/screens/home_screen.dart';
+import 'package:moass/screens/setting_background_photo.dart';
+import 'package:moass/screens/setting_profile_photo.dart';
 import 'package:moass/screens/setting_related_account.dart';
 import 'package:moass/screens/setting_user_info.dart';
 import 'package:moass/screens/setting_widget_photo.dart';
@@ -171,11 +173,57 @@ class SettingScreen extends StatelessWidget {
                                 MaterialPageRoute(
                                   // fullscreenDialog: true,
                                   builder: (context) =>
-                                      const SettingWidgetPhotoScreen(),
+                                      SettingProfilePhotoScreen(
+                                          profileImg: userProfile.profileImg),
+                                ),
+                              );
+                            },
+                            child: const CategoryText(text: '프로필 사진 설정')),
+                      )),
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey.withOpacity(0.5)))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  // fullscreenDialog: true,
+                                  builder: (context) =>
+                                      SettingWidgetPhotoScreen(
+                                          profileImg: userProfile.profileImg),
                                 ),
                               );
                             },
                             child: const CategoryText(text: '위젯 사진 설정')),
+                      )),
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey.withOpacity(0.5)))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  // fullscreenDialog: true,
+                                  builder: (context) =>
+                                      SettingBackgroundPhotoScreen(
+                                          backgroundImg:
+                                              userProfile.profileImg),
+                                ),
+                              );
+                            },
+                            child: const CategoryText(text: '기기 배경 사진 설정')),
                       )),
                   Container(
                       width: double.infinity,
