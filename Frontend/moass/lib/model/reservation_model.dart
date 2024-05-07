@@ -59,9 +59,9 @@ class UserSearchInfoDto {
 // 내 예약 정보 모델
 class MyReservationModel {
   final int infoId;
-  final String reservationName;
+  final int reservationId;
   final String userId;
-  final String infoState;
+  final int infoState;
   final String infoName;
   final String infoDate;
   final int infoTime;
@@ -69,7 +69,7 @@ class MyReservationModel {
 
   MyReservationModel({
     required this.infoId,
-    required this.reservationName,
+    required this.reservationId,
     required this.userId,
     required this.infoState,
     required this.infoName,
@@ -81,7 +81,7 @@ class MyReservationModel {
   factory MyReservationModel.fromJson(Map<String, dynamic> json) {
     return MyReservationModel(
       infoId: json['infoId'],
-      reservationName: json['reservationName'],
+      reservationId: json['reservationId'],
       userId: json['userId'],
       infoState: json['infoState'],
       infoName: json['infoName'],

@@ -16,6 +16,12 @@ Future<List<BoardModel>> fetchDummyBoards() async {
                 MemberImage(userId: 1, url: 'https://picsum.photos/id/7/80/50'),
                 MemberImage(
                     userId: 2, url: 'https://picsum.photos/id/63/90/50'),
+                MemberImage(
+                    userId: 2, url: 'https://picsum.photos/id/63/90/50'),
+                MemberImage(
+                    userId: 2, url: 'https://picsum.photos/id/63/90/50'),
+                MemberImage(
+                    userId: 2, url: 'https://picsum.photos/id/63/90/50'),
               ],
               images: [
                 ImageDetail(

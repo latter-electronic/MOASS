@@ -1,19 +1,58 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:moass/screens/reservation_user_step1.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
+import 'package:moass/model/reservation_model.dart';
+import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 
-class ReservationScreen extends StatelessWidget {
-  ReservationScreen({super.key});
+class ReservationScreen extends StatefulWidget {
+  const ReservationScreen({super.key});
 
-  final List<Map<String, dynamic>> reservations = [
-    {'type': '팀 미팅', 'time': '11:30 - 12:30'},
-    {'type': '보드 예약', 'time': '14:00 - 15:00'},
-    {'type': '팀 미팅', 'time': '15:30 - 16:30'},
-  ];
+  @override
+  State<ReservationScreen> createState() => _ReservationScreenState();
+}
+
+class _ReservationScreenState extends State<ReservationScreen> {
+  DateTime selectedDate = DateTime.now();
+  List<MyReservationModel> reservations = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchReservations();
+  }
+
+  void _changeDate(bool next) {
+    setState(() {
+      selectedDate = next
+          ? selectedDate.add(const Duration(days: 1))
+          : selectedDate.subtract(const Duration(days: 1));
+    });
+    fetchReservations();
+  }
+
+  Future<void> fetchReservations() async {
+    setState(() => isLoading = true);
+    var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    var result = await api.myReservationinfo(); // API 호출
+    setState(() {
+      // null 체크
+      reservations = result
+          .where((res) =>
+              DateFormat('yyyy.MM.dd').format(DateTime.parse(res.infoDate)) ==
+              DateFormat('yyyy.MM.dd').format(selectedDate))
+          .toList();
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat('yyyy. MM. dd').format(selectedDate);
+
     return Scaffold(
       appBar:
           const TopBar(title: '시설/미팅 예약', icon: Icons.edit_calendar_outlined),
@@ -30,82 +69,80 @@ class ReservationScreen extends StatelessWidget {
                   foregroundColor:
                       MaterialStateProperty.all<Color>(Colors.black),
                   textStyle: MaterialStateProperty.all<TextStyle>(
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                      const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
                   padding: MaterialStateProperty.all<EdgeInsets>(
-                    const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 10.0),
-                  ),
+                      const EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 10.0)),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ReservationUserStep1()),
-                  );
-                },
+                onPressed: () {},
                 child: const Text('시설/팀미팅 예약하기'),
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: CategoryText(text: '나의 예약 리스트'),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () => _changeDate(false)),
+                Text(formattedDate,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold)),
+                IconButton(
+                    icon: const Icon(Icons.arrow_forward_ios),
+                    onPressed: () => _changeDate(true)),
+              ],
             ),
           ),
+          const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: CategoryText(text: '나의 예약 리스트'))),
           Expanded(
-            child: Padding(
-              // ListView 전체를 Padding으로 감싸기
-              padding: const EdgeInsets.symmetric(horizontal: 8.0), // 좌우 여백 조정
-              child: ListView.builder(
-                itemCount: reservations.length,
-                itemBuilder: (context, index) {
-                  var reservation = reservations[index];
-                  return Card(
-                    margin: const EdgeInsets.all(8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    elevation: 8.0, // 여기서 그림자 효과의 깊이를 조절합니다.
-                    child: Material(
-                      color: Colors.transparent, // Material의 배경색을 투명하게 설정
-                      borderRadius: BorderRadius.circular(10.0), // 모서리를 둥글게 처리
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: Colors.blue, // Ink의 배경색 지정
-                          borderRadius:
-                              BorderRadius.circular(10.0), // 여기도 모서리 둥글게 처리
-                        ),
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: reservations.length,
+                    itemBuilder: (context, index) {
+                      var reservation = reservations[index];
+                      return Card(
+                        margin: const EdgeInsets.all(8.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0)),
+                        elevation: 8.0,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                reservation['type'],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
                             Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(8.0),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Radius.circular(10.0)),
-                              ),
-                              child: Text(reservation['time']),
-                            ),
+                                padding: const EdgeInsets.all(8.0),
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(10.0))),
+                                child: Text(reservation.infoName,
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 18))),
+                            Container(
+                                padding: const EdgeInsets.all(8.0),
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.vertical(
+                                        bottom: Radius.circular(10.0))),
+                                child: Text(
+                                    "${reservation.infoDate} at ${reservation.infoTime}",
+                                    style: const TextStyle(
+                                        color: Colors.black54))),
                           ],
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                      );
+                    },
+                  ),
           ),
         ],
       ),

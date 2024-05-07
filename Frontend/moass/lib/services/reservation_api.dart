@@ -12,31 +12,30 @@ class ReservationApi {
   ReservationApi({required this.dio, required this.storage});
 
   // 내 예약 조회
-  Future<MyReservationModel?> myReservationinfo() async {
-    // const apiUrl = '$baseUrl/reservationinfo/search?date=';
+  Future<List<MyReservationModel>> myReservationinfo() async {
+    List<MyReservationModel> reservations = [];
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
         print('No access token available');
-        return null;
+        return [];
       }
-      print(accessToken);
-      // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/reservationinfo',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
-
       if (response.statusCode == 200) {
-        return MyReservationModel.fromJson(response.data['data']);
+        List<dynamic> responseData = response.data['data'];
+        reservations = responseData
+            .map((data) => MyReservationModel.fromJson(data))
+            .toList();
       } else {
-        print('내 예약정보 불러오기 실패');
-        return null;
+        print('Failed to fetch reservation information');
       }
     } on DioException catch (e) {
-      print('Error myReservationinfo: ${e.message}');
-      return null;
+      print('Error fetching reservation information: ${e.message}');
     }
+    return reservations;
   }
 
   // 특정 날짜 예약 조회
@@ -57,6 +56,31 @@ class ReservationApi {
         return ReservationDayModel.fromJson(response.data['data']);
       } else {
         print('해당날짜 유저정보 불러오기 실패');
+        return null;
+      }
+    } on DioException catch (e) {
+      print('Error fetching user status: ${e.message}');
+      return null;
+    }
+  }
+
+// 예약 취소 infoId를 전달받아서 요청
+  reservationCancle() async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return null;
+      }
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.delete('$baseUrl/api/reservationinfo/{InfoId}',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+
+      if (response.statusCode == 200) {
+        print('해당 예약을 취소하였습니다!');
+        return null;
+      } else {
+        print('예약 취소 실패');
         return null;
       }
     } on DioException catch (e) {
