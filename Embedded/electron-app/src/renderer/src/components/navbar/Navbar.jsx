@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { deviceLogout } from '../../services/deviceService';
-import { fetchAllUsers } from '../../services/userService.js';
+import { fetchUserInfo } from '../../services/userService.js';
 import useUIStore from '../../stores/UIStore.js';
 import {
     useFloating,
@@ -112,7 +112,7 @@ export default function Navbar() {
     useEffect(() => {
         const loadUsers = async () => {
             try {
-                const userData = await fetchAllUsers();
+                const userData = await fetchUserInfo();
                 setUsers(userData); // API 호출 결과를 상태에 저장
             } catch (error) {
                 console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error);
@@ -128,12 +128,24 @@ export default function Navbar() {
 
     const handleLogout = async () => {
         try {
-            await deviceLogout();
-            console.log('Logged out successfully');
-            navigate('/login'); // Redirect to login page or home page after logout
+            const logoutData = {
+                deviceId: "DDDD2", // deviceId 나중에 실제로 가져오기
+                userId: "1058706" // userId 나중에 실제로 가져오기
+            };
+            await deviceLogout(logoutData);
+            console.log('로그아웃 성공!');
+            navigate('/testlogin');
         } catch (error) {
-            console.error('Logout failed:', error);
+            console.error('로그아웃 실패:', error);
         }
+    };
+
+    const callTestLogin = () => {
+        navigate(`/testlogin`);
+    };
+
+    const callSSETest = () => {
+        navigate(`/ssetest`);
     };
 
     return (
@@ -228,7 +240,7 @@ export default function Navbar() {
                                     </span>
                                 </div>
                             ))}
-                            <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none"/>
+                            <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
                             <span className="text-indigo-950 font-bold ml-3">개발용</span>
                             <div className="flex flex-col justify-around mt-2">
                                 <button
@@ -238,10 +250,22 @@ export default function Navbar() {
                                     로그인
                                 </button>
                                 <button
+                                    className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={() => callTestLogin()}
+                                >
+                                    로그인(SSE용)
+                                </button>
+                                <button
                                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                     onClick={handleLogout}
                                 >
                                     로그아웃
+                                </button>
+                                <button
+                                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={callSSETest}
+                                >
+                                    SSE 테스트
                                 </button>
                             </div>
                         </div>
