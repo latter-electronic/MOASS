@@ -22,7 +22,7 @@ public interface UserReservationInfoRepository   extends ReactiveCrudRepository<
             "GROUP BY uri.user_id")
     Flux<UserCount> countByReservationIdAndDate(Integer reservationId, LocalDate infoDate);
 
-    @Query("DELETE FROM userreservationInfo where info_id = :infoId")
+    @Query("DELETE FROM UserReservationInfo where info_id = :infoId")
     Mono<Void> deleteByInfoId(Integer infoId);
 
 

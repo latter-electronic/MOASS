@@ -75,13 +75,24 @@ public class ReservationInfoService {
     }
 
     private Mono<ReservationInfo> checkAndSaveReservation(UserInfo userInfo, ReservationInfoCreateDto reservationInfoCreateDto) {
-        return reservationInfoRepository.findInfoTimeByReservationIdAndInfoDate(
-                        reservationInfoCreateDto.getReservationId(), reservationInfoCreateDto.getInfoDate())
-                .collectList()
-                .flatMap(alreadyInfoTimes -> {
+        Mono<List<Integer>> alreadyReservedTimes = reservationInfoRepository.findInfoTimeByReservationIdAndInfoDate(
+                reservationInfoCreateDto.getReservationId(), reservationInfoCreateDto.getInfoDate()
+        ).collectList();
+
+        Mono<List<Integer>> bannedTimes = reservationInfoRepository.findBannedInfoTimeByReservationIdAndInfoDate(
+                reservationInfoCreateDto.getReservationId()).collectList();
+
+        return Mono.zip(alreadyReservedTimes, bannedTimes)
+                .flatMap(tuple -> {
+                    List<Integer> alreadyInfoTimes = tuple.getT1();
+                    List<Integer> bannedInfoTimes = tuple.getT2();
+
                     for (Integer infoTime : reservationInfoCreateDto.getInfoTimes()) {
                         if (alreadyInfoTimes.contains(infoTime)) {
                             return Mono.error(new CustomException("이미 예약된 시간입니다: " + convertNumberToTimeSlot(infoTime), HttpStatus.CONFLICT));
+                        }
+                        if (bannedInfoTimes.contains(infoTime)) {
+                            return Mono.error(new CustomException("예약 금지된 시간입니다: " + convertNumberToTimeSlot(infoTime), HttpStatus.FORBIDDEN));
                         }
                     }
 
@@ -97,10 +108,10 @@ public class ReservationInfoService {
                                     .build()))
                             .collectList()
                             .flatMap(reservationInfos -> Flux.fromIterable(reservationInfos)
-                                    .flatMap(reservationInfo ->
-                                            Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
-                                                    .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
-                                    ).then(Mono.just(reservationInfos.get(0))));
+                                    .flatMap(reservationInfo -> Flux.fromIterable(reservationInfoCreateDto.getInfoUsers())
+                                            .flatMap(userId -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userId)))
+                                    ).then(Mono.just(reservationInfos.get(0)))
+                            );
                 });
     }
 
