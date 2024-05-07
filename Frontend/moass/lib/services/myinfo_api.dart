@@ -75,10 +75,7 @@ class MyInfoApi {
   patchUserTeamName(String teamName, String? positionName) async {
     try {
       Map data = {'teamName': teamName, 'positionName': positionName};
-<<<<<<< f519391973a8c0ce18fc07dda1f07de25bb3fbc0
       print('수정 데이터 : $data');
-=======
->>>>>>> 8b49b1033b055006fd21a2bb9afc645ca0c2bf3c
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
