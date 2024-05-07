@@ -40,15 +40,15 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  const pythonTest = spawn('python', [join(__dirname, '../../sensors/ipc_test.py')], { encoding: 'utf8' });
+  const pythonTest = spawn('python', [join(__dirname, '../../sensors/ipc_test.py')], { encoding: 'utf8' })
   const rl = readline.createInterface({
     input: pythonTest.stdout,
   });
 
   rl.on('line', (data) => {
-    console.log(`Received line: ${data.toString('utf8')}`);
+    console.log(`Received line: ${data.toString('utf8')}`)
     if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
-      mainWindow.webContents.send('fromPython', data.toString('utf8'));
+      mainWindow.webContents.send('fromPython', data.toString('utf8'))
     }
   });
 
@@ -70,26 +70,26 @@ function setupPythonProcess(mainWindow) {
     const pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')], { encoding: 'utf8' });
 
     const readlineSensorData = readline.createInterface({
-      input: pythonTest.stdout,
+      input: pythonProcess.stdout,
     });
 
     readlineSensorData.on('line', (data) => {
-      const output = data.toString('utf8').trim();
-      console.log(`stdout: ${output}`);
+      console.log(`Received Sensor Data: ${data.toString('utf8')}`);
       if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
         try {
-          // 데이터를 JSON으로 파싱
-          const jsonData = JSON.parse(output);
-          console.log(jsonData);
-          // 로그인 성공 메시지 처리
-          if (jsonData.status === 200) {
-            mainWindow.webContents.send('nfc-data', jsonData.data);
-            console.log('login success');  
-          } else if (["AWAY", "AOD", "LONG_SIT"].includes(jsonData.type)) { // 메시지에 따라 다른 이벤트 전송
-            mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData.type);
+          const message = JSON.parse(data.toString());
+          switch (message.type) {
+            case 'NFC_DATA':
+              mainWindow.webContents.send('nfc-data', message.data)
+              break
+            case 'MOTION_DETECTED':
+              mainWindow.webContents.send('motion-detected', message.data)
+              break
+            default:
+              console.log('Received unknown message type:', message.type)
           }
         } catch (error) {
-          console.error('Error parsing JSON:', error);
+          console.error('Error parsing data from Python:', error)
         }
       }
     });
@@ -125,6 +125,13 @@ app.whenReady().then(() => {
   })
 
   createWindow()
+
+  ipcMain.on('login-success', (event, data) => {
+    console.log('Login success data received:', data);
+    if (pythonProcess && pythonProcess.stdin.writable) {
+        pythonProcess.stdin.write(JSON.stringify({action: {data}}) + '\n');
+    }
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
