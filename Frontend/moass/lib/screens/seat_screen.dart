@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/user_info.dart';
+import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -37,8 +38,13 @@ class _SeatScreenState extends State<SeatScreen> {
             .fetchUserProfile(value);
   }
 
+  late Future<List<List<UserInfo>>> myClass;
+
   @override
   Widget build(BuildContext context) {
+    final myInfoApi =
+        MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
+
     return Scaffold(
         appBar: const TopBar(
           title: '좌석',
@@ -49,12 +55,143 @@ class _SeatScreenState extends State<SeatScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 상태 처리 및 DropdownButton 작업 해야함
-              const CategoryText(text: '부울경캠퍼스 10기 2반'),
-              Container(
-                height: 400,
-                width: double.infinity,
-                decoration: const BoxDecoration(color: Colors.grey),
-              ),
+              FutureBuilder(
+                  future: myInfoApi.fetchUserProfile(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (snapshot.hasData) {
+                      var userProfile = snapshot.data;
+                      var currentClass = userProfile!.classCode.split('').last;
+
+                      myClass = UserInfoApi(
+                              dio: Dio(), storage: const FlutterSecureStorage())
+                          .fetchMyClass(userProfile.classCode);
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CategoryText(
+                              text:
+                                  '${userProfile.locationName}캠퍼스 $currentClass반'),
+                          FutureBuilder(
+                              future: myClass,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                      child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(
+                                      child: Text('Error: ${snapshot.error}'));
+                                } else if (snapshot.hasData) {
+                                  List<List<UserInfo>>? currentClass =
+                                      snapshot.data;
+                                  return SizedBox(
+                                    height: 400,
+                                    width: double.infinity,
+                                    child: InteractiveViewer(
+                                      scaleEnabled: true,
+                                      scaleFactor: 4.0,
+                                      minScale: 0.1,
+                                      maxScale: 3.0,
+                                      child: Container(
+                                          height: 800,
+                                          width: double.infinity,
+                                          decoration: const BoxDecoration(
+                                              color: Colors.grey),
+                                          child: Column(
+                                            children: [
+                                              for (var team in currentClass!)
+                                                Container(
+                                                    width: 200,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            color:
+                                                                Colors.white),
+                                                    child: GridView.count(
+                                                        shrinkWrap: true,
+                                                        crossAxisCount: 2,
+                                                        children: [
+                                                          for (var user in team)
+                                                            Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .all(2.0),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              decoration:
+                                                                  const BoxDecoration(
+                                                                      color: Colors
+                                                                          .green),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                      user
+                                                                          .teamCode,
+                                                                      style: const TextStyle(
+                                                                          fontWeight:
+                                                                              FontWeight.w600)),
+                                                                  Text(
+                                                                    user.userName,
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w800),
+                                                                  ),
+                                                                  Container(
+                                                                    margin:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            6.0),
+                                                                    width: 80,
+                                                                    height: 20,
+                                                                    decoration: BoxDecoration(
+                                                                        color: user.connectFlag == 1
+                                                                            ? user.statusId == 1
+                                                                                ? const Color(0xFF3DB887)
+                                                                                : const Color(0xFFFFBC1F)
+                                                                            : Colors.grey),
+                                                                    child: user.connectFlag ==
+                                                                            1
+                                                                        ? user.statusId ==
+                                                                                1
+                                                                            ? const Center(
+                                                                                child: Text('착석중'),
+                                                                              )
+                                                                            : const Center(
+                                                                                child: Text('자리 비움'),
+                                                                              )
+                                                                        : const Text(
+                                                                            ''),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            )
+                                                        ]))
+                                            ],
+                                          )),
+                                    ),
+                                  );
+                                } else {
+                                  return const Center(
+                                      child: Text('No data available'));
+                                }
+                              }),
+                        ],
+                      );
+                    } else {
+                      return const Center(child: Text('No data available'));
+                    }
+                  }),
+
               const CategoryText(text: '교육생 조회'),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),

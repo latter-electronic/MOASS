@@ -176,7 +176,51 @@ class SettingScreen extends StatelessWidget {
                                 ),
                               );
                             },
+                            child: const CategoryText(text: '프로필 사진 설정')),
+                      )),
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey.withOpacity(0.5)))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  // fullscreenDialog: true,
+                                  builder: (context) =>
+                                      SettingWidgetPhotoScreen(
+                                          profileImg: userProfile.profileImg),
+                                ),
+                              );
+                            },
                             child: const CategoryText(text: '위젯 사진 설정')),
+                      )),
+                  Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Colors.grey.withOpacity(0.5)))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  // fullscreenDialog: true,
+                                  builder: (context) =>
+                                      SettingWidgetPhotoScreen(
+                                          profileImg: userProfile.profileImg),
+                                ),
+                              );
+                            },
+                            child: const CategoryText(text: '기기 배경 사진 설정')),
                       )),
                   Container(
                       width: double.infinity,

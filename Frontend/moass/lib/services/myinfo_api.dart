@@ -119,7 +119,7 @@ class MyInfoApi {
       }
       // print(accessToken);
       // API요청, 헤더에 토큰 넣기
-      final response = await dio.post('$baseUrl/api/user/profileImg',
+      final response = await dio.post('$baseUrl/api/user/profileimg',
           options: Options(headers: {
             'Authorization': 'Bearer $accessToken',
             'Content-type': mimeType,

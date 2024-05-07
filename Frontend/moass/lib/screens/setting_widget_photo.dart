@@ -50,9 +50,12 @@ class _SettingWidgetPhotoScreenState extends State<SettingWidgetPhotoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {
-            MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+          onPressed: () async {
+            await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
                 .postUserWidgetPhoto(_image!);
+            if (context.mounted) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text('위젯 이미지 수정하기'),
         ),
