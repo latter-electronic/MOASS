@@ -17,6 +17,7 @@ public class S3ClientConfigurationProperties {
     private String accessKeyId;
     private String secretAccessKey;
     private URI endpoint = null;
+    private String imageUrl;
     private String bucket;
 
 }
