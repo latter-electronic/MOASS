@@ -47,9 +47,9 @@ class ReservationBox extends StatelessWidget {
           children: [
             Container(
               width: 100,
-              decoration: const BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                color: Colors.blue.shade200,
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
                 ),
@@ -64,16 +64,15 @@ class ReservationBox extends StatelessWidget {
             ),
             Expanded(
               child: Wrap(
-                spacing: 3, // Horizontal spacing
-                runSpacing: 3, // Vertical spacing
+                spacing: 3,
+                runSpacing: 3,
                 children: times
                     .map((time) => Padding(
-                          padding: const EdgeInsets.all(
-                              1), // Padding for each container
+                          padding: const EdgeInsets.all(1),
                           child: Container(
-                            width: (MediaQuery.of(context).size.width - 140) /
-                                4, // Adjust width calculation to account for padding
-                            height: 20, // Adjust height for better visibility
+                            width:
+                                (MediaQuery.of(context).size.width - 140) / 4,
+                            height: 20,
                             decoration: BoxDecoration(
                               border:
                                   Border.all(color: Colors.grey, width: 0.5),
