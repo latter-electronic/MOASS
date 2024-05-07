@@ -14,6 +14,18 @@ pipeline {
                 }
             }
         }
+        stage('WebSocket Build') {
+            steps {
+                dir('Backend/moass-ws-server') {
+                    sh 'docker stop backend-ws && docker rm backend-ws'
+                    sh 'docker build --no-cache -t backend-ws .'
+                    sh '''
+                        docker rmi -f $(docker images -f "dangling=true" -q)
+                    '''
+                    sh 'docker run -d -p 8080:8080 --name backend-ws backend-ws'
+                }
+            }
+        }
     }
     
     post {
