@@ -12,6 +12,8 @@ public class MyReservationInfoDetailDto {
 
     private Integer reservationId;
 
+    private String reservationName;
+
     private String userId;
 
     private Integer infoState;
@@ -24,9 +26,10 @@ public class MyReservationInfoDetailDto {
 
     private List<UserSearchInfoDto> userSearchInfoDtoList;
 
-    public MyReservationInfoDetailDto(ReservationInfo reservationInfo, List<UserSearchInfoDto> userSearchInfoDtoList) {
+    public MyReservationInfoDetailDto(ReservationInfo reservationInfo, List<UserSearchInfoDto> userSearchInfoDtoList,String reservationName) {
         this.infoId = reservationInfo.getInfoId();
         this.reservationId = reservationInfo.getReservationId();
+        this.reservationName = reservationName;
         this.userId = reservationInfo.getUserId();
         this.infoState = reservationInfo.getInfoState();
         this.infoName = reservationInfo.getInfoName();
