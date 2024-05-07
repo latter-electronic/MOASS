@@ -192,17 +192,17 @@ public class ReservationInfoService {
                         Mono.zip(
                                         Mono.just(reservationInfoEntity),
                                         userReservationInfoRepository.findUserSearchDetailByInfoId(reservationInfoEntity.getInfoId()).map(userSearchDetail -> new UserSearchInfoDto(userSearchDetail)).collectList(),
-                                        reservationRepository.findNameById(reservationInfoEntity.getReservationId())
+                                        reservationRepository.findById(reservationInfoEntity.getReservationId())
                                 )
                                 .map(tuple -> {
                                     ReservationInfo reservationInfo = tuple.getT1();
                                     List<UserSearchInfoDto> userSearchInfoDtos = tuple.getT2();
-                                    String reservationName = tuple.getT3();
+                                    Reservation reservation = tuple.getT3();
 
                                     return new MyReservationInfoDetailDto(
                                             reservationInfo,
                                             userSearchInfoDtos,
-                                            reservationName
+                                            reservation
                                     );
                                 })
                 )
