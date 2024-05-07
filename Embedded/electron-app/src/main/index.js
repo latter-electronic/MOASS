@@ -67,25 +67,30 @@ function createWindow() {
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
-    const pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')]);
+    const pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')], { encoding: 'utf8' });
 
-    pythonProcess.stdout.on('data', (data) => {
-      const output = data.toString().trim();
+    const readlineSensorData = readline.createInterface({
+      input: pythonTest.stdout,
+    });
+
+    readlineSensorData.on('line', (data) => {
+      const output = data.toString('utf8').trim();
       console.log(`stdout: ${output}`);
-      
-      try {
-        // 데이터를 JSON으로 파싱
-        const jsonData = JSON.parse(output);
-        console.log(jsonData);
-        // 로그인 성공 메시지 처리
-        if (jsonData.status === 200) {
-          mainWindow.webContents.send('nfc-data', jsonData.data);
-          console.log('login success');  
-        } else if (["AWAY", "AOD", "LONG_SIT"].includes(jsonData.type)) { // 메시지에 따라 다른 이벤트 전송
-          mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData.type);
+      if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
+        try {
+          // 데이터를 JSON으로 파싱
+          const jsonData = JSON.parse(output);
+          console.log(jsonData);
+          // 로그인 성공 메시지 처리
+          if (jsonData.status === 200) {
+            mainWindow.webContents.send('nfc-data', jsonData.data);
+            console.log('login success');  
+          } else if (["AWAY", "AOD", "LONG_SIT"].includes(jsonData.type)) { // 메시지에 따라 다른 이벤트 전송
+            mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData.type);
+          }
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
         }
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
       }
     });
 
@@ -100,7 +105,6 @@ function setupPythonProcess(mainWindow) {
     console.log('Python script is not supported on this platform.')
   }
 }
-
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

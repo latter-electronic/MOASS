@@ -54,9 +54,9 @@ export default function TagNFC() {
 
 
   useEffect(() => {
-    const handlePong = (event, args) => {
-      setMessage(args);
-      console.log(args);
+    const handlePong = (event, message) => {
+      setMessage(message);
+      console.log(message);
     };
   
     const handlePythonData = (event, message) => {
@@ -64,32 +64,32 @@ export default function TagNFC() {
       console.log(message);
     };
   
+    const handleNfcData = (event, data) => {
+      console.log('Received NFC data:', data)
+      try {
+        const parsedData = JSON.parse(data)
+        if (parsedData.accessToken && parsedData.refreshToken) {
+          login(parsedData.accessToken, parsedData.refreshToken)
+          console.log('navigate 시작')
+          navigate('/tagsuccess')
+          console.log('navigate 실행 완료')
+        }
+      } catch (error) {
+        console.error('Error parsing NFC data:', error)
+      }
+    }
+
     window.electron.ipcRenderer.on('pong', handlePong);
     window.electron.ipcRenderer.on('fromPython', handlePythonData);
-  
+    window.electron.ipcRenderer.on('nfc-data', handleNfcData)
+
     // 컴포넌트 언마운트 시에 이벤트 리스너 정리
     return () => {
-      window.electron.ipcRenderer.removeListener('pong', handlePong);
-      window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
-    };
+          window.electron.ipcRenderer.removeListener('pong', handlePong);
+          window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
+          window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
+        };
 
-    // const handleNfcData = (data) => {
-    //   console.log('Received NFC data:', data)
-    //   console.log('Type of data:', typeof data)
-    //   try {
-    //     const parsedData = JSON.parse(data)
-    //     if (parsedData.accessToken && parsedData.refreshToken) {
-    //       login(parsedData.accessToken, parsedData.refreshToken)
-    //       console.log('navigate 시작')
-    //       navigate('/tagsuccess')
-    //       console.log('navigate 실행 완료')
-    //     }
-    //   } catch (error) {
-    //     console.error('Error parsing NFC data:', error)
-    //   }
-    // }
-
-    // window.userAPI?.onNfcData(handleNfcData)
   }, [login, navigate])
 
   return (
