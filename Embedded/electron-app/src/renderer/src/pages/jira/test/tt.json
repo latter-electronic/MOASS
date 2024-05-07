@@ -1,0 +1,81 @@
+{
+    "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+    "id": "883811",
+    "self": "https://ssafy.atlassian.net/rest/api/3/issue/883811",
+    "key": "S10P31E203-595",
+    "fields": {
+      "summary": "[Live방송] 오전미팅/스크럼 (5/7)",
+      "customfield_10031": 1,
+      "parent": {
+        "id": "836497",
+        "key": "S10P31E203-3",
+        "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+        "fields": {
+          "summary": "[공통] 회의",
+          "status": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+            "description": "",
+            "iconUrl": "https://ssafy.atlassian.net/",
+            "name": "해야 할 일",
+            "id": "10000",
+            "statusCategory": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+              "id": 2,
+              "key": "new",
+              "colorName": "blue-gray",
+              "name": "해야 할 일"
+            }
+          },
+          "priority": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+            "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+            "name": "Medium",
+            "id": "3"
+          },
+          "issuetype": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+            "id": "10000",
+            "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+            "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "에픽",
+            "subtask": false,
+            "hierarchyLevel": 1
+          }
+        }
+      },
+      "creator": {
+        "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A8fbf3edc-c276-49cf-bb2b-0126a76f7844",
+        "accountId": "712020:8fbf3edc-c276-49cf-bb2b-0126a76f7844",
+        "avatarUrls": {
+          "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:8fbf3edc-c276-49cf-bb2b-0126a76f7844/58c6a49c-aab3-4651-a064-b629f5ccbcdc/48",
+          "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:8fbf3edc-c276-49cf-bb2b-0126a76f7844/58c6a49c-aab3-4651-a064-b629f5ccbcdc/24",
+          "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:8fbf3edc-c276-49cf-bb2b-0126a76f7844/58c6a49c-aab3-4651-a064-b629f5ccbcdc/16",
+          "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:8fbf3edc-c276-49cf-bb2b-0126a76f7844/58c6a49c-aab3-4651-a064-b629f5ccbcdc/32"
+        },
+        "displayName": "장현욱",
+        "active": true,
+        "timeZone": "Asia/Seoul",
+        "accountType": "atlassian"
+      },
+      "priority": {
+        "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+        "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+        "name": "Low",
+        "id": "4"
+      },
+      "status": {
+        "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+        "description": "",
+        "iconUrl": "https://ssafy.atlassian.net/",
+        "name": "완료",
+        "id": "10001",
+        "statusCategory": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+          "id": 3,
+          "key": "done",
+          "colorName": "green",
+          "name": "완료"
+        }
+      }
+    }
+  }

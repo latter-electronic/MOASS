@@ -10,7 +10,7 @@ const prefix = '';
  */
 export const fetchCurrentSprintIssues = async () => {
     const fields = 'creator,summary,priority,status, customfield_10031, parent';
-    const jqlQuery = encodeURIComponent("project = 'S10P31E203' AND sprint IN openSprints()");
+    const jqlQuery = encodeURIComponent("project = 'S10P31E203' AND reporter = 'hsj990604@gmail.com' AND sprint IN openSprints()");
     const url = `${prefix}/search?jql=${jqlQuery}&fields=${fields}&maxResults=240`;
 
     return axios.get(url)

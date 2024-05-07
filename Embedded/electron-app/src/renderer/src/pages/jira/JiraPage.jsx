@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import IssueCard from './JiraIssueCard.jsx';
 import testIssue from './test/recentClosedSprintIssues.json'
+import CurrentIssues from './test/CurrentSprintAll.json'
 import dropdownArrow from '../../assets/images/jira/dropdown-arrow.svg';
 import profile1 from '../../assets/images/jira/jiraProfileImg1.png'
 import profile2 from '../../assets/images/jira/jiraProfileImg2.png'
@@ -21,27 +22,39 @@ export default function JiraPage() {
     const [loadingInProgress, setLoadingInProgress] = useState(true);
     const [loadingDone, setLoadingDone] = useState(true);
 
+    // useEffect(() => {
+    //     fetchRecentClosedSprintIssues().then(data => {
+    //         setIssues(data.issues || testIssue.issues);
+    //         filterIssues(data.issues || testIssue.issues);
+    //         setLoadingTodo(false);
+    //         setLoadingInProgress(false);
+    //         setLoadingDone(false);
+    //     }).catch(error => {
+    //         console.error('Failed to fetch issues:', error);
+    //         setIssues(testIssue.issues);
+    //         filterIssues(testIssue.issues);
+    //         setLoadingTodo(false);
+    //         setLoadingInProgress(false);
+    //         setLoadingDone(false);
+    //     });
+    // });
+    
     useEffect(() => {
-        fetchRecentClosedSprintIssues().then(data => {
-            setIssues(data.issues || testIssue.issues);
-            filterIssues(data.issues || testIssue.issues);
-            setLoadingTodo(false);
-            setLoadingInProgress(false);
-            setLoadingDone(false);
-        }).catch(error => {
-            console.error('Failed to fetch issues:', error);
-            setIssues(testIssue.issues);
-            filterIssues(testIssue.issues);
-            setLoadingTodo(false);
-            setLoadingInProgress(false);
-            setLoadingDone(false);
-        });
-    });
+        setIssues(CurrentIssues.issues);
+        filterIssues(CurrentIssues.issues);
+        setLoadingTodo(false);
+        setLoadingInProgress(false);
+        setLoadingDone(false);
+    }, [])
 
     const filterIssues = (issues) => {
+        issues.forEach(issue => {
+            console.log(`Status: '${issue.fields.status.name}'`);
+        });
         setTodoIssues(issues.filter(issue => issue.fields.status.name === '해야 할 일'));
+        console.log('Filtered Todo Issues:', todoIssues);
         setInProgressIssues(issues.filter(issue => issue.fields.status.name === '진행 중'));
-        setDoneIssues(issues.filter(issue => issue.fields.status.name === '완료'));
+        setDoneIssues(issues.filter(issue => issue.fields.status.id === '10001'));
     };
 
     const renderLoading = () => (
@@ -86,7 +99,7 @@ export default function JiraPage() {
                 {/* 진행 중 */}
                 <div className="flex flex-col">
                     <div className="bg-white/10 p-3 rounded-lg flex-1">
-                        <h3 className="text-white/70 text-lg ml-1 font-light">진행 중</h3>
+                        <h3 className="text-white/70 text-lg ml-1 font-light mb-4">진행 중</h3>
                         <div className="h-[76vh] overflow-auto scrollbar-hide">
                             {loadingInProgress ? renderLoading() : inProgressIssues.length ? inProgressIssues.map(issue => (
                                 <IssueCard key={issue.id} issue={issue} />
