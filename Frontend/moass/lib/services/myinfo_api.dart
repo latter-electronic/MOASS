@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:moass/model/myprofile.dart';
 
 class MyInfoApi {
@@ -104,11 +105,12 @@ class MyInfoApi {
   postUserWidgetPhoto(XFile image) async {
     try {
       // String base64Image1 = "";
+      final mimeType = lookupMimeType(image.path);
       Uint8List convertedImage = File(image.path).readAsBytesSync();
       var len = convertedImage.length;
       var type = ContentType(image.toString(), image.toString());
 
-      print('길이 : $len, 타입: $type');
+      print('길이 : $len, 타입: $mimeType');
 
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
@@ -120,7 +122,7 @@ class MyInfoApi {
       final response = await dio.post('$baseUrl/api/user/profileImg',
           options: Options(headers: {
             'Authorization': 'Bearer $accessToken',
-            'Content-type': 'Image/jpg',
+            'Content-type': mimeType,
             'Content-Length': len,
           }),
           data: Stream.fromIterable(convertedImage.map((e) => [e])));
