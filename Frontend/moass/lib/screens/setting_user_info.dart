@@ -31,6 +31,7 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
   Widget build(BuildContext context) {
     // 팀 명 수정을 위한 변수들
     String basicTeamName = '없음';
+    String editedTeamName = '';
 
     final formKey = GlobalKey<FormState>();
 
@@ -90,6 +91,11 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        editedTeamName = value;
+                      });
+                    },
                     onSaved: (value) async {
                       setState(() {
                         textFormFieldValue = value!;
