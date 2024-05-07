@@ -50,7 +50,7 @@ class _ToDoListState extends State<ToDoListWidget> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             var userToDoList = snapshot.data;
-            print('유저투두리스트 : $userToDoList');
+            // print('유저투두리스트 : $userToDoList');
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(

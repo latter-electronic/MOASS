@@ -40,7 +40,7 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
     String? currentRole = widget.positionName;
 
     // 회원 정보 내의 position index에 맞게 정해줄 것.
-    final List<bool> selectedRole = <bool>[false, false, false, false];
+    List<bool> selectedRole = <bool>[false, false, false, false];
 
     setState(() {
       if (widget.positionName != null) {
