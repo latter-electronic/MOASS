@@ -36,7 +36,7 @@ public class UserService {
     private final LocationRepository locationRepository;
     private final CustomUserRepository customUserRepository;
     private final S3ClientConfigurationProperties s3config;
-
+    private final WidgetRepository widgetRepository;
 
     private final SsafyUserRepository ssafyUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -252,7 +252,6 @@ public class UserService {
                         }));
     }
 
-    // 이미지 업로드 후, status가 CREATED일 경우,, userInfo를 통해, userRepository 불러와서 profiileImg에 저장
     public Mono<String> profileImgUpload(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
         return s3Service.uploadHandler(headers, file)
                 .flatMap(uploadResult -> {
@@ -263,7 +262,7 @@ public class UserService {
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
                                 user.setProfileImg(s3config.getImageUrl()+"/"+fileKey);
-                                return userRepository.save(user).thenReturn(fileKey);
+                                return userRepository.save(user).thenReturn(s3config.getImageUrl() + "/" + fileKey);
                             });
                 });
     }
@@ -278,9 +277,39 @@ public class UserService {
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
                                 user.setBackgroundImg(s3config.getImageUrl()+"/"+fileKey);
-                                return userRepository.save(user).thenReturn(fileKey);
+                                return userRepository.save(user).thenReturn(s3config.getImageUrl() + "/" + fileKey);
                             });
                 });
+    }
+
+    public Mono<String> WidgetImgUpload(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
+        return s3Service.uploadHandler(headers, file)
+                .flatMap(uploadResult -> {
+                    if (uploadResult.getStatus() != HttpStatus.CREATED) {
+                        return Mono.error(new CustomException("Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR));
+                    }
+                    String fileKey = uploadResult.getKeys()[0];
+                    return widgetRepository.save(Widget.builder()
+                                    .userId(userInfo.getUserId())
+                                    .widgetImg(s3config.getImageUrl() + "/" + fileKey)
+                                    .build())
+                            .thenReturn(s3config.getImageUrl() + "/" + fileKey);
+                });
+    }
+
+    public Mono<List<WidgetDetailDto>> getWidgetImg(UserInfo userInfo) {
+        return widgetRepository.findAllByUserId(userInfo.getUserId())
+                .collectList()
+                .map(widgets -> widgets.stream().map(WidgetDetailDto::new).toList())
+                .switchIfEmpty(Mono.error(new CustomException("위젯을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)));
+    }
+
+    public Mono<WidgetDetailDto> deleteWidgetImg(UserInfo userInfo, String widgetId) {
+        return widgetRepository.findByWidgetIdAndUserId(widgetId, userInfo.getUserId())
+                .switchIfEmpty(Mono.error(new CustomException("위젯을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
+                .flatMap(widget -> widgetRepository.delete(widget)
+                        .thenReturn(widget)
+                        .map(deletedWidget -> new WidgetDetailDto(deletedWidget)));
     }
 
     /**
