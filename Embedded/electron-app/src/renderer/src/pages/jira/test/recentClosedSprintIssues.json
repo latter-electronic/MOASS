@@ -1,0 +1,4108 @@
+{
+  "expand": "schema,names",
+  "startAt": 0,
+  "maxResults": 50,
+  "total": 94,
+  "issues": [
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858583",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858583",
+      "key": "S10P31E203-305",
+      "fields": {
+        "summary": "3주차 프로젝트 회고/종료 미팅 (4/26)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858582",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858582",
+      "key": "S10P31E203-304",
+      "fields": {
+        "summary": "기기/앱/서버간 통신 테스트",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846934",
+          "key": "S10P31E203-228",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846934",
+          "fields": {
+            "summary": "[EM] 알림 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+          "name": "Highest",
+          "id": "1"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858581",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858581",
+      "key": "S10P31E203-303",
+      "fields": {
+        "summary": "[EM] 알림 탭 gitlab 컴포넌트 생성",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846934",
+          "key": "S10P31E203-228",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846934",
+          "fields": {
+            "summary": "[EM] 알림 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858580",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858580",
+      "key": "S10P31E203-302",
+      "fields": {
+        "summary": "[EM] 알림 탭 mm 컴포넌트 생성",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846934",
+          "key": "S10P31E203-228",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846934",
+          "fields": {
+            "summary": "[EM] 알림 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858579",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858579",
+      "key": "S10P31E203-301",
+      "fields": {
+        "summary": "[EM] 알림 탭 내부 navbar 구성",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "846934",
+          "key": "S10P31E203-228",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846934",
+          "fields": {
+            "summary": "[EM] 알림 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858578",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858578",
+      "key": "S10P31E203-300",
+      "fields": {
+        "summary": "[EM] 알림 탭 기본 구조 생성",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846934",
+          "key": "S10P31E203-228",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846934",
+          "fields": {
+            "summary": "[EM] 알림 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858577",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858577",
+      "key": "S10P31E203-299",
+      "fields": {
+        "summary": "[Live방송] 오전미팅/스크럼 (4/26)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858575",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858575",
+      "key": "S10P31E203-298",
+      "fields": {
+        "summary": "종료 미팅 (4/25)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858574",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858574",
+      "key": "S10P31E203-297",
+      "fields": {
+        "summary": "[EM] 메인화면 모지(Mozzi) 캐릭터 프로토타입 삽입",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846921",
+          "key": "S10P31E203-226",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846921",
+          "fields": {
+            "summary": "[EM] 메인 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858573",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858573",
+      "key": "S10P31E203-296",
+      "fields": {
+        "summary": "[EM] 메인화면 위젯 컴포넌트 생성",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "846921",
+          "key": "S10P31E203-226",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846921",
+          "fields": {
+            "summary": "[EM] 메인 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/5",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/lowest.svg",
+          "name": "Lowest",
+          "id": "5"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858572",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858572",
+      "key": "S10P31E203-295",
+      "fields": {
+        "summary": "[EM] 메인화면 시간/날짜 컴포넌트 생성",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846921",
+          "key": "S10P31E203-226",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846921",
+          "fields": {
+            "summary": "[EM] 메인 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858571",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858571",
+      "key": "S10P31E203-294",
+      "fields": {
+        "summary": "[EM] 메인화면 Todo 컴포넌트 생성",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "846921",
+          "key": "S10P31E203-226",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846921",
+          "fields": {
+            "summary": "[EM] 메인 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858570",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858570",
+      "key": "S10P31E203-293",
+      "fields": {
+        "summary": "[Live방송] 오전미팅/스크럼 (4/25)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858569",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858569",
+      "key": "S10P31E203-292",
+      "fields": {
+        "summary": "종료 미팅 (4/24)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858566",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858566",
+      "key": "S10P31E203-291",
+      "fields": {
+        "summary": "터치스크린에 대한 이해",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836496",
+          "key": "S10P31E203-2",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836496",
+          "fields": {
+            "summary": "[공통] 개인 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/5",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/lowest.svg",
+          "name": "Lowest",
+          "id": "5"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858564",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858564",
+      "key": "S10P31E203-290",
+      "fields": {
+        "summary": "[EM] 메일화면 스케줄 컴포넌트 수직 스크롤 설정",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "846921",
+          "key": "S10P31E203-226",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846921",
+          "fields": {
+            "summary": "[EM] 메인 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858562",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858562",
+      "key": "S10P31E203-289",
+      "fields": {
+        "summary": "[EM] 메인화면 edussafy 스케줄 컴포넌트 생성",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846921",
+          "key": "S10P31E203-226",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846921",
+          "fields": {
+            "summary": "[EM] 메인 화면",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858559",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858559",
+      "key": "S10P31E203-288",
+      "fields": {
+        "summary": "1차 개발 산출물 체크",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+          "name": "Highest",
+          "id": "1"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858558",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858558",
+      "key": "S10P31E203-287",
+      "fields": {
+        "summary": "개발 산출물 정리",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836501",
+          "key": "S10P31E203-6",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836501",
+          "fields": {
+            "summary": "[공통] 프로젝트 설계",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858557",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858557",
+      "key": "S10P31E203-286",
+      "fields": {
+        "summary": "[Live방송] 오전미팅/스크럼 (4/24)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858556",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858556",
+      "key": "S10P31E203-285",
+      "fields": {
+        "summary": "종료 미팅 (4/23)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858554",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858554",
+      "key": "S10P31E203-283",
+      "fields": {
+        "summary": "[EM] 명패 페이지 기본 구조 설정",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "846884",
+          "key": "S10P31E203-224",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/846884",
+          "fields": {
+            "summary": "[EM] IoT 명패",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858551",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858551",
+      "key": "S10P31E203-282",
+      "fields": {
+        "summary": "[EM] 네브바 생성 및 기본 페이지 라우팅 설정",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "847012",
+          "key": "S10P31E203-233",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/847012",
+          "fields": {
+            "summary": "[EM] 설계",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858550",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858550",
+      "key": "S10P31E203-281",
+      "fields": {
+        "summary": "[EM] 일렉트론 초기환경 세팅",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "845458",
+          "key": "S10P31E203-130",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/845458",
+          "fields": {
+            "summary": "[EM] 임베디드 공통",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858549",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858549",
+      "key": "S10P31E203-280",
+      "fields": {
+        "summary": "[EM] SSH 설정 및 고정 ip 설정",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "845458",
+          "key": "S10P31E203-130",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/845458",
+          "fields": {
+            "summary": "[EM] 임베디드 공통",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858547",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858547",
+      "key": "S10P31E203-278",
+      "fields": {
+        "summary": "[Live방송] 오전미팅/스크럼 (4/23)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858339",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858339",
+      "key": "S10P31E203-252",
+      "fields": {
+        "summary": "종료 미팅 (4/22)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858338",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858338",
+      "key": "S10P31E203-251",
+      "fields": {
+        "summary": "WBS 작성",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "836501",
+          "key": "S10P31E203-6",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836501",
+          "fields": {
+            "summary": "[공통] 프로젝트 설계",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+          "name": "High",
+          "id": "2"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858337",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858337",
+      "key": "S10P31E203-250",
+      "fields": {
+        "summary": "2차 교보재 신청",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+          "name": "Highest",
+          "id": "1"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858336",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858336",
+      "key": "S10P31E203-249",
+      "fields": {
+        "summary": "[자율PJT] 중간평가",
+        "customfield_10031": 3,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+          "name": "Highest",
+          "id": "1"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "858335",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/858335",
+      "key": "S10P31E203-248",
+      "fields": {
+        "summary": "오전미팅/스크럼 (4/22)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836754",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836754",
+      "key": "S10P31E203-85",
+      "fields": {
+        "summary": "임베디드 물품 정리 및 BOM 리스트 작성",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "836500",
+          "key": "S10P31E203-5",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836500",
+          "fields": {
+            "summary": "[공통] 프로젝트 기획",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836746",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836746",
+      "key": "S10P31E203-81",
+      "fields": {
+        "summary": "개발 환경 세팅",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "836501",
+          "key": "S10P31E203-6",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836501",
+          "fields": {
+            "summary": "[공통] 프로젝트 설계",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836692",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836692",
+      "key": "S10P31E203-72",
+      "fields": {
+        "summary": "종료미팅 (금)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836682",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836682",
+      "key": "S10P31E203-70",
+      "fields": {
+        "summary": "[공통] 프로젝트 설계 구체화",
+        "customfield_10031": 3,
+        "parent": {
+          "id": "836501",
+          "key": "S10P31E203-6",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836501",
+          "fields": {
+            "summary": "[공통] 프로젝트 설계",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836677",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836677",
+      "key": "S10P31E203-68",
+      "fields": {
+        "summary": "[자율PJT] 프로젝트 설계",
+        "customfield_10031": 3,
+        "parent": {
+          "id": "836501",
+          "key": "S10P31E203-6",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836501",
+          "fields": {
+            "summary": "[공통] 프로젝트 설계",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836635",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836635",
+      "key": "S10P31E203-58",
+      "fields": {
+        "summary": "종료미팅 (목)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836628",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836628",
+      "key": "S10P31E203-56",
+      "fields": {
+        "summary": "[자율PJT] 프로젝트 구체화",
+        "customfield_10031": 3,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836619",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836619",
+      "key": "S10P31E203-53",
+      "fields": {
+        "summary": "[자율PJT] 프로젝트 기획",
+        "customfield_10031": 3,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836614",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836614",
+      "key": "S10P31E203-51",
+      "fields": {
+        "summary": "[Live방송] 오전미팅/스크럼",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836611",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836611",
+      "key": "S10P31E203-49",
+      "fields": {
+        "summary": "[자율PJT] 팀 미팅",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836608",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836608",
+      "key": "S10P31E203-48",
+      "fields": {
+        "summary": "1주차 팀장 미팅",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836605",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836605",
+      "key": "S10P31E203-47",
+      "fields": {
+        "summary": "[특화PJT] 프로젝트 발표회",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836595",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836595",
+      "key": "S10P31E203-37",
+      "fields": {
+        "summary": "[특화PJT] 프로젝트 발표회",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836581",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836581",
+      "key": "S10P31E203-24",
+      "fields": {
+        "summary": "종료미팅 (월)",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836498",
+          "key": "S10P31E203-4",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836498",
+          "fields": {
+            "summary": "[공통] 기타",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836580",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836580",
+      "key": "S10P31E203-23",
+      "fields": {
+        "summary": "아이디어 회의",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836579",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836579",
+      "key": "S10P31E203-22",
+      "fields": {
+        "summary": "팀명 및 역할 분담",
+        "customfield_10031": 2,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836576",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836576",
+      "key": "S10P31E203-21",
+      "fields": {
+        "summary": "그라운드 룰 설정",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836569",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836569",
+      "key": "S10P31E203-18",
+      "fields": {
+        "summary": "[자율PJT] 컨설턴트/실습코치 미팅",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836497",
+          "key": "S10P31E203-3",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836497",
+          "fields": {
+            "summary": "[공통] 회의",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+      "id": "836566",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/836566",
+      "key": "S10P31E203-16",
+      "fields": {
+        "summary": "[자율PJT] 분반이동",
+        "customfield_10031": 1,
+        "parent": {
+          "id": "836494",
+          "key": "S10P31E203-1",
+          "self": "https://ssafy.atlassian.net/rest/api/3/issue/836494",
+          "fields": {
+            "summary": "[공통] 팀 일정",
+            "status": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+              "description": "",
+              "iconUrl": "https://ssafy.atlassian.net/",
+              "name": "해야 할 일",
+              "id": "10000",
+              "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+              }
+            },
+            "priority": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+              "name": "Medium",
+              "id": "3"
+            },
+            "issuetype": {
+              "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+              "id": "10000",
+              "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+              "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+              "name": "에픽",
+              "subtask": false,
+              "hierarchyLevel": 1
+            }
+          }
+        },
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+          "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+          "emailAddress": "diduedidue@naver.com",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+          },
+          "displayName": "Bada",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+          "name": "Medium",
+          "id": "3"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    }
+  ]
+}
