@@ -6,19 +6,25 @@ import { create } from 'zustand'
 
 const AuthStore = create(set => ({
   isAuthenticated: false,  // 로그인 상태
-  accessToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDU4NzA2IiwidXNlckVtYWlsIjoiZGlkdWVkaWR1ZUBuYXZlci5jb20iLCJ1c2VySWQiOiIxMDU4NzA2IiwidXNlck5hbWUiOiLshJzsp4DsiJgiLCJqb2JDb2RlIjoxLCJ0ZWFtQ29kZSI6IkUyMDMiLCJpYXQiOjE3MTQ3MTY3OTYsImV4cCI6MTcxNDcyNzU5Nn0.1mz4_pH6qACdjwdngAX-GiGz2TTgqFPkz4ehyGRhHZU',  // 액세스 토큰
-  refreshToken: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMDU4NzA2IiwidXNlckVtYWlsIjoiZGlkdWVkaWR1ZUBuYXZlci5jb20iLCJ1c2VySWQiOiIxMDU4NzA2IiwidXNlck5hbWUiOiLshJzsp4DsiJgiLCJqb2JDb2RlIjoxLCJ0ZWFtQ29kZSI6IkUyMDMiLCJpYXQiOjE3MTQ3MTY3OTYsImV4cCI6MTcxNTMyMTU5Nn0.YHzyhefYDjnvcBswvd50PMR613IRFCncGh0F8PAQ-sI', // 리프레시 토큰
+  accessToken: '',
+  refreshToken: '',
+  deviceId: '',
+  cardSerialId: '',
 
-  login: (accessToken, refreshToken) => set({
+  login: (accessToken, refreshToken, deviceId, cardSerialId) => set({
     isAuthenticated: true,
     accessToken,
-    refreshToken
+    refreshToken,
+    deviceId,
+    cardSerialId
   }),
 
   logout: () => set({
     isAuthenticated: false,
     accessToken: null,
-    refreshToken: null
+    refreshToken: null,
+    deviceId: null,
+    cardSerialId: null
   })
 }));
 

@@ -11,11 +11,9 @@ const prefix = 'api/device';
  * @returns {Promise} 로그인 결과
  */
 export const deviceLogin = (loginData) => {
-    const { accessToken } = AuthStore.getState();
     return axios.post(`${prefix}/login`, loginData, {
         headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
+            'Content-Type': 'application/json'
         }
     });
 };
