@@ -1,5 +1,6 @@
 // App.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
+
 
 import Layout from "./components/Layout.jsx";
 
@@ -19,7 +20,7 @@ import SSETestPage from "./pages/common/SSETestPage.jsx";
 
 export default function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <div className="flex min-h-screen font-noto-sans ml-1">
                 <Routes>
                     <Route path="/" element={<Navigate replace to="/testlogin" />} />
@@ -39,6 +40,6 @@ export default function App() {
                     <Route path="/ssetest" element={<SSETestPage />} />
                 </Routes>
             </div>
-        </BrowserRouter>
+        </HashRouter>
     );
 }
