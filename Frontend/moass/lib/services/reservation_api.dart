@@ -65,27 +65,26 @@ class ReservationApi {
   }
 
 // 예약 취소 infoId를 전달받아서 요청
-  reservationCancle() async {
+  Future<void> reservationCancel(int infoId) async {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
         print('No access token available');
-        return null;
+        return;
       }
-      // API요청, 헤더에 토큰 넣기
-      final response = await dio.delete('$baseUrl/api/reservationinfo/{InfoId}',
-          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+
+      final response = await dio.delete(
+        '$baseUrl/api/reservationinfo/$infoId',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
 
       if (response.statusCode == 200) {
         print('해당 예약을 취소하였습니다!');
-        return null;
       } else {
         print('예약 취소 실패');
-        return null;
       }
     } on DioException catch (e) {
-      print('Error fetching user status: ${e.message}');
-      return null;
+      print('Error reservationCancel: ${e.message}');
     }
   }
 }

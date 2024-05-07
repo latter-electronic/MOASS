@@ -49,6 +49,39 @@ class _ReservationScreenState extends State<ReservationScreen> {
     });
   }
 
+  // 예약 취소 확인 대화상자
+  void _showCancelDialog(BuildContext context, int infoId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('예약 취소'),
+          content: const Text('이 예약을 취소하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('취소'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text('확인'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _cancelReservation(infoId);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+// 예약 취소 요청
+  void _cancelReservation(int infoId) async {
+    var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    await api.reservationCancel(infoId);
+    fetchReservations(); // 예약 목록 새로 고침
+  }
+
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('yyyy. MM. dd').format(selectedDate);
@@ -109,25 +142,31 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     itemCount: reservations.length,
                     itemBuilder: (context, index) {
                       var reservation = reservations[index];
-                      return Card(
-                        margin: const EdgeInsets.all(8.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        elevation: 8.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                                padding: const EdgeInsets.all(8.0),
-                                width: double.infinity,
-                                decoration: const BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(10.0))),
-                                child: Text(reservation.infoName,
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 18))),
-                            Container(
+                      String timeSlot = convertTimeFromIndex(
+                          reservation.infoTime); // 시간 변환 함수 호출
+
+                      return GestureDetector(
+                        onLongPress: () => _showCancelDialog(
+                            context, reservation.infoId), // context 추가
+                        child: Card(
+                          margin: const EdgeInsets.all(8.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          elevation: 8.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  width: double.infinity,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10.0))),
+                                  child: Text(reservation.infoName,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 18))),
+                              Container(
                                 padding: const EdgeInsets.all(8.0),
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
@@ -135,10 +174,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                     borderRadius: BorderRadius.vertical(
                                         bottom: Radius.circular(10.0))),
                                 child: Text(
-                                    "${reservation.infoDate} at ${reservation.infoTime}",
-                                    style: const TextStyle(
-                                        color: Colors.black54))),
-                          ],
+                                    "${reservation.infoDate} at $timeSlot", // 시간 표시
+                                    style:
+                                        const TextStyle(color: Colors.black54)),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -148,4 +189,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
       ),
     );
   }
+}
+
+// infoTime을 시간으로 바꿔주는 함수
+String convertTimeFromIndex(int index) {
+  int hour = 9 + (index - 1) ~/ 2; // 9시부터 시작하므로
+  int minute = (index % 2 == 1) ? 0 : 30;
+  return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
 }
