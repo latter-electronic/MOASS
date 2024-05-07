@@ -16,60 +16,113 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
 
+    private final LocalDate globalBanDate = LocalDate.parse("9999-12-31");
     private final ClassRepository classRepository;
     private final ReservationRepository reservationRepository;
     private final ReservationInfoRepository reservationInfoRepository;
     private final UserReservationInfoRepository userReservationInfoRepository;
+    private final ReservationInfoService reservationInfoService;
     public Mono<Reservation> createReservation(UserInfo userInfo, ReservationCreateDto reservationCreateDto){
-        return reservationRepository.save(new Reservation(reservationCreateDto))
-                .flatMap(savedReservation -> {
+        return classRepository.findByClassCode(reservationCreateDto.getClassCode())
+                        .switchIfEmpty(Mono.error(new CustomException("해당 클래스가 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
+                        .flatMap(existsClass ->  reservationRepository.save(new Reservation(reservationCreateDto)))
+                        .flatMap(savedReservation -> {
                     if (reservationCreateDto.getInfoTimes() == null || reservationCreateDto.getInfoTimes().isEmpty()) {
                         return Mono.just(savedReservation);
                     } else {
-                        return BannedReservationInfo(userInfo, savedReservation, reservationCreateDto)
+                        return banMultipleTimes(userInfo, savedReservation, reservationCreateDto,LocalDate.of(9999, 12, 31))
                                 .thenReturn(savedReservation);
                     }
                 });
     }
 
-    public Mono<Reservation> patchReservation(ReservationPatchDto reservationPatchDto) {
+    @Transactional
+    public Mono<Boolean> patchReservation(UserInfo userInfo, ReservationPatchDto reservationPatchDto) {
         return reservationRepository.findById(reservationPatchDto.getReservationId())
+                .switchIfEmpty(Mono.error(new CustomException("해당 예약항목이 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
                 .flatMap(existingReservation -> {
                     copyNonNullProperties(reservationPatchDto, existingReservation);
                     return reservationRepository.save(existingReservation);
                 })
-                .switchIfEmpty(Mono.error(new CustomException("해당 예약항목이 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
+                .flatMap(savedReservation -> {
+                    if (reservationPatchDto.getInfoDate() == null || reservationPatchDto.getInfoTimes().isEmpty() || reservationPatchDto.getInfoTimes() == null) {
+                        return Mono.just(true);
+                    } else {
+                        return toggleBanAndUpdateReservationInfo(userInfo, savedReservation, reservationPatchDto);
+                    }
+                });
     }
 
-    private Mono<ReservationInfo> BannedReservationInfo(UserInfo userInfo, Reservation reservation, ReservationCreateDto reservationCreateDto) {
-        return Flux.fromIterable(reservationCreateDto.getInfoTimes())
-                .flatMap(infoTime -> reservationInfoRepository.save(ReservationInfo.builder()
-                        .reservationId(reservation.getReservationId())
-                        .userId(userInfo.getUserId())
-                        .infoState(2)
-                        .infoName("XXXX")
-                        .infoDate(LocalDate.of(9999, 12, 31))
-                        .infoTime(infoTime)
-                        .build()))
+    private Mono<Boolean> toggleBanAndUpdateReservationInfo(UserInfo userInfo, Reservation reservation, ReservationPatchDto reservationPatchDto) {
+        return Flux.fromIterable(reservationPatchDto.getInfoTimes())
+                .flatMap(infoTime -> reservationInfoRepository.findByReservationIdAndInfoTime(reservation.getReservationId(), infoTime)
+                        .flatMap(reservationInfo -> {
+                            if (reservationInfo.getInfoState() == 1) {
+                                return reservationInfoService.deleteReservationInfoByAdmin(reservationInfo.getInfoId())
+                                        .then(banSingleReservation(reservation.getReservationId(), userInfo, infoTime, reservationPatchDto.getInfoDate()))
+                                        .thenReturn(true);
+                            } else if (reservationInfo.getInfoState() == 2) {
+                                return reservationInfoService.deleteReservationInfoByAdmin(reservationInfo.getInfoId())
+                                        .thenReturn(false);
+                            }
+                            return Mono.just(false);
+                        })
+                        .switchIfEmpty(banSingleReservation(reservation.getReservationId(), userInfo, infoTime, reservationPatchDto.getInfoDate())
+                                .thenReturn(true))
+                )
                 .collectList()
-                .flatMapMany(reservationInfos -> Flux.fromIterable(reservationInfos)
-                        .flatMap(reservationInfo -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userInfo.getUserId())))
-                        .thenMany(Flux.fromIterable(reservationInfos)))
-                .last();
+                .map(results -> results.contains(true));
     }
 
+    private Mono<ReservationInfo> banMultipleTimes(UserInfo userInfo,Reservation reservation,  ReservationCreateDto reservationCreateDto, LocalDate banDate) {
+        return Flux.fromIterable(reservationCreateDto.getInfoTimes())
+                .flatMap(infoTime -> banSingleReservation(reservation.getReservationId(), userInfo, infoTime, banDate))
+                .then(Mono.just(new ReservationInfo()));
+    }
 
+    private Mono<Void> banSingleReservation(Integer reservationId, UserInfo userInfo, Integer infoTime,LocalDate banDate) {
+        if(banDate.equals(globalBanDate)){
+            return createGlobalBannedReservationInfo(reservationId, userInfo, infoTime, banDate)
+                    .flatMap(reservationInfo -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userInfo.getUserId())))
+                    .then();
+        }else {
+            return createBannedReservationInfo(reservationId, userInfo, infoTime, banDate)
+                    .flatMap(reservationInfo -> userReservationInfoRepository.save(new UserReservationInfo(reservationInfo.getInfoId(), userInfo.getUserId())))
+                    .then();
+        }
+    }
+
+    private Mono<ReservationInfo> createGlobalBannedReservationInfo(Integer reservationId, UserInfo userInfo, Integer infoTime, LocalDate banDate) {
+        return reservationInfoRepository.save(ReservationInfo.builder()
+                .reservationId(reservationId)
+                .userId(userInfo.getUserId())
+                .infoState(3)
+                .infoName("XXXX")
+                .infoDate(banDate)
+                .infoTime(infoTime)
+                .build());
+    }
+
+    private Mono<ReservationInfo> createBannedReservationInfo(Integer reservationId, UserInfo userInfo, Integer infoTime, LocalDate banDate) {
+        return reservationInfoRepository.save(ReservationInfo.builder()
+                .reservationId(reservationId)
+                .userId(userInfo.getUserId())
+                .infoState(2)
+                .infoName("XXXX")
+                .infoDate(banDate)
+                .infoTime(infoTime)
+                .build());
+    }
 
     private void copyNonNullProperties(ReservationPatchDto source, Reservation target) {
         if (source.getCategory() != null) target.setCategory(source.getCategory());

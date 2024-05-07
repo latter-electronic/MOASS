@@ -4,12 +4,13 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ReservationCreateDto {
 
     private String classCode;
@@ -26,4 +27,11 @@ public class ReservationCreateDto {
 
     private List<Integer> infoTimes;
 
+    public ReservationCreateDto(String classCode, String category, Integer timeLimit, String reservationName, String colorCode){
+        this.classCode = classCode;
+        this.category = category;
+        this.timeLimit = timeLimit;
+        this.reservationName = reservationName;
+        this.colorCode = colorCode;
+    }
 }

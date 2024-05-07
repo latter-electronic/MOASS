@@ -9,7 +9,6 @@ import com.moass.api.domain.reservation.repository.ReservationRepository;
 import com.moass.api.domain.reservation.repository.UserReservationInfoRepository;
 import com.moass.api.domain.user.dto.UserSearchInfoDto;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
-import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -34,22 +33,19 @@ public class ReservationInfoService {
     private final ReservationInfoRepository reservationInfoRepository;
     private final UserReservationInfoRepository userReservationInfoRepository;
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
     private final SsafyUserRepository ssafyUserRepository;
 
     @Transactional
     public Mono<ReservationInfo> createReservationInfo(UserInfo userInfo, ReservationInfoCreateDto reservationInfoCreateDto) {
         return reservationRepository.findById(reservationInfoCreateDto.getReservationId())
                 .switchIfEmpty(Mono.error(new CustomException("예약 항목을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
-                .flatMap(reservation -> {
-                    return checkUserReservationTime(reservationInfoCreateDto, reservation.getTimeLimit())
-                            .flatMap(overLimitUsers -> {
-                                if (!overLimitUsers.isEmpty()) {
-                                    return Mono.error(new CustomException("일부 사용자의 예약 시간이 제한을 초과합니다: " + overLimitUsers, HttpStatus.CONFLICT));
-                                }
-                                return checkAndSaveReservation(userInfo, reservationInfoCreateDto);
-                            });
-                });
+                .flatMap(reservation -> checkUserReservationTime(reservationInfoCreateDto, reservation.getTimeLimit())
+                        .flatMap(overLimitUsers -> {
+                            if (!overLimitUsers.isEmpty()) {
+                                return Mono.error(new CustomException("일부 사용자의 예약 시간이 제한을 초과합니다: " + overLimitUsers, HttpStatus.CONFLICT));
+                            }
+                            return checkAndSaveReservation(userInfo, reservationInfoCreateDto);
+                        }));
     }
 
     // 유저들이 해당 날짜와 해당 예약항목에서 더 예약할 수 있는지 확인
@@ -96,7 +92,6 @@ public class ReservationInfoService {
                         }
                     }
 
-                    // 예약 정보 저장
                     return Flux.fromIterable(reservationInfoCreateDto.getInfoTimes())
                             .flatMap(infoTime -> reservationInfoRepository.save(ReservationInfo.builder()
                                     .reservationId(reservationInfoCreateDto.getReservationId())
@@ -177,7 +172,18 @@ public class ReservationInfoService {
                 .switchIfEmpty(Mono.error(new CustomException("예약 정보가 일치하지 않습니다. : " + reservationInfoId, HttpStatus.NOT_FOUND)))
                 .flatMap(reservationInfo ->
                         userReservationInfoRepository.deleteByInfoId(reservationInfo.getInfoId())
-                                .then(reservationInfoRepository.delete(reservationInfo))
+                                .then(reservationInfoRepository.deleteById(reservationInfo.getInfoId()))
+                                .thenReturn(reservationInfo.getInfoId().toString())
+                                .onErrorResume(e -> Mono.error(new CustomException("삭제중 에러가 발생하였습니다. ", HttpStatus.INTERNAL_SERVER_ERROR)))
+                );
+    }
+
+    public Mono<String> deleteReservationInfoByAdmin(Integer infoId) {
+        return reservationInfoRepository.findByReservationInfoId(infoId)
+                .switchIfEmpty(Mono.error(new CustomException("예약 정보가 일치하지 않습니다. : " + infoId, HttpStatus.NOT_FOUND)))
+                .flatMap(reservationInfo ->
+                        userReservationInfoRepository.deleteByInfoId(reservationInfo.getInfoId())
+                                .then(reservationInfoRepository.deleteById(reservationInfo.getInfoId()))
                                 .thenReturn(reservationInfo.getInfoId().toString())
                                 .onErrorResume(e -> Mono.error(new CustomException("삭제중 에러가 발생하였습니다. ", HttpStatus.INTERNAL_SERVER_ERROR)))
                 );
