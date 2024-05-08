@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/reservation_model.dart';
 import 'package:moass/widgets/category_text.dart';
+import 'package:moass/widgets/user_search_widget.dart';
 
 class ReservationUserStep2 extends StatefulWidget {
   final ReservationDayModel reservation;
@@ -24,12 +25,15 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
       appBar: AppBar(title: const Text('시설 / 팀미팅 예약')),
       body: Column(
         children: [
-          CategoryText(text: formattedDate), // 포맷된 날짜를 사용
-          Text('예약명: ${widget.reservation.reservationName}'),
-          // 추가 상세 정보를 여기에 추가하세요
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            CategoryText(text: formattedDate), // 포맷된 날짜를 사용
+          ]
+              // 추가 정보 필요시 추가
+              ),
           ReservationBox(
               reservation: widget.reservation,
               selectedDate: widget.selectedDate),
+          const UserSearchWidget(),
         ],
       ),
     );

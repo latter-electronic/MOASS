@@ -19,14 +19,14 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onItemSelected,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.work_rounded), label: 'Work'),
+        BottomNavigationBarItem(icon: Icon(Icons.work_rounded), label: '업무'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.edit_calendar_outlined), label: 'Reservation'),
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            icon: Icon(Icons.edit_calendar_outlined), label: '예약'),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_view_month_rounded), label: 'Seat'),
+            icon: Icon(Icons.calendar_view_month_rounded), label: '좌석'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined), label: 'Board'),
+            icon: Icon(Icons.dashboard_outlined), label: '모음보드'),
       ],
       unselectedItemColor: Colors.grey.shade400,
       selectedItemColor: Colors.amber[800],
