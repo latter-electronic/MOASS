@@ -102,7 +102,6 @@ public class UserController {
     @GetMapping
     public Mono<ResponseEntity<ApiResponse>> getUserDetails(@Login UserInfo userInfo, @RequestParam(required = false) String username) {
         if(username != null) {
-            System.out.println(username);
             return userService.findByUsername(userInfo, username)
                     .flatMap(userDetail -> ApiResponse.ok("사용자 정보 조회 성공", userDetail))
                     .onErrorResume(CustomException.class,e -> ApiResponse.error("사용자 정보 조회 실패: "+e.getMessage(), e.getStatus()));
@@ -121,6 +120,7 @@ public class UserController {
                 .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
     }
+
 
     @GetMapping("/search")
     public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo,

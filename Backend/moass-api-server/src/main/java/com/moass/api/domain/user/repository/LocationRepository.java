@@ -13,7 +13,7 @@ public interface LocationRepository  extends ReactiveCrudRepository<Location, In
     Mono<Location> findByLocationCode(String locationCode);
 
     @Query("SELECT l.location_code, l.location_name, c.class_code, t.team_code, t.team_name, u.user_id, u.user_email, su.user_name, " +
-            "u.position_name, u.status_id, u.profile_img, su.job_code, u.connect_flag " +
+            "u.position_name, u.status_id, u.background_img, u.profile_img, su.job_code, u.connect_flag " +
             "FROM Location l " +
             "JOIN Class c ON l.location_code = c.location_code " +
             "JOIN Team t ON c.class_code = t.class_code " +

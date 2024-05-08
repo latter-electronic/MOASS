@@ -20,7 +20,7 @@ public interface TeamRepository  extends ReactiveCrudRepository<Team, String> {
     Mono<Team> findByTeamCode(String teamCode);
 
     @Query("SELECT l.location_code, l.location_name, c.class_code, t.team_code, t.team_name, " +
-            "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.profile_img, su.job_code, u.connect_flag " +
+            "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.background_img, u.profile_img, su.job_code, u.connect_flag " +
             "FROM Team t " +
             "INNER JOIN Class c ON t.class_code = c.class_code " +
             "INNER JOIN Location l ON c.location_code = l.location_code " +

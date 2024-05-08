@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS `Position`;
 DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
 DROP TABLE IF EXISTS `Widget`;
+
+DROP TABLE IF EXISTS `JiraToken`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `SsafyUser`;
 
@@ -61,6 +63,18 @@ CREATE TABLE `User`(
                        CONSTRAINT `FK_SSAFYUser_TO_User_1` FOREIGN KEY (`user_id`) REFERENCES `SsafyUser` (`user_id`)
 );
 
+CREATE TABLE JiraToken (
+                             jira_token_id INT AUTO_INCREMENT  KEY,
+                             user_id VARCHAR(20) NOT NULL,
+                             cloud_id VARCHAR(50) NOT NULL,
+                             access_token LONGTEXT NOT NULL,
+                             refresh_token LONGTEXT NOT NULL,
+                             expires_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 1 HOUR),
+                             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                             FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
+
 CREATE TABLE `Widget`(
                         `widget_id` INT NOT NULL AUTO_INCREMENT,
                         `user_id` VARCHAR(20) NOT NULL,
@@ -71,20 +85,16 @@ CREATE TABLE `Widget`(
                         FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
-CREATE TABLE `Seat` (
-                       `seat_id` INT NOT NULL AUTO_INCREMENT,
-                       `user_id` VARCHAR(20) NULL,
-                       `x_coord` VARCHAR(40) NULL,
-                       `y_coord` VARCHAR(20) NULL,
-                       PRIMARY KEY (`seat_id`),
-                       FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
-);
 
 CREATE TABLE `Device` (
                           `device_id` VARCHAR(40) NOT NULL,
                           `user_id` VARCHAR(20) NULL,
+                          `x_coord` INT NULL,
+                          `y_coord` INT NULL,
+                           `class_code` VARCHAR(5) NULL,
                           PRIMARY KEY (`device_id`),
-                          FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+                          FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`),
+                          FOREIGN KEY (`class_code`) REFERENCES `Class` (`class_code`)
 );
 
 
