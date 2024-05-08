@@ -1,6 +1,7 @@
 package com.moass.api.domain.device.controller;
 
 
+import com.moass.api.domain.device.dto.Coordinate;
 import com.moass.api.domain.device.dto.DeviceIdDto;
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
 import com.moass.api.domain.device.service.DeviceService;
@@ -44,4 +45,16 @@ public class DeviceController {
                 .flatMap(isLogin -> ApiResponse.ok("조회완료",isLogin))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
     }
+
+    @PatchMapping("/coordinate/{deviceId}")
+    public Mono<ResponseEntity<ApiResponse>> updateDeviceCoordinates(
+            @PathVariable String deviceId,
+            @RequestBody Coordinate coordinate) {
+        log.info("updateDeviceCoordinates : {}", coordinate);
+    return deviceService.updateDeviceCoordinates(deviceId,coordinate)
+            .flatMap(device -> ApiResponse.ok("좌표 업데이트 성공", device))
+            .onErrorResume(CustomException.class, e -> ApiResponse.error("좌표 업데이트 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+
 }

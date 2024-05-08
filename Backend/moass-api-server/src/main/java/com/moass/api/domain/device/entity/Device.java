@@ -20,4 +20,13 @@ public class Device {
     @Column("user_id")
     private String userId;
 
+    @Column("x_coord")
+    private Integer xCoord;
+
+    @Column("y_coord")
+    private Integer yCoord;
+
+    @Column("class_code")
+    private String classCode;
+
 }
