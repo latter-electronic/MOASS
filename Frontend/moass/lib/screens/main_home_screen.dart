@@ -115,9 +115,18 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 future: myInfoApi.fetchUserProfile(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(color: Colors.grey.shade200),
+                        child:
+                            const Center(child: CircularProgressIndicator()));
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(color: Colors.grey.shade200),
+                        child: Center(child: Text('Error: ${snapshot.error}')));
                   } else if (snapshot.hasData) {
                     var userProfile = snapshot.data;
 
@@ -407,7 +416,11 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                       ],
                     );
                   } else {
-                    return const Center(child: Text('No data available'));
+                    return Container(
+                        height: 200,
+                        width: double.infinity,
+                        decoration: BoxDecoration(color: Colors.grey.shade200),
+                        child: const Center(child: Text('No data available')));
                   }
                 },
               ),
