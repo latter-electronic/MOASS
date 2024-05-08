@@ -204,7 +204,7 @@ public class ScheduleTest {
         }
 
         @Test
-        @Order(2)
+        @Order(3)
         @DisplayName("[400] 바뀐게 없을경우(flag)")
         void Todo수정실패2(){
             TodoCreateDto todoCreateDto = new TodoCreateDto();

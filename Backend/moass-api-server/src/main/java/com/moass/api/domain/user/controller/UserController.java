@@ -197,4 +197,24 @@ public class UserController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+    @PostMapping(value = "/widget")
+    public Mono<ResponseEntity<ApiResponse>> addWidgetImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
+        return userService.WidgetImgUpload(userInfo,headers,file)
+                .flatMap(fileName -> ApiResponse.ok("등록완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("등록 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @GetMapping(value = "/widget")
+    public Mono<ResponseEntity<ApiResponse>> getWidgetImg(@Login UserInfo userInfo){
+        return userService.getWidgetImg(userInfo)
+                .flatMap(fileName -> ApiResponse.ok("조회완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @DeleteMapping(value = "/widget/{widgetId}")
+    public Mono<ResponseEntity<ApiResponse>> deleteWidgetImg(@Login UserInfo userInfo, @PathVariable String widgetId){
+        return userService.deleteWidgetImg(userInfo,widgetId)
+                .flatMap(fileName -> ApiResponse.ok("삭제완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("삭제 실패 : " + e.getMessage(), e.getStatus()));
+    }
 }

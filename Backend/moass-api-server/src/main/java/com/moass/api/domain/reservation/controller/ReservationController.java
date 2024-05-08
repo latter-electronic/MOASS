@@ -36,8 +36,8 @@ public class ReservationController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('CONSULTANT')")
     @PatchMapping()
-    public Mono<ResponseEntity<ApiResponse>> patchReservation(@RequestBody ReservationPatchDto reservationPatchDto){
-        return reservationService.patchReservation(reservationPatchDto)
+    public Mono<ResponseEntity<ApiResponse>> patchReservation(@Login UserInfo userInfo, @RequestBody ReservationPatchDto reservationPatchDto){
+        return reservationService.patchReservation(userInfo, reservationPatchDto)
                 .flatMap(reservationId -> ApiResponse.ok("예약 생성 성공", reservationId))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
     }
