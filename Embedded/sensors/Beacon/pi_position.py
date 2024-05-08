@@ -6,7 +6,7 @@ import numpy as np
 import math
 import requests
 import time
-from scipy.optimize import least_squares
+from scipy.optimize import least_squares, minimize
 
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
@@ -24,13 +24,22 @@ class RSSISmoother:
         return np.mean(self.rssi_queues[beacon_id])
 
 def calculate_distance(rssi, tx_power):
+    # if rssi == 0:
+    #     return -1.0
+    # ratio = rssi * 1.0 / tx_power
+    # if ratio < 1.0:
+    #     return ratio ** 10
+    # else:
+    #     return (0.89976) * (ratio ** 7.7095) + 0.111
+
     if rssi == 0:
         return -1.0
-    ratio = rssi * 1.0 / tx_power
-    if ratio < 1.0:
-        return ratio ** 10
-    else:
-        return (0.89976) * (ratio ** 7.7095) + 0.111
+    
+    ratio_db = tx_power - rssi
+    ratio_linear = 10 ** (ratio_db / (10 * 1))
+    
+    distance = math.sqrt(ratio_linear)
+    return distance
 
 def get_coordinates(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc):
     A = 2 * xb - 2 * xa
@@ -43,37 +52,31 @@ def get_coordinates(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc):
     y = (C * D - A * F) / (B * D - A * E)
     return (x, y)
 
-def convert_to_grid(x, y, room_width, room_height, desk_width, desk_height):
-    # 강의실 및 책상 크기 기준에 따른 격자 변환
-    grid_x = int(x / room_width * (room_width / desk_width))
-    grid_y = int(y / room_height * (room_height / desk_height))
-    return grid_x, grid_y
-
-def print_grid_dimensions(room_width, room_height, desk_width, desk_height):
-    grid_columns = int(room_width / desk_width)
-    grid_rows = int(room_height / desk_height)
-    print("Grid Dimensions: {} columns x {} rows".format(grid_columns, grid_rows))
-
 def find_position(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc):
     """
-    세 원의 교차점을 찾는 함수
-    (x - xa)^2 + (y - ya)^2 = dist_a^2
-    (x - xb)^2 + (y - yb)^2 = dist_b^2
-    (x - xc)^2 + (y - yc)^2 = dist_c^2
+    세 원의 교차점을 찾는 함수를 최적화 방법으로 개선
+    각 원의 중심과 반지름을 이용하여 교차점 좌표를 계산
     """
-    def equations(p):
+    def objective(p):
         x, y = p
-        return [
-            (x - xa)**2 + (y - ya)**2 - dist_a**2,
-            (x - xb)**2 + (y - yb)**2 - dist_b**2,
-            (x - xc)**2 + (y - yc)**2 - dist_c**2
-        ]
-    
+        return ((x - xa)**2 + (y - ya)**2 - dist_a**2)**2 + \
+               ((x - xb)**2 + (y - yb)**2 - dist_b**2)**2 + \
+               ((x - xc)**2 + (y - yc)**2 - dist_c**2)**2
+
     # 초기 추정치는 비콘의 중심점을 사용
     x_guess = (xa + xb + xc) / 3
     y_guess = (ya + yb + yc) / 3
-    result = least_squares(equations, (x_guess, y_guess))
-    return result.x[0], result.x[1]
+    initial_guess = [x_guess, y_guess]
+    
+    # 최적화 실행
+    result = minimize(objective, initial_guess, method='L-BFGS-B')
+    
+    # 최적화 결과에서 x, y 좌표 추출
+    if result.success:
+        optimized_x, optimized_y = result.x
+        return optimized_x, optimized_y
+    else:
+        raise RuntimeError("Optimization failed: " + result.message)
 
 # --------------------------------------------------------------------------------------------------
 
@@ -84,18 +87,19 @@ desk_width = 85
 desk_height = 85 
 
 # 비콘 좌표
-xa, ya = 0, 747.5   # MOASS_1
-xb, yb = 942, 0     # MOASS_2
-xc, yc = 942, 1495  # MOASS_3
+xa, ya = 1, 747.5   # MOASS_1
+xb, yb = 940, 0     # MOASS_2
+xc, yc = 941, 1490  # MOASS_3
 
 rssi_smoother = RSSISmoother(window_size=5)
 scanner = Scanner().withDelegate(ScanDelegate())
 
 while True:
     print('Scanning....')
-    devices = scanner.scan(10.0)
+    devices = scanner.scan(15.0)
 
     distances = {}
+    rssi_values = {}
     beacon_addresses = {
         'MOASS_1': 'c3:00:00:1c:6e:e3',
         'MOASS_2': 'c3:00:00:1c:6e:ce', 
@@ -107,6 +111,7 @@ while True:
         if dev.addr.lower() in [mac.lower() for mac in beacon_addresses.values()]:
             beacon_id = [key for key, value in beacon_addresses.items() if value.lower() == dev.addr.lower()][0]
             smooth_rssi = rssi_smoother.add_rssi(beacon_id, dev.rssi)
+            rssi_values[beacon_id] = smooth_rssi
             distances[beacon_id] = calculate_distance(smooth_rssi, tx_power)
             print(f'{beacon_id}: {distances[beacon_id]:.2f} meters')
 
@@ -114,24 +119,23 @@ while True:
         dist_a = distances.get('MOASS_1', None)
         dist_b = distances.get('MOASS_2', None)
         dist_c = distances.get('MOASS_3', None)
-
-        
+        rssi_a = rssi_values.get('MOASS_1', 0)
+        rssi_b = rssi_values.get('MOASS_2', 0)
+        rssi_c = rssi_values.get('MOASS_3', 0)
 
         if None not in [dist_a, dist_b, dist_c]:  # Ensure all distances are available
             x, y = find_position(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc)
-            x_mm = int(x * 1000)  # 소수점 제거
-            y_mm = int(y * 1000)  # 소수점 제거
+
+            x_mm = int(x * 10)  # 소수점 제거
+            y_mm = int(y * 10)  # 소수점 제거
             print(f'Computed coordinates: X = {x_mm} mm, Y = {y_mm} mm')
 
             x, y = get_coordinates(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc)
             print(f'X: {x}, y: {y}')
-            grid_x, grid_y = convert_to_grid(x, y, room_width, room_height, desk_width, desk_height)
-            print("Grid Position: (", grid_x, ",", grid_y, ")")
-            print_grid_dimensions(room_width, room_height, desk_width, desk_height)
-            time.sleep(5)
-            # Optional: POST to REST API
+            time.sleep(1)
+
             # api_url = "http://yourserver.com/api/positions"
-            # data = {"grid_x": grid_x, "grid_y": grid_y}
+            # data = {"x": x, "y": y}
             # response = requests.post(api_url, json=data)
             # print("Response from server:", response.text)
         else:
