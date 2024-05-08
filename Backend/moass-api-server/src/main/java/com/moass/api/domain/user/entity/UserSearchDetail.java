@@ -42,6 +42,8 @@ public class UserSearchDetail {
         @Column("status_id")
         private Integer statusId;
 
+        @Column("background_img")
+        private String backgroundImg;
         @Column("profile_img")
         private String profileImg;
 

@@ -102,7 +102,6 @@ public class UserController {
     @GetMapping
     public Mono<ResponseEntity<ApiResponse>> getUserDetails(@Login UserInfo userInfo, @RequestParam(required = false) String username) {
         if(username != null) {
-            System.out.println(username);
             return userService.findByUsername(userInfo, username)
                     .flatMap(userDetail -> ApiResponse.ok("사용자 정보 조회 성공", userDetail))
                     .onErrorResume(CustomException.class,e -> ApiResponse.error("사용자 정보 조회 실패: "+e.getMessage(), e.getStatus()));
