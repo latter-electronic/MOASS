@@ -1,4 +1,6 @@
 // 예약 관련 API 요청
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/reservation_model.dart';
@@ -39,27 +41,26 @@ class ReservationApi {
   }
 
   // 특정 날짜 예약 조회
-  Future<ReservationDayModel?> reservationinfoDay() async {
+  Future<List<ReservationDayModel>?> reservationinfoDay(String date) async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    if (accessToken == null) {
+      print('No access token available');
+      return null;
+    }
     try {
-      String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-        return null;
-      }
-      // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
-          '$baseUrl/api/reservationinfo/search?date=YYYY-MM-DD',
-          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
-
+        '$baseUrl/api/reservationinfo/search?date=$date',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
       if (response.statusCode == 200) {
-        print('해당 날짜 예약정보 불러오기 성공!');
-        return ReservationDayModel.fromJson(response.data['data']);
+        List<dynamic> data = response.data['data'];
+        return data.map((item) => ReservationDayModel.fromJson(item)).toList();
       } else {
-        print('해당날짜 유저정보 불러오기 실패');
+        print('해당 날짜 예약 정보 불러오기 실패');
         return null;
       }
     } on DioException catch (e) {
-      print('Error fetching user status: ${e.message}');
+      print('Error fetching reservation data: ${e.message}');
       return null;
     }
   }
@@ -87,5 +88,30 @@ class ReservationApi {
               : 'Reservation cancellation failed');
     }
     print('해당 예약을 취소하였습니다!');
+  }
+
+  // 예약하기
+  Future<void> reservationRequest(String request) async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    if (accessToken == null) {
+      throw Exception('No access token available');
+    }
+    try {
+      Map data = {'request': request};
+      var body = json.encode(data);
+      final response = await dio.post('$baseUrl/api/reservationinfo',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('예약 등록 성공!');
+      } else {
+        print('예약 등록 실패');
+        throw Exception('Failed to register reservation');
+      }
+    } on DioException catch (e) {
+      print('예약 등록 에러: ${e.message}');
+      throw Exception('Error making reservation request: ${e.message}');
+    }
   }
 }

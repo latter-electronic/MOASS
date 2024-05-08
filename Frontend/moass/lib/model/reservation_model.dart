@@ -134,7 +134,6 @@ class ReservationInfoListDto {
   }
 }
 
-// 내 예약 정보 모델
 class ReservationDayModel {
   final int reservationId;
   final String classCode;
