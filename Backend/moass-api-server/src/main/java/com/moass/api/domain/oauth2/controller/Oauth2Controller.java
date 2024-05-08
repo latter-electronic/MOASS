@@ -1,5 +1,6 @@
 package com.moass.api.domain.oauth2.controller;
 
+import com.moass.api.domain.oauth2.dto.JiraProxyRequestDto;
 import com.moass.api.domain.oauth2.service.Oauth2Service;
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -8,10 +9,7 @@ import com.moass.api.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -41,4 +39,12 @@ public class Oauth2Controller {
                 .flatMap(token -> ApiResponse.ok("Jira 토큰 갱신 성공", token))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("Jira 토큰 갱신 실패 : " + e.getMessage(), e.getStatus()));
     }
+
+    @GetMapping("/jira/proxy")
+    public Mono<ResponseEntity<ApiResponse>> proxyToJira(@Login UserInfo userInfo, @RequestBody JiraProxyRequestDto jiraProxyRequestDto) {
+        return oauth2Service.proxyRequestToJira(userInfo, jiraProxyRequestDto)
+                .flatMap(response -> ApiResponse.ok("Jira 프록시 요청 성공", response))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("Jira 프록시 요청 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
 }

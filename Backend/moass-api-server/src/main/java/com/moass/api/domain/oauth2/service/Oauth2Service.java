@@ -1,14 +1,20 @@
 package com.moass.api.domain.oauth2.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.moass.api.domain.oauth2.dto.JiraProxyRequestDto;
 import com.moass.api.domain.oauth2.dto.TokenResponseDto;
 import com.moass.api.domain.oauth2.entity.JiraToken;
 import com.moass.api.domain.oauth2.repository.JiraTokenRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.PropertiesConfig;
+import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -27,7 +33,12 @@ public class Oauth2Service {
     private final PropertiesConfig propertiesConfig;
     public Oauth2Service(WebClient.Builder webClientBuilder, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
         this.jiraAuthWebClient = webClientBuilder.baseUrl("https://auth.atlassian.com").build();
-        this.jiraApiWebClient = webClientBuilder.baseUrl("https://api.atlassian.com").build();
+        ExchangeStrategies strategies = ExchangeStrategies.builder()
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
+                .build();
+        this.jiraApiWebClient = webClientBuilder.baseUrl("https://api.atlassian.com")
+                .exchangeStrategies(strategies)
+                .build();
         this.jiraTokenRepository = jiraTokenRepository;
         this.propertiesConfig = propertiesConfig;
     }
@@ -126,6 +137,7 @@ public class Oauth2Service {
                     JiraToken refreshedToken = JiraToken.builder()
                             .jiraTokenId(token.getJiraTokenId())
                             .userId(token.getUserId())
+                            .cloudId(token.getCloudId())
                             .accessToken(response.getAccessToken())
                             .refreshToken(response.getRefreshToken() != null ? response.getRefreshToken() : token.getRefreshToken())
                             .expiresAt(LocalDateTime.now().plusHours(10))
@@ -142,5 +154,39 @@ public class Oauth2Service {
                 propertiesConfig.getJiraClientId()+
                 "&scope=offline_access%20read%3Ajira-user%20read%3Ajira-work%20write%3Ajira-work&redirect_uri="+
                 propertiesConfig.getJiraRedirectUri()+"&state="+userInfo.getUserId()+"&response_type=code&prompt=consent");
+    }
+
+    public Mono<JsonNode> proxyRequestToJira(UserInfo userInfo, JiraProxyRequestDto jiraProxyRequestDto) {
+        return getTokenByUserId(userInfo.getUserId())
+                .flatMap(token -> {
+                    String fullUrl = String.format("/ex/jira/%s%s", token.getCloudId(), jiraProxyRequestDto.getUrl());
+                    log.info(fullUrl);
+                    WebClient.RequestHeadersSpec<?> requestSpec;
+
+                    switch (jiraProxyRequestDto.getMethod().toUpperCase()) {
+                        case "POST":
+                            requestSpec = jiraApiWebClient.post()
+                                    .uri(fullUrl)
+                                    .header("Authorization", "Bearer " + token.getAccessToken());
+                            break;
+                        case "GET":
+                        default:
+                            requestSpec = jiraApiWebClient.get()
+                                    .uri(fullUrl)
+                                    .header("Authorization", "Bearer " + token.getAccessToken());
+                            break;
+                    }
+
+                    return requestSpec.retrieve()
+                            .onStatus(status -> !status.is2xxSuccessful(), clientResponse -> clientResponse.bodyToMono(String.class)
+                                    .flatMap(errorBody -> Mono.error(new CustomException(
+                                            String.format("내부 서버 에러: %s from %s %s",
+                                                    clientResponse.statusCode(),
+                                                    jiraProxyRequestDto.getMethod(),
+                                                    fullUrl),
+                                            HttpStatus.INTERNAL_SERVER_ERROR
+                                    ))))
+                            .bodyToMono(JsonNode.class);
+                });
     }
 }
