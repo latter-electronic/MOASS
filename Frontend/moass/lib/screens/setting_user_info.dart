@@ -141,12 +141,29 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () async {
+          onPressed: () {
             final formKeyState = formKey.currentState!;
             if (formKeyState.validate()) {
               formKeyState.save();
               MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
                   .patchUserTeamName(textFormFieldValue, currentRole);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('수정 완료'),
+                    content: const Text('회원 정보가 성공적으로 수정되었습니다.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('확인'),
+                      ),
+                    ],
+                  );
+                },
+              );
             }
           },
           child: const Text('수정하기'),
