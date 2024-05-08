@@ -92,9 +92,20 @@ class _SeatScreenState extends State<SeatScreen> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CategoryText(
-                              text:
-                                  '${userProfile.locationName}캠퍼스 $currentClass반'),
+                          Row(
+                            children: [
+                              CategoryText(
+                                  text:
+                                      '${userProfile.locationName}캠퍼스 $currentClass반'),
+                              IconButton.outlined(
+                                onPressed: () {},
+                                icon: const Icon(Icons.refresh),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.white)),
+                              ),
+                            ],
+                          ),
                           FutureBuilder(
                               future: myClass,
                               builder: (context, snapshot) {

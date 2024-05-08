@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Moass',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6ECEF5)),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       initialRoute: isLoggedIn ? '/homeScreen' : '/loginScreen',
