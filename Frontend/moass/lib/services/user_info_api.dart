@@ -14,6 +14,8 @@ class UserInfoApi {
   // dio와 storage에 담긴 데이터 활용하겠다 선언
   UserInfoApi({required this.dio, required this.storage});
 
+  // 유저 정보 불러오기
+
   // 키워드 검색 API
   Future<List<UserInfo>> fetchUserProfile(String? username) async {
     List<UserInfo> userProfileInstances = [];
@@ -91,6 +93,33 @@ class UserInfoApi {
     } on DioException catch (e) {
       print('Error fetching user profile: ${e.message}');
       return [];
+    }
+  }
+
+  // 우리 팀 조회
+  Future<MyTeam?> getMyTeam() async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return null;
+      }
+      print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.get(
+        '$baseUrl/api/user/team',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        return MyTeam.fromJson(response.data['data']);
+      } else {
+        print('팀 정보를 받아오는데 실패했습니다.');
+        return null;
+      }
+    } on DioException catch (e) {
+      print('팀 정보를 받아오는데 문제가 생겼습니다.: ${e.message}');
+      return null;
     }
   }
 }
