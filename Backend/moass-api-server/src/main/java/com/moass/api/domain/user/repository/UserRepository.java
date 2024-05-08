@@ -26,6 +26,17 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
             "WHERE u.user_email = :userEmail")
     Mono<UserSearchDetail> findUserSearchDetailByUserEmail(String userEmail);
 
+    @Query("SELECT l.location_code, l.location_name, c.class_code, t.team_code, t.team_name, " +
+            "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.background_img, u.profile_img, su.job_code, u.connect_flag , d.x_coord, d.y_coord " +
+            "FROM User u " +
+            "INNER JOIN SsafyUser su ON u.user_id = su.user_id " +
+            "LEFT JOIN device d ON u.user_id = d.user_id " +
+            "INNER JOIN Team t ON t.team_code = su.team_code " +
+            "INNER JOIN Class c ON c.class_code = t.class_code " +
+            "INNER JOIN Location l ON l.location_code = c.location_code " +
+            "WHERE u.user_id = :userId")
+    Mono<UserSearchDetail> findUserSearchDetailByUserId(String userId);
+
     Mono<User> findByUserEmail(String userEmail);
 
     Mono<User> findByUserEmailOrUserId(String userEmail, String userId);

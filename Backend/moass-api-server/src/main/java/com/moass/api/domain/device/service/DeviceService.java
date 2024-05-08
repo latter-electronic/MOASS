@@ -1,10 +1,7 @@
 package com.moass.api.domain.device.service;
 
 
-import com.moass.api.domain.device.dto.Coordinate;
-import com.moass.api.domain.device.dto.DeviceDetail;
-import com.moass.api.domain.device.dto.DeviceIdDto;
-import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
+import com.moass.api.domain.device.dto.*;
 import com.moass.api.domain.device.repository.DeviceRepository;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.repository.ClassRepository;
@@ -21,7 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -112,6 +113,28 @@ public class DeviceService {
                     device.setYCoord(coordinate.getYcoord());
                     return deviceRepository.save(device)
                             .then(deviceRepository.findByDeviceId(deviceId)).map(DeviceDetail::new);
+                });
+    }
+
+
+
+    public Mono<List<DeviceUserDetail>> getClassInfo(String classCode) {
+        return deviceRepository.findAllByClassCode(classCode)
+                .collectList()
+                .flatMap(devices -> {
+                    if (devices.isEmpty()) {
+                        return Mono.just(Collections.emptyList());
+                    }
+                    return Flux.fromIterable(devices)
+                            .flatMap(device -> {
+                                if (device.getUserId() == null) {
+                                    return Mono.just(new DeviceUserDetail(device));
+                                } else {
+                                    return userRepository.findUserSearchDetailByUserId(device.getUserId())
+                                            .map(userDetail -> new DeviceUserDetail(device, userDetail));
+                                }
+                            })
+                            .collectList();
                 });
     }
 }

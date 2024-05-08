@@ -121,6 +121,7 @@ public class UserController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+
     @GetMapping("/search")
     public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo,
                                                      @RequestParam(name = "teamcode", required = false) String teamCode,
