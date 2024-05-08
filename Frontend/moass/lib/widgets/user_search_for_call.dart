@@ -7,7 +7,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserSearchForCallWidget extends StatefulWidget {
-  const UserSearchForCallWidget({super.key});
+  final Function() openButtonWidget;
+  const UserSearchForCallWidget({super.key, required this.openButtonWidget});
 
   @override
   _UserSearchWidgetState createState() => _UserSearchWidgetState();
@@ -23,12 +24,6 @@ class _UserSearchWidgetState extends State<UserSearchForCallWidget> {
         UserInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
             .fetchUserProfile(value);
     setState(() {});
-  }
-
-  void openButtonWidget() {
-    setState(() {
-      isOpenedButtonWidget = !isOpenedButtonWidget;
-    });
   }
 
   @override
@@ -69,7 +64,11 @@ class _UserSearchWidgetState extends State<UserSearchForCallWidget> {
                   return Column(
                     children: snapshot.data!.map((userInfo) {
                       return GestureDetector(
-                        onTap: openButtonWidget,
+                        onTap: () {
+                          setState(() {
+                            widget.openButtonWidget();
+                          });
+                        },
                         child: UserBox(
                             username: userInfo.userName,
                             team: userInfo.teamCode,

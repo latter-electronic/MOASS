@@ -73,94 +73,66 @@ class _SeatScreenState extends State<SeatScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 상태 처리 및 DropdownButton 작업 해야함
-              FutureBuilder(
-                  future: myInfoApi.fetchUserProfile(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (snapshot.hasData) {
-                      var userProfile = snapshot.data;
-                      var currentClass = userProfile!.classCode.split('').last;
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      FutureBuilder(
+                          future: myInfoApi.fetchUserProfile(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const SizedBox(
+                                  height: 50,
+                                  child: Center(
+                                      child: CircularProgressIndicator()));
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            } else if (snapshot.hasData) {
+                              var userProfile = snapshot.data;
+                              var currentClass =
+                                  userProfile!.classCode.split('').last;
 
-                      myClass = UserInfoApi(
-                              dio: Dio(), storage: const FlutterSecureStorage())
-                          .fetchMyClass(userProfile.classCode);
+                              myClass = UserInfoApi(
+                                      dio: Dio(),
+                                      storage: const FlutterSecureStorage())
+                                  .fetchMyClass(userProfile.classCode);
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              CategoryText(
+                              return CategoryText(
                                   text:
-                                      '${userProfile.locationName}캠퍼스 $currentClass반'),
-                              IconButton.outlined(
-                                onPressed: () {},
-                                icon: const Icon(Icons.refresh),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        Colors.white)),
-                              ),
-                            ],
-                          ),
-                          FutureBuilder(
-                              future: myClass,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.shade200),
-                                    height: 400,
-                                    width: double.infinity,
-                                    child: const Center(
-                                        child: CircularProgressIndicator()),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.shade200),
-                                    height: 400,
-                                    width: double.infinity,
-                                    child: Center(
-                                        child:
-                                            Text('Error: ${snapshot.error}')),
-                                  );
-                                } else if (snapshot.hasData) {
-                                  List<List<UserInfo>>? currentClass =
-                                      snapshot.data;
+                                      '${userProfile.locationName}캠퍼스 $currentClass반');
+                            } else {
+                              return const Center(
+                                  child: Text('No data available'));
+                            }
+                          }),
+                      IconButton(
+                        color: Theme.of(context).colorScheme.primary,
+                        onPressed: () {},
+                        icon: const Icon(Icons.refresh),
+                        style: ButtonStyle(
+                          iconColor: MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              // 상태 처리 및 DropdownButton 작업 해야함
 
-                                  return SizedBox(
-                                    height: 400,
-                                    width: double.infinity,
-                                    child: SeatMapWidget(
-                                      seatList: seatList,
-                                      openButtonWidget: openButtonWidget,
-                                    ),
-                                  );
-                                } else {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.grey.shade200),
-                                    height: 400,
-                                    width: double.infinity,
-                                    child: const Center(
-                                        child: Text('데이터를 불러오는 데 문제가 있어요.')),
-                                  );
-                                }
-                              }),
-                        ],
-                      );
-                    } else {
-                      return const Center(child: Text('No data available'));
-                    }
-                  }),
+              SizedBox(
+                height: 400,
+                width: double.infinity,
+                child: SeatMapWidget(
+                    seatList: seatList, openButtonWidget: openButtonWidget),
+              ),
 
               const CategoryText(text: '교육생 조회'),
-              const UserSearchForCallWidget(),
+              UserSearchForCallWidget(openButtonWidget: openButtonWidget),
               isOpenedButtonWidget
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
