@@ -4,41 +4,66 @@ import 'package:moass/model/seat.dart';
 class SeatMapWidget extends StatelessWidget {
   final List<Seat> seatList;
   final Function() openButtonWidget;
+  final TransformationController _transformationController =
+      TransformationController();
 
-  const SeatMapWidget(
-      {super.key, required this.seatList, required this.openButtonWidget});
-
+  SeatMapWidget(
+      {super.key, required this.seatList, required this.openButtonWidget}) {
+    _transformationController.value = Matrix4.diagonal3Values(0.5, 0.5, 0.4);
+  }
+  late bool isOpenedButtonWidget = false;
   @override
   Widget build(BuildContext context) {
-    return InteractiveViewer(
-      constrained: false,
-      boundaryMargin: const EdgeInsets.all(50),
-      minScale: 0.3,
-      maxScale: 3.0,
-      child: Stack(children: [
-        CustomPaint(
-          painter: SeatMap(seatList),
-          size: const Size(942, 1495),
-        ),
-        for (final seat in seatList)
-          Positioned(
-            left: seat.coordX,
-            top: seat.coordY,
-            child: GestureDetector(
-              onTap: () {
-                // 각 사각형을 터치했을 때의 동작 처리
-                // print('사각형 클릭됨: ${seat.coordX}, ${seat.coordY}');
-                openButtonWidget();
-              },
-              child: Container(
-                width: 85,
-                height: 85,
-                color: Colors.transparent,
+    return Stack(children: [
+      InteractiveViewer(
+        transformationController: _transformationController,
+        constrained: false,
+        boundaryMargin: const EdgeInsets.all(50),
+        minScale: 0.3,
+        maxScale: 3.0,
+        child: Stack(children: [
+          CustomPaint(
+            painter: SeatMap(seatList),
+            size: const Size(942, 1495),
+          ),
+          for (final seat in seatList)
+            Positioned(
+              left: seat.coordX,
+              top: seat.coordY,
+              child: GestureDetector(
+                onTap: () {
+                  // 각 사각형을 터치했을 때의 동작 처리
+                  // print('사각형 클릭됨: ${seat.coordX}, ${seat.coordY}');
+                  openButtonWidget();
+                },
+                child: Container(
+                  width: 85,
+                  height: 85,
+                  color: Colors.transparent,
+                ),
               ),
             ),
-          ),
-      ]),
-    );
+        ]),
+      ),
+      isOpenedButtonWidget
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: FloatingActionButton.extended(
+                  backgroundColor: const Color(0xFF3DB887),
+                  foregroundColor: Colors.white,
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications_on),
+                  label: const Text(
+                    '호출',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            )
+          : const SizedBox()
+    ]);
   }
 }
 
@@ -101,6 +126,12 @@ class SeatMap extends CustomPainter {
       ..color = Colors.amber // 나중에 Seat Model 안에 착석 여부 넣어두고 착석했으면 분기처리 해줄 것.
       ..isAntiAlias = true;
 
+    final fixedPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.black // 나중에 Seat Model 안에 착석 여부 넣어두고 착석했으면 분기처리 해줄 것.
+      ..strokeWidth = 2.0
+      ..isAntiAlias = true;
+
     final teamNamePaint = Paint()
       ..style = PaintingStyle.fill
       ..color = Colors.white
@@ -114,7 +145,34 @@ class SeatMap extends CustomPainter {
     const userNameTextStyle = TextStyle(
         color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800);
 
-    // const radius = 30.0;
+    RRect consultantSeat = RRect.fromRectAndRadius(
+      const Rect.fromLTRB(700, 20, 885, 105),
+      const Radius.circular(20),
+    );
+    canvas.drawRRect(consultantSeat, fixedPaint);
+    _drawText(canvas, 792.5, 62.5, '컨설턴트석', userNameTextStyle);
+
+    RRect coachSeat1 = RRect.fromRectAndRadius(
+      const Rect.fromLTRB(50, 20, 200, 105),
+      const Radius.circular(20),
+    );
+    canvas.drawRRect(coachSeat1, fixedPaint);
+    _drawText(canvas, 125, 62.5, '코치석1', userNameTextStyle);
+    RRect coachSeat2 = RRect.fromRectAndRadius(
+      const Rect.fromLTRB(210, 20, 360, 105),
+      const Radius.circular(20),
+    );
+    canvas.drawRRect(coachSeat2, fixedPaint);
+    _drawText(canvas, 285, 62.5, '코치석2', userNameTextStyle);
+
+    RRect door = RRect.fromRectAndRadius(
+      const Rect.fromLTRB(341, 1475, 601, 1495),
+      const Radius.circular(0),
+    );
+    canvas.drawRRect(door, fixedPaint);
+    _drawText(canvas, 471, 1485, '출입구', userNameTextStyle);
+
+    // seatList에 따라 그리기
     for (final seat in seatList) {
       // final c = Offset(seat.coordX, seat.coordY);
       // canvas.drawCircle(c, radius, paint);
@@ -159,35 +217,4 @@ class SeatMap extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
-
-// 테스트용 호버 버튼
-class _HoverButton extends StatefulWidget {
-  final VoidCallback onTap;
-
-  const _HoverButton({super.key, required this.onTap});
-
-  @override
-  _HoverButtonState createState() => _HoverButtonState();
-}
-
-class _HoverButtonState extends State<_HoverButton> {
-  bool _isHovering = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovering = true),
-      onExit: (_) => setState(() => _isHovering = false),
-      child: InkWell(
-        onTap: widget.onTap,
-        child: Container(
-          width: 85,
-          height: 85,
-          color:
-              _isHovering ? Colors.blue.withOpacity(0.5) : Colors.transparent,
-        ),
-      ),
-    );
-  }
 }

@@ -28,11 +28,12 @@ class _SeatScreenState extends State<SeatScreen> {
 
   void initSeats() {
     seatList.clear();
-    seatList.add(Seat(150.0, 180.0));
-    seatList.add(Seat(210.0, 40.0));
-    seatList.add(Seat(380.0, 240.0));
-    seatList.add(Seat(640.0, 490.0));
-    seatList.add(Seat(480.0, 350.0));
+    seatList.add(Seat(683.0, 745.0));
+    seatList.add(Seat(593.0, 745.0));
+    seatList.add(Seat(680.0, 655.0));
+    seatList.add(Seat(593.0, 655.0));
+    seatList.add(Seat(683.0, 565.0));
+    seatList.add(Seat(593.0, 565.0));
   }
 
   // 교육생 검색 관련 변수
@@ -108,7 +109,7 @@ class _SeatScreenState extends State<SeatScreen> {
                                       snapshot.data;
 
                                   return SizedBox(
-                                    height: 400,
+                                    height: 600,
                                     width: double.infinity,
                                     child: SeatMapWidget(
                                       seatList: seatList,
