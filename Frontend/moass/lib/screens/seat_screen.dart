@@ -12,6 +12,7 @@ import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/seat_map.dart';
 import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/widgets/user_box.dart';
+import 'package:moass/widgets/user_search_for_call.dart';
 
 class SeatScreen extends StatefulWidget {
   const SeatScreen({super.key});
@@ -99,17 +100,30 @@ class _SeatScreenState extends State<SeatScreen> {
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade200),
+                                    height: 400,
+                                    width: double.infinity,
+                                    child: const Center(
+                                        child: CircularProgressIndicator()),
+                                  );
                                 } else if (snapshot.hasError) {
-                                  return Center(
-                                      child: Text('Error: ${snapshot.error}'));
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade200),
+                                    height: 400,
+                                    width: double.infinity,
+                                    child: Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}')),
+                                  );
                                 } else if (snapshot.hasData) {
                                   List<List<UserInfo>>? currentClass =
                                       snapshot.data;
 
                                   return SizedBox(
-                                    height: 600,
+                                    height: 400,
                                     width: double.infinity,
                                     child: SeatMapWidget(
                                       seatList: seatList,
@@ -117,8 +131,14 @@ class _SeatScreenState extends State<SeatScreen> {
                                     ),
                                   );
                                 } else {
-                                  return const Center(
-                                      child: Text('No data available'));
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.shade200),
+                                    height: 400,
+                                    width: double.infinity,
+                                    child: const Center(
+                                        child: Text('데이터를 불러오는 데 문제가 있어요.')),
+                                  );
                                 }
                               }),
                         ],
@@ -129,74 +149,7 @@ class _SeatScreenState extends State<SeatScreen> {
                   }),
 
               const CategoryText(text: '교육생 조회'),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: SearchBar(
-                  leading: const Icon(Icons.search),
-                  hintText: "교육생 이름을 입력하세요",
-                  onChanged: (value) {
-                    setState(() {
-                      inputText = value;
-                    });
-                    searchUser(inputText);
-                  },
-                ),
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      FutureBuilder(
-                          future: searchedUserList,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                  child: Text('Error: ${snapshot.error}'));
-                            } else if (snapshot.hasData) {
-                              var userInfoList = snapshot.data;
-                              print('유저 정보 : $userInfoList');
-                              if (userInfoList!.isNotEmpty) {
-                                return Column(
-                                  children: [
-                                    for (var userInfo in userInfoList)
-                                      GestureDetector(
-                                        onTap: () {
-                                          openButtonWidget();
-                                        },
-                                        child: UserBox(
-                                            username: userInfo.userName,
-                                            team: userInfo.teamCode,
-                                            role: userInfo.positionName,
-                                            userstatus: userInfo.statusId),
-                                      )
-                                  ],
-                                );
-                              } else {
-                                return const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Text('검색된 유저가 없습니다.'),
-                                  ),
-                                );
-                              }
-                            } else {
-                              return const Center(
-                                child: Text('검색어를 입력하세요'),
-                              );
-                            }
-                          }),
-                    ],
-                  ),
-                ),
-              ),
+              const UserSearchForCallWidget(),
               isOpenedButtonWidget
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
