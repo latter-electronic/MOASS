@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
+import 'package:moass/model/seat.dart';
 import 'package:moass/model/user_info.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
+import 'package:moass/widgets/seat_map.dart';
 import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/widgets/user_box.dart';
 
@@ -19,6 +21,23 @@ class SeatScreen extends StatefulWidget {
 }
 
 class _SeatScreenState extends State<SeatScreen> {
+  // 좌석도 관련 변수
+  final List<Seat> seatList = List.empty(growable: true);
+
+  DraggableObjectPageState() {
+    initSeats();
+  }
+
+  void initSeats() {
+    seatList.clear();
+    seatList.add(Seat(150.0, 180.0));
+    seatList.add(Seat(220.0, 40.0));
+    seatList.add(Seat(380.0, 240.0));
+    seatList.add(Seat(640.0, 190.0));
+    seatList.add(Seat(480.0, 350.0));
+  }
+
+  // 교육생 검색 관련 변수
   bool isOpenedButtonWidget = false;
 
   openButtonWidget() {
@@ -89,97 +108,103 @@ class _SeatScreenState extends State<SeatScreen> {
                                 } else if (snapshot.hasData) {
                                   List<List<UserInfo>>? currentClass =
                                       snapshot.data;
-                                  return SizedBox(
-                                    height: 400,
-                                    width: double.infinity,
-                                    child: InteractiveViewer(
-                                      scaleEnabled: true,
-                                      scaleFactor: 4.0,
-                                      minScale: 0.1,
-                                      maxScale: 3.0,
-                                      child: Container(
-                                          height: 800,
-                                          width: double.infinity,
-                                          decoration: const BoxDecoration(
-                                              color: Colors.grey),
-                                          child: Column(
-                                            children: [
-                                              for (var team in currentClass!)
-                                                Container(
-                                                    width: 200,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color:
-                                                                Colors.white),
-                                                    child: GridView.count(
-                                                        shrinkWrap: true,
-                                                        crossAxisCount: 2,
-                                                        children: [
-                                                          for (var user in team)
-                                                            Container(
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                      .all(2.0),
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                      color: Colors
-                                                                          .green),
-                                                              child: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Text(
-                                                                      user
-                                                                          .teamCode,
-                                                                      style: const TextStyle(
-                                                                          fontWeight:
-                                                                              FontWeight.w600)),
-                                                                  Text(
-                                                                    user.userName,
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight.w800),
-                                                                  ),
-                                                                  Container(
-                                                                    margin:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            6.0),
-                                                                    width: 80,
-                                                                    height: 20,
-                                                                    decoration: BoxDecoration(
-                                                                        color: user.connectFlag == 1
-                                                                            ? user.statusId == 1
-                                                                                ? const Color(0xFF3DB887)
-                                                                                : const Color(0xFFFFBC1F)
-                                                                            : Colors.grey),
-                                                                    child: user.connectFlag ==
-                                                                            1
-                                                                        ? user.statusId ==
-                                                                                1
-                                                                            ? const Center(
-                                                                                child: Text('착석중'),
-                                                                              )
-                                                                            : const Center(
-                                                                                child: Text('자리 비움'),
-                                                                              )
-                                                                        : const Text(
-                                                                            ''),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            )
-                                                        ]))
-                                            ],
-                                          )),
-                                    ),
+
+                                  return CustomPaint(
+                                    painter: SeatMap(),
+                                    child: const SizedBox(
+                                        width: 942, height: 1495),
                                   );
+                                  // return SizedBox(
+                                  //   height: 400,
+                                  //   width: double.infinity,
+                                  //   child: InteractiveViewer(
+                                  //     scaleEnabled: true,
+                                  //     scaleFactor: 4.0,
+                                  //     minScale: 0.1,
+                                  //     maxScale: 3.0,
+                                  //     child: Container(
+                                  //         height: 800,
+                                  //         width: double.infinity,
+                                  //         decoration: const BoxDecoration(
+                                  //             color: Colors.grey),
+                                  //         child: Column(
+                                  //           children: [
+                                  //             for (var team in currentClass!)
+                                  //               Container(
+                                  //                   width: 200,
+                                  //                   decoration:
+                                  //                       const BoxDecoration(
+                                  //                           color:
+                                  //                               Colors.white),
+                                  //                   child: GridView.count(
+                                  //                       shrinkWrap: true,
+                                  //                       crossAxisCount: 2,
+                                  //                       children: [
+                                  //                         for (var user in team)
+                                  //                           Container(
+                                  //                             margin:
+                                  //                                 const EdgeInsets
+                                  //                                     .all(2.0),
+                                  //                             padding:
+                                  //                                 const EdgeInsets
+                                  //                                     .all(8.0),
+                                  //                             decoration:
+                                  //                                 const BoxDecoration(
+                                  //                                     color: Colors
+                                  //                                         .green),
+                                  //                             child: Column(
+                                  //                               mainAxisAlignment:
+                                  //                                   MainAxisAlignment
+                                  //                                       .center,
+                                  //                               children: [
+                                  //                                 Text(
+                                  //                                     user
+                                  //                                         .teamCode,
+                                  //                                     style: const TextStyle(
+                                  //                                         fontWeight:
+                                  //                                             FontWeight.w600)),
+                                  //                                 Text(
+                                  //                                   user.userName,
+                                  //                                   style: const TextStyle(
+                                  //                                       fontSize:
+                                  //                                           16,
+                                  //                                       fontWeight:
+                                  //                                           FontWeight.w800),
+                                  //                                 ),
+                                  //                                 Container(
+                                  //                                   margin:
+                                  //                                       const EdgeInsets
+                                  //                                           .all(
+                                  //                                           6.0),
+                                  //                                   width: 80,
+                                  //                                   height: 20,
+                                  //                                   decoration: BoxDecoration(
+                                  //                                       color: user.connectFlag == 1
+                                  //                                           ? user.statusId == 1
+                                  //                                               ? const Color(0xFF3DB887)
+                                  //                                               : const Color(0xFFFFBC1F)
+                                  //                                           : Colors.grey),
+                                  //                                   child: user.connectFlag ==
+                                  //                                           1
+                                  //                                       ? user.statusId ==
+                                  //                                               1
+                                  //                                           ? const Center(
+                                  //                                               child: Text('착석중'),
+                                  //                                             )
+                                  //                                           : const Center(
+                                  //                                               child: Text('자리 비움'),
+                                  //                                             )
+                                  //                                       : const Text(
+                                  //                                           ''),
+                                  //                                 )
+                                  //                               ],
+                                  //                             ),
+                                  //                           )
+                                  //                       ]))
+                                  //           ],
+                                  //         )),
+                                  //   ),
+                                  // );
                                 } else {
                                   return const Center(
                                       child: Text('No data available'));
