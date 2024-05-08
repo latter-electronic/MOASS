@@ -58,6 +58,7 @@ function setupPythonProcess(mainWindow) {
       if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
         try {
           const message = JSON.parse(data.toString());
+          console.log(message.data)
           switch (message.type) {
             case 'NFC_DATA':
               mainWindow.webContents.send('nfc-data', message.data) // nfc-data 전송

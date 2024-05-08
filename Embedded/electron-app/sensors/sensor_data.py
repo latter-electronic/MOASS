@@ -63,7 +63,8 @@ def read_uid():
 def handle_login_response(device_id, card_serial_id):
     if device_id and card_serial_id:
         print("NFC 로그인 성공")
-        sys.stdout.write(json.dumps({"type": "NFC_DATA", "data": {'deviceId': device_id, 'cardSerialId': card_serial_id}}))
+        nfc_data = json.dumps({"type": "NFC_DATA", "data": {'deviceId': device_id, 'cardSerialId': card_serial_id}}, ensure_ascii=False)
+        sys.stdout.write(nfc_data + '\n')
         sys.stdout.flush()
         return True
     print("Login failed")
@@ -107,13 +108,14 @@ if __name__ == '__main__':
                 card_serial_id = read_uid()
                 if card_serial_id:
                     logged_in = handle_login_response(device_id, card_serial_id)
-                elif pir.motion_detected:
-                    print("AOD 상태")
-                    sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AOD"}}))
-                    sys.stdout.flush()
+                # elif pir.motion_detected:
+                #     print("AOD 상태")
+                #     sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AOD"}}))
+                #     sys.stdout.flush()
             
             else:   # 로그인 상태
-                handle_motion_detection()
+                pass
+                # handle_motion_detection()
 
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", str(e))
