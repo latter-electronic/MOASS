@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/reservation_model.dart';
+import 'package:moass/screens/home_screen.dart';
+import 'package:moass/screens/reservation_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
@@ -23,8 +25,12 @@ class ReservationUserStep2 extends StatefulWidget {
 class _ReservationUserStep2State extends State<ReservationUserStep2> {
   // 내 정보 API 요청
   MyProfile? userProfile;
+  // 버튼 활성화 상태
+  bool isButtonActive = false;
   // 선택 교육생들 리스트
   List<Map<String, String>> selectMembers = [];
+  // 선택한 시간을 받아올 리스트
+  List<int> selectedTimes = [];
 
   Future<void> fetchUserProfile() async {
     final profile =
@@ -75,6 +81,49 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     fetchTeamMembers();
   }
 
+  // 예약 팝업
+  void completeReservation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('예약 완료'),
+          content: const Text('예약이 완료되었습니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('완료'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void onTimeSelected(int time) {
+    setState(() {
+      if (selectedTimes.contains(time)) {
+        selectedTimes.remove(time);
+      } else {
+        selectedTimes.add(time);
+      }
+      updateButtonState();
+    });
+  }
+
+  void updateButtonState() {
+    setState(() {
+      isButtonActive = selectedTimes.isNotEmpty;
+    });
+  }
+
+// 예약 위젯 시작점
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,8 +138,11 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
             ],
           ),
           ReservationBox(
-              reservation: widget.reservation,
-              selectedDate: widget.selectedDate),
+            reservation: widget.reservation,
+            selectedDate: widget.selectedDate,
+            selectedTimes: selectedTimes,
+            onTimeSelected: onTimeSelected,
+          ),
           const Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -149,6 +201,16 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
           const UserSearchWidget(),
         ],
       ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ElevatedButton(
+          onPressed: isButtonActive ? () => completeReservation(context) : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isButtonActive ? Colors.blue : Colors.grey,
+          ),
+          child: const Text('예약하기'),
+        ),
+      ),
     );
   }
 }
@@ -157,11 +219,15 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
 class ReservationBox extends StatefulWidget {
   final ReservationDayModel reservation;
   final DateTime selectedDate;
+  final List<int> selectedTimes;
+  final Function(int) onTimeSelected;
 
   const ReservationBox({
     super.key,
     required this.reservation,
     required this.selectedDate,
+    required this.selectedTimes,
+    required this.onTimeSelected,
   });
 
   @override
@@ -230,6 +296,8 @@ class _ReservationBoxState extends State<ReservationBox> {
                           }
                         }
                       }
+                      widget.onTimeSelected(index);
+                      setState(() {});
                     });
                     // 시간 선택이 맞게 들어갔는지 확인
                     print(selectedTimes);
