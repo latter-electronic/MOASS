@@ -21,25 +21,24 @@ import SSETestPage from "./pages/common/SSETestPage.jsx";
 export default function App() {
     return (
         <HashRouter>
-            <div className="flex min-h-screen font-noto-sans ml-1">
-                <Routes>
-                    <Route path="/" element={<Navigate replace to="/login" />} />
-                    <Route path="/login" element={<TagNFC />} />
-                    <Route path="/home" element={<Layout />}>
-                        <Route index element={<Home />} />
-                        <Route path="board" element={<Board />} />
-                        <Route path="board/test" element={<BoardTest />} />
-                        <Route path="board/history" element={<BoardHistory />} />
-                        <Route path="jira" element={<Jira />} />
-                        <Route path="alert" element={<Alert />} />
-                    </Route>
-                    <Route path="/nameplate" element={<Nameplate />} />
-                    <Route path="/callalert" element={<CallAlert />} />
-                    <Route path="/tagnfc" element={<TagNFC />} />
-                    <Route path="/tagsuccess" element={<TagSuccess />} />
-                    <Route path="/ssetest" element={<SSETestPage />} />
-                </Routes>
-            </div>
-        </HashRouter>
+        <div className="flex min-h-screen font-noto-sans ml-1">
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="board" element={<Board />} />
+              <Route path="board/test" element={<BoardTest />} />
+              <Route path="board/history" element={<BoardHistory />} />
+              <Route path="jira" element={<Jira />} />
+              <Route path="alert" element={<Alert />} />
+            </Route>
+            <Route path="/nameplate" element={<Nameplate />} />
+            <Route path="/callalert" element={<CallAlert />} />
+            <Route path="/tagnfc" element={<TagNFC />} />
+            <Route path="/testlogin" element={<TestLoginPage />} />
+            <Route path="/tagsuccess" element={<TagSuccess />} />
+            <Route path="/ssetest" element={<SSETestPage />} />
+          </Routes>
+        </div>
+      </HashRouter>
     );
 }
