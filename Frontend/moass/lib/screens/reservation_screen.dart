@@ -19,10 +19,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
   DateTime selectedDate = DateTime.now();
   List<MyReservationModel> reservations = [];
   bool isLoading = true;
+  late ReservationApi api;
 
   @override
   void initState() {
     super.initState();
+    api = ReservationApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
     fetchReservations();
   }
 
@@ -37,7 +40,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
   Future<void> fetchReservations() async {
     setState(() => isLoading = true);
-    var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     var result = await api.myReservationinfo(); // API 호출
     setState(() {
       // null 체크
@@ -78,9 +81,35 @@ class _ReservationScreenState extends State<ReservationScreen> {
 
 // 예약 취소 요청
   void _cancelReservation(int infoId) async {
-    var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
-    await api.reservationCancel(infoId);
-    fetchReservations(); // 예약 목록 새로 고침
+    try {
+      await api.reservationCancel(infoId);
+      fetchReservations(); // 예약 목록 새로 고침
+    } catch (e) {
+      String errorMessage = '예약 취소 중 오류가 발생했습니다.';
+      if (e is DioException && e.response?.statusCode == 404) {
+        errorMessage = '예약한 당사자만 예약을 취소할 수 있습니다.';
+      }
+      _showErrorMessage(errorMessage);
+    }
+  }
+
+// 에러 메시지를 보여주는 다이얼로그
+  void _showErrorMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('오류'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('확인'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -110,7 +139,6 @@ class _ReservationScreenState extends State<ReservationScreen> {
                           horizontal: 32.0, vertical: 10.0)),
                 ),
                 onPressed: () {
-                  // 여기에서 페이지 이동 로직 추가
                   Navigator.push(
                     context,
                     MaterialPageRoute(

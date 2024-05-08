@@ -66,25 +66,26 @@ class ReservationApi {
 
 // 예약 취소 infoId를 전달받아서 요청
   Future<void> reservationCancel(int infoId) async {
-    try {
-      String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-        return;
-      }
-
-      final response = await dio.delete(
-        '$baseUrl/api/reservationinfo/$infoId',
-        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
-      );
-
-      if (response.statusCode == 200) {
-        print('해당 예약을 취소하였습니다!');
-      } else {
-        print('예약 취소 실패');
-      }
-    } on DioException catch (e) {
-      print('Error reservationCancel: ${e.message}');
+    String? accessToken = await storage.read(key: 'accessToken');
+    if (accessToken == null) {
+      throw Exception('No access token available');
     }
+
+    final response = await dio.delete(
+      '$baseUrl/api/reservationinfo/$infoId',
+      options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+    );
+
+    if (response.statusCode != 200) {
+      // 상태 코드에 따라 적절한 예외를 던집니다.
+      throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioExceptionType.badCertificate,
+          error: response.statusCode == 404
+              ? 'Unauthorized cancellation attempt'
+              : 'Reservation cancellation failed');
+    }
+    print('해당 예약을 취소하였습니다!');
   }
 }
