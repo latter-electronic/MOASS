@@ -85,20 +85,16 @@ CREATE TABLE `Widget`(
                         FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
-CREATE TABLE `Seat` (
-                       `seat_id` INT NOT NULL AUTO_INCREMENT,
-                       `user_id` VARCHAR(20) NULL,
-                       `x_coord` VARCHAR(40) NULL,
-                       `y_coord` VARCHAR(20) NULL,
-                       PRIMARY KEY (`seat_id`),
-                       FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
-);
 
 CREATE TABLE `Device` (
                           `device_id` VARCHAR(40) NOT NULL,
                           `user_id` VARCHAR(20) NULL,
+                          `x_coord` INT NULL,
+                          `y_coord` INT NULL,
+                           `class_code` VARCHAR(5) NULL,
                           PRIMARY KEY (`device_id`),
-                          FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+                          FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`),
+                          FOREIGN KEY (`class_code`) REFERENCES `Class` (`class_code`)
 );
 
 
