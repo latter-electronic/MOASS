@@ -27,25 +27,23 @@ class SettingUserInfoScreen extends StatefulWidget {
 }
 
 class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
+  // 회원 정보 내의 position index에 맞게 정해줄 것.
+  final List<bool> selectedRole = <bool>[false, false, false, false];
+  late String textFormFieldValue;
+  late String fieldValue = "";
+  late String? currentRole = widget.positionName;
+
   @override
   Widget build(BuildContext context) {
     // 팀 명 수정을 위한 변수들
-    String basicTeamName = '없음';
-    String editedTeamName = '';
+    fieldValue = widget.teamName;
 
     final formKey = GlobalKey<FormState>();
 
-    String textFormFieldValue = widget.teamName;
-
-    String? currentRole = widget.positionName;
-
-    // 회원 정보 내의 position index에 맞게 정해줄 것.
-    List<bool> selectedRole = <bool>[false, false, false, false];
-
     setState(() {
-      if (widget.positionName != null) {
+      if (currentRole != null) {
         for (int i = 0; i < selectedRole.length; i++) {
-          if (selectedRole[i] == widget.positionName) {
+          if (selectedRole[i] == currentRole) {
             selectedRole[i] = true;
           }
         }
@@ -82,27 +80,21 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
                       }
                       return null;
                     },
-                    controller: TextEditingController(
-                      text: widget.teamName.isNotEmpty
-                          ? widget.teamName
-                          : basicTeamName,
-                    ),
+                    // initialValue: fieldValue,
+                    controller: TextEditingController(text: fieldValue),
                     obscureText: false,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        editedTeamName = value;
-                      });
-                    },
+                    // onChanged: (value) {
+                    //   setState(() {
+                    //     fieldValue = value;
+                    //   });
+                    // },
                     onSaved: (value) async {
                       setState(() {
                         textFormFieldValue = value!;
                       });
-                      MyInfoApi(
-                              dio: Dio(), storage: const FlutterSecureStorage())
-                          .patchUserTeamName(textFormFieldValue, currentRole);
                     },
                   ),
                 ),
@@ -119,11 +111,9 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
               onPressed: (int index) {
                 setState(() {
                   for (int i = 0; i < selectedRole.length; i++) {
-                    if (index == i) {
-                      selectedRole[i] = i == index;
-                      print(selectedRole);
+                    selectedRole[i] = i == index;
+                    if (i == index) {
                       currentRole = rolesString[i];
-                      print(currentRole);
                     }
                   }
                 });
@@ -146,10 +136,12 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             final formKeyState = formKey.currentState!;
             if (formKeyState.validate()) {
               formKeyState.save();
+              MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+                  .patchUserTeamName(textFormFieldValue, currentRole);
             }
           },
           child: const Text('수정하기'),
