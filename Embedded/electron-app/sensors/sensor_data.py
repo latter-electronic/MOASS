@@ -1,14 +1,14 @@
 # DamaskRose
 
-#  - NFC ±â±â ·Î±×ÀÎ ±â´É
-#    : NFC ÅÂ±ë ÈÄ Token Àü´Þ
+#  - NFC ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+#    : NFC ï¿½Â±ï¿½ ï¿½ï¿½ Token ï¿½ï¿½ï¿½ï¿½
 
-#  - ÀÎÃ¼ °¨Áö ¼¾¼­ ±â´É
-#    1. ·Î±×ÀÎ »óÅÂ
-#        1-1. 5ºÐ ÀÌ»ó ÀÚ¸® ºñ¿ò
-#        1-2. 2½Ã°£ ÀÌ»ó ÀÚ¸®¿¡ ¾É¾Æ ÀÖ´Â °æ¿ì
-#    2. ·Î±×¾Æ¿ô »óÅÂ
-#        2-1. »ç¶÷ ÀÎ½Ä ÈÄ AOD È­¸é Ãâ·Â
+#  - ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+#    1. ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+#        1-1. 5ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½
+#        1-2. 2ï¿½Ã°ï¿½ ï¿½Ì»ï¿½ ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½É¾ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½
+#    2. ï¿½Î±×¾Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½
+#        2-1. ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ ï¿½ï¿½ AOD È­ï¿½ï¿½ ï¿½ï¿½ï¿½
 
 import os
 import board
@@ -24,27 +24,27 @@ from adafruit_pn532.i2c import PN532_I2C
 from gpiozero import MotionSensor
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-load_dotenv() # .env ÆÄÀÏ ·Îµå
+load_dotenv() # .env ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
 
 server_url = os.getenv('SERVER_URL')
-i2c = busio.I2C(board.SCL, board.SDA) # I2C ¿¬°á ¼³Á¤
-pn532 = PN532_I2C(i2c, debug=False) # PN532 ¸ðµâ ÃÊ±âÈ­
-pn532.SAM_configuration() # SAM ±¸¼º
+i2c = busio.I2C(board.SCL, board.SDA) # I2C ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+pn532 = PN532_I2C(i2c, debug=False) # PN532 ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
+pn532.SAM_configuration() # SAM ï¿½ï¿½ï¿½ï¿½
 
-pir = MotionSensor(17)  # GPIO 17¹ø ÇÉ¿¡ ¿¬°áµÈ PIR ¼¾¼­ HC-SR501
+pir = MotionSensor(17)  # GPIO 17ï¿½ï¿½ ï¿½É¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ PIR ï¿½ï¿½ï¿½ï¿½ HC-SR501
 motion_detected_time = time.time()
 
 logged_in = False
-print("Waiting for NFC card...", file=sys.stderr)
+# print("Waiting for NFC card...", file=sys.stderr)
 
-# ¼³Á¤µÈ ½Ã°£ Á¤ÀÇ
-NO_MOTION_TIMEOUT = 300  # 5ºÐ
-LONG_SIT_TIMEOUT = 7200  # 2½Ã°£
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
+NO_MOTION_TIMEOUT = 300  # 5ï¿½ï¿½
+LONG_SIT_TIMEOUT = 7200  # 2ï¿½Ã°ï¿½
 last_motion_time = time.time()
 
 # -----------------------------------------------------------------
 
-# ±â±â ½Ã¸®¾ó ³Ñ¹ö 
+# ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ 
 def get_serial_number():
     with open('/proc/cpuinfo', 'r') as f:
         for line in f:
@@ -52,47 +52,47 @@ def get_serial_number():
                 return line.split(':')[1].strip()
     return None
 
-# NFC uid ÀÐ±â
+# NFC uid ï¿½Ð±ï¿½
 def read_uid():
     uid = pn532.read_passive_target(timeout=0.5)
     if uid is not None:
         return ''.join(["{0:x}".format(i).zfill(2) for i in uid])
     return None
 
-# ·Î±×ÀÎ Á¤º¸ ¼Û½Å(electron)
+# ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Û½ï¿½(electron)
 def handle_login_response(device_id, card_serial_id):
     if device_id and card_serial_id:
-        print("NFC ·Î±×ÀÎ ¼º°ø")
+        # print("NFC ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
         nfc_data = json.dumps({"type": "NFC_DATA", "data": {'deviceId': device_id, 'cardSerialId': card_serial_id}}, ensure_ascii=False)
         sys.stdout.write(nfc_data + '\n')
         sys.stdout.flush()
         return True
-    print("Login failed")
+    # print("Login failed")
     return False
 
-# ÀÎÃ¼ °¨Áö ¼¾¼­ ·ÎÁ÷
+# ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 def handle_motion_detection():
     global motion_detected_time, last_motion_time
     if pir.motion_detected:
         motion_detected_time = last_motion_time = time.time()
-        print("Motion detected.")
+        # print("Motion detected.")
 
     current_time = time.time()
     if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
-        print("ÀÚ¸® ºñ¿ò »óÅÂ")
+        # print("ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
         sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AWAY"}}))
         sys.stdout.flush()
         motion_detected_time = current_time
 
     if current_time - last_motion_time > LONG_SIT_TIMEOUT:
-        print("¿À·¡ ¾É¾Æ ÀÖÀ½ »óÅÂ")
+        # print("ï¿½ï¿½ï¿½ï¿½ ï¿½É¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")
         sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "LONG_SIT"}}))
         sys.stdout.flush()
         last_motion_time = current_time
 
 # -----------------------------------------------------------------
 
-# ¸ÞÀÎ ·ÎÁ÷
+# ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 if __name__ == '__main__': 
     device_id = get_serial_number()
     
@@ -102,18 +102,18 @@ if __name__ == '__main__':
             data = json.loads(line)
             if data.get("action") == "login_success":
                 logged_in = True
-                print("Login status changed to True")
+                # print("Login status changed to True")
 
-            if not logged_in:   # ·Î±×¾Æ¿ô »óÅÂ
+            if not logged_in:   # ï¿½Î±×¾Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½
                 card_serial_id = read_uid()
                 if card_serial_id:
                     logged_in = handle_login_response(device_id, card_serial_id)
                 # elif pir.motion_detected:
-                #     print("AOD »óÅÂ")
+                #     print("AOD ï¿½ï¿½ï¿½ï¿½")
                 #     sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AOD"}}))
                 #     sys.stdout.flush()
             
-            else:   # ·Î±×ÀÎ »óÅÂ
+            else:   # ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 pass
                 # handle_motion_detection()
 
