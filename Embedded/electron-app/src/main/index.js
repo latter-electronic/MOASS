@@ -47,7 +47,9 @@ function createWindow() {
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
-    pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')], { encoding: 'utf8' });
+    const pythonPath = '/home/pi/myenv/bin/python';
+    const scriptPath = join(__dirname, '../../sensors/sensor_data.py');
+    const pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' });
 
     const readlineSensorData = readline.createInterface({
       input: pythonProcess.stdout,
