@@ -86,6 +86,7 @@ public class SecurityConfig {
                                 .pathMatchers("/stream/**").permitAll()
                                 .pathMatchers("/user/profileImg").permitAll()
                                 .pathMatchers("/upload/**").permitAll()
+                                .pathMatchers("/oauth2/jira/callback").permitAll()
                                 .pathMatchers("/**").authenticated()
                                 .anyExchange().permitAll()
                 )
