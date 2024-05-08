@@ -2,12 +2,11 @@ package com.moass.ws.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+import java.util.List;
+
 @AllArgsConstructor
-@NoArgsConstructor
 public class Point {
-    private Integer xCord;
-    private Integer yCord;
-    private String color;
+    private String peer;
+    private Integer timestamp;
+    private List<Integer> rgb;
 }

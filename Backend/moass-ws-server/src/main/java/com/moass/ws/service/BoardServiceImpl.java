@@ -57,4 +57,8 @@ public class BoardServiceImpl implements BoardService {
                 .users(boards.get(dto.getBoardId()))
                 .build());
     }
+
+    public void drawBoard(String message) {
+        template.convertAndSend("/topic/board/draw", message);
+    }
 }
