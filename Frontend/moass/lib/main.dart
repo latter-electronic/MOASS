@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/token_interceptor.dart';
 import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
+import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/account_api.dart';
 
 void main() async {
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/homeScreen': (context) => const HomeScreen(),
         '/loginScreen': (context) => const LoginScreen(),
+        '/settingScreen': (context) => const SettingScreen(),
         // 추가 라우트 필요할 경우 추가
       },
       home: FutureBuilder<bool>(
