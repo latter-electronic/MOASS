@@ -40,6 +40,32 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
+  const pythonTest = spawn('python', [join(__dirname, '../../sensors/ipc_test.py')], { encoding: 'utf8' });
+  const rl = readline.createInterface({
+    input: pythonTest.stdout,
+  });
+
+  rl.on('line', (line) => {
+    console.log(`Received line: ${line.toString()}`);
+    if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
+      mainWindow.webContents.send('fromPython', line.toString('utf8'));
+    }
+  });
+
+  // pythonTest.stdout.on('data', (data) => {
+  //   console.log(`python data: ${data}`);
+  //   mainWindow.webContents.send('fromPython', data.toString());
+  // });
+
+  pythonTest.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`);
+  });
+
+  pythonTest.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+
+
   setupPythonProcess(mainWindow)
 }
 
