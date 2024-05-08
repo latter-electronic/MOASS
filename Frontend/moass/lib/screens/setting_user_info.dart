@@ -19,36 +19,46 @@ class SettingUserInfoScreen extends StatefulWidget {
   final String teamName;
   final dynamic positionName;
 
-  const SettingUserInfoScreen(
-      {super.key, required this.teamName, required this.positionName});
+  const SettingUserInfoScreen({
+    super.key,
+    required this.teamName,
+    required this.positionName,
+  });
 
   @override
-  State<SettingUserInfoScreen> createState() => _SettingUserInfoScreenState();
+  _SettingUserInfoScreenState createState() => _SettingUserInfoScreenState();
 }
 
 class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
-  // 회원 정보 내의 position index에 맞게 정해줄 것.
-  final List<bool> selectedRole = <bool>[false, false, false, false];
+  late List<bool> selectedRole = <bool>[false, false, false, false];
+
   late String textFormFieldValue;
-  late String fieldValue = "";
-  late String? currentRole = widget.positionName;
+  late String? currentRole;
+
+  final myController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // 초기 팀 이름 설정
+    myController.text = widget.teamName;
+
+    // 초기 역할 설정
+    if (widget.positionName != null) {
+      for (int i = 0; i < rolesString.length; i++) {
+        if (widget.positionName == rolesString[i]) {
+          setState(() {
+            selectedRole[i] = true;
+            currentRole = rolesString[i];
+          });
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // 팀 명 수정을 위한 변수들
-    fieldValue = widget.teamName;
-
     final formKey = GlobalKey<FormState>();
-
-    setState(() {
-      if (currentRole != null) {
-        for (int i = 0; i < selectedRole.length; i++) {
-          if (selectedRole[i] == currentRole) {
-            selectedRole[i] = true;
-          }
-        }
-      }
-    });
 
     return Scaffold(
       appBar: const TopBar(
@@ -80,21 +90,16 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
                       }
                       return null;
                     },
-                    // initialValue: fieldValue,
-                    controller: TextEditingController(text: fieldValue),
+                    controller: myController,
                     obscureText: false,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
-                    // onChanged: (value) {
-                    //   setState(() {
-                    //     fieldValue = value;
-                    //   });
-                    // },
-                    onSaved: (value) async {
-                      setState(() {
-                        textFormFieldValue = value!;
-                      });
+                    onChanged: (value) {
+                      textFormFieldValue = value;
+                    },
+                    onSaved: (value) {
+                      textFormFieldValue = value!;
                     },
                   ),
                 ),
@@ -136,12 +141,29 @@ class _SettingUserInfoScreenState extends State<SettingUserInfoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () async {
+          onPressed: () {
             final formKeyState = formKey.currentState!;
             if (formKeyState.validate()) {
               formKeyState.save();
               MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
                   .patchUserTeamName(textFormFieldValue, currentRole);
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('수정 완료'),
+                    content: const Text('회원 정보가 성공적으로 수정되었습니다.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('확인'),
+                      ),
+                    ],
+                  );
+                },
+              );
             }
           },
           child: const Text('수정하기'),

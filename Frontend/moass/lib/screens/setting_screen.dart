@@ -291,9 +291,6 @@ class SettingScreen extends StatelessWidget {
                                 ),
                             child: const CategoryText(text: '로그아웃')),
                       )),
-                  Center(
-                    child: Text(userProfile.teamName),
-                  )
                 ],
               );
             } else {

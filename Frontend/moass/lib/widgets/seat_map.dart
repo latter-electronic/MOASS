@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:moass/model/seat.dart';
 
-class SeatMapWidget extends StatelessWidget {
+class SeatMapWidget extends StatefulWidget {
   final List<Seat> seatList;
   final Function() openButtonWidget;
+
+  const SeatMapWidget(
+      {super.key, required this.seatList, required this.openButtonWidget});
+
+  @override
+  State<SeatMapWidget> createState() => _SeatMapWidgetState();
+}
+
+class _SeatMapWidgetState extends State<SeatMapWidget> {
   final TransformationController _transformationController =
       TransformationController();
 
-  SeatMapWidget(
-      {super.key, required this.seatList, required this.openButtonWidget}) {
-    _transformationController.value = Matrix4.diagonal3Values(0.5, 0.5, 0.4);
-  }
-  late bool isOpenedButtonWidget = false;
   @override
   Widget build(BuildContext context) {
+    _transformationController.value = Matrix4.diagonal3Values(0.5, 0.5, 0.4);
     return Stack(children: [
       InteractiveViewer(
         transformationController: _transformationController,
@@ -23,10 +28,10 @@ class SeatMapWidget extends StatelessWidget {
         maxScale: 3.0,
         child: Stack(children: [
           CustomPaint(
-            painter: SeatMap(seatList),
+            painter: SeatMap(widget.seatList),
             size: const Size(942, 1495),
           ),
-          for (final seat in seatList)
+          for (final seat in widget.seatList)
             Positioned(
               left: seat.coordX,
               top: seat.coordY,
@@ -34,7 +39,9 @@ class SeatMapWidget extends StatelessWidget {
                 onTap: () {
                   // 각 사각형을 터치했을 때의 동작 처리
                   // print('사각형 클릭됨: ${seat.coordX}, ${seat.coordY}');
-                  openButtonWidget();
+                  setState(() {
+                    widget.openButtonWidget();
+                  });
                 },
                 child: Container(
                   width: 85,
@@ -45,24 +52,6 @@ class SeatMapWidget extends StatelessWidget {
             ),
         ]),
       ),
-      isOpenedButtonWidget
-          ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: FloatingActionButton.extended(
-                  backgroundColor: const Color(0xFF3DB887),
-                  foregroundColor: Colors.white,
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications_on),
-                  label: const Text(
-                    '호출',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            )
-          : const SizedBox()
     ]);
   }
 }

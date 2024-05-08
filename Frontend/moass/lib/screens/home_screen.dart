@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static final List<Widget> _widgetOptions = [
     const WorkScreen(),
-    ReservationScreen(),
+    const ReservationScreen(),
     // 어드민 페이지로 일시적으로 돌림
     // ReservationAdminScreen(),
     const MainHomeScreen(),
