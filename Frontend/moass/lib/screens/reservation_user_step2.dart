@@ -33,6 +33,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
           ReservationBox(
               reservation: widget.reservation,
               selectedDate: widget.selectedDate),
+          // 유저 검색 이어서 추가 (터치했을까 유저의 아이디, 이름, 반 받아오기 아이디는 리스트에 넣어야함.)
           const UserSearchWidget(),
         ],
       ),
