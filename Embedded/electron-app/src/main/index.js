@@ -11,9 +11,9 @@ let pythonProcess = null;
 function createWindow() {
   const mainWindow = new BrowserWindow({
     title: 'MOASS',
-    // width: 1600,
-    // height: 600,
-    fullscreen: true, // 전체 화면 모드
+    width: 1600,
+    height: 600,
+    // fullscreen: true, // 전체 화면 모드
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
