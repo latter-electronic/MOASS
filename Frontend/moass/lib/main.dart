@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         '/settingScreen': (context) => const SettingScreen(),
         // 추가 라우트 필요할 경우 추가
       },
-      // 메인화면 중첩을 피하기 위한 주석처리
+      // 메인화면 중첩을 피하기 위한 주석처리 만약 어플 켰을때 무한로딩 돌면 앱 삭제 후 여기 주석 풀기
       // home: FutureBuilder<bool>(
       //     future: _getLoginStatus(),
       //     builder: (context, snapshot) {
