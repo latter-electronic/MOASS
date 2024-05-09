@@ -10,9 +10,9 @@ import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -50,7 +50,7 @@ public class DeviceController {
     @PatchMapping("/coordinate/{deviceId}")
     public Mono<ResponseEntity<ApiResponse>> updateDeviceCoordinates(
             @PathVariable String deviceId,
-            @RequestBody Coordinate coordinate) {
+            @Valid @RequestBody Coordinate coordinate) {
         log.info("updateDeviceCoordinates : {}", coordinate);
     return deviceService.updateDeviceCoordinates(deviceId,coordinate)
             .flatMap(device -> ApiResponse.ok("좌표 업데이트 성공", device))

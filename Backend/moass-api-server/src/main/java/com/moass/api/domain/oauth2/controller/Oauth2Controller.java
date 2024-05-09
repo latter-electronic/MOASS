@@ -42,9 +42,15 @@ public class Oauth2Controller {
 
     @GetMapping("/jira/proxy")
     public Mono<ResponseEntity<ApiResponse>> proxyToJira(@Login UserInfo userInfo, @RequestBody JiraProxyRequestDto jiraProxyRequestDto) {
-        return oauth2Service.proxyRequestToJira(userInfo, jiraProxyRequestDto)
+        return oauth2Service.proxyRequestToJira(userInfo.getUserId(), jiraProxyRequestDto)
                 .flatMap(response -> ApiResponse.ok("Jira 프록시 요청 성공", response))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("Jira 프록시 요청 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+    @GetMapping("/jira/isconnected")
+    public Mono<ResponseEntity<ApiResponse>> isConnected(@Login UserInfo userInfo) {
+        return oauth2Service.isConnected(userInfo.getUserId())
+                .flatMap(isConnected -> ApiResponse.ok("Jira 연결 상태 조회 성공", isConnected))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("Jira 연결 상태 조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
 }

@@ -27,6 +27,9 @@ public class JiraToken  extends Auditable {
     @Column("cloud_id")
     private String cloudId;
 
+    @Column("jira_email")
+    private String jiraEmail;
+
     @Column("access_token")
     private String accessToken;
 

@@ -1,7 +1,9 @@
 package com.moass.api.domain;
 
+import com.moass.api.domain.device.dto.Coordinate;
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
 import com.moass.api.domain.device.dto.ReqDeviceLogoutDto;
+import com.moass.api.domain.reservation.dto.ReservationCreateDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
 import org.junit.jupiter.api.*;
@@ -23,7 +25,6 @@ import java.util.Map;
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("기기 컨트롤러 통합 테스트")
 public class DeviceTest {
@@ -37,6 +38,7 @@ public class DeviceTest {
     private ReqDeviceLogoutDto reqDeviceLogoutDto;
     private String accessToken;
 
+    private String accessToken2;
     private String refreshToken;
 
 
@@ -75,6 +77,7 @@ public class DeviceTest {
 
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("[POST] 기기로그인 /device/login")
     class 기기로그인{
 
@@ -116,13 +119,28 @@ public class DeviceTest {
                     .expectBody()
                     .jsonPath("$.status").isEqualTo("404");
         }
+
+        @Test
+        @Order(4)
+        @DisplayName("[400] 이미 로그인함")
+        void 기기중복로그인(){
+            webTestClient.post().uri("/device/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new ReqDeviceLoginDto("DDDD4", "AAAA4"))
+                    .exchange()
+                    .expectStatus().isEqualTo(400)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo(400);
+        }
     }
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("[POST] 로그아웃 /device/logout")
     class 로그아웃{
 
-            @BeforeEach
+            @Test
+            @Order(1)
             void setUp(){
                 login(new UserLoginDto("test04@com", "ssafyout4"));
 
@@ -137,7 +155,7 @@ public class DeviceTest {
             }
 
             @Test
-            @Order(1)
+            @Order(2)
             @DisplayName("[200] 정상로그아웃")
             void 로그아웃성공(){
                 webTestClient.post().uri("/device/logout")
@@ -149,6 +167,64 @@ public class DeviceTest {
                         .jsonPath("$.status").isEqualTo(200);
             }
 
+        @Test
+        @Order(3)
+        @DisplayName("[400] 이미 로그아웃")
+        void 로그아웃실패(){
+            webTestClient.post().uri("/device/logout")
+                    .header("Authorization", accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .exchange()
+                    .expectStatus().isEqualTo(400)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo(400);
+        }
+
     }
 
-}
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @DisplayName("[PATCH] 기기로그인 /device/coordinate")
+    class 기기좌표변경{
+
+        @Test
+        @Order(1)
+        @DisplayName("[200] 정상좌표변경")
+        void 좌표변경성공(){
+            webTestClient.patch().uri("/device/coordinate/DDDD1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new Coordinate(1,2))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[200] 정상좌표변경(double)")
+        void 좌표변경성공1(){
+            webTestClient.patch().uri("/device/coordinate/DDDD1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(Map.of("xcoord", 3.5, "ycoord", 2))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("[400] 잘못된 좌표")
+        void 좌표변경실패1(){
+            webTestClient.patch().uri("/device/coordinate/DDDD1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(Map.of("xcoord", "132ㄱ", "ycoord", 2))
+                    .exchange()
+                    .expectStatus().isEqualTo(400)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo(400);
+        }
+
+    }
+    }
