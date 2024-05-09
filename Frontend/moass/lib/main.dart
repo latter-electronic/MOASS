@@ -10,6 +10,14 @@ import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/account_api.dart';
 
+// 백그라운드 메시지 설정
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -25,6 +33,9 @@ void main() async {
   // 스토리지에 담기
   await storage.write(key: 'fcmToken', value: fcmToken);
   print('FCM Token: $fcmToken');
+
+  // 백그라운드 메시지 관련
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   final accountApi = AccountApi(dio: dio, storage: storage);
   final bool isLoggedIn = await _getLoginStatus(storage);
