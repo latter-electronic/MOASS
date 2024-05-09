@@ -19,11 +19,14 @@ class DeviceInfo {
 
   factory DeviceInfo.fromJson(Map<String, dynamic> json) {
     return DeviceInfo(
-        deviceId: json['deviceId'],
-        classCode: json['classCode'],
-        userId: json['userId'],
-        xcoord: json['xcoord'],
-        ycoord: json['ycoord'],
-        userSearchDetail: json['userSearchDetail']);
+      deviceId: json['deviceId'],
+      classCode: json['classCode'],
+      userId: json['userId'],
+      xcoord: json['xcoord'],
+      ycoord: json['ycoord'],
+      userSearchDetail: json['userSearchDetail'] != null
+          ? UserInfo.fromJson(json['userSearchDetail'])
+          : null,
+    );
   }
 }
