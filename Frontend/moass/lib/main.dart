@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/firebase_options.dart';
@@ -12,10 +13,18 @@ import 'package:moass/services/account_api.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 파이어베이스 설정
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   const storage = FlutterSecureStorage();
   final dio = Dio();
   dio.interceptors.add(TokenInterceptor(dio, storage));
+
+  // FCM 토큰 설정
+  String? fcmToken = await FirebaseMessaging.instance.getToken();
+  // 스토리지에 담기
+  await storage.write(key: 'fcmToken', value: fcmToken);
+  print('FCM Token: $fcmToken');
 
   final accountApi = AccountApi(dio: dio, storage: storage);
   final bool isLoggedIn = await _getLoginStatus(storage);
