@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/device_info.dart';
 import 'package:moass/model/seat.dart';
+import 'package:moass/model/user_info.dart';
 import 'package:moass/services/device_api.dart';
 
 class SeatMapWidget extends StatefulWidget {
@@ -40,10 +41,10 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
     setState(() => isLoading = true);
     // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     var result = await api.fetchClassDevices(widget.classCode); // API 호출
-    print('디바이스 정보 : $result');
     setState(() {
       // null 체크
       deviceInfos = result;
+      print('디바이스 정보 : $deviceInfos');
 
       isLoading = false;
     });
@@ -71,7 +72,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
         maxScale: 3.0,
         child: Stack(children: [
           CustomPaint(
-            painter: SeatMap(seatList),
+            painter: SeatMap(seatList, deviceInfos),
             size: const Size(942, 1495),
           ),
           for (final seat in seatList)
@@ -101,7 +102,8 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
 
 class SeatMap extends CustomPainter {
   final List<Seat> seatList;
-  SeatMap(this.seatList);
+  final List<DeviceInfo> deviceInfosList;
+  SeatMap(this.seatList, this.deviceInfosList);
 
   static const gridWidth = 50.0;
   static const gridHeight = 50.0;
@@ -203,6 +205,15 @@ class SeatMap extends CustomPainter {
     );
     canvas.drawRRect(door, fixedPaint);
     _drawText(canvas, 471, 1485, '출입구', userNameTextStyle);
+
+    for (final deviceInfo in deviceInfosList) {
+      if (deviceInfo.userSearchDetail != null) {
+        UserInfo? userInfo = deviceInfo.userSearchDetail;
+        _drawText(canvas, 105, 125, userInfo!.teamName, teamNameTextStyle);
+      } else {
+        _drawText(canvas, 105, 125, '유저 없음', teamNameTextStyle);
+      }
+    }
 
     // seatList에 따라 그리기
     for (final seat in seatList) {

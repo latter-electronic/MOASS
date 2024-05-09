@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
-import 'package:moass/model/seat.dart';
 import 'package:moass/model/user_info.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
