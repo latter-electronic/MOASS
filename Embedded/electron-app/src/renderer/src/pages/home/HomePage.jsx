@@ -34,17 +34,26 @@ export default function HomePage() {
     };
 
     useEffect(() => {
+        console.log('홈에서 확인중')
         checkStoredAuth()
-        if (!isAuthenticated) {
-          navigate('/tagnfc')
-        }
-      }, [checkStoredAuth, isAuthenticated, navigate])
+      }, [])
+    
+    //   useEffect(() => {
+    //     console.log('isAuthenticated:', isAuthenticated)
+    //     if (!isAuthenticated) {
+    //       navigate('/tagnfc')
+    //     }
+    //   }, [isAuthenticated, navigate])
     
       useEffect(() => {
         const { accessToken, refreshToken } = AuthStore.getState()
         console.log('AccessToken:', accessToken)
         console.log('RefreshToken:', refreshToken)
+        if (!accessToken) {
+            navigate('/tagnfc')
+          }
       }, [])
+    
 
     return (
         <div className=" mx-auto p-4 h-screen">

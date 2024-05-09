@@ -29,7 +29,7 @@ export default function TagNFC() {
 
     navigate('/tagsuccess')
     setTimeout(() => {
-      navigate('/home')
+      navigate('/')
       console.log('navigate 실행 완료')
     }, 2000)
     ipcLoginHandle()
