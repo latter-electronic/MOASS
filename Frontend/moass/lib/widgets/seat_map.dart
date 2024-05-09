@@ -172,9 +172,7 @@ class SeatMap extends CustomPainter {
       ..isAntiAlias = true;
 
     const teamNameTextStyle = TextStyle(
-      color: Colors.black,
-      fontSize: 14,
-    );
+        color: Colors.black, fontSize: 14, fontWeight: FontWeight.w800);
 
     const userNameTextStyle = TextStyle(
         color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800);
@@ -206,12 +204,35 @@ class SeatMap extends CustomPainter {
     canvas.drawRRect(door, fixedPaint);
     _drawText(canvas, 471, 1485, '출입구', userNameTextStyle);
 
+    // 좌석도 그리기 테스트 코드
+
     for (final deviceInfo in deviceInfosList) {
+      final seatPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = deviceInfo.userId != null
+            ? deviceInfo.userSearchDetail?.statusId == 1
+                ? const Color(0xFF3DB887)
+                : const Color(0xFFFFBC1F)
+            : Colors.grey
+        ..isAntiAlias = true;
+
+      RRect rect = RRect.fromRectAndRadius(
+          const Rect.fromLTWH(62.5, 202.5, 85, 85), const Radius.circular(20));
+
+      var teamNameRect = RRect.fromRectAndRadius(
+          Rect.fromCenter(
+              center: const Offset(62.5 + 42.5, 202.5 + 24),
+              width: 60,
+              height: 22),
+          const Radius.circular(20));
+      canvas.drawRRect(rect, seatPaint);
       if (deviceInfo.userSearchDetail != null) {
         UserInfo? userInfo = deviceInfo.userSearchDetail;
-        _drawText(canvas, 105, 125, userInfo!.teamName, teamNameTextStyle);
+        canvas.drawRRect(teamNameRect, teamNamePaint);
+        _drawText(canvas, 105, 225, userInfo!.teamName, teamNameTextStyle);
+        _drawText(canvas, 105, 248, userInfo.userName, userNameTextStyle);
       } else {
-        _drawText(canvas, 105, 125, '유저 없음', teamNameTextStyle);
+        _drawText(canvas, 105, 248, '유저 없음', teamNameTextStyle);
       }
     }
 
