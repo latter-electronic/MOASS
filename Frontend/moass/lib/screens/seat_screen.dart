@@ -47,9 +47,17 @@ class _SeatScreenState extends State<SeatScreen> {
   // 교육생 검색 관련 변수
   bool isOpenedButtonWidget = false;
 
-  void openButtonWidget() {
+  void openButtonWidget(bool value) {
     setState(() {
-      isOpenedButtonWidget = !isOpenedButtonWidget;
+      isOpenedButtonWidget = value;
+    });
+  }
+
+  String callUserId = "";
+
+  void setUserId(String value) {
+    setState(() {
+      callUserId = value;
     });
   }
 
@@ -105,13 +113,18 @@ class _SeatScreenState extends State<SeatScreen> {
                 child: myProfile != null
                     ? SeatMapWidget(
                         openButtonWidget: openButtonWidget,
+                        setUserId: setUserId,
                         classCode: myProfile!.classCode,
+                        callUserId: callUserId,
                       )
                     : const Center(child: CircularProgressIndicator()),
               ),
 
               const CategoryText(text: '교육생 조회'),
-              UserSearchForCallWidget(openButtonWidget: openButtonWidget),
+              UserSearchForCallWidget(
+                openButtonWidget: openButtonWidget,
+                setUserId: setUserId,
+              ),
               isOpenedButtonWidget
                   ? Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -120,11 +133,16 @@ class _SeatScreenState extends State<SeatScreen> {
                         child: FloatingActionButton.extended(
                           backgroundColor: const Color(0xFF3DB887),
                           foregroundColor: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            print('부를 유저 아이디 : $callUserId');
+                            setState(() {
+                              isOpenedButtonWidget = !isOpenedButtonWidget;
+                            });
+                          },
                           icon: const Icon(Icons.notifications_on),
-                          label: const Text(
-                            '호출',
-                            style: TextStyle(
+                          label: Text(
+                            '$callUserId 호출',
+                            style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w600),
                           ),
                         ),

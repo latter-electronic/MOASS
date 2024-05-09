@@ -7,8 +7,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserSearchForCallWidget extends StatefulWidget {
-  final Function() openButtonWidget;
-  const UserSearchForCallWidget({super.key, required this.openButtonWidget});
+  final Function(bool) openButtonWidget;
+  final Function(String) setUserId;
+  const UserSearchForCallWidget(
+      {super.key, required this.openButtonWidget, required this.setUserId});
 
   @override
   _UserSearchWidgetState createState() => _UserSearchWidgetState();
@@ -17,7 +19,7 @@ class UserSearchForCallWidget extends StatefulWidget {
 class _UserSearchWidgetState extends State<UserSearchForCallWidget> {
   String? inputText;
   late Future<List<UserInfo>> searchedUserList;
-  bool isOpenedButtonWidget = false;
+  bool isUserSelected = false;
 
   void searchUser(String? value) {
     searchedUserList =
@@ -66,7 +68,10 @@ class _UserSearchWidgetState extends State<UserSearchForCallWidget> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            widget.openButtonWidget();
+                            isUserSelected = !isUserSelected;
+                            widget.openButtonWidget(isUserSelected);
+                            String selectedUser = userInfo.userId;
+                            widget.setUserId(selectedUser);
                           });
                         },
                         child: UserBox(

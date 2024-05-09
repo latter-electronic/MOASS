@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/device_info.dart';
@@ -44,6 +46,35 @@ class DeviceApi {
     } on DioException catch (e) {
       print('Error fetching device info: ${e.message}');
       return [];
+    }
+  }
+
+  // 유저 호출
+  callUser(String userId) async {
+    try {
+      Map data = {'userId': userId};
+      var body = json.encode(data);
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.post('$baseUrl/api/device/call',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('유저 호출 성공!');
+        return response;
+      } else {
+        print('유저 호출 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('호출 에러s: ${e.message}');
+      return null;
     }
   }
 }

@@ -3,8 +3,8 @@ import 'package:moass/model/user_info.dart';
 class DeviceInfo {
   final String deviceId;
   final String? userId;
-  final double? xcoord;
-  final double? ycoord;
+  final int? xcoord;
+  final int? ycoord;
   final String classCode;
   final UserInfo? userSearchDetail;
 
