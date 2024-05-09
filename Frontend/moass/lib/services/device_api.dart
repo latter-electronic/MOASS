@@ -73,7 +73,7 @@ class DeviceApi {
         return [];
       }
     } on DioException catch (e) {
-      print('호출 에러s: ${e.message}');
+      print('호출 에러: ${e.message}');
       return null;
     }
   }

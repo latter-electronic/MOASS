@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/user_info.dart';
+import 'package:moass/services/device_api.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
@@ -134,7 +135,11 @@ class _SeatScreenState extends State<SeatScreen> {
                           backgroundColor: const Color(0xFF3DB887),
                           foregroundColor: Colors.white,
                           onPressed: () {
-                            print('부를 유저 아이디 : $callUserId');
+                            // print('부를 유저 아이디 : $callUserId');
+                            DeviceApi(
+                                    dio: Dio(),
+                                    storage: const FlutterSecureStorage())
+                                .callUser(callUserId);
                             setState(() {
                               isOpenedButtonWidget = !isOpenedButtonWidget;
                             });
