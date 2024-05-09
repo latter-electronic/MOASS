@@ -91,14 +91,13 @@ class ReservationApi {
   }
 
   // 예약하기
-  Future<void> reservationRequest(String request) async {
+  Future<void> reservationRequest(Map<String, dynamic> requestData) async {
     String? accessToken = await storage.read(key: 'accessToken');
     if (accessToken == null) {
       throw Exception('No access token available');
     }
     try {
-      Map data = {'request': request};
-      var body = json.encode(data);
+      var body = json.encode(requestData); // Map을 직접 인코드
       final response = await dio.post('$baseUrl/api/reservationinfo',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
           data: body);

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,6 +10,7 @@ import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/reservation_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
+import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/user_search_widget.dart';
 
@@ -15,8 +18,11 @@ class ReservationUserStep2 extends StatefulWidget {
   final ReservationDayModel reservation;
   final DateTime selectedDate;
 
-  const ReservationUserStep2(
-      {super.key, required this.reservation, required this.selectedDate});
+  const ReservationUserStep2({
+    super.key,
+    required this.reservation,
+    required this.selectedDate,
+  });
 
   @override
   _ReservationUserStep2State createState() => _ReservationUserStep2State();
@@ -28,12 +34,15 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
   // 버튼 활성화 상태
   bool isButtonActive = false;
   // 예약 이름(기본값은 팀 코드로)
-  String reservationName = '';
+  late TextEditingController _reservationNameController;
+  // 예약하기 API
+  late ReservationApi api;
   // 선택 교육생들 리스트
   List<Map<String, String>> selectMembers = [];
   // 선택한 시간을 받아올 리스트
   List<int> selectedTimes = [];
 
+  // 개인 정보를 불러오는 요청 함수
   Future<void> fetchUserProfile() async {
     final profile =
         await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
@@ -41,6 +50,8 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     if (profile != null) {
       setState(() {
         userProfile = profile;
+        _reservationNameController.text =
+            profile.teamCode ?? ''; // 사용자 정보가 로드된 후에 텍스트 업데이트
         selectMembers.add({
           'userName': profile.userName,
           'userId': profile.userId,
@@ -61,7 +72,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
         for (var user in teamInfo.users) {
           // 중복되는 userId가 있는지 확인
           var isUserExist =
-              selectMembers.any((element) => element['userId'] == user.userId);
+              selectMembers.any((profile) => profile["userId"] == user.userId);
 
           // 중복되는 userId가 없으면 리스트에 추가
           if (!isUserExist) {
@@ -76,21 +87,57 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     }
   }
 
+  // 예약하기 API 호출
+  Future<void> sendReservationRequest() async {
+    try {
+      Map<String, dynamic> requestData = {
+        "reservationId": widget.reservation.reservationId,
+        "infoName": _reservationNameController.text,
+        "infoTimes": selectedTimes,
+        "infoDate": DateFormat('yyyy-MM-dd').format(widget.selectedDate),
+        "infoUsers": selectMembers
+            .map(
+              (user) => user['userId'],
+            )
+            .toList()
+      };
+      print(requestData);
+      await api.reservationRequest(requestData);
+      print('예약 성공!');
+      completeReservation(context);
+      // 성공 다이얼로그 표시
+    } catch (e) {
+      print('예약 실패: $e');
+      // 실패 다이얼로그 표시
+      showErrorDialog();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    fetchUserProfile();
-    fetchTeamMembers();
+    _reservationNameController = TextEditingController(); // 초기에 빈 컨트롤러 생성
+    api = ReservationApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // 사용할 API파일 가져오기
+    fetchUserProfile().then((value) => fetchTeamMembers());
   }
 
-  // 예약 팝업
+// 회의 이름 입력 폼
+  @override
+  void dispose() {
+    // 위젯이 dispose 될 때 컨트롤러도 dispose 해줍니다.
+    _reservationNameController.dispose();
+    super.dispose();
+  }
+
+// 예약 완료 팝업
   void completeReservation(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('예약 완료'),
-          content: const Text('예약이 완료되었습니다.'),
+          content: const Text('예약이 성공적으로 등록되었습니다.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -100,7 +147,26 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
                   (Route<dynamic> route) => false,
                 );
               },
-              child: const Text('완료'),
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 예약 실패 팝업
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('예약 실패'),
+          content: const Text('예약 등록에 실패하였습니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('닫기'),
             ),
           ],
         );
@@ -125,88 +191,130 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     });
   }
 
+  // 검색해서 데이터를 담아올 함수
+  void addUserToSelectedList(Map<String, String> userData) {
+    // 같은 userId를 가진 사용자가 리스트에 이미 있는지 검사
+    bool userExists =
+        selectMembers.any((member) => member['userId'] == userData['userId']);
+
+    if (!userExists) {
+      setState(() {
+        selectMembers.add(userData);
+      });
+    } else {
+      // 사용자가 이미 목록에 존재하는 경우
+      print("User with userId ${userData['userId']} already exists.");
+    }
+  }
+
 // 예약 위젯 시작점
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('시설 / 팀미팅 예약')),
-      body: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CategoryText(
-                  text: DateFormat('yyyy.MM.dd').format(widget.selectedDate)),
-            ],
-          ),
-          ReservationBox(
-            reservation: widget.reservation,
-            selectedDate: widget.selectedDate,
-            selectedTimes: selectedTimes,
-            onTimeSelected: onTimeSelected,
-          ),
-          const Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    '참가자 설정',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CategoryText(
+                    text: DateFormat('yyyy.MM.dd').format(widget.selectedDate)),
+              ],
+            ),
+            ReservationBox(
+              reservation: widget.reservation,
+              selectedDate: widget.selectedDate,
+              selectedTimes: selectedTimes,
+              onTimeSelected: onTimeSelected,
+            ),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CategoryText(text: '회의 이름'),
+              ],
+            ),
+            // 인풋 박스 아래에 넣기
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _reservationNameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: '회의 이름',
+                ),
+              ),
+            ),
+
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: CategoryText(
+                    text: '참가자 설정',
                   ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey[200], // 배경색 설정
-                borderRadius: BorderRadius.circular(10), // 경계면 둥글게 처리
-              ),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 70, // 최대 높이 설정
-                  maxWidth: double.infinity, // 최대 너비 설정
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200], // 배경색 설정
+                  borderRadius: BorderRadius.circular(10), // 경계면 둥글게 처리
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal, // 가로 스크롤 설정
-                  child: Wrap(
-                    spacing: 4.0, // 간격
-                    runSpacing: 4.0, // 줄 간격
-                    children: selectMembers
-                        .map((member) => Chip(
-                              labelPadding: const EdgeInsets.symmetric(
-                                  horizontal: 0.0, vertical: 0.0),
-                              label: Text(
-                                  '${member['teamCode']} ${member['userName']}',
-                                  style: const TextStyle(fontSize: 12)),
-                              deleteIcon: const Icon(Icons.close, size: 14),
-                              onDeleted: () {
-                                setState(() {
-                                  selectMembers.removeWhere((element) =>
-                                      element['userId'] == member['userId']);
-                                });
-                              },
-                              backgroundColor: Colors.green[400],
-                              labelStyle: const TextStyle(color: Colors.white),
-                              deleteIconColor: Colors.white,
-                            ))
-                        .toList(),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 70, // 최대 높이 설정
+                    maxWidth: double.infinity, // 최대 너비 설정
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal, // 가로 스크롤 설정
+                    child: Wrap(
+                      spacing: 4.0, // 간격
+                      runSpacing: 4.0, // 줄 간격
+                      children: selectMembers.map((member) {
+                        bool isMyself = member['userId'] ==
+                            userProfile?.userId; // 현재 사용자와 같은지 검사
+                        return Chip(
+                          labelPadding: const EdgeInsets.symmetric(
+                              horizontal: 0.0, vertical: 0.0),
+                          label: Text(
+                              '${member['teamCode']} ${member['userName']}',
+                              style: const TextStyle(fontSize: 12)),
+                          deleteIcon: isMyself
+                              ? null
+                              : const Icon(Icons.close,
+                                  size: 14), // 조건에 따라 deleteIcon 설정
+                          onDeleted: isMyself
+                              ? null
+                              : () {
+                                  // 삭제 함수도 조건에 따라 설정
+                                  setState(() {
+                                    selectMembers.removeWhere((element) =>
+                                        element['userId'] == member['userId']);
+                                  });
+                                },
+                          backgroundColor: Colors.green[400],
+                          labelStyle: const TextStyle(color: Colors.white),
+                          deleteIconColor: Colors.white,
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          const UserSearchWidget(),
-        ],
+            UserSearchWidget(
+              onUserSelected: addUserToSelectedList,
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
-          onPressed: isButtonActive ? () => completeReservation(context) : null,
+          onPressed: isButtonActive ? () => sendReservationRequest() : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: isButtonActive ? Colors.blue : Colors.grey,
           ),
@@ -301,8 +409,6 @@ class _ReservationBoxState extends State<ReservationBox> {
                       widget.onTimeSelected(index);
                       setState(() {});
                     });
-                    // 시간 선택이 맞게 들어갔는지 확인
-                    print(selectedTimes);
                   },
                   child: Container(
                     margin: const EdgeInsets.all(2),
