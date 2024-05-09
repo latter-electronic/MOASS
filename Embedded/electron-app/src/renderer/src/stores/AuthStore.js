@@ -45,6 +45,8 @@ const AuthStore = create(set => ({
         deviceId,
         cardSerialId
       })
+    } else {
+      set({ isAuthenticated: false })
     }
   }
 }))
