@@ -50,7 +50,7 @@ export default function HomePage() {
         console.log('AccessToken:', accessToken)
         console.log('RefreshToken:', refreshToken)
         if (!accessToken) {
-            navigate('/tagnfc')
+            navigate('/login')
           }
       }, [])
     

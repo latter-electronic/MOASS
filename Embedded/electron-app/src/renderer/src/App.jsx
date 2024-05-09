@@ -33,7 +33,7 @@ export default function App() {
             </Route>
             <Route path="/nameplate" element={<Nameplate />} />
             <Route path="/callalert" element={<CallAlert />} />
-            <Route path="/tagnfc" element={<TagNFC />} />
+            <Route path="/login" element={<TagNFC />} />
             <Route path="/testlogin" element={<TestLoginPage />} />
             <Route path="/tagsuccess" element={<TagSuccess />} />
             <Route path="/ssetest" element={<SSETestPage />} />

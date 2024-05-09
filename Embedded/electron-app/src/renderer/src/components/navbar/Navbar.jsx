@@ -128,7 +128,7 @@ export default function Navbar() {
   }, []);
 
   const callLoginFunction = () => {
-    navigate(`/tagnfc`)
+    navigate(`/login`)
   }
 
   const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success')
@@ -142,7 +142,7 @@ export default function Navbar() {
       await deviceLogout(logoutData)
       logout()  // store 상태 변경
       ipcLogoutHandle() // python에 ipc로 전달
-      console.log('로그아웃 성공!')
+      alert('로그아웃 성공!')
 
       localStorage.removeItem('accessToken')
       localStorage.removeItem('refreshToken')
