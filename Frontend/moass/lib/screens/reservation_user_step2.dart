@@ -27,6 +27,8 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
   MyProfile? userProfile;
   // 버튼 활성화 상태
   bool isButtonActive = false;
+  // 예약 이름(기본값은 팀 코드로)
+  String reservationName = '';
   // 선택 교육생들 리스트
   List<Map<String, String>> selectMembers = [];
   // 선택한 시간을 받아올 리스트
