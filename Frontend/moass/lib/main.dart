@@ -41,24 +41,26 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: isLoggedIn ? '/homeScreen' : '/loginScreen',
       routes: {
+        // 메인에서 뒤로가기 버튼 생기는 원인 나중에 확인되면 지우기
         '/homeScreen': (context) => const HomeScreen(),
         '/loginScreen': (context) => const LoginScreen(),
         '/settingScreen': (context) => const SettingScreen(),
         // 추가 라우트 필요할 경우 추가
       },
-      home: FutureBuilder<bool>(
-          future: _getLoginStatus(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              print(ConnectionState.done);
-              print(snapshot.data);
-              return snapshot.data ?? false
-                  ? const HomeScreen()
-                  : const LoginScreen();
-            } else {
-              return const CircularProgressIndicator();
-            }
-          }),
+      // 메인화면 중첩을 피하기 위한 주석처리 만약 어플 켰을때 무한로딩 돌면 앱 삭제 후 여기 주석 풀기
+      // home: FutureBuilder<bool>(
+      //     future: _getLoginStatus(),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.connectionState == ConnectionState.done) {
+      //         print(ConnectionState.done);
+      //         print(snapshot.data);
+      //         return snapshot.data ?? false
+      //             ? const HomeScreen()
+      //             : const LoginScreen();
+      //       } else {
+      //         return const CircularProgressIndicator();
+      //       }
+      //     }),
     );
   }
 

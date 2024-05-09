@@ -7,7 +7,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserSearchWidget extends StatefulWidget {
-  const UserSearchWidget({super.key});
+  final Function(Map<String, String>) onUserSelected; // 사용자 선택 처리를 위한 콜백 함수
+
+  const UserSearchWidget({super.key, required this.onUserSelected});
 
   @override
   _UserSearchWidgetState createState() => _UserSearchWidgetState();
@@ -25,16 +27,23 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
     setState(() {});
   }
 
-  void openButtonWidget() {
+  // 수정된 openButtonWidget 메서드
+  void openButtonWidget(UserInfo userInfo) {
     setState(() {
       isOpenedButtonWidget = !isOpenedButtonWidget;
+    });
+    // 콜백 함수 호출, userInfo 객체를 맵으로 전달
+    widget.onUserSelected({
+      'userName': userInfo.userName,
+      'userId': userInfo.userId.toString(),
+      'teamCode': userInfo.teamCode
     });
   }
 
   @override
   void initState() {
     super.initState();
-    searchedUserList = Future.value([]); // 초기 빈 리스트
+    searchedUserList = Future.value([]); // 초기 빈 리스트 설정
   }
 
   @override
@@ -69,7 +78,7 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
                   return Column(
                     children: snapshot.data!.map((userInfo) {
                       return GestureDetector(
-                        onTap: openButtonWidget,
+                        onTap: () => openButtonWidget(userInfo),
                         child: UserBox(
                             username: userInfo.userName,
                             team: userInfo.teamCode,
