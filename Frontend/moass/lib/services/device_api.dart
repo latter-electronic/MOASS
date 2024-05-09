@@ -11,7 +11,7 @@ class DeviceApi {
   DeviceApi({required this.dio, required this.storage});
 
   // 우리반 조회
-  Future<List<DeviceInfo>> fetchMyClass(String? classcode) async {
+  Future<List<DeviceInfo>> fetchClassDevices(String? classcode) async {
     List<DeviceInfo> deviceInstances = [];
     try {
       String? accessToken = await storage.read(key: 'accessToken');

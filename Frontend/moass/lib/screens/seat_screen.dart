@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/seat.dart';
@@ -11,11 +9,12 @@ import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/seat_map.dart';
 import 'package:moass/widgets/top_bar.dart';
-import 'package:moass/widgets/user_box.dart';
 import 'package:moass/widgets/user_search_for_call.dart';
 
 class SeatScreen extends StatefulWidget {
-  const SeatScreen({super.key});
+  const SeatScreen({
+    super.key,
+  });
 
   @override
   State<SeatScreen> createState() => _SeatScreenState();
@@ -26,6 +25,29 @@ class _SeatScreenState extends State<SeatScreen> {
     initSeats();
   }
   final List<Seat> seatList = List.empty(growable: true);
+  MyProfile? myProfile;
+  bool isLoading = true;
+  late MyInfoApi api;
+
+  @override
+  void initState() {
+    super.initState();
+    api = MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
+
+    fetchMyInfo();
+  }
+
+  Future<void> fetchMyInfo() async {
+    setState(() => isLoading = true);
+    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    var result = await api.fetchUserProfile(); // API 호출
+    setState(() {
+      // null 체크
+      myProfile = result;
+
+      isLoading = false;
+    });
+  }
 
   void initSeats() {
     seatList.clear();
@@ -57,13 +79,8 @@ class _SeatScreenState extends State<SeatScreen> {
             .fetchUserProfile(value);
   }
 
-  late Future<List<List<UserInfo>>> myClass;
-
   @override
   Widget build(BuildContext context) {
-    final myInfoApi =
-        MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
-
     return Scaffold(
         appBar: const TopBar(
           title: '좌석',
@@ -79,36 +96,9 @@ class _SeatScreenState extends State<SeatScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      FutureBuilder(
-                          future: myInfoApi.fetchUserProfile(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const SizedBox(
-                                  height: 50,
-                                  child: Center(
-                                      child: CircularProgressIndicator()));
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                  child: Text('Error: ${snapshot.error}'));
-                            } else if (snapshot.hasData) {
-                              var userProfile = snapshot.data;
-                              var currentClass =
-                                  userProfile!.classCode.split('').last;
-
-                              myClass = UserInfoApi(
-                                      dio: Dio(),
-                                      storage: const FlutterSecureStorage())
-                                  .fetchMyClass(userProfile.classCode);
-
-                              return CategoryText(
-                                  text:
-                                      '${userProfile.locationName}캠퍼스 $currentClass반');
-                            } else {
-                              return const Center(
-                                  child: Text('No data available'));
-                            }
-                          }),
+                      CategoryText(
+                          text:
+                              '${myProfile?.locationName}캠퍼스 ${myProfile?.classCode.split('').last}반'),
                       IconButton(
                         color: Theme.of(context).colorScheme.primary,
                         onPressed: () {},
@@ -128,7 +118,10 @@ class _SeatScreenState extends State<SeatScreen> {
                 height: 400,
                 width: double.infinity,
                 child: SeatMapWidget(
-                    seatList: seatList, openButtonWidget: openButtonWidget),
+                  seatList: seatList,
+                  openButtonWidget: openButtonWidget,
+                  classCode: myProfile?.classCode,
+                ),
               ),
 
               const CategoryText(text: '교육생 조회'),

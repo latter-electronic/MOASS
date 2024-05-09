@@ -1,12 +1,20 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/model/device_info.dart';
 import 'package:moass/model/seat.dart';
+import 'package:moass/services/device_api.dart';
 
 class SeatMapWidget extends StatefulWidget {
   final List<Seat> seatList;
   final Function() openButtonWidget;
+  final String? classCode;
 
   const SeatMapWidget(
-      {super.key, required this.seatList, required this.openButtonWidget});
+      {super.key,
+      required this.seatList,
+      required this.openButtonWidget,
+      required this.classCode});
 
   @override
   State<SeatMapWidget> createState() => _SeatMapWidgetState();
@@ -15,6 +23,31 @@ class SeatMapWidget extends StatefulWidget {
 class _SeatMapWidgetState extends State<SeatMapWidget> {
   final TransformationController _transformationController =
       TransformationController();
+
+  // 기기 정보를 받아오기 위한 변수
+  List<DeviceInfo> deviceInfos = [];
+  bool isLoading = true;
+  late DeviceApi api;
+
+  @override
+  void initState() {
+    super.initState();
+    api = DeviceApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
+    fetchDeviceInfos();
+  }
+
+  Future<void> fetchDeviceInfos() async {
+    setState(() => isLoading = true);
+    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    var result = await api.fetchClassDevices(widget.classCode); // API 호출
+    setState(() {
+      // null 체크
+      deviceInfos = result;
+
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
