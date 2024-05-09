@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/model/device_info.dart';
 
 class DeviceApi {
   final Dio dio;
@@ -9,29 +10,37 @@ class DeviceApi {
   // dio와 storage에 담긴 데이터 활용하겠다 선언
   DeviceApi({required this.dio, required this.storage});
 
-  // Future<MyProfile?> fetchUserProfile() async {
-  //   try {
-  //     String? accessToken = await storage.read(key: 'accessToken');
-  //     if (accessToken == null) {
-  //       print('No access token available');
-  //       return null;
-  //     }
-  //     print(accessToken);
-  //     // API요청, 헤더에 토큰 넣기
-  //     final response = await dio.get(
-  //       '$baseUrl/api/user',
-  //       options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
-  //     );
+  // 우리반 조회
+  Future<List<DeviceInfo>> fetchMyClass(String? classcode) async {
+    List<DeviceInfo> deviceInstances = [];
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return [];
+      }
 
-  //     if (response.statusCode == 200) {
-  //       return MyProfile.fromJson(response.data['data']);
-  //     } else {
-  //       print('Failed to load user profile');
-  //       return null;
-  //     }
-  //   } on DioException catch (e) {
-  //     print('Error fetching user profile: ${e.message}');
-  //     return null;
-  //   }
-  // }
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.get(
+        '$baseUrl/api/device/search?classcode=$classcode',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('조회 성공!');
+        final List<dynamic> deviceInfos = response.data['data'];
+        for (var deviceInfo in deviceInfos) {
+          deviceInstances.add(DeviceInfo.fromJson(deviceInfo));
+        }
+        // print(userProfileInstances);
+        return deviceInstances;
+      } else {
+        print('Failed to load device info');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('Error fetching device info: ${e.message}');
+      return [];
+    }
+  }
 }
