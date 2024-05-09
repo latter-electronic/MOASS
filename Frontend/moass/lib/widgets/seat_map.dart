@@ -6,15 +6,11 @@ import 'package:moass/model/seat.dart';
 import 'package:moass/services/device_api.dart';
 
 class SeatMapWidget extends StatefulWidget {
-  final List<Seat> seatList;
   final Function() openButtonWidget;
   final String? classCode;
 
   const SeatMapWidget(
-      {super.key,
-      required this.seatList,
-      required this.openButtonWidget,
-      required this.classCode});
+      {super.key, required this.openButtonWidget, required this.classCode});
 
   @override
   State<SeatMapWidget> createState() => _SeatMapWidgetState();
@@ -25,6 +21,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
       TransformationController();
 
   // 기기 정보를 받아오기 위한 변수
+  final List<Seat> seatList = List.empty(growable: true);
   List<DeviceInfo> deviceInfos = [];
   bool isLoading = true;
   late DeviceApi api;
@@ -32,21 +29,34 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
   @override
   void initState() {
     super.initState();
+    print('상속받은 클래스 코드 : ${widget.classCode}');
     api = DeviceApi(
         dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
     fetchDeviceInfos();
+    initSeats();
   }
 
   Future<void> fetchDeviceInfos() async {
     setState(() => isLoading = true);
     // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     var result = await api.fetchClassDevices(widget.classCode); // API 호출
+    print('디바이스 정보 : $result');
     setState(() {
       // null 체크
       deviceInfos = result;
 
       isLoading = false;
     });
+  }
+
+  void initSeats() {
+    seatList.clear();
+    seatList.add(Seat(683.0, 745.0));
+    seatList.add(Seat(593.0, 745.0));
+    seatList.add(Seat(680.0, 655.0));
+    seatList.add(Seat(593.0, 655.0));
+    seatList.add(Seat(683.0, 565.0));
+    seatList.add(Seat(593.0, 565.0));
   }
 
   @override
@@ -61,10 +71,10 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
         maxScale: 3.0,
         child: Stack(children: [
           CustomPaint(
-            painter: SeatMap(widget.seatList),
+            painter: SeatMap(seatList),
             size: const Size(942, 1495),
           ),
-          for (final seat in widget.seatList)
+          for (final seat in seatList)
             Positioned(
               left: seat.coordX,
               top: seat.coordY,

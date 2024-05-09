@@ -13,6 +13,7 @@ class DeviceApi {
   // 우리반 조회
   Future<List<DeviceInfo>> fetchClassDevices(String? classcode) async {
     List<DeviceInfo> deviceInstances = [];
+    print('검색 클래스 코드 : $classcode');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
@@ -27,7 +28,9 @@ class DeviceApi {
       );
 
       if (response.statusCode == 200) {
-        print('조회 성공!');
+        print('기기 정보 조회 성공!');
+        print('기기정보리스트:${response.data['data']}');
+
         final List<dynamic> deviceInfos = response.data['data'];
         for (var deviceInfo in deviceInfos) {
           deviceInstances.add(DeviceInfo.fromJson(deviceInfo));

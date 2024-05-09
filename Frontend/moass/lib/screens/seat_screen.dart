@@ -21,20 +21,16 @@ class SeatScreen extends StatefulWidget {
 }
 
 class _SeatScreenState extends State<SeatScreen> {
-  _SeatScreenState() {
-    initSeats();
-  }
-  final List<Seat> seatList = List.empty(growable: true);
   MyProfile? myProfile;
   bool isLoading = true;
   late MyInfoApi api;
 
   @override
   void initState() {
-    super.initState();
     api = MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
 
     fetchMyInfo();
+    super.initState();
   }
 
   Future<void> fetchMyInfo() async {
@@ -47,16 +43,6 @@ class _SeatScreenState extends State<SeatScreen> {
 
       isLoading = false;
     });
-  }
-
-  void initSeats() {
-    seatList.clear();
-    seatList.add(Seat(683.0, 745.0));
-    seatList.add(Seat(593.0, 745.0));
-    seatList.add(Seat(680.0, 655.0));
-    seatList.add(Seat(593.0, 655.0));
-    seatList.add(Seat(683.0, 565.0));
-    seatList.add(Seat(593.0, 565.0));
   }
 
   // 교육생 검색 관련 변수
@@ -117,11 +103,12 @@ class _SeatScreenState extends State<SeatScreen> {
               SizedBox(
                 height: 400,
                 width: double.infinity,
-                child: SeatMapWidget(
-                  seatList: seatList,
-                  openButtonWidget: openButtonWidget,
-                  classCode: myProfile?.classCode,
-                ),
+                child: myProfile != null
+                    ? SeatMapWidget(
+                        openButtonWidget: openButtonWidget,
+                        classCode: myProfile!.classCode,
+                      )
+                    : const Center(child: CircularProgressIndicator()),
               ),
 
               const CategoryText(text: '교육생 조회'),
