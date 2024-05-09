@@ -46,9 +46,9 @@ public class SseController {
 
     @PostMapping("/send")
     public Mono<ResponseEntity<ApiResponse>> sendMessage(
-            @RequestParam(required = false) String teamCode,
-            @RequestParam(required = false) String classCode,
-            @RequestParam(required = false) String userId,
+            @RequestParam(required = false, name="teamcode") String teamCode,
+            @RequestParam(required = false, name="classcode") String classCode,
+            @RequestParam(required = false, name="userid") String userId,
             @RequestBody MessageDto messageDto) {
         if (messageDto.getMessage() == null) {
             return ApiResponse.error("메시지가 필요합니다.", HttpStatus.NO_CONTENT);
