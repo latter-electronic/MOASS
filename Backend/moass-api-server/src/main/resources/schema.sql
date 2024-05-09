@@ -67,6 +67,7 @@ CREATE TABLE JiraToken (
                              jira_token_id INT AUTO_INCREMENT  KEY,
                              user_id VARCHAR(20) NOT NULL,
                              cloud_id VARCHAR(50) NOT NULL,
+                             jira_email VARCHAR(50) NOT NULL,
                              access_token LONGTEXT NOT NULL,
                              refresh_token LONGTEXT NOT NULL,
                              expires_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 1 HOUR),
