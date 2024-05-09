@@ -21,7 +21,7 @@ import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -135,11 +135,13 @@ public class ReservationInfoService {
     }
 
     public Mono<List<ReservationDetailDto>> getTodayReservationInfo(UserInfo userInfo) {
-        log.info(String.valueOf(LocalDate.now(ZoneId.of("Asia/Seoul"))));
+        LocalDateTime localDateTime = LocalDateTime.now().plusHours(9);
+        LocalDate localDate = localDateTime.toLocalDate();
+        log.info(String.valueOf(localDate));
         return ssafyUserRepository.findClassCodeByUserId(userInfo.getUserId())
                 .switchIfEmpty(Mono.error(new CustomException("해당 사용자의 클래스 코드를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
                 .flatMapMany(classCode -> reservationRepository.findByClassCode(classCode))
-                .flatMap(reservation -> reservationInfoRepository.findByReservationIdAndInfoDate(reservation.getReservationId(), LocalDate.now(ZoneId.of("Asia/Seoul")))
+                .flatMap(reservation -> reservationInfoRepository.findByReservationIdAndInfoDate(reservation.getReservationId(),localDate )
                         .collectList()
                         .map(infos -> createReservationDetailDto(reservation, infos)))
                 .collectList();
@@ -191,11 +193,12 @@ public class ReservationInfoService {
 
     public Mono<Map<String,List<ReservationDetailDto>>> getWeekReservationInfo(UserInfo userInfo) {
         Map<String, List<ReservationDetailDto>> weekReservationInfo = new HashMap<>();
-        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime localDateTime = LocalDateTime.now().plusHours(9);
+        LocalDate localDate = localDateTime.toLocalDate();
 
         return Flux.range(0, 7)
                 .flatMap(day -> {
-                    LocalDate searchDate = today.plusDays(day);
+                    LocalDate searchDate = localDate.plusDays(day);
                     return searchReservationInfo(userInfo, searchDate)
                             .doOnNext(reservationDetailDtos -> weekReservationInfo.put(searchDate.toString(), reservationDetailDtos));
                 })
