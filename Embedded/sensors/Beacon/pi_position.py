@@ -6,7 +6,12 @@ import numpy as np
 import math
 import requests
 import time
+import os
+from dotenv import load_dotenv
 from scipy.optimize import least_squares, minimize
+
+load_dotenv()  # 환경 변수 로드
+server_url = os.getenv('SERVER_URL')
 
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
@@ -22,6 +27,13 @@ class RSSISmoother:
             self.rssi_queues[beacon_id] = deque(maxlen=self.window_size)
         self.rssi_queues[beacon_id].append(rssi)
         return np.mean(self.rssi_queues[beacon_id])
+    
+def get_serial_number():
+    with open('/proc/cpuinfo', 'r') as f:
+        for line in f:
+            if line.startswith('Serial'):
+                return line.split(':')[1].strip()
+    return None
 
 def calculate_distance(rssi, tx_power):
     # if rssi == 0:
@@ -80,6 +92,8 @@ def find_position(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc):
 
 # --------------------------------------------------------------------------------------------------
 
+device_id = get_serial_number()
+
 # 강의실, 책상 크기(cm)
 room_width = 942
 room_height = 1495 
@@ -126,20 +140,25 @@ while True:
         if None not in [dist_a, dist_b, dist_c]:  # Ensure all distances are available
             x, y = find_position(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc)
 
-            x_mm = int(x * 10)  # 소수점 제거
-            y_mm = int(y * 10)  # 소수점 제거
-            print(f'Computed coordinates: X = {x_mm} mm, Y = {y_mm} mm')
+            x_cm = int(x)  # 소수점 제거
+            y_cm = int(y)  # 소수점 제거
+            print(f'Computed coordinates: X = {x_cm}, Y = {y_cm}')
 
             x, y = get_coordinates(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc)
             print(f'X: {x}, y: {y}')
             time.sleep(1)
 
-            # api_url = "http://yourserver.com/api/positions"
-            # data = {"x": x, "y": y}
-            # response = requests.post(api_url, json=data)
-            # print("Response from server:", response.text)
+            patch_url = f"{server_url}/api/device/coordinate/{device_id}"
+            data = {
+                "xcoord": x_cm, 
+                "ycoord": y_cm
+                }
+            response = requests.patch(patch_url, json=data)
+            print("Response from server:", response.text)
         else:
             print('One or more distances are missing')
     else:
         print('Fail to measure position')
         time.sleep(5)
+
+    time.sleep(20)
