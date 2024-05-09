@@ -40,6 +40,32 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
+  // const pythonTest = spawn('python', [join(__dirname, '../../sensors/ipc_test.py')], { encoding: 'utf8' });
+  // const rl = readline.createInterface({
+  //   input: pythonTest.stdout,
+  // });
+
+  // rl.on('line', (line) => {
+  //   console.log(`Received line: ${line.toString()}`);
+  //   if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
+  //     mainWindow.webContents.send('fromPython', line.toString('utf8'));
+  //   }
+  // });
+
+  // // pythonTest.stdout.on('data', (data) => {
+  // //   console.log(`python data: ${data}`);
+  // //   mainWindow.webContents.send('fromPython', data.toString());
+  // // });
+
+  // pythonTest.stderr.on('data', (data) => {
+  //   console.error(`stderr: ${data}`);
+  // });
+
+  // pythonTest.on('close', (code) => {
+  //   console.log(`child process exited with code ${code}`);
+  // });
+
+
   setupPythonProcess(mainWindow)
 }
 
@@ -47,7 +73,9 @@ function createWindow() {
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
-    pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')], { encoding: 'utf8' });
+    const pythonPath = '/home/pi/myenv/bin/python';
+    const scriptPath = join(__dirname, '../../sensors/sensor_data.py');
+    const pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' });
 
     const readlineSensorData = readline.createInterface({
       input: pythonProcess.stdout,
@@ -58,6 +86,7 @@ function setupPythonProcess(mainWindow) {
       if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
         try {
           const message = JSON.parse(data.toString());
+          console.log(message.data)
           switch (message.type) {
             case 'NFC_DATA':
               mainWindow.webContents.send('nfc-data', message.data) // nfc-data 전송
