@@ -20,6 +20,10 @@ import AuthStore from '../../stores/AuthStore.js';
 
 export default function HomePage() {
     const navigate = useNavigate();
+    const { checkStoredAuth, isAuthenticated } = AuthStore((state) => ({
+        checkStoredAuth: state.checkStoredAuth,
+        isAuthenticated: state.isAuthenticated
+      }))
 
     const callAlertFunction = () => {  // 개발용
         navigate(`/callalert`);
@@ -30,10 +34,17 @@ export default function HomePage() {
     };
 
     useEffect(() => {
-        const { accessToken, refreshToken } = AuthStore.getState();
-        console.log('AccessToken:', accessToken);
-        console.log('RefreshToken:', refreshToken);
-    }, []);
+        checkStoredAuth()
+        if (!isAuthenticated) {
+          navigate('/tagnfc')
+        }
+      }, [checkStoredAuth, isAuthenticated, navigate])
+    
+      useEffect(() => {
+        const { accessToken, refreshToken } = AuthStore.getState()
+        console.log('AccessToken:', accessToken)
+        console.log('RefreshToken:', refreshToken)
+      }, [])
 
     return (
         <div className=" mx-auto p-4 h-screen">
