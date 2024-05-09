@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/firebase_options.dart';
 import 'package:moass/model/token_interceptor.dart';
 import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
@@ -9,6 +11,8 @@ import 'package:moass/services/account_api.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   const storage = FlutterSecureStorage();
   final dio = Dio();
   dio.interceptors.add(TokenInterceptor(dio, storage));
