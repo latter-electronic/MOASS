@@ -14,7 +14,7 @@ COPY src src
 RUN gradle build --no-daemon -x test
 
 # 두 번째 스테이지: 빌드된 JAR를 실행할 OpenJDK 기반의 JRE 이미지
-FROM openjdk:17-oracle
+FROM openjdk:17-alpine
 
 ENV JAVA_OPTS "-XX:+AllowRedefinitionToAddDeleteMethods"
 

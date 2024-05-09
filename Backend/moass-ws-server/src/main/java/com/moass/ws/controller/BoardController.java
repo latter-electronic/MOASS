@@ -36,5 +36,8 @@ public class BoardController {
     }
 
     @MessageMapping("/draw")
-    public void draw(BoardRequestDto dto) {}
+    public void draw(String message) {
+        System.out.println("draw");
+        boardService.drawBoard(message);
+    }
 }

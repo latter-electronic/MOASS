@@ -7,4 +7,5 @@ public interface BoardService {
     void createBoard(BoardRequestDto dto);
     void enterBoard(BoardRequestDto dto);
     void quitBoard(BoardRequestDto dto);
+    void drawBoard(String message);
 }
