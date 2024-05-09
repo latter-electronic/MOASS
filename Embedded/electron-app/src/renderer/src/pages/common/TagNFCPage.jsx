@@ -8,12 +8,14 @@ import tagging_space from '../../assets/tag_nfc.png'
 export default function TagNFC() {
   const [deviceId, setDeviceId] = useState('')
   const [cardSerialId, setCardSerialId] = useState('')
+  // const [pythondata, setPythondata] = useState('');
   const { login } = AuthStore((state) => ({
     login: state.login,
   }))
 
   const navigate = useNavigate()
-  const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success')
+  // 수정 필요함
+  const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login')
 
   // 로그인 성공 후 로직
   const handleSuccessfulLogin = (accessToken, refreshToken, deviceId, cardSerialId) => {
@@ -54,13 +56,10 @@ export default function TagNFC() {
   useEffect(() => {
     // NFC 로그인 기능
     const handleNfcData = (event, data) => {
-      console.log('Received NFC data:', data)
       try {
-        const parsedData = JSON.parse(data)
-        if (parsedData.deviceId && parsedData.cardSerialId) {
-          setDeviceId(parsedData.deviceId)
-          setCardSerialId(parsedData.cardSerialId)
-          handleLogin()
+        if (data.deviceId && data.cardSerialId) {
+          setDeviceId(data.deviceId)
+          setCardSerialId(data.cardSerialId)
         }
       } catch (error) {
         console.error('Error parsing NFC data:', error)
@@ -68,13 +67,29 @@ export default function TagNFC() {
       }
     }
 
+    // const handlePythonData = (event, message) => {
+    //   setPythondata(message);
+    //   const parsedMessage = JSON.parse(message)
+    //   console.log(parsedMessage.name);
+    // };
+
     window.electron.ipcRenderer.on('nfc-data', handleNfcData)
+    // window.electron.ipcRenderer.on('fromPython', handlePythonData);
 
     // 컴포넌트 언마운트 시에 이벤트 리스너 정리
     return () => {
       window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
+      // window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
     }
-  }, [handleLogin])
+  }, [])
+
+  useEffect(() => {
+    if (deviceId && cardSerialId) {
+      console.log(deviceId)
+      console.log(cardSerialId)
+      handleLogin()
+    }
+  }, [deviceId, cardSerialId, handleLogin])
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
