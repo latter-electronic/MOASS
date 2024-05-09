@@ -19,7 +19,7 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
             "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.background_img, u.profile_img, su.job_code, u.connect_flag , d.x_coord, d.y_coord " +
             "FROM User u " +
             "INNER JOIN SsafyUser su ON u.user_id = su.user_id " +
-            "LEFT JOIN device d ON u.user_id = d.user_id " +
+            "LEFT JOIN Device d ON u.user_id = d.user_id " +
             "INNER JOIN Team t ON t.team_code = su.team_code " +
             "INNER JOIN Class c ON c.class_code = t.class_code " +
             "INNER JOIN Location l ON l.location_code = c.location_code " +
@@ -30,7 +30,7 @@ public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
             "u.user_id, u.user_email, su.user_name, u.position_name, u.status_id, u.background_img, u.profile_img, su.job_code, u.connect_flag , d.x_coord, d.y_coord " +
             "FROM User u " +
             "INNER JOIN SsafyUser su ON u.user_id = su.user_id " +
-            "LEFT JOIN device d ON u.user_id = d.user_id " +
+            "LEFT JOIN Device d ON u.user_id = d.user_id " +
             "INNER JOIN Team t ON t.team_code = su.team_code " +
             "INNER JOIN Class c ON c.class_code = t.class_code " +
             "INNER JOIN Location l ON l.location_code = c.location_code " +
