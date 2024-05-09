@@ -1,12 +1,23 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/model/device_info.dart';
 import 'package:moass/model/seat.dart';
+import 'package:moass/model/user_info.dart';
+import 'package:moass/services/device_api.dart';
 
 class SeatMapWidget extends StatefulWidget {
-  final List<Seat> seatList;
-  final Function() openButtonWidget;
+  final Function(bool) openButtonWidget;
+  final Function(String) setUserId;
+  final String? classCode;
+  String callUserId;
 
-  const SeatMapWidget(
-      {super.key, required this.seatList, required this.openButtonWidget});
+  SeatMapWidget(
+      {super.key,
+      required this.openButtonWidget,
+      required this.setUserId,
+      required this.classCode,
+      required this.callUserId});
 
   @override
   State<SeatMapWidget> createState() => _SeatMapWidgetState();
@@ -16,6 +27,47 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
   final TransformationController _transformationController =
       TransformationController();
 
+  bool isUserSelected = false;
+
+  // 기기 정보를 받아오기 위한 변수
+  final List<Seat> seatList = List.empty(growable: true);
+  List<DeviceInfo> deviceInfos = [];
+  bool isLoading = true;
+  late DeviceApi api;
+
+  @override
+  void initState() {
+    super.initState();
+    print('상속받은 클래스 코드 : ${widget.classCode}');
+    api = DeviceApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
+    fetchDeviceInfos();
+    initSeats();
+  }
+
+  Future<void> fetchDeviceInfos() async {
+    setState(() => isLoading = true);
+    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    var result = await api.fetchClassDevices(widget.classCode); // API 호출
+    setState(() {
+      // null 체크
+      deviceInfos = result;
+      print('디바이스 정보 : $deviceInfos');
+
+      isLoading = false;
+    });
+  }
+
+  void initSeats() {
+    seatList.clear();
+    seatList.add(Seat(683.0, 745.0));
+    seatList.add(Seat(593.0, 745.0));
+    seatList.add(Seat(680.0, 655.0));
+    seatList.add(Seat(593.0, 655.0));
+    seatList.add(Seat(683.0, 565.0));
+    seatList.add(Seat(593.0, 565.0));
+  }
+
   @override
   Widget build(BuildContext context) {
     _transformationController.value = Matrix4.diagonal3Values(0.5, 0.5, 0.4);
@@ -23,25 +75,30 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
       InteractiveViewer(
         transformationController: _transformationController,
         constrained: false,
-        boundaryMargin: const EdgeInsets.all(50),
+        boundaryMargin: const EdgeInsets.all(0),
         minScale: 0.3,
         maxScale: 3.0,
         child: Stack(children: [
           CustomPaint(
-            painter: SeatMap(widget.seatList),
+            painter: SeatMap(seatList, deviceInfos),
             size: const Size(942, 1495),
           ),
-          for (final seat in widget.seatList)
+          for (final device in deviceInfos)
             Positioned(
-              left: seat.coordX,
-              top: seat.coordY,
+              left: device.xcoord?.toDouble(),
+              top: device.ycoord?.toDouble(),
               child: GestureDetector(
                 onTap: () {
                   // 각 사각형을 터치했을 때의 동작 처리
                   // print('사각형 클릭됨: ${seat.coordX}, ${seat.coordY}');
-                  setState(() {
-                    widget.openButtonWidget();
-                  });
+                  if (device.userId != null) {
+                    setState(() {
+                      isUserSelected = !isUserSelected;
+                      widget.openButtonWidget(isUserSelected);
+                      String selectedUser = device.userId!;
+                      widget.setUserId(selectedUser);
+                    });
+                  }
                 },
                 child: Container(
                   width: 85,
@@ -58,7 +115,8 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
 
 class SeatMap extends CustomPainter {
   final List<Seat> seatList;
-  SeatMap(this.seatList);
+  final List<DeviceInfo> deviceInfosList;
+  SeatMap(this.seatList, this.deviceInfosList);
 
   static const gridWidth = 50.0;
   static const gridHeight = 50.0;
@@ -110,10 +168,10 @@ class SeatMap extends CustomPainter {
   }
 
   void _drawSeats(Canvas canvas) {
-    final paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = Colors.amber // 나중에 Seat Model 안에 착석 여부 넣어두고 착석했으면 분기처리 해줄 것.
-      ..isAntiAlias = true;
+    // final paint = Paint()
+    //   ..style = PaintingStyle.fill
+    //   ..color = Colors.amber
+    //   ..isAntiAlias = true;
 
     final fixedPaint = Paint()
       ..style = PaintingStyle.stroke
@@ -127,9 +185,7 @@ class SeatMap extends CustomPainter {
       ..isAntiAlias = true;
 
     const teamNameTextStyle = TextStyle(
-      color: Colors.black,
-      fontSize: 14,
-    );
+        color: Colors.black, fontSize: 14, fontWeight: FontWeight.w800);
 
     const userNameTextStyle = TextStyle(
         color: Colors.black, fontSize: 18, fontWeight: FontWeight.w800);
@@ -161,27 +217,68 @@ class SeatMap extends CustomPainter {
     canvas.drawRRect(door, fixedPaint);
     _drawText(canvas, 471, 1485, '출입구', userNameTextStyle);
 
-    // seatList에 따라 그리기
-    for (final seat in seatList) {
-      // final c = Offset(seat.coordX, seat.coordY);
-      // canvas.drawCircle(c, radius, paint);
-      RRect rect = RRect.fromRectAndRadius(
-          Rect.fromLTWH(seat.coordX, seat.coordY, 85, 85),
-          const Radius.circular(20));
+    // 좌석도 그리기 테스트 코드
 
-      var teamNameRect = RRect.fromRectAndRadius(
-          Rect.fromCenter(
-              center: Offset(seat.coordX + 42.5, seat.coordY + 24),
-              width: 60,
-              height: 22),
-          const Radius.circular(20));
-      canvas.drawRRect(rect, paint);
-      canvas.drawRRect(teamNameRect, teamNamePaint);
-      _drawText(canvas, seat.coordX + 42.5, seat.coordY + 24, '팀코드',
-          teamNameTextStyle);
-      _drawText(canvas, seat.coordX + 42.5, seat.coordY + 48, '이름',
-          userNameTextStyle);
+    for (final deviceInfo in deviceInfosList) {
+      int? coordx = deviceInfo.xcoord;
+      int? coordy = deviceInfo.ycoord;
+      final seatPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..color = deviceInfo.userId != null
+            ? deviceInfo.userSearchDetail?.statusId == 1
+                ? const Color(0xFF3DB887)
+                : const Color(0xFFFFBC1F)
+            : Colors.grey
+        ..isAntiAlias = true;
+
+      if (coordx != null) {
+        RRect rect = RRect.fromRectAndRadius(
+            Rect.fromLTWH(coordx.toDouble(), coordy!.toDouble(), 85, 85),
+            const Radius.circular(20));
+
+        var teamNameRect = RRect.fromRectAndRadius(
+            Rect.fromCenter(
+                center:
+                    Offset(coordx.toDouble() + 42.5, coordy.toDouble() + 24),
+                width: 60,
+                height: 22),
+            const Radius.circular(20));
+        canvas.drawRRect(rect, seatPaint);
+        if (deviceInfo.userSearchDetail != null) {
+          UserInfo? userInfo = deviceInfo.userSearchDetail;
+          canvas.drawRRect(teamNameRect, teamNamePaint);
+          _drawText(canvas, coordx.toDouble() + 42.5, coordy.toDouble() + 23,
+              userInfo!.teamName, teamNameTextStyle);
+          _drawText(canvas, coordx.toDouble() + 42.5, coordy.toDouble() + 46,
+              userInfo.userName, userNameTextStyle);
+        } else {
+          _drawText(canvas, coordx.toDouble() + 42.5, coordy.toDouble() + 46,
+              '유저 없음', teamNameTextStyle);
+        }
+      }
     }
+
+    // seatList에 따라 그리기
+    // for (final seat in seatList) {
+    //   // final c = Offset(seat.coordX, seat.coordY);
+    //   // canvas.drawCircle(c, radius, paint);
+    //   RRect rect = RRect.fromRectAndRadius(
+    //       Rect.fromLTWH(seat.coordX, seat.coordY, 85, 85),
+    //       const Radius.circular(20));
+
+    //   var teamNameRect = RRect.fromRectAndRadius(
+    //       Rect.fromCenter(
+    //           center: Offset(seat.coordX + 42.5, seat.coordY + 24),
+    //           width: 60,
+    //           height: 22),
+    //       const Radius.circular(20));
+    //   canvas.drawRRect(rect, paint);
+    //   canvas.drawRRect(teamNameRect, teamNamePaint);
+    //   _drawText(canvas, seat.coordX + 42.5, seat.coordY + 24, '팀코드',
+    //       teamNameTextStyle);
+    //   _drawText(canvas, seat.coordX + 42.5, seat.coordY + 48, '이름',
+    //       userNameTextStyle);
+    // }
   }
 
   void _drawText(Canvas canvas, double centerX, double centerY, String text,

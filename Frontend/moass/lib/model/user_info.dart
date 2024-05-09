@@ -12,8 +12,8 @@ class UserInfo {
   final String? profileImg;
   final int jobCode;
   final int connectFlag;
-  final String? xcoord;
-  final String? ycoord;
+  final int? xcoord;
+  final int? ycoord;
 
   UserInfo({
     required this.locationCode,
@@ -96,8 +96,8 @@ class User {
   final String? profileImg;
   final int jobCode;
   final int connectFlag;
-  final double? ycoord;
-  final double? xcoord;
+  final int? ycoord;
+  final int? xcoord;
 
   User({
     required this.locationCode,
