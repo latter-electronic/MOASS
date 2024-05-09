@@ -8,7 +8,7 @@ import tagging_space from '../../assets/tag_nfc.png'
 export default function TagNFC() {
   const [deviceId, setDeviceId] = useState('')
   const [cardSerialId, setCardSerialId] = useState('')
-  const [pythondata, setPythondata] = useState('');
+  // const [pythondata, setPythondata] = useState('');
   const { login } = AuthStore((state) => ({
     login: state.login,
   }))
@@ -57,12 +57,9 @@ export default function TagNFC() {
     // NFC 로그인 기능
     const handleNfcData = (event, data) => {
       try {
-        // const parsedData = JSON.parse(data)
-        console.log(data) 
         if (data.deviceId && data.cardSerialId) {
           setDeviceId(data.deviceId)
           setCardSerialId(data.cardSerialId)
-          handleLogin()
         }
       } catch (error) {
         console.error('Error parsing NFC data:', error)
@@ -70,21 +67,29 @@ export default function TagNFC() {
       }
     }
 
-    const handlePythonData = (event, message) => {
-      setPythondata(message);
-      const parsedMessage = JSON.parse(message)
-      console.log(parsedMessage.name);
-    };
+    // const handlePythonData = (event, message) => {
+    //   setPythondata(message);
+    //   const parsedMessage = JSON.parse(message)
+    //   console.log(parsedMessage.name);
+    // };
 
     window.electron.ipcRenderer.on('nfc-data', handleNfcData)
-    window.electron.ipcRenderer.on('fromPython', handlePythonData);
+    // window.electron.ipcRenderer.on('fromPython', handlePythonData);
 
     // 컴포넌트 언마운트 시에 이벤트 리스너 정리
     return () => {
       window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
-      window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
+      // window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
     }
-  }, [handleLogin])
+  }, [])
+
+  useEffect(() => {
+    if (deviceId && cardSerialId) {
+      console.log(deviceId)
+      console.log(cardSerialId)
+      handleLogin()
+    }
+  }, [deviceId, cardSerialId, handleLogin])
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
@@ -135,15 +140,6 @@ export default function TagNFC() {
         </form>
       </div>
       <div className="flex-1 flex flex-col">
-        <div>
-          <h1>Python에서 받은 데이터:</h1>
-          <p>{pythondata}</p>
-        </div>
-        <div>
-          <h1>NFC 데이터</h1>
-          <p>deviceId: {deviceId}</p>
-          <p>cardSerialId: {cardSerialId}</p>
-        </div>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center">
         <img
