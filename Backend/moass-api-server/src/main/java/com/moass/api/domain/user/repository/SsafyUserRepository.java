@@ -40,14 +40,13 @@ public interface SsafyUserRepository extends ReactiveCrudRepository<SsafyUser, I
             "INNER JOIN Team t ON t.team_code = su.team_code " +
             "INNER JOIN Class c ON c.class_code = t.class_code " +
             "INNER JOIN Location l ON l.location_code = c.location_code " +
-            "WHERE su.user_name = :userName AND su.job_code <= :jobCode "+
+            "WHERE su.user_name LIKE  CONCAT('%', :userName, '%') AND su.job_code <= :jobCode "+
             "ORDER BY su.user_id ASC")
     Flux<UserSearchDetail> findAllUserSearchDetailByuserName(String userName, Integer jobCode);
 
-    @Query("SELECT EXISTS(SELECT 1 FROM SsafyUser WHERE user_name = :userName AND job_code <= :jobCode)")
+    @Query("SELECT EXISTS(SELECT 1 FROM SsafyUser WHERE user_name = LIKE CONCAT('%', :userName, '%') AND job_code <= :jobCode)")
     Mono<Boolean> exisisByUserName(String userName, Integer jobCode);
 
-    // saveForce 코드 완성하기
     @Query("INSERT INTO `SsafyUser` (user_id, job_code, team_code,user_name,card_serial_id) " +
             "VALUES (:#{#ssafyUser.userId}, :#{#ssafyUser.jobCode}, :#{#ssafyUser.teamCode}, :#{#ssafyUser.userName}, :#{#ssafyUser.cardSerialId})")
     Mono<SsafyUser> saveForce(SsafyUser ssafyUser);
@@ -61,4 +60,9 @@ public interface SsafyUserRepository extends ReactiveCrudRepository<SsafyUser, I
             "INNER JOIN Class c ON t.class_code = c.class_code " +
             "WHERE s.user_id = :userId")
     Mono<String> findClassCodeByUserId(String userId);
+
+    @Query("SELECT CASE WHEN COUNT(1) > 0 THEN true ELSE false END " +
+            "FROM SsafyUser su " +
+            "WHERE su.user_name LIKE CONCAT('%', :userName, '%') AND su.job_code <= :jobCode")
+    Mono<Boolean> existsByUserNameAndJobCode( String userName, Integer jobCode);
 }

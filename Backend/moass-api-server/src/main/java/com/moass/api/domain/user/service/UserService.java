@@ -146,14 +146,20 @@ public class UserService {
 
 
     public Mono<List<UserSearchInfoDto>> findByUsername(UserInfo userInfo, String userName) {
-        return ssafyUserRepository.exisisByUserName(userName, userInfo.getJobCode())
-                .switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
-                .flatMap(userExist -> ssafyUserRepository.findAllUserSearchDetailByuserName(userName, userInfo.getJobCode()).collectList().flatMap(userSearchDetails -> {
-            if (userSearchDetails.isEmpty()) {
-                return Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
-            }
-            return Mono.just(userSearchDetails.stream().map(UserSearchInfoDto::new).toList());
-        }));
+        log.info("userInfo: {}", userInfo);
+        log.info("userName: {}", userName);
+
+        return ssafyUserRepository.existsByUserNameAndJobCode(userName, userInfo.getJobCode())
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND));
+                    }
+                    return ssafyUserRepository.findAllUserSearchDetailByuserName(userName, userInfo.getJobCode())
+                            .collectList()
+                            .map(userSearchDetails -> userSearchDetails.stream()
+                                    .map(UserSearchInfoDto::new)
+                                    .toList());
+                });
     }
 
     public Mono<TeamInfoDto> getTeamInfo(String teamCode) {

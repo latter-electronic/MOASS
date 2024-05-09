@@ -219,7 +219,7 @@ public class DeviceTest {
         void 좌표변경실패1(){
             webTestClient.patch().uri("/device/coordinate/DDDD1")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(Map.of("xcoord", "1", "ycoord", 2))
+                    .bodyValue(Map.of("xcoord", "132ㄱ", "ycoord", 2))
                     .exchange()
                     .expectStatus().isEqualTo(400)
                     .expectBody()
