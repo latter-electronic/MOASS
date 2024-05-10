@@ -13,8 +13,11 @@ import com.moass.api.global.auth.CustomUserDetails;
 import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
+import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
+import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.service.S3Service;
+import com.moass.api.global.sse.dto.SseNotificationDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,7 @@ public class UserController {
 
     final UserService userService;
     final SseService sseService;
+    final FcmService fcmService;
     final JWTService jwtService;
     final PasswordEncoder encoder;
     final AuthManager authManager;
@@ -56,7 +60,7 @@ public class UserController {
                     UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
 
                     Mono<Boolean> teamNotify = sseService.notifyTeam(userInfo.getTeamCode(), "로그인성공 :" + userInfo.getUserName());
-                    Mono<Boolean> userNotify = sseService.notifyUser(userInfo.getUserId(), "로그인성공 :" + userInfo.getUserName());
+                    Mono<Boolean> userNotify = sseService.notifyUser(userInfo.getUserId(),new SseNotificationDto("server","로그인성공",userInfo.getUserName() + "님이 로그인하셨습니다." ));
 
                     return Mono.when(teamNotify, userNotify)  // 두 알림의 성공 여부를 동시에 확인
                             .then(jwtService.generateTokens(userInfo));
@@ -219,4 +223,12 @@ public class UserController {
                 .flatMap(fileName -> ApiResponse.ok("삭제완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("삭제 실패 : " + e.getMessage(), e.getStatus()));
     }
+
+    @PostMapping("/fcmtoken")
+    public Mono<ResponseEntity<ApiResponse>> saveFcmToken(@Login UserInfo userInfo, @RequestBody FcmTokenSaveDto fcmtokenSaveDto){
+        return fcmService.saveOrUpdateFcmToken(userInfo.getUserId(), fcmtokenSaveDto)
+                .flatMap(savedToken -> ApiResponse.ok("FCM 토큰 저장 성공", savedToken))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("FCM 토큰 저장 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
 }

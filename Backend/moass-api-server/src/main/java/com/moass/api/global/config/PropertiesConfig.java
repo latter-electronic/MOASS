@@ -19,5 +19,4 @@ public class PropertiesConfig {
      private String jiraClientId;
      private String jiraClientSecret;
      private String jiraRedirectUri;
-    // private String jiraAuthorizationUri;
 }

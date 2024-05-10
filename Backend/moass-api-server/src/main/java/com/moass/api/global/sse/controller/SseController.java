@@ -2,9 +2,9 @@ package com.moass.api.global.sse.controller;
 
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.dto.UserInfo;
-import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.sse.dto.MessageDto;
+import com.moass.api.global.sse.dto.SseNotificationDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,9 +46,9 @@ public class SseController {
 
     @PostMapping("/send")
     public Mono<ResponseEntity<ApiResponse>> sendMessage(
-            @RequestParam(required = false) String teamCode,
-            @RequestParam(required = false) String classCode,
-            @RequestParam(required = false) String userId,
+            @RequestParam(required = false, name="teamcode") String teamCode,
+            @RequestParam(required = false, name="classcode") String classCode,
+            @RequestParam(required = false, name="userid") String userId,
             @RequestBody MessageDto messageDto) {
         if (messageDto.getMessage() == null) {
             return ApiResponse.error("메시지가 필요합니다.", HttpStatus.NO_CONTENT);
@@ -60,7 +60,7 @@ public class SseController {
         } else if (classCode != null) {
             notificationResult = sseService.notifyClass(classCode, messageDto.getMessage());
         } else if (userId != null) {
-            notificationResult = sseService.notifyUser(userId, messageDto.getMessage());
+            notificationResult = sseService.notifyUser(userId, new SseNotificationDto("server","title","message"));
         } else {
             return ApiResponse.error("팀 코드, 반 코드 또는 사용자 ID 중 하나가 필요합니다.", HttpStatus.BAD_REQUEST);
         }
