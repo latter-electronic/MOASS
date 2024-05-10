@@ -4,6 +4,7 @@ import com.moass.api.domain.notification.entity.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -12,8 +13,10 @@ public class NotificationPageDto {
 
     private List<Notification> notifications;
 
-    private Integer page;
+    private Long totalCount;
 
-    private Integer totalPage;
+    private String lastNotificationId;
+
+    private LocalDateTime lastCreatedAt;
 
 }

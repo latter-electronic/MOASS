@@ -1,6 +1,5 @@
 package com.moass.api.domain.notification.entity;
 
-import com.moass.api.domain.notification.dto.NotificationSaveDto;
 import com.moass.api.domain.notification.dto.NotificationSendDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,11 +27,20 @@ public class Notification {
     @Field("source")
     private String source;
 
-    @Field("source_img")
-    private String sourceImg;
+    @Field("icon")
+    private String icon;
 
-    @Field("message")
-    private String message;
+    @Field("title")
+    private String title;
+
+    @Field("body")
+    private String body;
+
+    @Field("sender")
+    private String sender;
+
+    @Field("redirect_url")
+    private String redirectUrl;
 
     @Field("status")
     private Status status;
@@ -40,21 +48,17 @@ public class Notification {
     @Field("created_at")
     private LocalDateTime createdAt;
 
-    public Notification(NotificationSaveDto notificationSaveDto){
-        this.userId = notificationSaveDto.getUserId();
+    public Notification(String userId,NotificationSendDto notificationSaveDto){
+        this.userId = userId;
         this.source = notificationSaveDto.getSource();
-        this.sourceImg = notificationSaveDto.getSourceImg();
-        this.message = notificationSaveDto.getMessage();
+        this.icon = notificationSaveDto.getIcon();
+        this.title = notificationSaveDto.getTitle();
+        this.body = notificationSaveDto.getBody();
+        this.sender = notificationSaveDto.getSender();
+        this.redirectUrl = notificationSaveDto.getRedirectUrl();
         this.status = notificationSaveDto.getStatus();
         this.createdAt = notificationSaveDto.getCreatedAt();
+
     }
 
-    public Notification(String userId, NotificationSendDto notificationSendDto){
-        this.userId = userId;
-        this.source = notificationSendDto.getSource();
-        this.sourceImg = notificationSendDto.getSourceImg();
-        this.message = notificationSendDto.getMessage();
-        this.status = notificationSendDto.getStatus();
-        this.createdAt = notificationSendDto.getCreatedAt();
-    }
 }
