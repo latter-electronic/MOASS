@@ -8,7 +8,6 @@ import tagging_space from '../../assets/tag_nfc.png'
 export default function TagNFC() {
   const [deviceId, setDeviceId] = useState('')
   const [cardSerialId, setCardSerialId] = useState('')
-  // const [pythondata, setPythondata] = useState('');
   const { login } = AuthStore((state) => ({
     login: state.login,
   }))
@@ -71,19 +70,11 @@ export default function TagNFC() {
       }
     }
 
-    // const handlePythonData = (event, message) => {
-    //   setPythondata(message);
-    //   const parsedMessage = JSON.parse(message)
-    //   console.log(parsedMessage.name);
-    // };
-
     window.electron.ipcRenderer.on('nfc-data', handleNfcData)
-    // window.electron.ipcRenderer.on('fromPython', handlePythonData);
 
     // 컴포넌트 언마운트 시에 이벤트 리스너 정리
     return () => {
       window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
-      // window.electron.ipcRenderer.removeListener('fromPython', handlePythonData);
     }
   }, [])
 
@@ -97,14 +88,6 @@ export default function TagNFC() {
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
-      {/* <div className="absolute top-0 left-0 m-4">
-        <button
-          onClick={() => handleHome()}
-          className="text-xl bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          홈으로
-        </button>
-      </div> */}
       <div className="flex-1 flex items-center justify-center">
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg">
           <div className="mb-4">
