@@ -50,6 +50,8 @@ dependencies:
 
     # 파일 타입 확인을 위한 라이브러리
     mime: ^1.0.5
+    firebase_core: ^2.31.0
+    firebase_messaging: ^14.9.2
 
 dev_dependencies:
     flutter_test:
