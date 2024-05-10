@@ -157,6 +157,12 @@ class ReservationDayModel {
     required this.reservationInfoList,
   });
 
+// print출력을 위한 코드
+  @override
+  String toString() {
+    return 'ReservationDayModel(reservationId: $reservationId, classCode: $classCode, category: $category, timeLimit: $timeLimit, reservationName: $reservationName, colorCode: $colorCode, reservationInfoList: ${reservationInfoList.map((i) => i.toString()).join(', ')})';
+  }
+
   factory ReservationDayModel.fromJson(Map<String, dynamic> json) {
     return ReservationDayModel(
       reservationId: json['reservationId'] ?? 0,
