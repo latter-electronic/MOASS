@@ -1,17 +1,22 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { fetchTodos } from '../../services/todoService.js'
+import AuthStore from '../../stores/AuthStore.js';
 
 export default function HomeTodoListComponent() {
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { accessToken, refreshToken } = AuthStore.getState()
 
     useEffect(() => {
         const loadTodos = async () => {
             setIsLoading(true);
             setError(null);
             try {
+                if (!accessToken) {
+                    setTodos(null)
+                } else { 
                 const response = await fetchTodos();  // Todo 가져오기
                 setTodos(response.data.data.map(todo => ({
                     todoId: todo.todoId,
@@ -20,7 +25,7 @@ export default function HomeTodoListComponent() {
                     createdAt: todo.createdAt,
                     updatedAt: todo.updatedAt,
                     completedAt: todo.completedAt,
-                })));
+                })))};
             } catch (err) {
                 setError(err.message);  // 에러
                 setTodos([

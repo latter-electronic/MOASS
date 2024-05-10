@@ -24,12 +24,13 @@ export default function Navbar() {
   const { logout, deviceId, cardSerialId } = AuthStore((state) => ({
     logout: state.logout,
     deviceId: state.deviceId,
-    cardSerialId: state.cardSerial
+    cardSerialId: state.cardSerial,
   }))
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
   const statusOptions = [ '자리비움', '착석중', '공가', '방해금지']
+  const { accessToken, refreshToken } = AuthStore.getState()
 
   const backgroundColors = {
     착석중: 'bg-emerald-500',
@@ -114,11 +115,15 @@ export default function Navbar() {
   useEffect(() => {
     const loadUsers = async () => {
       try {
+        if (!accessToken) {
+          setUsers(null)
+        } else{
         const userData = await fetchUserInfo();
         setUsers(userData.data.data); // API 호출 결과를 상태에 저장
         if (userData.data.data.statusId !== undefined) {
           setSelectedIndex(userData.data.data.statusId); // Set selectedIndex based on statusId
         }
+      }
       } catch (error) {
         console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error);
       }
@@ -143,11 +148,6 @@ export default function Navbar() {
       logout()  // store 상태 변경
       ipcLogoutHandle() // python에 ipc로 전달
       alert('로그아웃 성공!')
-
-      localStorage.removeItem('accessToken')
-      localStorage.removeItem('refreshToken')
-      localStorage.removeItem('deviceId')
-      localStorage.removeItem('cardSerialId')
 
       navigate('/login')
     } catch (error) {
