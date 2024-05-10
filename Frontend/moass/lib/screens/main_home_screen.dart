@@ -8,6 +8,7 @@ import 'package:moass/model/myprofile.dart';
 import 'package:moass/screens/notification_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
+import 'package:moass/services/sse_listener_api.dart';
 import 'package:moass/widgets/check_box.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -24,6 +25,17 @@ class MainHomeScreen extends StatefulWidget {
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
   late int selectedSeatedState;
+  // final storage = new FlutterSecureStorage();
+  // String? test = "";
+
+  @override
+  initState() {
+    super.initState();
+  }
+
+  // seeTestSSE() async {
+  //   test = await storage.read(key: 'testteamEventresult');
+  // }
 
 // 내상태 설정
 // 자리비움으로 바꾸기
