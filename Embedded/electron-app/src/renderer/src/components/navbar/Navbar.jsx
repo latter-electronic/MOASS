@@ -136,7 +136,7 @@ export default function Navbar() {
     navigate(`/login`)
   }
 
-  const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success')
+  const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success', 'logout')
 
   const handleLogout = async () => {
     try {
