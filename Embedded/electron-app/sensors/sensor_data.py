@@ -9,9 +9,11 @@ import sys
 import requests
 import io
 import traceback
+import threading
 import RPi.GPIO as GPIO
 from dotenv import load_dotenv
 from adafruit_pn532.i2c import PN532_I2C
+
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 load_dotenv() 
@@ -26,6 +28,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(motion_sensor_pin, GPIO.IN)
 
 last_motion_time = time.time()
+
+logged_in_lock = threading.Lock()
 logged_in = False
 print("Waiting for NFC card...", file=sys.stderr)
 
@@ -34,6 +38,28 @@ LONG_SIT_TIMEOUT = 7200
 motion_state = None
 
 # -----------------------------------------------------------------
+
+def listen_for_commands():
+    global logged_in
+    while True:
+        try:
+            line = sys.stdin.readline()
+            if line:
+                data = json.loads(line)
+                with logged_in_lock:
+                    if data.get("action") == "login":
+                        logged_in = True
+                        print(f"Login signal received: {data}", file=sys.stderr)
+                    elif data.get("action") == "logout":
+                        logged_in = False
+                        print(f"Logout signal received: {data}", file=sys.stderr)
+        except json.JSONDecodeError as e:
+            print("JSON Decode Error:", str(e))
+        except Exception as e:
+            print("An error occurred:", traceback.format_exc())
+        except KeyboardInterrupt:
+            print("Thread interrupted")
+            break
 
 def get_serial_number():
     with open('/proc/cpuinfo', 'r') as f:
@@ -61,53 +87,50 @@ def handle_login_response(device_id, card_serial_id):
         sys.stdout.write(nfc_data + '\n')
         sys.stdout.flush()
         print(nfc_data, file=sys.stderr)
-        return True
-    return False
 
 def handle_motion_detection():
     global last_motion_time, motion_state
-    if GPIO.input(motion_sensor_pin):
-        if motion_state != 'LONG_SIT' and (time.time() - last_motion_time > LONG_SIT_TIMEOUT):
-            motion_state = 'LONG_SIT'
-            sys.stdout.write(json.dumps({
-                "type": "MOTION_DETECTED", 
-                "data": {
-                    "status": "LONG_SIT"
+    try:
+        if GPIO.input(motion_sensor_pin):
+            if motion_state != 'LONG_SIT' and (time.time() - last_motion_time > LONG_SIT_TIMEOUT):
+                motion_state = 'LONG_SIT'
+                sys.stdout.write(json.dumps({
+                    "type": "MOTION_DETECTED", 
+                    "data": {
+                        "status": "LONG_SIT"
                     }
-                })
-            )
-            sys.stdout.flush()
-        last_motion_time = time.time()
-    else:
-        if motion_state != 'AWAY' and (time.time() - last_motion_time > NO_MOTION_TIMEOUT):
-            motion_state = 'AWAY'
-            sys.stdout.write(json.dumps({
-                "type": "MOTION_DETECTED", 
-                "data": {
-                    "status": "AWAY"
+                }) + '\n')
+                sys.stdout.flush()
+            last_motion_time = time.time()
+        else:
+            if motion_state != 'AWAY' and (time.time() - last_motion_time > NO_MOTION_TIMEOUT):
+                motion_state = 'AWAY'
+                sys.stdout.write(json.dumps({
+                    "type": "MOTION_DETECTED", 
+                    "data": {
+                        "status": "AWAY"
                     }
-                })
-            )
-            sys.stdout.flush()
+                }) + '\n')
+                sys.stdout.flush()
+    except Exception as e:
+        print(f"An error occurred during motion detection: {e}")
+        traceback.print_exc()
 
 # -----------------------------------------------------------------
 
+
 if __name__ == '__main__': 
     device_id = get_serial_number()
+
+    command_thread = threading.Thread(target=listen_for_commands)
+    command_thread.start()
     
     while True:
         try:
-            line = sys.stdin.readline()
-            if line:
-                data = json.loads(line)
-                if data.get("action") == "login":
-                    logged_in = True
-                    print("Login signal received.", file=sys.stderr)
-                elif data.get("action") == "logout":
-                    logged_in = False
-                    print("Logout signal received.", file=sys.stderr)
+            with logged_in_lock:
+                current_logged_in_status = logged_in
 
-            if not logged_in:  
+            if not current_logged_in_status:  
                 card_serial_id = read_uid()
                 if card_serial_id:
                     print(card_serial_id, file=sys.stderr)
@@ -119,7 +142,7 @@ if __name__ == '__main__':
                         "data": {
                             "status": "AOD"
                             }
-                        })
+                        }) + '\n'
                     )
                     sys.stdout.flush()
             
