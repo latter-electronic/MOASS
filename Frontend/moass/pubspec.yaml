@@ -52,6 +52,7 @@ dependencies:
     mime: ^1.0.5
     firebase_core: ^2.31.0
     firebase_messaging: ^14.9.2
+    eventflux: ^2.0.1
 
 dev_dependencies:
     flutter_test:
