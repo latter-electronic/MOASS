@@ -3,7 +3,7 @@ package com.moass.api.global.sse.dto;
 import lombok.Data;
 
 @Data
-public class OrderSseDto {
+public class SseOrderDto {
 
     private String command="order";
 
@@ -11,7 +11,7 @@ public class OrderSseDto {
 
     private String message;
 
-    public OrderSseDto(String type, String message) {
+    public SseOrderDto(String type, String message) {
         this.type = type;
         this.message = message;
     }

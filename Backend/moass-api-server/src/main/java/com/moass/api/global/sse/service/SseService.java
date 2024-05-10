@@ -2,23 +2,18 @@ package com.moass.api.global.sse.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.moass.api.domain.notification.dto.NotificationSaveDto;
-import com.moass.api.domain.notification.entity.Notification;
+import com.moass.api.domain.notification.dto.NotificationSendDto;
 import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
-import com.moass.api.global.exception.CustomException;
-import com.moass.api.global.sse.dto.NotificationSseDto;
+import com.moass.api.global.sse.dto.SseNotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,9 +29,9 @@ public class SseService {
 
     private final UserRepository userRepository;
     private final SsafyUserRepository ssafyUserRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final NotificationService notificationService;
+    private int sseCount=0;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Mono<Boolean> userExists(String userId) {return userRepository.existsByUserId(userId);}
     public Mono<String> getTeamCode(String userId) {return ssafyUserRepository.findTeamCodeByUserId(userId);}
@@ -107,11 +102,11 @@ public class SseService {
     }
 
     // 사람에게 알림 보내기
-    public Mono<Boolean> notifyUser(String userId, String message) {
+    public Mono<Boolean> notifyUser(String userId, SseNotificationDto message) {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = userSinks.get(userId);
             if (sink != null) {
-                boolean result = sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("유저 SSE전송 실패 : " + userId);
                 }
@@ -126,7 +121,7 @@ public class SseService {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = teamSinks.get(teamCode);
             if (sink != null) {
-                boolean result = sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("팀 SSE전송 실패 : " + teamCode);
                 }
@@ -141,7 +136,7 @@ public class SseService {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = classSinks.get(classCode);
             if (sink != null) {
-                boolean result = sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("반 SSE전송 실패 : " + classCode);
                 }
@@ -168,12 +163,8 @@ public class SseService {
         log.info("teamSinks size: {}", teamSinks.size());
         log.info("classSinks size: {}", classSinks.size());
         Map<String,String> tmp= new HashMap<>();
-        String jsonMessage = createSseJsonMessage(new NotificationSseDto("testId","gitlab",null,"테스트알림", LocalDateTime.now().plusHours(9))); // 재연결 대기 시간 5000ms
+        sseCount++;
         userSinks.forEach((userId, sink) -> {
-            notificationService.saveNotification(new NotificationSaveDto(userId, "test", "테스트알림"))
-                    .subscribe(savedNotification -> {
-                        log.info("Notification saved for user {}: {}", userId, savedNotification);
-                    });
             log.info("User ID '{}' has {} subscribers.", userId, sink.currentSubscriberCount());
             sink.tryEmitNext("Test message to user: " + userId);
 
@@ -184,7 +175,7 @@ public class SseService {
             log.info("Team code '{}' has {} subscribers.", teamCode, sink.currentSubscriberCount());
             sink.tryEmitNext("Test message to team: " + teamCode);
             sink.tryEmitNext(tmp.toString());
-            sink.tryEmitNext(jsonMessage).isSuccess();
+            //sink.tryEmitNext(jsonMessage).isSuccess();
         });
 
         // 각 반에게 테스트 메시지 전송
