@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "139102845960",
+    "project_id": "moass-b25d1",
+    "storage_bucket": "moass-b25d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139102845960:android:157b1ad6c8d8bbf6ab25bd",
+        "android_client_info": {
+          "package_name": "com.example.moass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYDSI6NC7VJvbR7fX8OuZO2AuVLgA4X2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
