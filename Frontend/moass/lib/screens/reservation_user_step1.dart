@@ -166,7 +166,7 @@ class ReservationBox extends StatelessWidget {
                   bool isReserved = reservation.reservationInfoList
                       .any((info) => info.infoTime == index);
                   Color bgColor =
-                      isReserved ? Colors.blue.withOpacity(0.3) : Colors.blue;
+                      isReserved ? Colors.green.withOpacity(0.3) : Colors.green;
                   return Container(
                     margin: const EdgeInsets.all(2),
                     padding:

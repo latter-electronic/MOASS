@@ -1,11 +1,18 @@
 // 장현욱
 
 import 'package:flutter/material.dart';
+import 'package:moass/model/reservation_model.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/schedule_box.dart';
 
 class ReservationAdminFix extends StatelessWidget {
-  const ReservationAdminFix({super.key});
+  final ReservationDayModel reservation;
+  final String selectedDate;
+  const ReservationAdminFix({
+    super.key,
+    required this.reservation,
+    required this.selectedDate,
+  });
 
   @override
   Widget build(BuildContext context) {

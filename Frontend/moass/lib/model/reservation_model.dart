@@ -132,6 +132,10 @@ class ReservationInfoListDto {
       infoTime: json['infoTime'],
     );
   }
+  @override
+  String toString() {
+    return 'ReservationInfoListDto(infoId: $infoId, reservationId: $reservationId, userId: $userId, infoState: $infoState, infoName: $infoName, infoDate: $infoDate, infoTime: $infoTime)';
+  }
 }
 
 class ReservationDayModel {
