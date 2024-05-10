@@ -9,9 +9,9 @@ import sys
 import requests
 import io
 import traceback
+import RPi.GPIO as GPIO
 from dotenv import load_dotenv
 from adafruit_pn532.i2c import PN532_I2C
-from gpiozero import MotionSensor
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 load_dotenv() 
@@ -21,15 +21,17 @@ i2c = busio.I2C(board.SCL, board.SDA)
 pn532 = PN532_I2C(i2c, debug=False) 
 pn532.SAM_configuration()
 
-pir = MotionSensor(17) 
-motion_detected_time = time.time()
+motion_sensor_pin = 17 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(motion_sensor_pin, GPIO.IN)
 
+last_motion_time = time.time()
 logged_in = False
 print("Waiting for NFC card...", file=sys.stderr)
 
 NO_MOTION_TIMEOUT = 300  
 LONG_SIT_TIMEOUT = 7200  
-last_motion_time = time.time()
+motion_state = None
 
 # -----------------------------------------------------------------
 
@@ -63,21 +65,30 @@ def handle_login_response(device_id, card_serial_id):
     return False
 
 def handle_motion_detection():
-    global motion_detected_time, last_motion_time
-    if pir.motion_detected:
-        motion_detected_time = last_motion_time = time.time()
-        # print("Motion detected.")
-
-    current_time = time.time()
-    if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
-        sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AWAY"}}))
-        sys.stdout.flush()
-        motion_detected_time = current_time
-
-    if current_time - last_motion_time > LONG_SIT_TIMEOUT:
-        sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "LONG_SIT"}}))
-        sys.stdout.flush()
-        last_motion_time = current_time
+    global last_motion_time, motion_state
+    if GPIO.input(motion_sensor_pin):
+        if motion_state != 'LONG_SIT' and (time.time() - last_motion_time > LONG_SIT_TIMEOUT):
+            motion_state = 'LONG_SIT'
+            sys.stdout.write(json.dumps({
+                "type": "MOTION_DETECTED", 
+                "data": {
+                    "status": "LONG_SIT"
+                    }
+                })
+            )
+            sys.stdout.flush()
+        last_motion_time = time.time()
+    else:
+        if motion_state != 'AWAY' and (time.time() - last_motion_time > NO_MOTION_TIMEOUT):
+            motion_state = 'AWAY'
+            sys.stdout.write(json.dumps({
+                "type": "MOTION_DETECTED", 
+                "data": {
+                    "status": "AWAY"
+                    }
+                })
+            )
+            sys.stdout.flush()
 
 # -----------------------------------------------------------------
 
@@ -86,27 +97,42 @@ if __name__ == '__main__':
     
     while True:
         try:
-            # line = sys.stdin.readline()
-            # data = json.loads(line)
-            # if data.get("action") == "login":
-            #     logged_in = True
+            line = sys.stdin.readline()
+            if line:
+                data = json.loads(line)
+                if data.get("action") == "login":
+                    logged_in = True
+                    print("Login signal received.", file=sys.stderr)
+                elif data.get("action") == "logout":
+                    logged_in = False
+                    print("Logout signal received.", file=sys.stderr)
 
             if not logged_in:  
                 card_serial_id = read_uid()
                 if card_serial_id:
                     print(card_serial_id, file=sys.stderr)
                     logged_in = handle_login_response(device_id, card_serial_id)
-                # elif pir.motion_detected:
-                #     sys.stdout.write(json.dumps({"type": "MOTION_DETECTED", "data": {"status": "AOD"}}))
-                #     sys.stdout.flush()
+                elif GPIO.input(motion_sensor_pin) and motion_state != 'AOD':
+                    motion_state = 'AOD'
+                    sys.stdout.write(json.dumps({
+                        "type": "MOTION_DETECTED", 
+                        "data": {
+                            "status": "AOD"
+                            }
+                        })
+                    )
+                    sys.stdout.flush()
             
             else:  
-                pass
-                # handle_motion_detection()
+                handle_motion_detection()
 
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", str(e))
         except Exception as e:
             print("An error occurred:", traceback.format_exc())
+        except KeyboardInterrupt:
+            print("Program stopped by User")
+            GPIO.cleanup()
+            break
 
-        time.sleep(1)
+        time.sleep(1) 
