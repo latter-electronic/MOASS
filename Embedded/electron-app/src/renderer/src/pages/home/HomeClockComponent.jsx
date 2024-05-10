@@ -13,8 +13,6 @@ export default function HomeClockComponent() {
 
         // OpenWeatherMap API
         const fetchWeatherIcon = async () => {
-            console.log(OPEN_WEATHER_API_KEY)
-            console.log(CITY_NAME)
             try {
                 const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${CITY_NAME}&appid=${OPEN_WEATHER_API_KEY}`);
                 const data = await response.json();
@@ -46,8 +44,8 @@ export default function HomeClockComponent() {
 
     return (
         <div className="text-white rounded-lg p-4 text-center font-noto-sans mt-2">
-            <div className="flex flex-row text-2xl opacity-70 ml-2">
-                <span className="ml-4">{formattedDate}</span> {weatherIcon? <img src={weatherIcon} alt="Weather Icon" className="ml-1 size-8"/> : '☀'}
+            <div className="flex flex-row text-date opacity-70 ml-1">
+                <span className="ml-3">{formattedDate}</span> {weatherIcon? <img src={weatherIcon} alt="Weather Icon" className="ml-1 size-8"/> : '☀'}
             </div>
             <div className="text-clock leading-none font-semibold">
                 {formattedTime}

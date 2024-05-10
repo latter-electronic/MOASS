@@ -18,6 +18,7 @@ module.exports = {
         '20xl': '20rem',      // 256px
         'clock': '5rem',
         'test': '1.35rem',
+        'date': '1.45rem',
       },
       letterSpacing: {
         'ww': '0.5rem',
