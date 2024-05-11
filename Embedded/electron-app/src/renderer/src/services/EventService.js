@@ -8,27 +8,26 @@ class EventService {
     }
 
     initEventSource() {
-        console.log('3.initEventSource 호출!')
+        console.log('Initializing Event Source...');
         this.eventSource = new EventSourcePolyfill(this.url, {
-            headers: this.headers
+            headers: this.headers,
         });
 
         this.eventSource.onopen = () => {
-            console.log('4. Connection to SSE opened');
+            console.log('Connection to SSE opened');
         };
 
         this.eventSource.onerror = (error) => {
-            console.error('4. EventSource failed:', error);
+            console.error('EventSource error:', error);
             this.eventSource.close();
         };
     }
 
     startListening(onMessage) {
-        console.log('스타트리스닝중')
+        console.log('Listening for messages...');
         this.eventSource.onmessage = (event) => {
-            console.log('온메세지중')
             const data = event.data;
-            onMessage(data);
+            onMessage(data); // 파싱하지 않고 그대로 전달
         };
     }
 

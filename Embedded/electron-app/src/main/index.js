@@ -1,15 +1,21 @@
 // main/index.js
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn } from 'child_process';
 import readline from 'readline';
 import icon from '../../resources/icon.png?asset'
 
-let pythonProcess = null;
+let mainWindow = null
+let secondWindow = null
+let pythonProcess = null
 
 function createWindow() {
-  const mainWindow = new BrowserWindow({
+  const primaryDisplay = screen.getPrimaryDisplay()
+  const externalDisplays = screen.getAllDisplays().filter((display) => display.id !== primaryDisplay.id)
+  console.log('externalDisplay:', externalDisplays)
+  // 메인 윈도우 설정
+  mainWindow = new BrowserWindow({
     title: 'MOASS',
     width: 1600,
     height: 600,
@@ -34,39 +40,38 @@ function createWindow() {
     return { action: 'deny' }
   })
 
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  const mainWindowURL = is.dev ? process.env['ELECTRON_RENDERER_URL'] : `file://${join(__dirname, '../renderer/index.html')}`;
+  mainWindow.loadURL(mainWindowURL);
+
+  // 라즈베리파이에서만 추가 디스플레이 처리
+  if (process.platform === 'linux' && externalDisplays.length > 0) {
+    createSecondWindow(externalDisplays[0])
   }
 
-  // const pythonTest = spawn('python', [join(__dirname, '../../sensors/ipc_test.py')], { encoding: 'utf8' });
-  // const rl = readline.createInterface({
-  //   input: pythonTest.stdout,
-  // });
-
-  // rl.on('line', (line) => {
-  //   console.log(`Received line: ${line.toString()}`);
-  //   if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
-  //     mainWindow.webContents.send('fromPython', line.toString('utf8'));
-  //   }
-  // });
-
-  // // pythonTest.stdout.on('data', (data) => {
-  // //   console.log(`python data: ${data}`);
-  // //   mainWindow.webContents.send('fromPython', data.toString());
-  // // });
-
-  // pythonTest.stderr.on('data', (data) => {
-  //   console.error(`stderr: ${data}`);
-  // });
-
-  // pythonTest.on('close', (code) => {
-  //   console.log(`child process exited with code ${code}`);
-  // });
-
-
   setupPythonProcess(mainWindow)
+}
+
+function createSecondWindow(display) {
+  // 두 번째 윈도우 설정
+  secondWindow = new BrowserWindow({
+    title: 'Name Space',
+    fullscreen: true, // 전체 화면 모드
+    x: display.bounds.x,
+    y: display.bounds.y,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+      nodeIntegration: true,
+      contextIsolation: false,
+    }
+  });
+
+  console.log('xxxxxx: ', display.bounds.x)
+  console.log('yyyyyy: ', display.bounds.y)
+  console.log(join(__dirname, '../renderer/secondary.html'));
+
+  const secondWindowURL = is.dev ? `${process.env['ELECTRON_RENDERER_URL']}#/nameplate` : `file://${join(__dirname, '../renderer/index.html')}#/nameplate`
+  secondWindow.loadURL(secondWindowURL)
 }
 
 // python script 실행
@@ -75,14 +80,14 @@ function setupPythonProcess(mainWindow) {
   if (process.platform === 'linux') {
     const pythonPath = '/home/pi/myenv/bin/python';
     const scriptPath = join(__dirname, '../../sensors/sensor_data.py');
-    const pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' });
+    pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' })
 
     const readlineSensorData = readline.createInterface({
       input: pythonProcess.stdout,
     });
 
     readlineSensorData.on('line', (data) => {
-      console.log(`Received Sensor Data: ${data.toString('utf8')}`);
+      console.log(`Received Sensor Data: ${data.toString('utf8')}`)
       if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
         try {
           const message = JSON.parse(data.toString());
@@ -104,11 +109,12 @@ function setupPythonProcess(mainWindow) {
     });
 
     pythonProcess.stderr.on('data', (data) => {
-      console.log('Python log:', data.toString());  // 에러 출력
+      console.log('Python log:', data.toString())  // 에러 출력
     });
 
     pythonProcess.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
+        console.log(`child process exited with code ${code}`)
+        pythonProcess = null
     });
   } else {
     console.log('Python script is not supported on this platform.')
@@ -122,13 +128,10 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  // ipcMain.on('ping', (event) => {
-  //   console.log('pong')
-  //   event.reply('pong', 'This is a message from the main process.')
-  // })
-
   createWindow()
+
+  const primaryDisplay = screen.getPrimaryDisplay()
+  console.log('Primary Display:', primaryDisplay)
 
   if (process.platform === 'linux') {
     ipcMain.on('login-success', (event, data) => {
