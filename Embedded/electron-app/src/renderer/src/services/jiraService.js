@@ -53,7 +53,7 @@ export const fetchRecentClosedSprintIssues = async () => {
 export const fetchProjects = async () => {
     const url = `/api/oauth2/jira/proxy`;
     const payload = {
-        url: '/rest/api/3/project/search',
+        url: '/rest/api/3/project/search?orderBy=lastIssueUpdatedTime DESC&maxResults=1',
         method: "get"
     };
 
