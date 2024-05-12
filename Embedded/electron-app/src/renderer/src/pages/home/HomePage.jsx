@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Clock from './HomeClockComponent.jsx'
 import Calendar from './CalendarWidget.jsx'
 import TodoList from './HomeTodoListComponent.jsx'
 import Schedule from './HomeScheduleComponent.jsx'
+import MozzyModal from '../mozzy/MozzyMainPage..jsx'
 
 import testImg1 from './test/swiper-slide-test-img-1.png'
 import testImg2 from './test/swiper-slide-test-img-2.jpg'
@@ -19,11 +20,20 @@ import { Pagination } from 'swiper/modules';
 import AuthStore from '../../stores/AuthStore.js';
 
 export default function HomePage() {
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const navigate = useNavigate();
     const { checkStoredAuth, isAuthenticated } = AuthStore((state) => ({
         checkStoredAuth: state.checkStoredAuth,
         isAuthenticated: state.isAuthenticated
-      }))
+    }))
+
+    const openModal = () => {
+        setModalIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setModalIsOpen(false);
+    };
 
     const callAlertFunction = () => {  // 개발용
         navigate(`/callalert`);
@@ -36,24 +46,24 @@ export default function HomePage() {
     useEffect(() => {
         console.log('홈에서 확인중')
         checkStoredAuth()
-      }, [])
-    
+    }, [])
+
     //   useEffect(() => {
     //     console.log('isAuthenticated:', isAuthenticated)
     //     if (!isAuthenticated) {
     //       navigate('/tagnfc')
     //     }
     //   }, [isAuthenticated, navigate])
-    
-      useEffect(() => {
+
+    useEffect(() => {
         const { accessToken, refreshToken } = AuthStore.getState()
         console.log('AccessToken:', accessToken)
         console.log('RefreshToken:', refreshToken)
         if (!accessToken) {
             navigate('/login')
-          }
-      }, [])
-    
+        }
+    }, [])
+
 
     return (
         <div className=" mx-auto p-4 h-screen">
@@ -80,9 +90,9 @@ export default function HomePage() {
                             modules={[Pagination]}
                             className="mySwiper"
                         >
-                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><Calendar /></SwiperSlide>
-                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src={testImg1} alt="테스트이미지1" className="mb-14 rounded-md" /></SwiperSlide>
-                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',marginBottom: '2.5rem' }}><img src={testImg2} alt="테스트이미지2" className="mb-14 rounded-md" /></SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', marginBottom: '2.5rem' }}><Calendar /></SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', marginBottom: '2.5rem' }}><img src={testImg1} alt="테스트이미지1" className="mb-14 rounded-md" /></SwiperSlide>
+                            <SwiperSlide style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', marginBottom: '2.5rem' }}><img src={testImg2} alt="테스트이미지2" className="mb-14 rounded-md" /></SwiperSlide>
                         </Swiper>
                     </div>
                 </div>
@@ -93,8 +103,16 @@ export default function HomePage() {
                 {/* 3열: 할 일 목록, 모찌 위아래로 배치 */}
                 <div className="flex flex-col justify-center items-end mr-8 h-full">
                     <TodoList />
+                    <div>
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => callNamePlateFunction()}>
+                            명패
+                        </button>
+                    </div>
                     <div className="mt-8">
-                        <img src={Mozzy} alt="Mozzy" className="size-64" onClick={() => callNamePlateFunction()} />
+                        <img src={Mozzy} alt="Mozzy" className="size-64" onClick={openModal} />
+                        <MozzyModal isOpen={modalIsOpen} onClose={closeModal}/>
                     </div>
                 </div>
             </div>
