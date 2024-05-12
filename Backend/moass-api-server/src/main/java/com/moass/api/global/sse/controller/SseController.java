@@ -56,7 +56,7 @@ public class SseController {
 
         Mono<Boolean> notificationResult;
         if (teamCode != null) {
-            notificationResult = sseService.notifyTeam(teamCode, messageDto.getMessage());
+            notificationResult = sseService.notifyTeam(teamCode,  new SseNotificationDto("server","title","message"));
         } else if (classCode != null) {
             notificationResult = sseService.notifyClass(classCode, messageDto.getMessage());
         } else if (userId != null) {
