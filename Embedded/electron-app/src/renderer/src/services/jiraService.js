@@ -138,29 +138,34 @@ export const getProject = async () => {
 };
 
 /**
- * 이슈를 새로운 상태로 전환하고 필요할 경우 전환 화면의 필드를 업데이트
+ * Jira 이슈의 상태 변경
  * 
- * @param {string} issueIdOrKey - 상태 전환을 수행할 이슈의 ID 또는 키
- * @param {object} transitionData - 전환 데이터
- * @returns {Promise} 요청의 결과를 반환하는 Promise 객체
+ * @param {string} issueIdOrKey - 변경할 이슈의 ID 또는 키
+ * @param {string} transitionId - 적용할 상태 전환의 ID
+ * @returns {Promise} 상태 변경 요청의 결과를 반환하는 Promise 객체
  */
-export const transitionIssue = async (issueIdOrKey, transitionData) => {
+export const changeIssueStatus = async (issueIdOrKey, transitionId) => {
     const { accessToken } = AuthStore.getState();
     const payload = {
-        method: 'post',
-        url: `/rest/api/3/issue/${issueIdOrKey}/transitions`,
-        body: JSON.stringify(transitionData)
+        transition: {
+            id: transitionId
+        }
     };
 
-    return axios.post(`${prefix}`, payload, {
+    return axios.post(`${prefix}/rest/api/3/issue/${issueIdOrKey}/transitions`, payload, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.data)
+    .then(response => {
+        if (response.status === 204) {
+            console.log('Status updated successfully');
+        }
+        return response;
+    })
     .catch(error => {
-        console.error(`Error transitioning issue ${issueIdOrKey}:`, error);
+        console.error(`Error updating status for issue ${issueIdOrKey}:`, error);
         throw error;
     });
 };
