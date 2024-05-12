@@ -1,6 +1,7 @@
 package com.moass.api.domain.user.controller;
 
-import com.moass.api.domain.file.controller.FileController;
+import com.moass.api.domain.notification.dto.NotificationSendDto;
+import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.dto.UserCreateDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
@@ -16,8 +17,6 @@ import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
 import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
-import com.moass.api.global.service.S3Service;
-import com.moass.api.global.sse.dto.SseNotificationDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +45,8 @@ public class UserController {
     final JWTService jwtService;
     final PasswordEncoder encoder;
     final AuthManager authManager;
+    final NotificationService notificationService;
+
     @GetMapping("/auth")
     public Mono<String> auth(){
         return Mono.just("t");
@@ -58,12 +59,10 @@ public class UserController {
                 .flatMap(auth -> {
                     CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
                     UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
+                    Mono<Integer> teamNoty = notificationService.saveAndPushbyTeam(userInfo.getTeamCode(),new NotificationSendDto("server","팀원 로그인 알림 : "+userInfo.getUserName(),userInfo.getUserName()+"님이 로그인하셨습니다."));
 
-                    Mono<Boolean> teamNotify = sseService.notifyTeam(userInfo.getTeamCode(), "로그인성공 :" + userInfo.getUserName());
-                    Mono<Boolean> userNotify = sseService.notifyUser(userInfo.getUserId(),new SseNotificationDto("server","로그인성공",userInfo.getUserName() + "님이 로그인하셨습니다." ));
-
-                    return Mono.when(teamNotify, userNotify)  // 두 알림의 성공 여부를 동시에 확인
-                            .then(jwtService.generateTokens(userInfo));
+                    return Mono.when(teamNoty)
+                                    .then(jwtService.generateTokens(userInfo));
                 })
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공", tokens))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
@@ -106,7 +105,7 @@ public class UserController {
     @GetMapping
     public Mono<ResponseEntity<ApiResponse>> getUserDetails(@Login UserInfo userInfo, @RequestParam(required = false) String username) {
         log.info("NAME~@@@ : "+username);
-        if(username != null) {
+        if(username != null && !username.isEmpty()) {
             log.info("NAME~! : "+username);
             return userService.findByUsername(userInfo, username)
                     .flatMap(userDetail -> ApiResponse.ok("사용자 정보 조회 성공", userDetail))
