@@ -184,13 +184,17 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                           CrossAxisAlignment
                                                               .end,
                                                       children: [
-                                                        Text(
-                                                          userProfile.userName,
-                                                          style: const TextStyle(
-                                                              fontSize: 80,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
+                                                        FittedBox(
+                                                          fit: BoxFit.cover,
+                                                          child: Text(
+                                                            userProfile
+                                                                .userName,
+                                                            style: const TextStyle(
+                                                                fontSize: 80,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w700),
+                                                          ),
                                                         ),
                                                         Transform.translate(
                                                           offset: const Offset(

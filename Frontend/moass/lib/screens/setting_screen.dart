@@ -10,6 +10,7 @@ import 'package:moass/screens/setting_profile_photo.dart';
 import 'package:moass/screens/setting_related_account.dart';
 import 'package:moass/screens/setting_user_info.dart';
 import 'package:moass/screens/setting_widget_photo.dart';
+import 'package:moass/services/device_api.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -115,9 +116,18 @@ class SettingScreen extends StatelessWidget {
                                                   child: const Text('취소'),
                                                 ),
                                                 TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          context, '확인'),
+                                                  onPressed: () async {
+                                                    // String response =
+                                                    DeviceApi(
+                                                            dio: Dio(),
+                                                            storage:
+                                                                const FlutterSecureStorage())
+                                                        .disconnectDevice();
+                                                    // if (response == '200') {
+                                                    Navigator.pop(
+                                                        context, '확인');
+                                                    // }
+                                                  },
                                                   child: const Text('확인'),
                                                 ),
                                               ],
