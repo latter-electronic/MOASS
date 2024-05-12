@@ -17,6 +17,7 @@ import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
 import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
+import com.moass.api.global.sse.dto.SseOrderDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -66,6 +67,14 @@ public class UserController {
                 })
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공", tokens))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/devicelogout")
+    public Mono<ResponseEntity<ApiResponse>> deviceLogout(@Login UserInfo userInfo){
+        return userService.deviceLogout(userInfo)
+                .flatMap(logoutSuccess -> sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("logoutDevice", userInfo.getUserId()))
+                        .then(ApiResponse.ok("로그아웃 성공")))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("로그아웃 실패 : "+e.getMessage(), e.getStatus()));
     }
 
     @PostMapping("/signup")
