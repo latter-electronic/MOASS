@@ -51,6 +51,10 @@ export default function NotiPage() {
     setNotifications(notifications.filter(noti => noti.id !== id));
   };
 
+  const handleClearAll = () => {
+    setNotices([]); // 모든 알림 삭제
+  };
+
   return (
     <div className="flex h-screen">
 
@@ -59,7 +63,7 @@ export default function NotiPage() {
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-4xl font-medium text-white">알림 모아쓰</h1>
           {/* 모두 읽음 처리 버튼 */}
-          <button className="flex items-center gap-2 mt-3">
+          <button className="flex items-center gap-2 mt-3" onClick={handleClearAll}>
             <img src={checkIcon} alt="Check Icon" className="w-6 h-6" />
             <span className="text-lg text-white">모두 읽음 처리</span>
           </button>
