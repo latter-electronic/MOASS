@@ -17,6 +17,7 @@ import 'swiper/css/pagination';
 
 import { Pagination } from 'swiper/modules';
 import AuthStore from '../../stores/AuthStore.js';
+import { getCurrentUser } from '../../services/jiraService.js'
 
 export default function HomePage() {
     const navigate = useNavigate();
@@ -36,6 +37,7 @@ export default function HomePage() {
     useEffect(() => {
         console.log('홈에서 확인중')
         checkStoredAuth()
+        getCurrentUser()
       }, [])
     
     //   useEffect(() => {
