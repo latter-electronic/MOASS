@@ -1,17 +1,29 @@
 // pages/mozzy/MozzyMainPage.jsx
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import useGlobalStore from '../../stores/useGlobalStore.js'
 import MozzyModal from '../../components/modals/MozzyModal.jsx'
 import LunchMenu from './MozzyLunchMenuPage.jsx'
 import DailyNews from './MozzyDailyNewsPage.jsx'
 import DailyScrum from './MozzyDailyScrumPage.jsx'
 import QuizToday from './MozzyQuizTodayPage.jsx'
+import useLunchMenuStore from '../../stores/LunchMenuStore'
+import BackButton from '../../components/buttons/BackButton.jsx'
 
 function MozzyMain({ isOpen, onClose }) {
     const [page, setPage] = useState('main')
     const { user } = useGlobalStore(state => ({
         user: state.user,
     }))
+    const { lunchMenus, fetchLunchMenus, isLoading, error } = useLunchMenuStore(state => ({
+        lunchMenus: state.launchMenus, 
+        fetchLunchMenus: state.fetchLunchMenus, 
+        isLoading: state.isLoading, 
+        error: state.error
+    }))
+
+    useEffect(() => {
+        fetchLunchMenus() // 컴포넌트 마운트 시 메뉴 데이터 불러오기
+    }, [])
 
     const handleModalClose = () => {
         setPage('main')  // 모달을 닫을 때 페이지 상태를 초기화
@@ -32,7 +44,7 @@ function MozzyMain({ isOpen, onClose }) {
                 return (
                     <div>
                         <div className='flex flex-col justify-center items-center text-2xl'>
-                            <p>안녕하세요, {user.userName} 님!</p>
+                            <p>안녕하세요, {user?.userName} 님!</p>
                             <p>제가 도와드릴 일이 있을까요?</p>
                         </div>
                         <div className='flex flex-row justify-between mt-5 mx-3'>
@@ -56,7 +68,14 @@ function MozzyMain({ isOpen, onClose }) {
 
     return (
         <MozzyModal isOpen={isOpen} onRequestClose={handleModalClose}>
-            <div className="p-3 text-black">
+            <div className="text-black">
+                {page !== 'main' && (
+                    <BackButton
+                        onClick={() => setPage('main')}
+                        className="absolute top-2 left-3 bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded"
+                    >
+                    </BackButton>
+                )}
                 {renderContent()}
             </div>
         </MozzyModal>
