@@ -140,26 +140,27 @@ export const getProject = async () => {
 /**
  * 이슈를 새로운 상태로 전환하고 필요할 경우 전환 화면의 필드를 업데이트
  * 
- * @param {string} issueIdOrKey - 전환할 이슈의 ID 또는 키
- * @param {object} transitionData - 전환에 필요한 데이터 객체
- * @returns {Promise} 전환 요청의 결과를 반환하는 Promise 객체
+ * @param {string} issueIdOrKey - 상태 전환을 수행할 이슈의 ID 또는 키
+ * @param {object} transitionData - 전환 데이터
+ * @returns {Promise} 요청의 결과를 반환하는 Promise 객체
  */
 export const transitionIssue = async (issueIdOrKey, transitionData) => {
     const { accessToken } = AuthStore.getState();
-    const data = {
+    const payload = {
         method: 'post',
         url: `/rest/api/3/issue/${issueIdOrKey}/transitions`,
         body: JSON.stringify(transitionData)
     };
 
-    return axios.post(prefix, data, {
+    return axios.post(`${prefix}`, payload, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
-      .catch(error => {
-          console.error(`Error transitioning issue ${issueIdOrKey}:`, error);
-          throw error;
-      });
+    })
+    .then(response => response.data)
+    .catch(error => {
+        console.error(`Error transitioning issue ${issueIdOrKey}:`, error);
+        throw error;
+    });
 };
