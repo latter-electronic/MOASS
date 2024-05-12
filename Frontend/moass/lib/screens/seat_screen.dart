@@ -74,6 +74,11 @@ class _SeatScreenState extends State<SeatScreen> {
             .fetchUserProfile(value);
   }
 
+  // Refresh 아이콘을 누를 때 호출되는 콜백 함수
+  void handleRefresh() {
+    fetchMyInfo(); // 사용자 정보를 다시 불러옴
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +105,7 @@ class _SeatScreenState extends State<SeatScreen> {
                                 '${myProfile?.locationName}캠퍼스 ${myProfile?.classCode.split('').last}반'),
                         IconButton(
                           color: Theme.of(context).colorScheme.primary,
-                          onPressed: () {},
+                          onPressed: handleRefresh,
                           icon: const Icon(Icons.refresh),
                           style: ButtonStyle(
                             iconColor: MaterialStateProperty.all<Color>(

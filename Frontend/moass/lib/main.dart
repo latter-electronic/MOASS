@@ -33,9 +33,45 @@ void main() async {
   // 스토리지에 담기
   await storage.write(key: 'fcmToken', value: fcmToken);
   print('FCM Token: $fcmToken');
+  // 알림 권한
+  FirebaseMessaging.instance.requestPermission(
+    badge: true,
+    alert: true,
+    sound: true,
+  );
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        print(message.notification!.title);
+        print(message.notification!.body);
+        print(message.data["click_action"]);
+      }
+    }
+  });
 
   // 백그라운드 메시지 관련
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        print(message.notification!.title);
+        print(message.notification!.body);
+        print(message.data["click_action"]);
+      }
+    }
+  });
+
+  FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    if (message != null) {
+      if (message.notification != null) {
+        print(message.notification!.title);
+        print(message.notification!.body);
+        print(message.data["click_action"]);
+      }
+    }
+  });
 
   final accountApi = AccountApi(dio: dio, storage: storage);
   final bool isLoggedIn = await _getLoginStatus(storage);
