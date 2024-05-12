@@ -20,6 +20,7 @@ export default function JiraPage() {
         done: []
     });
     const [loading, setLoading] = useState({ todo: true, inProgress: true, done: false });
+    const [selectedProfile, setSelectedProfile] = useState(null);
 
     useEffect(() => {
         async function fetchIssues(statusId, column) {
@@ -47,12 +48,12 @@ export default function JiraPage() {
         if (source.droppableId === destination.droppableId && source.index === destination.index) {
             return;
         }
-    
+
         const sourceColumn = issues[source.droppableId];
         const destColumn = issues[destination.droppableId];
         const [removed] = sourceColumn.splice(source.index, 1);
         destColumn.splice(destination.index, 0, removed);
-    
+
         setIssues(prev => ({
             ...prev,
             [source.droppableId]: sourceColumn,
@@ -69,15 +70,25 @@ export default function JiraPage() {
         return statusNames[key] || key;
     };
 
+    const handleProfileClick = (index) => {
+        setSelectedProfile(index);
+    };
+
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="mx-auto p-6 h-screen overflow-hidden">
                 <div className="flex items-center text-white font-extrabold text-3xl mb-5">
                     <div>S10P31E203 보드</div>
                     <img src={dropdownArrow} alt="화살표" className="ml-2" />
-                    <div className="flex -space-x-2 ml-4">
+                    <div className="flex -space-x-2 ml-6">
                         {profileImages.map((avatar, index) => (
-                            <img key={index} src={avatar} alt={`participant ${index + 1}`} className="w-10 h-10 rounded-full border-2 border-black shadow-sm" />
+                            <button
+                                key={index}
+                                onClick={() => handleProfileClick(index)}
+                                className={`w-10 h-10 rounded-full border-3 shadow-sm overflow-hidden relative ${selectedProfile === index ? 'z-10 ring-1 ring-blue-500 ring-offset-2 shadow-lg' : 'border-gray-900'}`}
+                            >
+                                <img src={avatar} alt={`participant ${index + 1}`} className="w-full h-full rounded-full" />
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -106,8 +117,8 @@ export default function JiraPage() {
                                                 )}
                                             </Draggable>
                                         )) : <div className="flex justify-center items-center h-full">
-                                        <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
-                                    </div>}
+                                            <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
+                                        </div>}
                                         {provided.placeholder}
                                     </div>
                                 </div>
