@@ -113,4 +113,52 @@ class ReservationApi {
       throw Exception('Error making reservation request: ${e.message}');
     }
   }
+
+  // 예약 생성
+  Future<void> reservationCreate(Map<String, dynamic> createData) async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    if (accessToken == null) {
+      throw Exception('No access token available');
+    }
+    try {
+      var body = json.encode(createData); // Map을 직접 인코드
+      final response = await dio.post('$baseUrl/api/reservation',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('예약 생성 성공!');
+      } else {
+        print('예약 생성 실패');
+        throw Exception('Failed to register reservation');
+      }
+    } on DioException catch (e) {
+      print('예약 생성 에러: ${e.message}');
+      throw Exception('Error making reservation request: ${e.message}');
+    }
+  }
+
+  // 예약 취소
+  Future<void> reservationFix(Map<String, dynamic> fixData) async {
+    String? accessToken = await storage.read(key: 'accessToken');
+    if (accessToken == null) {
+      throw Exception('No access token available');
+    }
+    try {
+      var body = json.encode(fixData); // Map을 직접 인코드
+      final response = await dio.patch('$baseUrl/api/reservation',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('예약 수정 성공!');
+      } else {
+        print('예약 수정 실패');
+        throw Exception('Failed to register reservation');
+      }
+    } on DioException catch (e) {
+      print('예약 수정 에러: ${e.message}');
+      throw Exception('Error making reservation request: ${e.message}');
+    }
+  }
 }

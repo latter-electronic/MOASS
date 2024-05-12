@@ -1,6 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/reservation_model.dart';
+import 'package:moass/screens/home_screen.dart';
+import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
 
 class ReservationAdminFix extends StatefulWidget {
@@ -21,6 +25,8 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
   late TextEditingController _nameController;
   late Color _currentColor;
   late int _currentLimit;
+  // 예약하기 API
+  late ReservationApi api;
   List<int> _selectedTimes = []; // 여기에 선택된 시간을 저장합니다.
 
   @override
@@ -28,10 +34,13 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
     super.initState();
     _nameController =
         TextEditingController(text: widget.reservation.reservationName);
+    _nameController.addListener(_updateText); // 리스너 추가
     _currentColor =
         Color(int.parse(widget.reservation.colorCode.replaceAll('#', '0xff')));
     _currentLimit =
         widget.reservation.timeLimit; // 이 값이 드롭다운 아이템 중 하나와 정확히 일치하는지 확인
+    api = ReservationApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // 사용할 API파일 가져오기
 
     // 아래 코드는 _currentLimit 값이 드롭다운 메뉴 아이템에 포함되지 않은 경우 기본값을 설정합니다.
     List<int> validLimits = [30, 60, 90, 120, 150, 180];
@@ -41,11 +50,94 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
     print('전달받은 데이터 확인 : ${widget.reservation.toString()}');
   }
 
+  @override
+  void dispose() {
+    _nameController.removeListener(_updateText); // 리스너 제거
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  void _updateText() {
+    setState(() {
+      // 이곳에서는 단순히 setState만 호출합니다. 입력 필드의 변화에 따라 UI를 갱신하기 위함입니다.
+    });
+  }
+
   // 이 함수를 자식 위젯에서 호출하여 선택된 시간을 업데이트합니다.
   void updateSelectedTimes(List<int> selectedTimes) {
     setState(() {
       _selectedTimes = selectedTimes;
     });
+  }
+
+  // // 예약 수정 요청 API 호출
+  Future<void> sendReservationFix() async {
+    saveSettings;
+    try {
+      Map<String, dynamic> fixData = {
+        "reservationId": widget.reservation.reservationId,
+        "category": 'board',
+        "timeLimit": _currentLimit ~/ 30,
+        "reservationName": _nameController.text,
+        "colorCode":
+            '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
+        "infoDate": widget.selectedDate,
+        "infoTimes": _selectedTimes
+      };
+      print(fixData);
+      await api.reservationFix(fixData);
+      print('예약 수정 성공!');
+      completeReservation(context);
+      // 성공 다이얼로그 표시
+    } catch (e) {
+      print('예약 수정 실패: $e');
+      // 실패 다이얼로그 표시
+      showErrorDialog();
+    }
+  }
+
+  // 예약 완료 팝업
+  void completeReservation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('예약 수정 완료'),
+          content: const Text('예약 수정이 성공적으로 등록되었습니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 예약 실패 팝업
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('예약 수정 실패'),
+          content: const Text('예약 수정에 실패하였습니다.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -104,12 +196,14 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
               reservation: widget.reservation,
               selectedDate: widget.selectedDate,
               onUpdateSelectedTimes: updateSelectedTimes, // 콜백 함수 전달
+              currentColor: _currentColor, // 현재 색상을 전달
+              nameController: _nameController, // 컨트롤러를 전달
             ),
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: saveSettings,
-                child: const Text('저장하기'),
+                onPressed: sendReservationFix,
+                child: const Text('수정하기'),
               ),
             ),
           ],
@@ -119,6 +213,8 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
   }
 
   Future<Color?> pickColor(BuildContext context, Color currentColor) async {
+    Color? pickedColor = currentColor; // 초기 색상을 임시 변수에 저장
+
     return showDialog<Color>(
       context: context,
       builder: (BuildContext context) {
@@ -128,17 +224,22 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
             child: ColorPicker(
               pickerColor: currentColor,
               onColorChanged: (Color color) {
-                Navigator.of(context).pop(color);
+                pickedColor = color; // 사용자가 선택한 색상을 임시 변수에 저장
               },
+              enableAlpha: true, // 투명도 조절 가능
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('취소'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+                onPressed: () {
+                  Navigator.of(context).pop(pickedColor); // 선택한 색상으로 대화상자 닫기
+                },
+                child: const Text('결정')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // 변경 없이 대화상자 닫기
+                },
+                child: const Text('취소')),
           ],
         );
       },
@@ -147,13 +248,17 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
 
   void saveSettings() {
     // 저장 로직 구현
+    // String colorStr =
+    //     '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}';
     print('reservationId: ${widget.reservation.reservationId}');
     print('category: 아무거나 넣기 보드 미팅 이런거');
-    print('최대 예약 시간: $_currentLimit 분'); // 인덱스번호로 받고싶어
+    print(
+        '최대 예약 시간: ${_currentLimit ~/ 30}번 옵션'); // `_currentLimit / 30`의 결과를 int로 변환
     print('지정한 이름: ${_nameController.text}');
-    print('지정한 색상: ${_currentColor.toString()}'); // #이후로 잘라야함
+    print(
+        '지정한 색상: #${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}'); // #이후로 잘라야함
     print('선택된 날짜: ${widget.selectedDate}');
-    print('선택된 날짜: $_selectedTimes');
+    print('선택된 시간: $_selectedTimes');
   }
 }
 
@@ -161,12 +266,16 @@ class ReservationBox extends StatefulWidget {
   final ReservationDayModel reservation;
   final String selectedDate;
   final Function(List<int>) onUpdateSelectedTimes; // 콜백 함수 타입 정의
+  final Color currentColor; // 색상 인자 추가
+  final TextEditingController nameController; // TextEditingController 인자 추가
 
   const ReservationBox({
     super.key,
     required this.reservation,
     required this.selectedDate,
     required this.onUpdateSelectedTimes, // 콜백 함수를 인자로 추가
+    required this.currentColor, // 인자를 필수로 설정
+    required this.nameController, // 인자를 필수로 설정
   });
 
   @override
@@ -216,13 +325,12 @@ class _ReservationBoxState extends State<ReservationBox> {
             height: 130,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Color(int.parse(
-                  widget.reservation.colorCode.replaceAll('#', '0xff'))),
+              color: widget.currentColor, // widget을 통해 상위에서 전달된 색상 사용
               borderRadius:
                   const BorderRadius.horizontal(left: Radius.circular(10)),
             ),
             child: Text(
-              widget.reservation.reservationName,
+              widget.nameController.text, // widget을 통해 전달된 컨트롤러 사용
               style: const TextStyle(
                   color: Colors.white, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
@@ -281,10 +389,19 @@ class _ReservationBoxState extends State<ReservationBox> {
                       textStyle = const TextStyle(color: Colors.black26);
 
                       break;
-                    case '03':
+                    case '04':
                       bgColor = isSelected
                           ? Colors.red
-                          : Colors.blue.withOpacity(0.3);
+                          : Colors.indigo.withOpacity(0.3);
+                      text =
+                          info.infoName; // Show name or any status description
+                      textStyle = const TextStyle(color: Colors.black26);
+
+                      break;
+                    case '05':
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.purple.withOpacity(0.3);
                       text =
                           info.infoName; // Show name or any status description
                       textStyle = const TextStyle(color: Colors.black26);

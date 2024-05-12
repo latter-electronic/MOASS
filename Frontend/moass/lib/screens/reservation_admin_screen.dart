@@ -9,7 +9,6 @@ import 'package:moass/screens/reservation_admin_fix.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
-import 'package:moass/widgets/reservation_box.dart';
 import 'package:moass/widgets/top_bar.dart';
 
 class ReservationAdminScreen extends StatefulWidget {
@@ -103,7 +102,7 @@ class _ReservationAdminScreenState extends State<ReservationAdminScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const ReservationAdminCreate()),
+                        builder: (context) => ReservationAdminCreate()),
                   );
                 },
                 child: const Text('시설/팀미팅 생성하기'),
@@ -255,6 +254,20 @@ class ReservationBox extends StatelessWidget {
                         break;
                       case '03':
                         bgColor = Colors.blue.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+
+                        break;
+                      case '04':
+                        bgColor = Colors.indigo.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+
+                        break;
+                      case '05':
+                        bgColor = Colors.purple.withOpacity(0.3);
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
