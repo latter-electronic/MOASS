@@ -54,7 +54,7 @@
         },
         "timespent": null,
         "customfield_10030": null,
-        "customfield_10031": null,
+        "customfield_10031": 2.0,
         "project": {
             "self": "https://ssafy.atlassian.net/rest/api/3/project/14697",
             "id": "14697",
@@ -71,8 +71,8 @@
         },
         "fixVersions": [],
         "aggregatetimespent": null,
-        "customfield_10035": [],
         "resolution": null,
+        "customfield_10035": [],
         "customfield_10036": null,
         "customfield_10037": null,
         "customfield_10027": null,
@@ -80,7 +80,6 @@
         "customfield_10029": null,
         "resolutiondate": null,
         "workratio": -1,
-        "lastViewed": "2024-05-11T19:37:26.704+0900",
         "watches": {
             "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-644/watchers",
             "watchCount": 1,
@@ -90,6 +89,7 @@
             "issuerestrictions": {},
             "shouldDisplay": false
         },
+        "lastViewed": "2024-05-12T14:07:57.453+0900",
         "created": "2024-05-11T19:37:17.754+0900",
         "customfield_10020": null,
         "customfield_10021": null,
@@ -103,8 +103,8 @@
         "customfield_10023": null,
         "customfield_10024": null,
         "customfield_10025": null,
-        "customfield_10026": null,
         "labels": [],
+        "customfield_10026": null,
         "customfield_10016": null,
         "customfield_10017": null,
         "customfield_10018": {
@@ -116,8 +116,8 @@
             }
         },
         "customfield_10019": "1|vi7obj:",
-        "timeestimate": null,
         "aggregatetimeoriginalestimate": null,
+        "timeestimate": null,
         "versions": [],
         "issuelinks": [],
         "assignee": {
@@ -135,7 +135,7 @@
             "timeZone": "Asia/Seoul",
             "accountType": "atlassian"
         },
-        "updated": "2024-05-12T13:43:35.438+0900",
+        "updated": "2024-05-12T14:07:57.313+0900",
         "status": {
             "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
             "description": "",
@@ -155,16 +155,16 @@
         "description": null,
         "customfield_10010": null,
         "customfield_10014": "S10P31E203-236",
-        "customfield_10015": null,
         "timetracking": {},
+        "customfield_10015": null,
         "customfield_10005": null,
         "customfield_10006": null,
-        "security": null,
         "customfield_10007": null,
+        "security": null,
         "customfield_10008": null,
-        "aggregatetimeestimate": null,
         "customfield_10009": null,
         "attachment": [],
+        "aggregatetimeestimate": null,
         "summary": "jiraTest용 이슈",
         "creator": {
             "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
@@ -197,12 +197,12 @@
             "timeZone": "Asia/Seoul",
             "accountType": "atlassian"
         },
+        "customfield_10044": null,
         "customfield_10000": "{}",
         "aggregateprogress": {
             "progress": 0,
             "total": 0
         },
-        "customfield_10044": null,
         "customfield_10045": null,
         "customfield_10001": null,
         "customfield_10002": null,
@@ -216,17 +216,17 @@
             "progress": 0,
             "total": 0
         },
-        "votes": {
-            "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-644/votes",
-            "votes": 0,
-            "hasVoted": false
-        },
         "comment": {
             "comments": [],
             "self": "https://ssafy.atlassian.net/rest/api/3/issue/892641/comment",
             "maxResults": 0,
             "total": 0,
             "startAt": 0
+        },
+        "votes": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-644/votes",
+            "votes": 0,
+            "hasVoted": false
         },
         "worklog": {
             "startAt": 0,
