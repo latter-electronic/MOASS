@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/firebase_options.dart';
 import 'package:moass/model/token_interceptor.dart';
@@ -9,14 +10,18 @@ import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/account_api.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // 백그라운드 메시지 설정
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   print("Handling a background message: ${message.messageId}");
 }
+
+final FlutterLocalNotificationsPlugin _local =
+    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +38,7 @@ void main() async {
   // 스토리지에 담기
   await storage.write(key: 'fcmToken', value: fcmToken);
   print('FCM Token: $fcmToken');
+
   // 알림 권한
   FirebaseMessaging.instance.requestPermission(
     badge: true,
@@ -40,13 +46,41 @@ void main() async {
     sound: true,
   );
 
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel', // id
+    'High Importance Notifications', // title
+    importance: Importance.max,
+  );
+
   FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
+    RemoteNotification? notification = message?.notification;
     if (message != null) {
       if (message.notification != null) {
         print(message.notification!.title);
         print(message.notification!.body);
         print(message.data["click_action"]);
       }
+    }
+
+    if (notification != null) {
+      _local
+          .show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  importance: Importance.max,
+                  priority: Priority.high,
+                ),
+              ))
+          .then((_) {
+        Future.delayed(const Duration(seconds: 5), () {
+          _local.cancel(notification.hashCode);
+        });
+      });
     }
   });
 
@@ -81,13 +115,48 @@ void main() async {
 
 Future<bool> _getLoginStatus(FlutterSecureStorage storage) async {
   final isLoggedIn = await storage.read(key: 'isLoggedIn');
+  print('로그인? ${isLoggedIn.toString()}');
   return isLoggedIn == 'true';
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool isLoggedIn;
 
   const MyApp({super.key, required this.isLoggedIn});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Local Notification 초기화
+
+  @override
+  void initState() {
+    super.initState();
+    _permissionWithNotification();
+    _initialization();
+  }
+
+  void _permissionWithNotification() async {
+    if (await Permission.notification.isDenied &&
+        !await Permission.notification.isPermanentlyDenied) {
+      await [Permission.notification].request();
+    }
+  }
+
+  void _initialization() async {
+    AndroidInitializationSettings android =
+        const AndroidInitializationSettings("@mipmap/ic_launcher");
+    DarwinInitializationSettings ios = const DarwinInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+    );
+    InitializationSettings settings =
+        InitializationSettings(android: android, iOS: ios);
+    await _local.initialize(settings);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +168,7 @@ class MyApp extends StatelessWidget {
             primary: const Color(0xFF6ECEF5)),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: isLoggedIn ? '/homeScreen' : '/loginScreen',
+      initialRoute: widget.isLoggedIn ? '/homeScreen' : '/loginScreen',
       routes: {
         // 메인에서 뒤로가기 버튼 생기는 원인 나중에 확인되면 지우기
         '/homeScreen': (context) => const HomeScreen(),
