@@ -1,5 +1,7 @@
 import { moassApiAxios } from './apiConfig.js';
 
+import testDoneIssues from '../pages/jira/proxyTest/testJson10001.json' 
+
 const axios = moassApiAxios();
 const prefix = '/api/oauth2/jira/proxy';
 
@@ -37,8 +39,8 @@ export const fetchCurrentSprintIssues = async (statusId) => {
         const projectKey = projectData.values[0].key; // 가장 최근에 업데이트된 프로젝트의 키
 
         const url = `${prefix}`;
-        const fields = "customfield_10014, summary, status, priority, assignee, customfield_10031";
-        const jqlQuery = `project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'`; // 잠시 개발용으로 reporter
+        const fields = "customfield_10014, summary, priority, assignee, customfield_10031";
+        const jqlQuery = `project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'`; // 잠시 개발용으로
         const maxResults = 240;
 
         const payload = {
