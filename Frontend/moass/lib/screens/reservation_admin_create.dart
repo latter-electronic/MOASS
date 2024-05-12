@@ -73,18 +73,20 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
   // // 예약 수정 요청 API 호출
   // // 예약하기 API 호출
   Future<void> sendReservationCreate() async {
+    print(
+        '${userProfile?.classCode} / ${_currentLimit ~/ 30} / ${_nameController.text} / ${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)} / $_selectedTimes');
     try {
-      Map<String, dynamic> fixData = {
-        "reservationId": userProfile?.classCode,
+      Map<String, dynamic> createData = {
+        "classCode": userProfile?.classCode,
         "category": 'board',
         "timeLimit": _currentLimit ~/ 30,
-        "reservationName": _nameController,
+        "reservationName": _nameController.text,
         "colorCode":
             '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
         "infoTimes": _selectedTimes
       };
-      print(fixData);
-      await api.reservationFix(fixData);
+      print(createData);
+      await api.reservationCreate(createData);
       print('예약 수정 성공!');
       completeCreate(context);
       // 성공 다이얼로그 표시
