@@ -35,4 +35,27 @@ class JiraApi {
       return null;
     }
   }
+
+  requestConnectJira() async {
+    String jiraAuthURL = "";
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return null;
+      }
+      final response = await dio.get(
+        '$baseUrl/api/oauth2/jira/connect',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        jiraAuthURL = response.data;
+        return jiraAuthURL;
+      }
+    } on DioException catch (e) {
+      print('Error fetching user profile: ${e.message}');
+      return null;
+    }
+  }
 }

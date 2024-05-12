@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/jira_api.dart';
 
 class SetRelatedAccount extends StatefulWidget {
   final String service;
@@ -157,8 +160,11 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton(
-                        onPressed: () {
-                          () {};
+                        onPressed: () async {
+                          String JiraConnectUrl = await JiraApi(
+                                  dio: Dio(),
+                                  storage: const FlutterSecureStorage())
+                              .requestConnectJira();
                         },
                         style: const ButtonStyle(),
                         child: const Text('URL 등록')),
