@@ -26,6 +26,14 @@ public class Oauth2Controller {
                 .flatMap(jiraConnectUrl -> ApiResponse.ok("지라 연결주소 조회 성공", jiraConnectUrl))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
     }
+
+    @DeleteMapping("/jira/connect")
+    public Mono<ResponseEntity<ApiResponse>> jiraDeleteConnect(@Login UserInfo userInfo){
+        return oauth2Service.deleteJiraConnect(userInfo)
+                .flatMap(jiraConnectUrl -> ApiResponse.ok("지라 연결주소 조회 성공", jiraConnectUrl))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
     @GetMapping("/jira/callback")
     public Mono<ResponseEntity<ApiResponse>> jiraCallback(@RequestParam String code, @RequestParam String state){
         return oauth2Service.exchangeCodeForToken(code,state)
@@ -40,7 +48,7 @@ public class Oauth2Controller {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("Jira 토큰 갱신 실패 : " + e.getMessage(), e.getStatus()));
     }
 
-    @GetMapping("/jira/proxy")
+    @PostMapping("/jira/proxy")
     public Mono<ResponseEntity<ApiResponse>> proxyToJira(@Login UserInfo userInfo, @RequestBody JiraProxyRequestDto jiraProxyRequestDto) {
         return oauth2Service.proxyRequestToJira(userInfo.getUserId(), jiraProxyRequestDto)
                 .flatMap(response -> ApiResponse.ok("Jira 프록시 요청 성공", response))
