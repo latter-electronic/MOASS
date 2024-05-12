@@ -79,7 +79,7 @@ export default function JiraPage() {
             <div className="mx-auto p-6 h-screen overflow-hidden">
                 <div className="flex items-center text-white font-extrabold text-3xl mb-5">
                     <div>S10P31E203 보드</div>
-                    <img src={dropdownArrow} alt="화살표" className="ml-2" />
+                    {/* <img src={dropdownArrow} alt="화살표" className="ml-2" /> */}
                     <div className="flex -space-x-2 ml-6">
                         {profileImages.map((avatar, index) => (
                             <button
