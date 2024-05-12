@@ -7,10 +7,15 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserSearchForCallWidget extends StatefulWidget {
-  final Function(bool) openButtonWidget;
+  final VoidCallback toggleOpenButtonWidget;
   final Function(String) setUserId;
-  const UserSearchForCallWidget(
-      {super.key, required this.openButtonWidget, required this.setUserId});
+  final FocusNode textFocus;
+  const UserSearchForCallWidget({
+    super.key,
+    required this.toggleOpenButtonWidget,
+    required this.setUserId,
+    required this.textFocus,
+  });
 
   @override
   _UserSearchWidgetState createState() => _UserSearchWidgetState();
@@ -41,6 +46,7 @@ class _UserSearchWidgetState extends State<UserSearchForCallWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: TextField(
+            focusNode: widget.textFocus,
             decoration: InputDecoration(
               icon: const Icon(Icons.search),
               hintText: "교육생 이름을 입력하세요",
@@ -69,7 +75,7 @@ class _UserSearchWidgetState extends State<UserSearchForCallWidget> {
                         onTap: () {
                           setState(() {
                             isUserSelected = !isUserSelected;
-                            widget.openButtonWidget(isUserSelected);
+                            widget.toggleOpenButtonWidget();
                             String selectedUser = userInfo.userId;
                             widget.setUserId(selectedUser);
                           });

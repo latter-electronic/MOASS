@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -190,7 +191,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                             userProfile
                                                                 .userName,
                                                             style: const TextStyle(
-                                                                fontSize: 80,
+                                                                fontSize: 65,
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .w700),
@@ -209,11 +210,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                                                         .circular(
                                                                             50))),
                                                             child: Center(
-                                                                child: Text(
+                                                                child:
+                                                                    AutoSizeText(
                                                               '${userProfile.positionName}',
                                                               style: const TextStyle(
                                                                   color: Colors
                                                                       .white),
+                                                              maxLines: 1,
                                                             )),
                                                           ),
                                                         )
