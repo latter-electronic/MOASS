@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moass/model/BoardModel.dart';
+import 'package:moass/riverpod/my_profile_river.dart';
 import 'package:moass/screens/board_detail_screen.dart';
 import 'package:moass/services/board_api.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -47,12 +49,18 @@ Future<List<BoardModel>> fetchDummyBoards() async {
           ]);
 }
 
-// BoardScreen 수정
-class BoardScreen extends StatelessWidget {
+// BoardScreen 수정 ConsumerWidget 와 stateless는 같음 차이는 ref 추가
+class BoardScreen extends ConsumerWidget {
   const BoardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 전역관리 프로필 불러오기
+    final profile = ref.watch(profileProvider);
+    if (profile == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: const TopBar(
         title: '모음 보드',
