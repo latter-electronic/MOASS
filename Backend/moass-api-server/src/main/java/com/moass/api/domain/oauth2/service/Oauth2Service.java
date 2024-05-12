@@ -74,9 +74,10 @@ public class Oauth2Service {
                                 return jiraTokenRepository.findByUserId(userId)
                                         .flatMap(existingToken -> {
                                             existingToken.setCloudId(cloudId);
+                                            existingToken.setJiraEmail(emailAddress);
                                             existingToken.setAccessToken(response.getAccessToken());
                                             existingToken.setRefreshToken(response.getRefreshToken());
-
+                                            existingToken.setExpiresAt(LocalDateTime.now().plusHours(1));
                                             return jiraTokenRepository.save(existingToken);
                                         })
                                         .switchIfEmpty(Mono.defer(() -> {
@@ -123,12 +124,12 @@ public class Oauth2Service {
     }
 
     public Mono<JiraToken> getTokenByUserId(String userId) {
-        log.info("리프레시 시도");
+        log.info("리프레시 확인");
         return jiraTokenRepository.findByUserId(userId)
                 .flatMap(token -> {
                     log.info(String.valueOf(token.getExpiresAt()));
                     log.info(String.valueOf(LocalDateTime.now()));
-                    if (token.getExpiresAt().isBefore(LocalDateTime.now().plusHours(9))) {
+                    if (token.getExpiresAt().isBefore(LocalDateTime.now())) {
                         log.info("시간초과로 리프레쉬됨");
                         return refreshAccessToken(token)
                                 .flatMap(refreshedToken -> jiraTokenRepository.save(refreshedToken));
@@ -162,7 +163,7 @@ public class Oauth2Service {
                             .jiraEmail(token.getJiraEmail())
                             .accessToken(response.getAccessToken())
                             .refreshToken(response.getRefreshToken() != null ? response.getRefreshToken() : token.getRefreshToken())
-                            .expiresAt(LocalDateTime.now().plusHours(10))
+                            .expiresAt(LocalDateTime.now().plusHours(1))
                             .build();
 
                     return Mono.just(refreshedToken);
@@ -176,6 +177,13 @@ public class Oauth2Service {
                 propertiesConfig.getJiraClientId() +
                 "&scope=offline_access%20read%3Ajira-user%20read%3Ajira-work%20write%3Ajira-work&redirect_uri=" +
                 propertiesConfig.getJiraRedirectUri() + "&state=" + userInfo.getUserId() + "&response_type=code&prompt=consent");
+    }
+
+    public Mono<JiraToken> deleteJiraConnect(UserInfo userInfo) {
+        return jiraTokenRepository.findByUserId(userInfo.getUserId())
+                .flatMap(token -> jiraTokenRepository.delete(token)
+                        .then(Mono.just(token)))
+                .switchIfEmpty(Mono.error(new CustomException("연동된 Jira 계정이 없습니다.", HttpStatus.FORBIDDEN)));
     }
 
     public Mono<JsonNode> proxyRequestToJira(String userId, JiraProxyRequestDto jiraProxyRequestDto) {
@@ -226,4 +234,6 @@ public class Oauth2Service {
                 })
                 .switchIfEmpty(Mono.just("null"));
     }
+
+
 }

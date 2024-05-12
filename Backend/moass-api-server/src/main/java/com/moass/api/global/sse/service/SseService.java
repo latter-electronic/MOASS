@@ -102,7 +102,7 @@ public class SseService {
     }
 
     // 사람에게 알림 보내기
-    public Mono<Boolean> notifyUser(String userId, SseNotificationDto message) {
+    public Mono<Boolean> notifyUser(String userId, Object message) {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = userSinks.get(userId);
             if (sink != null) {
@@ -117,7 +117,7 @@ public class SseService {
         });
     }
 
-    public Mono<Boolean> notifyTeam(String teamCode, String message) {
+    public Mono<Boolean> notifyTeam(String teamCode, Object message) {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = teamSinks.get(teamCode);
             if (sink != null) {
@@ -174,8 +174,6 @@ public class SseService {
         teamSinks.forEach((teamCode, sink) -> {
             log.info("Team code '{}' has {} subscribers.", teamCode, sink.currentSubscriberCount());
             sink.tryEmitNext("Test message to team: " + teamCode);
-            sink.tryEmitNext(tmp.toString());
-            //sink.tryEmitNext(jsonMessage).isSuccess();
         });
 
         // 각 반에게 테스트 메시지 전송

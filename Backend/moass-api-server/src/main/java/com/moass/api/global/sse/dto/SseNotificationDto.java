@@ -25,9 +25,10 @@ public class SseNotificationDto extends NotificationBase {
         this.setBody(notification.getBody());
         this.setSender(notification.getSender());
         this.setRedirectUrl(notification.getRedirectUrl());
-        this.setStatus(notification.getStatus());
+        this.setDeletedAt(notification.getDeletedAt());
         this.setCreatedAt(notification.getCreatedAt());
     }
+
 
     public SseNotificationDto(String source, String title, String body){
         this.setSource(source);

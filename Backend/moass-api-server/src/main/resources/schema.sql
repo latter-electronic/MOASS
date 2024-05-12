@@ -71,9 +71,9 @@ CREATE TABLE JiraToken (
                              jira_email VARCHAR(50) NOT NULL,
                              access_token LONGTEXT NOT NULL,
                              refresh_token LONGTEXT NOT NULL,
-                             expires_at TIMESTAMP NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 1 HOUR),
-                             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                             expires_at TIMESTAMP NOT NULL DEFAULT (UTC_TIMESTAMP() + INTERVAL 1 HOUR),
+                             created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                             updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                              FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
@@ -83,8 +83,8 @@ CREATE TABLE `FcmToken` (
                             `user_id`	VARCHAR(20)	NOT NULL,
                             `mobile_device_id`	VARCHAR(50)	NOT NULL,
                             `token`	VARCHAR(50)	NULL,
-                            created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                            created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                            updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                             FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
@@ -92,8 +92,8 @@ CREATE TABLE `Widget`(
                         `widget_id` INT NOT NULL AUTO_INCREMENT,
                         `user_id` VARCHAR(20) NOT NULL,
                         `widget_img` VARCHAR(255) NOT NULL,
-                        `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                        `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        `created_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                        `updated_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                         PRIMARY KEY (`widget_id`),
                         FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
@@ -139,8 +139,8 @@ CREATE TABLE `ReservationInfo` (
                                    `info_name` VARCHAR(8) NOT NULL,
                                    `info_date` DATE NOT NULL,
                                    `info_time` INT NOT NULL,
-                                   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                   `created_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                                   `updated_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                                    PRIMARY KEY (`info_id`),
                                    FOREIGN KEY (`reservation_id`) REFERENCES `Reservation`(`reservation_id`),
                                    FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
@@ -160,7 +160,7 @@ CREATE TABLE `Board`
     `board_name` VARCHAR(255),
     `board_url` VARCHAR(255),
     `is_active` BOOLEAN,
-    `completed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `completed_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
     PRIMARY KEY (`board_id`)
 );
 

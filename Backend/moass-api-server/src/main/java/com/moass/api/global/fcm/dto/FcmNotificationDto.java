@@ -19,7 +19,7 @@ public class FcmNotificationDto extends NotificationBase {
         this.setBody(notification.getBody());
         this.setSender(notification.getSender());
         this.setRedirectUrl(notification.getRedirectUrl());
-        this.setStatus(notification.getStatus());
+        this.setDeletedAt(notification.getDeletedAt());
         this.setCreatedAt(notification.getCreatedAt());
     }
 }

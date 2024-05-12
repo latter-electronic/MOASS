@@ -1,6 +1,5 @@
 package com.moass.api.domain.notification.dto;
 
-import com.moass.api.domain.notification.entity.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +24,7 @@ public class NotificationBase {
 
     private String redirectUrl = null;
 
-    private Status status = Status.UNREAD;
+    private  LocalDateTime deletedAt = null;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 

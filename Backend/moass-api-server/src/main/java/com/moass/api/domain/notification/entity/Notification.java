@@ -42,8 +42,8 @@ public class Notification {
     @Field("redirect_url")
     private String redirectUrl;
 
-    @Field("status")
-    private Status status;
+    @Field("deleted_at")
+    private LocalDateTime deletedAt;
 
     @Field("created_at")
     private LocalDateTime createdAt;
@@ -56,7 +56,7 @@ public class Notification {
         this.body = notificationSaveDto.getBody();
         this.sender = notificationSaveDto.getSender();
         this.redirectUrl = notificationSaveDto.getRedirectUrl();
-        this.status = notificationSaveDto.getStatus();
+        this.deletedAt = notificationSaveDto.getDeletedAt();
         this.createdAt = notificationSaveDto.getCreatedAt();
 
     }
