@@ -1,26 +1,32 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { fetchTodos } from '../../services/todoService.js'
+import AuthStore from '../../stores/AuthStore.js';
 
 export default function HomeTodoListComponent() {
     const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { accessToken, refreshToken } = AuthStore.getState()
 
     useEffect(() => {
         const loadTodos = async () => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetchTodos();  // Todo 가져오기
-                setTodos(response.data.data.map(todo => ({
-                    todoId: todo.todoId,
-                    content: todo.content,
-                    completedFlag: todo.completedFlag,
-                    createdAt: todo.createdAt,
-                    updatedAt: todo.updatedAt,
-                    completedAt: todo.completedAt,
-                })));
+                if (!accessToken) {
+                    setTodos(null)
+                } else {
+                    const response = await fetchTodos();  // Todo 가져오기
+                    setTodos(response.data.data.map(todo => ({
+                        todoId: todo.todoId,
+                        content: todo.content,
+                        completedFlag: todo.completedFlag,
+                        createdAt: todo.createdAt,
+                        updatedAt: todo.updatedAt,
+                        completedAt: todo.completedAt,
+                    })))
+                };
             } catch (err) {
                 setError(err.message);  // 에러
                 setTodos([
@@ -59,7 +65,7 @@ export default function HomeTodoListComponent() {
             });
             if (response.data && response.status === 200) {
                 setTodos(
-                    todos.map(t => t.todoId === todoId ? updatedTodo : t)
+                    todos?.map(t => t.todoId === todoId ? updatedTodo : t)
                 );
             } else {
                 throw new Error("Server responded with no error but no data or unexpected status");
@@ -76,7 +82,7 @@ export default function HomeTodoListComponent() {
         <div className="bg-white/5 p-6 rounded-lg w-72 mt-5 h-60 scrollbar-hide overflow-y-auto">
             <h1 className="text-white text-2xl font-bold mb-4">To do List ✨</h1>
             <ul>
-                {todos.map((todo) => (
+                {todos?.map((todo) => (
                     <li key={todo.todoId} className="flex items-center mb-2 text-xl">
                         <input
                             id={`todo-${todo.todoId}`}

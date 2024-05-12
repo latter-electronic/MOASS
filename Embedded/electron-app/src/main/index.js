@@ -1,18 +1,25 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+// main/index.js
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { spawn } from 'child_process';
+import readline from 'readline';
 import icon from '../../resources/icon.png?asset'
 
-let mainWindow;
+let mainWindow = null
+let secondWindow = null
+let pythonProcess = null
 
 function createWindow() {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  const primaryDisplay = screen.getPrimaryDisplay()
+  const externalDisplays = screen.getAllDisplays().filter((display) => display.id !== primaryDisplay.id)
+  console.log('externalDisplay:', externalDisplays)
+  // 메인 윈도우 설정
+  mainWindow = new BrowserWindow({
     title: 'MOASS',
     // width: 1600,
     // height: 600,
-    fullscreen: true, // 전체 화면 모드
+    fullscreen: process.platform === 'linux', // 전체 화면 모드
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -20,7 +27,7 @@ function createWindow() {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
     }
   })
 
@@ -33,90 +40,127 @@ function createWindow() {
     return { action: 'deny' }
   })
 
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
-  } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+  const mainWindowURL = is.dev ? process.env['ELECTRON_RENDERER_URL'] : `file://${join(__dirname, '../renderer/index.html')}`;
+  mainWindow.loadURL(mainWindowURL);
+
+  // 라즈베리파이에서만 추가 디스플레이 처리
+  if (process.platform === 'linux' && externalDisplays.length > 0) {
+    createSecondWindow(externalDisplays[0])
   }
 
   setupPythonProcess(mainWindow)
+}
+
+function createSecondWindow(display) {
+  // 두 번째 윈도우 설정
+  secondWindow = new BrowserWindow({
+    title: 'Name Space',
+    fullscreen: true, // 전체 화면 모드
+    x: display.bounds.x,
+    y: display.bounds.y,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.js'),
+      sandbox: false,
+      nodeIntegration: true,
+      contextIsolation: false,
+    }
+  });
+
+  console.log('xxxxxx: ', display.bounds.x)
+  console.log('yyyyyy: ', display.bounds.y)
+  console.log(join(__dirname, '../renderer/secondary.html'));
+
+  const secondWindowURL = is.dev ? `${process.env['ELECTRON_RENDERER_URL']}#/nameplate` : `file://${join(__dirname, '../renderer/index.html')}#/nameplate`
+  secondWindow.loadURL(secondWindowURL)
 }
 
 // python script 실행
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
-    const pythonProcess = spawn('python', [join(__dirname, '../../sensors/sensor_data.py')]);
+    const pythonPath = '/home/pi/myenv/bin/python';
+    const scriptPath = join(__dirname, '../../sensors/sensor_data.py');
+    pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' })
 
-    pythonProcess.stdout.on('data', (data) => {
-      const output = data.toString().trim();
-      console.log(`stdout: ${output}`);
-      
-      try {
-        // 데이터를 JSON으로 파싱
-        const jsonData = JSON.parse(output);
-        console.log(jsonData);
-        // 로그인 성공 메시지 처리
-        if (jsonData.status === 200) {
-          mainWindow.webContents.send('nfc-data', jsonData.data);
-          console.log('login success');  
-        } else if (["AWAY", "AOD", "LONG_SIT"].includes(jsonData.type)) { // 메시지에 따라 다른 이벤트 전송
-          mainWindow.webContents.send(`${jsonData.type.toLowerCase()}-status`, jsonData.type);
+    const readlineSensorData = readline.createInterface({
+      input: pythonProcess.stdout,
+    });
+
+    readlineSensorData.on('line', (data) => {
+      console.log(`Received Sensor Data: ${data.toString('utf8')}`)
+      if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
+        try {
+          const message = JSON.parse(data.toString());
+          console.log(message.data)
+          switch (message.type) {
+            case 'NFC_DATA':
+              mainWindow.webContents.send('nfc-data', message.data) // nfc-data 전송
+              break
+            case 'MOTION_DETECTED':
+              mainWindow.webContents.send('motion-detected', message.data)  // motion-detected 전송
+              break
+            default:
+              console.log('Received unknown message type:', message.type)
+          }
+        } catch (error) {
+          console.error('Error parsing data from Python:', error)
         }
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
       }
     });
 
     pythonProcess.stderr.on('data', (data) => {
-      console.log('Python log:', data.toString());  // stderr를 통해 로그 출력
+      console.log('Python log:', data.toString())  // 에러 출력
     });
 
     pythonProcess.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
+        console.log(`child process exited with code ${code}`)
+        pythonProcess = null
     });
   } else {
     console.log('Python script is not supported on this platform.')
   }
 }
 
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
-
   createWindow()
 
+  const primaryDisplay = screen.getPrimaryDisplay()
+  console.log('Primary Display:', primaryDisplay)
+
+  if (process.platform === 'linux') {
+    ipcMain.on('login-success', (event, data) => {
+      console.log('Login success data received:', data);
+      if (pythonProcess && pythonProcess.stdin.writable) {
+          pythonProcess.stdin.write(JSON.stringify({action: data}) + '\n');
+      } else {
+        console.log('Python process is not available or not writable.');
+      }
+    })
+
+    ipcMain.on('logout-success', (event, data) => {
+      console.log('Logout success data received:', data);
+      if (pythonProcess && pythonProcess.stdin.writable) {
+          pythonProcess.stdin.write(JSON.stringify({action: data}) + '\n');
+      } else {
+        console.log('Python process is not available or not writable.');
+      }
+    })
+}
+
   app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
-
-// In this file you can include the rest of your app"s specific main process
-// code. You can also put them in separate files and require them here.

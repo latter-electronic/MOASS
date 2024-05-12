@@ -1,96 +1,81 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom' 
-import useAuthStore from '../../stores/AuthStore.js'
+// TagNFCPage.jsx
+import React, { useState, useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
+import AuthStore from '../../stores/AuthStore.js'
+import { deviceLogin } from '../../services/deviceService.js'
 import tagging_space from '../../assets/tag_nfc.png'
-import axios from "axios";
 
 export default function TagNFC() {
-  const MOASS_API_URL = import.meta.env.VITE_MOASS_API_URL;
-  const navigate = useNavigate()
-
-  // const callTagSuccessFunction = () => {
-  //   navigate(`/tagsuccess`)
-  // }
-  const { login, isAuthenticated } = useAuthStore((state) => ({
+  const [deviceId, setDeviceId] = useState('')
+  const [cardSerialId, setCardSerialId] = useState('')
+  const [triggerLogin, setTriggerLogin] = useState(false)
+  const { login } = AuthStore((state) => ({
     login: state.login,
-    isAuthenticated: state.isAuthenticated
   }))
 
-  const [deviceId, setDeviceId] = useState('');
-  const [cardSerialId, setCardSerialId] = useState('');
+  const navigate = useNavigate()
+  // 수정 필요함
+  const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login')
 
-  // API 요청 함수
-  const sendLoginRequest = async () => {
-    const url = `https://${MOASS_API_URL}/api/device/login`;
-    const payload = {
-      'deviceId': deviceId,
-      'cardSerialId': cardSerialId,
-    };
-  
-    try {
-      const response = await axios.post(url, payload, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-  
-      const data = response.data; // axios는 자동으로 JSON 파싱을 처리합니다
-      if (response.status === 200) { // axios는 response.ok 대신 직접 status 코드를 확인합니다
-        await login(data.accessToken, data.refreshToken);
-        console.log('로그인 완료')
-        navigate('/tagsuccess');
-      } else {
-        throw new Error(`API call failed with status ${response.status}: ${data.message}`);
+  // 로그인 성공 후 로직
+  const handleSuccessfulLogin = useCallback((accessToken, refreshToken, deviceId, cardSerialId) => {
+    login(accessToken, refreshToken, deviceId, cardSerialId)
+    localStorage.setItem('accessToken', accessToken)
+    localStorage.setItem('refreshToken', refreshToken)
+    localStorage.setItem('deviceId', deviceId)
+    localStorage.setItem('cardSerialId', cardSerialId)
+
+    navigate('/tagsuccess')
+    setTimeout(() => {
+      navigate('/')
+      console.log('navigate 실행 완료')
+    }, 2000)
+    ipcLoginHandle()
+  }, [login, navigate])
+
+  // 일반 로그인 로직
+  const handleLogin = useCallback(async () => {
+    if (deviceId && cardSerialId) {
+      try {
+        const response = await deviceLogin({ deviceId, cardSerialId })
+        const { accessToken, refreshToken } = response.data.data
+        console.log(`로그인 성공: \nAccessToken: ${accessToken}\nRefreshToken: ${refreshToken}`)
+        handleSuccessfulLogin(accessToken, refreshToken, deviceId, cardSerialId)
+      } catch (error) {
+        alert(`로그인 실패: ${error.response?.data?.message}`)
       }
-    } catch (error) {
-      // axios는 네트워크 에러뿐만 아니라 2xx 범위를 벗어나는 상태 코드도 예외를 발생시킵니다
-      console.error('API call error:', error.message);
     }
-  };
-  
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    sendLoginRequest();
-  };
+  }, [deviceId, cardSerialId, handleSuccessfulLogin])
 
+  const handleNfcData = useCallback((event, data) => {
+    setDeviceId(data.deviceId)
+    setCardSerialId(data.cardSerialId)
+    setTriggerLogin(true)
+  }, [])
 
   useEffect(() => {
-    const handleNfcData = (data) => {
-      console.log('Received NFC data:', data)
-      console.log('Type of data:', typeof data)                 
-      try {
-        const parsedData = JSON.parse(data)
-        if (parsedData.accessToken && parsedData.refreshToken) {
-          login(parsedData.accessToken, parsedData.refreshToken)
-          console.log('navigate 시작')
-          navigate('/tagsuccess')
-          console.log('navigate 실행 완료')
-        }
-      } catch (error) {
-        console.error('Error parsing NFC data:', error)
-      }
+    if (triggerLogin) {
+      handleLogin();
+      setTriggerLogin(false);
     }
+  }, [triggerLogin, handleLogin]);
 
-    window.userAPI?.onNfcData(handleNfcData)
-
-    // 컴포넌트 언마운트 시에 이벤트 리스너 정리.
+  useEffect(() => {
+    window.electron.ipcRenderer.on('nfc-data', handleNfcData);
     return () => {
-      window.userAPI?.removeNfcDataListener()
-    }
-  }, [login, navigate])
+      window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
+    };
+  }, [handleNfcData])
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    setTriggerLogin(true)
+  }
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
-      <div className="absolute top-0 left-0 m-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-xl bg-gray-300 hover:bg-gray-400 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          뒤로가기
-        </button>
-      </div>
       <div className="flex-1 flex items-center justify-center">
-      <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg">
+        <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="deviceId">
               Device ID
@@ -100,7 +85,7 @@ export default function TagNFC() {
               id="deviceId"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               value={deviceId}
-              onChange={e => setDeviceId(e.target.value)}
+              onChange={(e) => setDeviceId(e.target.value)}
               required
             />
           </div>
@@ -113,7 +98,7 @@ export default function TagNFC() {
               id="cardSerialId"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               value={cardSerialId}
-              onChange={e => setCardSerialId(e.target.value)}
+              onChange={(e) => setCardSerialId(e.target.value)}
               required
             />
           </div>
@@ -127,7 +112,8 @@ export default function TagNFC() {
           </div>
         </form>
       </div>
-      <div className="flex-1 flex flex-col"></div>
+      <div className="flex-1 flex flex-col">
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center">
         <img
           className="flex justify-center items-center size-21"
