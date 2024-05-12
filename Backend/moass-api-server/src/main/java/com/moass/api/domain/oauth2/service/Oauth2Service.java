@@ -8,13 +8,11 @@ import com.moass.api.domain.oauth2.repository.JiraTokenRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.PropertiesConfig;
 import com.moass.api.global.exception.CustomException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -161,6 +159,7 @@ public class Oauth2Service {
                             .jiraTokenId(token.getJiraTokenId())
                             .userId(token.getUserId())
                             .cloudId(token.getCloudId())
+                            .jiraEmail(token.getJiraEmail())
                             .accessToken(response.getAccessToken())
                             .refreshToken(response.getRefreshToken() != null ? response.getRefreshToken() : token.getRefreshToken())
                             .expiresAt(LocalDateTime.now().plusHours(10))
