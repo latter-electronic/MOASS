@@ -17,8 +17,8 @@ function createWindow() {
   // 메인 윈도우 설정
   mainWindow = new BrowserWindow({
     title: 'MOASS',
-    // width: 1600,
-    // height: 600,
+    width: 1600,
+    height: 600,
     fullscreen: process.platform === 'linux', // 전체 화면 모드
     show: false,
     autoHideMenuBar: true,
