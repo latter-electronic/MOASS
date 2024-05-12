@@ -50,7 +50,7 @@ class JiraApi {
       );
 
       if (response.statusCode == 200) {
-        jiraAuthURL = response.data;
+        jiraAuthURL = response.data['data'];
         return jiraAuthURL;
       }
     } on DioException catch (e) {

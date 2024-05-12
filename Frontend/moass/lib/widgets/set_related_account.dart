@@ -119,7 +119,13 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          String JiraConnectUrl = await JiraApi(
+                                  dio: Dio(),
+                                  storage: const FlutterSecureStorage())
+                              .requestConnectJira();
+                          print('지라 url : $JiraConnectUrl');
+                        },
                         style: const ButtonStyle(),
                         child: const Text('계정 연동'),
                       ),
@@ -160,12 +166,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton(
-                        onPressed: () async {
-                          String JiraConnectUrl = await JiraApi(
-                                  dio: Dio(),
-                                  storage: const FlutterSecureStorage())
-                              .requestConnectJira();
-                        },
+                        onPressed: () {},
                         style: const ButtonStyle(),
                         child: const Text('URL 등록')),
                   )
