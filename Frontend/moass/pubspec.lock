@@ -129,6 +129,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.3+1"
+  eventflux:
+    dependency: "direct main"
+    description:
+      name: eventflux
+      sha256: "2fa48f592ad748cb6448ef2bb3a702665b5db7a9686859ac6a3c958a24e9ce67"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:

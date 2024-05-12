@@ -1,6 +1,7 @@
 // 계정 관련 API 요청
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/sse_listener_api.dart';
 
 class AccountApi {
   final Dio dio;
@@ -47,6 +48,9 @@ class AccountApi {
       await storage.delete(key: 'isLoggedIn');
       await storage.delete(key: 'accessToken');
       await storage.delete(key: 'refreshToken');
+      // SSEListener(storage: const FlutterSecureStorage()).disconnectUserEvent();
+      SSEListener(storage: const FlutterSecureStorage()).disconnectTeamEvent();
+
       return true; // 로그아웃 성공
     } catch (e) {
       print('Logout failed: $e');

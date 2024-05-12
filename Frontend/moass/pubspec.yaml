@@ -55,6 +55,7 @@ dependencies:
     auto_size_text: ^3.0.0
     flutter_local_notifications: ^17.1.2
     permission_handler: ^11.1.0
+    eventflux: ^2.0.1
 
 dev_dependencies:
     flutter_test:

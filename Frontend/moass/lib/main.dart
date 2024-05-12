@@ -39,7 +39,7 @@ void main() async {
   await storage.write(key: 'fcmToken', value: fcmToken);
   print('FCM Token: $fcmToken');
 
-  // 알림 권한
+  // 권한 요청
   FirebaseMessaging.instance.requestPermission(
     badge: true,
     alert: true,
@@ -86,7 +86,6 @@ void main() async {
 
   // 백그라운드 메시지 관련
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
     if (message != null) {
       if (message.notification != null) {
