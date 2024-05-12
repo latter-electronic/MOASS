@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/services/jira_api.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SetRelatedAccount extends StatefulWidget {
   final String service;
@@ -124,7 +125,11 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                                   dio: Dio(),
                                   storage: const FlutterSecureStorage())
                               .requestConnectJira();
-                          print('지라 url : $JiraConnectUrl');
+                          await launchUrlString(JiraConnectUrl);
+                          setState() {
+                            isOpenedButtonWidget = false;
+                          }
+                          // print('지라 url : $JiraConnectUrl');
                         },
                         style: const ButtonStyle(),
                         child: const Text('계정 연동'),

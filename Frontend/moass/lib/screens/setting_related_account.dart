@@ -16,7 +16,7 @@ class SettingRelatedAccountScreen extends StatefulWidget {
 
 class _SettingRelatedAccountScreenState
     extends State<SettingRelatedAccountScreen> {
-  late String? userJiraMail = 'null';
+  late String? userJiraMail = '정보를 불러오고 있습니다...';
   late JiraApi jiraApi;
 
   @override
