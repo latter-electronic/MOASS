@@ -13,8 +13,8 @@ export default function JiraIssueCard({ issue }) {
         if (customfield_10014) {
             getIssueDetails(customfield_10014)
                 .then(data => {
-                    setEpicName(data.fields.customfield_10011);
-                    setEpicColor(data.fields.customfield_10017);
+                    setEpicName(data.data.fields.customfield_10011);
+                    setEpicColor(data.data.fields.customfield_10017);
                 })
                 .catch(error => console.error('Failed to fetch epic details:', error));
         }
