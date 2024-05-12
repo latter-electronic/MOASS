@@ -19,7 +19,7 @@ const customStyles = {
         boxSizing: 'border-box'
     },
     overlay: {
-        backgroundColor: 'rgba(0, 0, 0, 0)'
+        backgroundColor: 'rgba(0, 0, 0, 0)',
     }
 };
 
@@ -31,6 +31,7 @@ function ModalBase({ isOpen, onRequestClose, children }) {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             style={customStyles}
+            shouldCloseOnOverlayClick={false}
             contentLabel="Modal"
         >
             {children}
