@@ -23,19 +23,20 @@ export default function JiraPage() {
 
     useEffect(() => {
         async function fetchIssues(statusId, setIssues, setLoading) {
+            setLoading(true);
             try {
                 const data = await fetchCurrentSprintIssues(statusId);
-                setIssues(data.issues);
+                setIssues(data.issues || []);
             } catch (error) {
                 console.error('Error fetching issues:', error);
+                setIssues([]);  // 실패 시 빈 배열 할당
             }
             setLoading(false);
         }
 
-        fetchIssues('10000', setTodoIssues, setLoadingTodo); // "해야 할 일"
-        fetchIssues('3', setInProgressIssues, setLoadingInProgress); // "진행 중"
-        // fetchIssues('10001', setDoneIssues, setLoadingDone); // "완료"
-        setDoneIssues(testDoneIssues.issues); // "완료"
+        fetchIssues('10000', setTodoIssues, setLoadingTodo);  // "해야 할 일"
+        fetchIssues('3', setInProgressIssues, setLoadingInProgress);  // "진행 중"
+        setDoneIssues(testDoneIssues.issues || []);  // "완료", 실패하면 테스트 데이터 사용
     }, []);
 
     const renderLoading = () => (
