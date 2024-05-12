@@ -1,0 +1,204 @@
+{
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations,customfield_10010.requestTypePractice",
+    "id": "847157",
+    "self": "https://ssafy.atlassian.net/rest/api/3/issue/847157",
+    "key": "S10P31E203-236",
+    "fields": {
+        "statuscategorychangedate": "2024-04-15T09:10:14.958+0900",
+        "issuetype": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+            "id": "10000",
+            "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+            "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+            "name": "에픽",
+            "subtask": false,
+            "hierarchyLevel": 1
+        },
+        "timespent": null,
+        "customfield_10030": null,
+        "customfield_10031": null,
+        "project": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14697",
+            "id": "14697",
+            "key": "S10P31E203",
+            "name": "S10P31E203",
+            "projectTypeKey": "software",
+            "simplified": false,
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=medium"
+            }
+        },
+        "fixVersions": [],
+        "aggregatetimespent": null,
+        "customfield_10035": [],
+        "resolution": null,
+        "customfield_10036": null,
+        "customfield_10037": null,
+        "customfield_10027": null,
+        "customfield_10028": null,
+        "customfield_10029": null,
+        "resolutiondate": null,
+        "workratio": -1,
+        "issuerestriction": {
+            "issuerestrictions": {},
+            "shouldDisplay": false
+        },
+        "lastViewed": "2024-04-29T10:18:21.137+0900",
+        "watches": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-236/watchers",
+            "watchCount": 1,
+            "isWatching": false
+        },
+        "created": "2024-04-15T09:10:14.525+0900",
+        "customfield_10020": null,
+        "customfield_10021": null,
+        "customfield_10022": null,
+        "customfield_10023": null,
+        "priority": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+            "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+            "name": "Medium",
+            "id": "3"
+        },
+        "customfield_10024": null,
+        "customfield_10025": null,
+        "customfield_10026": null,
+        "labels": [],
+        "customfield_10016": null,
+        "customfield_10017": "teal",
+        "customfield_10018": {
+            "hasEpicLinkFieldDependency": false,
+            "showField": false,
+            "nonEditableReason": {
+                "reason": "TOP_OF_HIERARCHY",
+                "message": "계층 구조의 맨 위에 있는 이슈는 상위 집합을 가질 수 없습니다."
+            }
+        },
+        "customfield_10019": "1|i05csi:",
+        "timeestimate": null,
+        "aggregatetimeoriginalestimate": null,
+        "versions": [],
+        "issuelinks": [],
+        "assignee": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A79efe5ca-a585-4346-b8eb-1445ae87ccaa",
+            "accountId": "712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/32"
+            },
+            "displayName": "한성주",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "updated": "2024-05-12T13:43:35.416+0900",
+        "status": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+            "description": "",
+            "iconUrl": "https://ssafy.atlassian.net/",
+            "name": "해야 할 일",
+            "id": "10000",
+            "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+            }
+        },
+        "components": [],
+        "timeoriginalestimate": null,
+        "description": null,
+        "customfield_10010": null,
+        "customfield_10011": "[EM] IoT 기기 설계",
+        "customfield_10012": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/customFieldOption/10016",
+            "value": "To Do",
+            "id": "10016"
+        },
+        "customfield_10013": "ghx-label-11",
+        "customfield_10014": null,
+        "customfield_10015": null,
+        "timetracking": {},
+        "customfield_10005": null,
+        "customfield_10006": null,
+        "customfield_10007": null,
+        "security": null,
+        "customfield_10008": null,
+        "attachment": [],
+        "customfield_10009": null,
+        "aggregatetimeestimate": null,
+        "summary": "[EM] IoT 기기 설계",
+        "creator": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A79efe5ca-a585-4346-b8eb-1445ae87ccaa",
+            "accountId": "712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/32"
+            },
+            "displayName": "한성주",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "subtasks": [],
+        "reporter": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A79efe5ca-a585-4346-b8eb-1445ae87ccaa",
+            "accountId": "712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:79efe5ca-a585-4346-b8eb-1445ae87ccaa/0f7d32ef-6298-470b-9925-d3f2df8d89ce/32"
+            },
+            "displayName": "한성주",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "aggregateprogress": {
+            "progress": 0,
+            "total": 0
+        },
+        "customfield_10000": "{}",
+        "customfield_10044": null,
+        "customfield_10045": null,
+        "customfield_10001": null,
+        "customfield_10002": null,
+        "customfield_10003": null,
+        "customfield_10004": null,
+        "customfield_10038": null,
+        "customfield_10039": null,
+        "environment": null,
+        "duedate": null,
+        "progress": {
+            "progress": 0,
+            "total": 0
+        },
+        "comment": {
+            "comments": [],
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/847157/comment",
+            "maxResults": 0,
+            "total": 0,
+            "startAt": 0
+        },
+        "votes": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-236/votes",
+            "votes": 0,
+            "hasVoted": false
+        },
+        "worklog": {
+            "startAt": 0,
+            "maxResults": 20,
+            "total": 0,
+            "worklogs": []
+        }
+    }
+}

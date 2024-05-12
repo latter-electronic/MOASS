@@ -15,6 +15,43 @@
             "avatarId": 10315,
             "hierarchyLevel": 0
         },
+        "parent": {
+            "id": "847157",
+            "key": "S10P31E203-236",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/847157",
+            "fields": {
+                "summary": "[EM] IoT 기기 설계",
+                "status": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+                    "description": "",
+                    "iconUrl": "https://ssafy.atlassian.net/",
+                    "name": "해야 할 일",
+                    "id": "10000",
+                    "statusCategory": {
+                        "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                        "id": 2,
+                        "key": "new",
+                        "colorName": "blue-gray",
+                        "name": "해야 할 일"
+                    }
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "issuetype": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+                    "id": "10000",
+                    "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+                    "name": "에픽",
+                    "subtask": false,
+                    "hierarchyLevel": 1
+                }
+            }
+        },
         "timespent": null,
         "customfield_10030": null,
         "customfield_10031": null,
@@ -34,8 +71,8 @@
         },
         "fixVersions": [],
         "aggregatetimespent": null,
-        "resolution": null,
         "customfield_10035": [],
+        "resolution": null,
         "customfield_10036": null,
         "customfield_10037": null,
         "customfield_10027": null,
@@ -98,7 +135,7 @@
             "timeZone": "Asia/Seoul",
             "accountType": "atlassian"
         },
-        "updated": "2024-05-11T19:37:20.584+0900",
+        "updated": "2024-05-12T13:43:35.438+0900",
         "status": {
             "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
             "description": "",
@@ -117,16 +154,16 @@
         "timeoriginalestimate": null,
         "description": null,
         "customfield_10010": null,
-        "customfield_10014": null,
+        "customfield_10014": "S10P31E203-236",
         "customfield_10015": null,
         "timetracking": {},
         "customfield_10005": null,
         "customfield_10006": null,
-        "customfield_10007": null,
         "security": null,
+        "customfield_10007": null,
         "customfield_10008": null,
-        "customfield_10009": null,
         "aggregatetimeestimate": null,
+        "customfield_10009": null,
         "attachment": [],
         "summary": "jiraTest용 이슈",
         "creator": {
@@ -161,11 +198,11 @@
             "accountType": "atlassian"
         },
         "customfield_10000": "{}",
-        "customfield_10044": null,
         "aggregateprogress": {
             "progress": 0,
             "total": 0
         },
+        "customfield_10044": null,
         "customfield_10045": null,
         "customfield_10001": null,
         "customfield_10002": null,
