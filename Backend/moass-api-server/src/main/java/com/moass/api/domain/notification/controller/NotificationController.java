@@ -26,10 +26,10 @@ public class NotificationController {
 
 
     // 모든 알림 가져오기
-    @GetMapping("/all")
+    @GetMapping("/search")
     public Mono<ResponseEntity<ApiResponse>> getAllNotifications(@Login UserInfo userInfo,
-                                                                 @RequestParam(defaultValue = "") String lastNotificationId,
-                                                                 @RequestParam(required = false) LocalDateTime lastCreatedAt) {
+                                                                 @RequestParam(defaultValue = "",name="lastnotificationid") String lastNotificationId,
+                                                                 @RequestParam(required = false,name="lastcreatedat") LocalDateTime lastCreatedAt) {
         return notificationService.getAllNotifications(userInfo, lastNotificationId, lastCreatedAt)
                 .flatMap(notifications -> ApiResponse.ok("알람 목록 조회 완료", notifications))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
@@ -45,13 +45,22 @@ public class NotificationController {
             return notificationService.saveAndPushNotification(userId, notificationSendDto)
                     .flatMap(savedNotification -> ApiResponse.ok("Notification 저장 성공", savedNotification))
                     .onErrorResume(CustomException.class, e -> ApiResponse.error("Notification 저장 실패 : " + e.getMessage(), e.getStatus()));
-        }else if(teamCode!=null){
+        }else if(teamCode!=null) {
             return notificationService.saveAndPushbyTeam(teamCode, notificationSendDto)
+                    .flatMap(savedNotification -> ApiResponse.ok("Notification 저장 성공", savedNotification))
+                    .onErrorResume(CustomException.class, e -> ApiResponse.error("Notification 저장 실패 : " + e.getMessage(), e.getStatus()));
+        }else if(classCode!=null) {
+            return notificationService.saveAndPushbyClass(classCode, notificationSendDto)
                     .flatMap(savedNotification -> ApiResponse.ok("Notification 저장 성공", savedNotification))
                     .onErrorResume(CustomException.class, e -> ApiResponse.error("Notification 저장 실패 : " + e.getMessage(), e.getStatus()));
         }
         return ApiResponse.error("userId, teamCode, classCode 중 하나는 필수입니다.", HttpStatus.BAD_REQUEST);
     }
 
-
+    @DeleteMapping("/{notificationId}")
+    public Mono<ResponseEntity<ApiResponse>> readNotification(@Login UserInfo userInfo,@PathVariable String notificationId){
+        return notificationService.readNotification(userInfo,notificationId)
+                .flatMap(readNotificationId -> ApiResponse.ok("알람 읽기완료", readNotificationId))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
 }
