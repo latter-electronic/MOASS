@@ -28,16 +28,17 @@ export const getCurrentUser = async () => {
 /**
  * 현재 열려있는 스프린트의 이슈들 검색
  * 
+ * @param {string} statusId - 조회할 이슈의 상태 ID ('10000' - 해야 할 일, '3' - 진행 중, '10001' - 완료)
  * @returns {Promise} 이슈 데이터
  */
-export const fetchCurrentSprintIssues = async () => {
+export const fetchCurrentSprintIssues = async (statusId) => {
     try {
         const projectData = await getProject();
         const projectKey = projectData.values[0].key; // 가장 최근에 업데이트된 프로젝트의 키
 
         const url = `${prefix}`;
         const fields = "customfield_10014, summary, status, priority, assignee, customfield_10031";
-        const jqlQuery = `project = '${projectKey}' AND reporter = 'diduedidue@naver.com' AND sprint IN openSprints()`;
+        const jqlQuery = `project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'`; // 잠시 개발용으로 reporter
         const maxResults = 240;
 
         const payload = {
@@ -47,9 +48,9 @@ export const fetchCurrentSprintIssues = async () => {
 
         return axios.post(url, payload)
             .then(response => response.data)
-            .catch(error => console.error('Error fetching current sprint issues:', error));
+            .catch(error => console.error('Error fetching current sprint issues based on status:', error));
     } catch (error) {
-        console.error('프로젝트 키를 가져오는 데 실패했습니다:', error);
+        console.error('Failed to fetch project key:', error);
         throw error;
     }
 };
