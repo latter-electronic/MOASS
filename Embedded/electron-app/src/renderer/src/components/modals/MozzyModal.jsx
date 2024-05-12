@@ -1,6 +1,7 @@
 // components/ModalBase.jsx
-import React from 'react';
-import Modal from 'react-modal';
+import React from 'react'
+import Modal from 'react-modal'
+import CloseIcon from '../../assets/images/buttons/x-icon.png'
 
 const customStyles = {
     content: {
@@ -31,16 +32,16 @@ function ModalBase({ isOpen, onRequestClose, children }) {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             style={customStyles}
-            shouldCloseOnOverlayClick={false}
+            // shouldCloseOnOverlayClick={false}
             contentLabel="Modal"
         >
             {children}
             <button
                 onClick={onRequestClose}
-                className="absolute top-0 right-0 m-2 p-2 text-black"
+                className="absolute top-0 right-0 m-2 p-2"
                 aria-label="Close modal"
             >
-                ✕
+                <img className='w-4 m-2' src={CloseIcon} alt="Close Icon" />
             </button>
         </Modal>
     );
