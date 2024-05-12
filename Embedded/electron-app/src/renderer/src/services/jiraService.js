@@ -1,9 +1,10 @@
 import { moassApiAxios } from './apiConfig.js';
+import AuthStore from '../stores/AuthStore.js'; 
 
 import testDoneIssues from '../pages/jira/proxyTest/testJson10001.json' 
 
 const axios = moassApiAxios();
-const prefix = '/api/oauth2/jira/proxy';
+const prefix = 'api/oauth2/jira/proxy';
 
 
 /**
@@ -12,18 +13,25 @@ const prefix = '/api/oauth2/jira/proxy';
  * @returns {Promise} 사용자 정보
  */
 export const getCurrentUser = async () => {
-    const url = `${prefix}`;
+    const { accessToken } = AuthStore.getState();
     const payload = {
-        url: '/rest/api/3/myself',
-        method: "get"
+        method: "get",
+        url: "/rest/api/3/myself",
     };
 
-    return axios.post(url, payload)
-        .then(response => response.data)
-        .catch(error => {
-            console.error('Error fetching current user details:', error);
-            throw error;
-        });
+    return axios.post(prefix, payload, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        response.data
+        console.log(response.data);
+    })
+    .catch(error => {
+        console.error('Error fetching current user details:', error);
+        throw error;
+    });
 };
 
 
@@ -34,27 +42,24 @@ export const getCurrentUser = async () => {
  * @returns {Promise} 이슈 데이터
  */
 export const fetchCurrentSprintIssues = async (statusId) => {
-    try {
-        const projectData = await getProject();
-        const projectKey = projectData.values[0].key; // 가장 최근에 업데이트된 프로젝트의 키
+    const { accessToken } = AuthStore.getState();
+    const projectData = await getProject();
+    const projectKey = projectData.values[0].key;
+    const data = {
+        method: "get",
+        url: `/rest/api/3/search?jql=project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'&fields=customfield_10014,summary,priority,assignee,customfield_10031&maxResults=240`
+    };
 
-        const url = `${prefix}`;
-        const fields = "customfield_10014, summary, priority, assignee, customfield_10031";
-        const jqlQuery = `project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'`; // 잠시 개발용으로
-        const maxResults = 240;
-
-        const payload = {
-            url: `/rest/api/3/search?jql=${jqlQuery}&fields=${fields}&maxResults=${maxResults}`,
-            method: "get"
-        };
-
-        return axios.post(url, payload)
-            .then(response => response.data)
-            .catch(error => console.error('Error fetching current sprint issues based on status:', error));
-    } catch (error) {
-        console.error('Failed to fetch project key:', error);
-        throw error;
-    }
+    return axios.post(prefix, data, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.data)
+      .catch(error => {
+          console.error('Error fetching current sprint issues based on status:', error);
+          throw error;
+      });
 };
 
 /**
@@ -65,19 +70,22 @@ export const fetchCurrentSprintIssues = async (statusId) => {
  * @returns {Promise} 이슈 세부 정보를 나타내는 Promise 객체
  */
 export const getIssueDetails = async (issueIdOrKey) => {
-    const url = `${prefix}`;
-    const fields = 'customfield_10011, customfield_10017'  // 10011 에픽이름, 10017 색상
-    const payload = {
-        url: `/rest/api/3/issue/${issueIdOrKey}?fields=${fields}`,
-        method: "get"
+    const { accessToken } = AuthStore.getState();
+    const data = {
+        method: 'get',
+        url: `/rest/api/3/issue/${issueIdOrKey}?fields=customfield_10011,customfield_10017`
     };
 
-    return axios.post(url, payload)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(`이슈 ${issueIdOrKey}의 세부 정보를 가져오는 중 오류 발생:`, error);
-            throw error;
-        });
+    return axios.post(prefix, data, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.data)
+      .catch(error => {
+          console.error(`Error fetching details for issue ${issueIdOrKey}:`, error);
+          throw error;
+      });
 };
 
 /**
@@ -86,19 +94,22 @@ export const getIssueDetails = async (issueIdOrKey) => {
  * @returns {Promise} 이슈 데이터
  */
 export const fetchRecentClosedSprintIssues = async () => {
-    const url = `${prefix}`;
-    const fields = 'creator,summary,priority,status, customfield_10031, parent';
-    const jqlQuery = "project = 'S10P31E203' AND reporter = 'diduedidue@naver.com' AND sprint IN closedSprints() AND sprint NOT IN futureSprints() ORDER BY sprint DESC";
-    const maxResults = 50;  // 일단 50
-
-    const payload = {
-        url: `/rest/api/3/search?jql=${jqlQuery}&fields=${fields}&maxResults=${maxResults}`,
-        method: "get"
+    const { accessToken } = AuthStore.getState();
+    const data = {
+        method: "get",
+        url: "/rest/api/3/search?jql=project = 'S10P31E203' AND reporter = 'diduedidue@naver.com' AND sprint IN closedSprints() AND sprint NOT IN futureSprints() ORDER BY sprint DESC&fields=creator,summary,priority,status,customfield_10031,parent&maxResults=50"
     };
 
-    return axios.post(url, payload)
-        .then(response => response.data)
-        .catch(error => console.error('Error fetching recent closed sprint issues:', error));
+    return axios.post(prefix, data, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.data)
+      .catch(error => {
+          console.error('Error fetching recent closed sprint issues:', error);
+          throw error;
+      });
 };
 
 /**
@@ -108,17 +119,20 @@ export const fetchRecentClosedSprintIssues = async () => {
  * expand: insight  통해 lastIssueUpdatedTime 키값 json 결과값에 추가하고 해당 키를 통해 desc 정렬. 마지막 결과 1개만 받아옴
  */
 export const getProject = async () => {
-    const url = `${prefix}`;
-    const maxResults = 1
-    const expand = 'insight'
-    const orderBy ='-lastIssueUpdatedTime'
-
-    const payload = {
-        url: `/rest/api/3/project/search?maxResults=${maxResults}&expand=${expand}&orderBy=${orderBy}`,
-        method: "get"
+    const { accessToken } = AuthStore.getState();
+    const data = {
+        method: "get",
+        url: "/rest/api/3/project/search?maxResults=1&expand=insight&orderBy=-lastIssueUpdatedTime"
     };
 
-    return axios.post(url, payload)
-        .then(response => response.data)
-        .catch(error => console.error('Error fetching projects:', error));
+    return axios.post(prefix, data, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.data)
+      .catch(error => {
+          console.error('Error fetching projects:', error);
+          throw error;
+      });
 };
