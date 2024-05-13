@@ -417,10 +417,10 @@ class _ReservationBoxState extends State<ReservationBox> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       color: isReserved
-                          ? Colors.blue.withOpacity(0.3)
+                          ? Colors.green.withOpacity(0.3)
                           : isSelected
-                              ? Colors.blue[900] // 선택된 시간에 더 어두운 색상 적용
-                              : Colors.blue,
+                              ? Colors.green[900] // 선택된 시간에 더 어두운 색상 적용
+                              : Colors.green,
                     ),
                     child:
                         Text(time, style: const TextStyle(color: Colors.white)),

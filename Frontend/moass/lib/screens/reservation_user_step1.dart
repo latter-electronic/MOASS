@@ -2,9 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/reservation_model.dart';
 import 'package:moass/screens/reservation_user_step2.dart';
+import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/reservation_api.dart';
+import 'package:moass/widgets/category_text.dart';
 
 class ReservationUserStep1 extends StatefulWidget {
   const ReservationUserStep1({super.key});
@@ -17,6 +20,7 @@ class _ReservationUserStep1State extends State<ReservationUserStep1> {
   DateTime selectedDate = DateTime.now();
   List<ReservationDayModel> reservationDayData = [];
   late ReservationApi api;
+  MyProfile? userProfile;
 
   @override
   void initState() {
@@ -24,6 +28,21 @@ class _ReservationUserStep1State extends State<ReservationUserStep1> {
     api = ReservationApi(
         dio: Dio(), storage: const FlutterSecureStorage()); // Initialize
     fetchReservationData();
+    fetchUserProfile();
+  }
+
+  // 개인 정보를 불러오는 요청 함수
+  Future<void> fetchUserProfile() async {
+    final profile =
+        await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+            .fetchUserProfile();
+    if (profile != null) {
+      setState(() {
+        userProfile = profile;
+        // 'userName': profile.locationName;
+        // 'userId': profile.classCode;
+      });
+    }
   }
 
 // 날짜가 바뀔때마다 새로운 API요청
@@ -55,6 +74,9 @@ class _ReservationUserStep1State extends State<ReservationUserStep1> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            CategoryText(
+                text:
+                    '${userProfile?.locationName} / ${userProfile?.classCode} 반 예약 가능 목록'),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Row(
@@ -144,7 +166,7 @@ class ReservationBox extends StatelessWidget {
                   bool isReserved = reservation.reservationInfoList
                       .any((info) => info.infoTime == index);
                   Color bgColor =
-                      isReserved ? Colors.blue.withOpacity(0.3) : Colors.blue;
+                      isReserved ? Colors.green.withOpacity(0.3) : Colors.green;
                   return Container(
                     margin: const EdgeInsets.all(2),
                     padding:

@@ -132,6 +132,10 @@ class ReservationInfoListDto {
       infoTime: json['infoTime'],
     );
   }
+  @override
+  String toString() {
+    return 'ReservationInfoListDto(infoId: $infoId, reservationId: $reservationId, userId: $userId, infoState: $infoState, infoName: $infoName, infoDate: $infoDate, infoTime: $infoTime)';
+  }
 }
 
 class ReservationDayModel {
@@ -152,6 +156,12 @@ class ReservationDayModel {
     required this.colorCode,
     required this.reservationInfoList,
   });
+
+// print출력을 위한 코드
+  @override
+  String toString() {
+    return 'ReservationDayModel(reservationId: $reservationId, classCode: $classCode, category: $category, timeLimit: $timeLimit, reservationName: $reservationName, colorCode: $colorCode, reservationInfoList: ${reservationInfoList.map((i) => i.toString()).join(', ')})';
+  }
 
   factory ReservationDayModel.fromJson(Map<String, dynamic> json) {
     return ReservationDayModel(
