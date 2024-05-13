@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ import java.util.Map;
 public class MessageDto {
 
     private Integer boardId;
-    private List<String> ids;
-    private List<String> palette;
+    private Set<String> ids;
+    private Set<String> palette;
     private Map<String, List<Integer>> data;
 }

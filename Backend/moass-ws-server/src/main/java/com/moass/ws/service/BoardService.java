@@ -6,8 +6,8 @@ import com.moass.ws.dto.MessageDto;
 
 public interface BoardService {
 
-    void createBoard(BoardRequestDto dto);
-    void enterBoard(BoardEnterDto boardEnterDto);
-    void quitBoard(BoardRequestDto dto);
+//    void createBoard(BoardRequestDto dto);
+    void enterBoard(String message);
+//    void quitBoard(BoardRequestDto dto);
     void drawBoard(String message);
 }

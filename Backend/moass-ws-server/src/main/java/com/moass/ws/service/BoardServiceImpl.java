@@ -11,6 +11,9 @@ import com.moass.ws.repository.BoardRepository;
 import com.moass.ws.repository.BoardUserRepository;
 import com.moass.ws.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,39 +29,47 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
     private final BoardUserRepository boardUserRepository;
 
-    public void createBoard(BoardRequestDto dto) {
-        Board board = boardRepository.save(new Board());
-        boardUserRepository.save(new BoardUser(board.getBoardId(), dto.getUserId()));
+//    public void createBoard(BoardRequestDto dto) {
+//        Board board = boardRepository.save(new Board());
+//        boardUserRepository.save(new BoardUser(board.getBoardId(), dto.getUserId()));
+//
+//        Set<User> users = new HashSet<>();
+//        users.add(userRepository.findById(dto.getUserId()).orElseThrow());
+//        boards.put(board.getBoardId(), users);
+//
+//        template.convertAndSend("/topic/board/" + board.getBoardId(), BoardResponseDto.builder()
+//                .boardId(board.getBoardId())
+//                .users(users)
+//                .build());
+//    }
 
-        Set<User> users = new HashSet<>();
-        users.add(userRepository.findById(dto.getUserId()).orElseThrow());
-        boards.put(board.getBoardId(), users);
+    public void enterBoard(String message) {
+        JSONParser parser = new JSONParser();
+        Object obj = null;
 
-        template.convertAndSend("/topic/board/" + board.getBoardId(), BoardResponseDto.builder()
-                .boardId(board.getBoardId())
-                .users(users)
-                .build());
+        try {
+            obj = parser.parse(message);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject jsonObject = (JSONObject) obj;
+        BoardEnterDto boardEnterDto = new BoardEnterDto((Integer) jsonObject.get("boardId"), (String) jsonObject.get("userId"));
+
+//        boardUserRepository.save(new BoardUser(boardEnterDto.getBoardId(), boardEnterDto.getUserId()));
+//        boards.get(boardEnterDto.getBoardId()).getIds().add(boardEnterDto.getUserId());
+
+        template.convertAndSend("/topic/board/" + boardEnterDto.getBoardId(), boards.get(boardEnterDto.getBoardId()));
     }
 
-    public void enterBoard(BoardEnterDto boardEnterDto) {
-        boardUserRepository.save(new BoardUser(boardEnterDto.getBoardId(), boardEnterDto.getUserId()));
-
-        boards.get(boardEnterDto.getBoardId()).add(userRepository.findById(dto.getUserId()).orElseThrow());
-
-        template.convertAndSend("/topic/board/" + dto.getBoardId(), BoardResponseDto.builder()
-                .boardId(dto.getBoardId())
-                .users(boards.get(dto.getBoardId()))
-                .build());
-    }
-
-    public void quitBoard(BoardRequestDto dto) {
-        boards.get(dto.getBoardId()).remove(userRepository.findById(dto.getUserId()).orElseThrow());
-
-        template.convertAndSend("/topic/board/" + dto.getBoardId(), BoardResponseDto.builder()
-                .boardId(dto.getBoardId())
-                .users(boards.get(dto.getBoardId()))
-                .build());
-    }
+//    public void quitBoard(BoardRequestDto dto) {
+//        boards.get(dto.getBoardId()).remove(userRepository.findById(dto.getUserId()).orElseThrow());
+//
+//        template.convertAndSend("/topic/board/" + dto.getBoardId(), BoardResponseDto.builder()
+//                .boardId(dto.getBoardId())
+//                .users(boards.get(dto.getBoardId()))
+//                .build());
+//    }
 
     public void drawBoard(String message) {
         template.convertAndSend("/topic/board/draw", message);
