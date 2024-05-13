@@ -18,7 +18,7 @@ export default function NotiGitlabComponent() {
 
       {/* Gitlab 로고 */}
       <div className="flex-shrink-0 mr-1 absolute top-5 right-3">
-        <img src={gitlabIcon} alt="Gitlab Icon" className="size-14 opacity-15" />
+        <img src={gitlabIcon} alt="Gitlab Icon" className="size-14 opacity-30" />
       </div>
 
     </div>
