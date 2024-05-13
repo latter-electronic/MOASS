@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/screens/reservation_admin_screen.dart';
+import 'package:moass/screens/work_admin_screen.dart';
 import 'package:moass/screens/work_screen.dart';
 import 'package:moass/screens/reservation_screen.dart';
 import 'package:moass/screens/main_home_screen.dart';
@@ -47,8 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void setupWidgetOptions(int jobCode) {
     setState(() {
       _widgetOptions = [
-        const WorkScreen(),
-        (jobCode == 1) ? const ReservationScreen() : ReservationAdminScreen(),
+        (jobCode == 1) ? const WorkScreen() : const WorkAdminScreen(),
+        (jobCode == 1)
+            ? const ReservationScreen()
+            : const ReservationAdminScreen(),
         const MainHomeScreen(),
         const SeatScreen(),
         const BoardScreen(),

@@ -123,6 +123,7 @@ Future<bool> checkTokenValidityAndRefresh(
     Dio dio, FlutterSecureStorage storage) async {
   try {
     final accessToken = await storage.read(key: 'accessToken');
+    print("엑세스 토큰: $accessToken");
     final refreshToken = await storage.read(key: 'refreshToken');
 
     if (accessToken == null || refreshToken == null) {
