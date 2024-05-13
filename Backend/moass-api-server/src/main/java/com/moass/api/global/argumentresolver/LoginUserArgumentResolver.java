@@ -22,7 +22,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        log.info("supportsParameter 실행");
         boolean hasLoginAnnotation = parameter.hasParameterAnnotation(Login.class);
         boolean hasIntegerType = UserInfo.class.isAssignableFrom(parameter.getParameterType());
         return hasLoginAnnotation && hasIntegerType;
@@ -30,7 +29,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public Mono<Object> resolveArgument(MethodParameter parameter, BindingContext bindingContext, ServerWebExchange exchange) {
-        log.info("resolveArgument 실행");
         ServerHttpRequest request = exchange.getRequest();
         String authorization = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
 
@@ -38,7 +36,6 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
             return Mono.empty();
 
         String token = authorization.substring(7);
-        log.info("token={}", token);
         try {
             UserInfo userInfo = jwtService.getUserInfoFromAccessToken(token);
             return Mono.justOrEmpty(userInfo);
