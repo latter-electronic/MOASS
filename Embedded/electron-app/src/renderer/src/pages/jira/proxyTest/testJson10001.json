@@ -1,0 +1,808 @@
+{
+    "expand": "schema,names",
+    "startAt": 0,
+    "maxResults": 25,
+    "total": 119,
+    "issues": [
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883207",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883207",
+            "key": "S10P31E203-553",
+            "fields": {
+                "summary": "5주차 프로젝트 회고/종료 미팅 (5/10)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-1"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883206",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883206",
+            "key": "S10P31E203-552",
+            "fields": {
+                "summary": "기기/앱/서버간 통신 테스트",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+                    "name": "High",
+                    "id": "2"
+                },
+                "customfield_10014": "S10P31E203-1"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883205",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883205",
+            "key": "S10P31E203-551",
+            "fields": {
+                "summary": "[EM] 기기 모든 기능 테스트",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+                    "name": "High",
+                    "id": "2"
+                },
+                "customfield_10014": "S10P31E203-130"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883204",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883204",
+            "key": "S10P31E203-550",
+            "fields": {
+                "summary": "[EM] 실 기기 UI/UX 검수",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+                    "name": "Highest",
+                    "id": "1"
+                },
+                "customfield_10014": "S10P31E203-130"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883203",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883203",
+            "key": "S10P31E203-549",
+            "fields": {
+                "summary": "[EM] 실 기기간 통신 테스트",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-130"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883202",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883202",
+            "key": "S10P31E203-548",
+            "fields": {
+                "summary": "오전미팅/스크럼 (5/10)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-3"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883201",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883201",
+            "key": "S10P31E203-547",
+            "fields": {
+                "summary": "종료 미팅 (5/9)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-1"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883200",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883200",
+            "key": "S10P31E203-546",
+            "fields": {
+                "summary": "[EM] 인체감지 센서 동작 테스트 및 모찌에 연결",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+                    "name": "Low",
+                    "id": "4"
+                },
+                "customfield_10014": "S10P31E203-226"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883199",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883199",
+            "key": "S10P31E203-545",
+            "fields": {
+                "summary": "[EM] 모찌 버튼 별 api 연결",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-226"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883198",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883198",
+            "key": "S10P31E203-544",
+            "fields": {
+                "summary": "[EM] 모찌 기본 챗봇 구조 구현",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+                    "name": "High",
+                    "id": "2"
+                },
+                "customfield_10014": "S10P31E203-226"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883197",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883197",
+            "key": "S10P31E203-543",
+            "fields": {
+                "summary": "3차 개발 산출물 체크",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+                    "name": "Highest",
+                    "id": "1"
+                },
+                "customfield_10014": "S10P31E203-1"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883196",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883196",
+            "key": "S10P31E203-542",
+            "fields": {
+                "summary": "[Live방송] 오전미팅/스크럼 (5/9)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-3"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883195",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883195",
+            "key": "S10P31E203-541",
+            "fields": {
+                "summary": "종료 미팅 (5/8)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-1"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883194",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883194",
+            "key": "S10P31E203-540",
+            "fields": {
+                "summary": "[EM] 알림 모아쓰 페이지 api 연결",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+                    "name": "Highest",
+                    "id": "1"
+                },
+                "customfield_10014": "S10P31E203-228"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883193",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883193",
+            "key": "S10P31E203-539",
+            "fields": {
+                "summary": "[EM] 알림 모아쓰 페이지 상세 조회 컴포넌트 구현",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+                    "name": "High",
+                    "id": "2"
+                },
+                "customfield_10014": "S10P31E203-228"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883192",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883192",
+            "key": "S10P31E203-538",
+            "fields": {
+                "summary": "[EM] 이음보드 api 연결 및 테스트",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+                    "name": "Highest",
+                    "id": "1"
+                },
+                "customfield_10014": "S10P31E203-507"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883191",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883191",
+            "key": "S10P31E203-537",
+            "fields": {
+                "summary": "[EM] 이음보드 과거 조회 페이지 완성",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+                    "name": "Low",
+                    "id": "4"
+                },
+                "customfield_10014": "S10P31E203-507"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883190",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883190",
+            "key": "S10P31E203-536",
+            "fields": {
+                "summary": "[EM] 이음보드 과거 조회 컴포넌트 추가",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+                    "name": "Low",
+                    "id": "4"
+                },
+                "customfield_10014": "S10P31E203-507"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883189",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883189",
+            "key": "S10P31E203-535",
+            "fields": {
+                "summary": "오전미팅/스크럼 (5/8)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-3"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883188",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883188",
+            "key": "S10P31E203-534",
+            "fields": {
+                "summary": "종료 미팅 (5/7)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-1"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883187",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883187",
+            "key": "S10P31E203-533",
+            "fields": {
+                "summary": "[EM] Jira Oauth 관련 정보 api 연결",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+                    "name": "Low",
+                    "id": "4"
+                },
+                "customfield_10014": "S10P31E203-229"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883186",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883186",
+            "key": "S10P31E203-532",
+            "fields": {
+                "summary": "[EM] 기기 외관 디자인 및 3D 프린팅 설계",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/1",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/highest.svg",
+                    "name": "Highest",
+                    "id": "1"
+                },
+                "customfield_10014": "S10P31E203-236"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883185",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883185",
+            "key": "S10P31E203-531",
+            "fields": {
+                "summary": "[EM] 기기 회로도 설계",
+                "customfield_10031": 2.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+                    "name": "High",
+                    "id": "2"
+                },
+                "customfield_10014": "S10P31E203-236"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883184",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883184",
+            "key": "S10P31E203-530",
+            "fields": {
+                "summary": "[EM] 라즈베리파이 환경 세팅",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/2",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/high.svg",
+                    "name": "High",
+                    "id": "2"
+                },
+                "customfield_10014": "S10P31E203-130"
+            }
+        },
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "883183",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/883183",
+            "key": "S10P31E203-529",
+            "fields": {
+                "summary": "[Live방송] 오전미팅/스크럼 (5/7)",
+                "customfield_10031": 1.0,
+                "assignee": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+                    "emailAddress": "diduedidue@naver.com",
+                    "avatarUrls": {
+                        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+                    },
+                    "displayName": "Bada",
+                    "active": true,
+                    "timeZone": "Asia/Seoul",
+                    "accountType": "atlassian"
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "customfield_10014": "S10P31E203-3"
+            }
+        }
+    ]
+}

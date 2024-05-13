@@ -1,0 +1,238 @@
+{
+    "expand": "renderedFields,names,schema,operations,editmeta,changelog,versionedRepresentations,customfield_10010.requestTypePractice",
+    "id": "892641",
+    "self": "https://ssafy.atlassian.net/rest/api/3/issue/892641",
+    "key": "S10P31E203-644",
+    "fields": {
+        "statuscategorychangedate": "2024-05-11T19:37:18.026+0900",
+        "issuetype": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10001",
+            "id": "10001",
+            "description": "Jira Agile에서 만듦 - 편집 또는 삭제하지 마세요. 사용자 스토리에 대한 이슈 유형입니다.",
+            "iconUrl": "https://ssafy.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10315?size=medium",
+            "name": "스토리",
+            "subtask": false,
+            "avatarId": 10315,
+            "hierarchyLevel": 0
+        },
+        "parent": {
+            "id": "847157",
+            "key": "S10P31E203-236",
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/847157",
+            "fields": {
+                "summary": "[EM] IoT 기기 설계",
+                "status": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+                    "description": "",
+                    "iconUrl": "https://ssafy.atlassian.net/",
+                    "name": "해야 할 일",
+                    "id": "10000",
+                    "statusCategory": {
+                        "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                        "id": 2,
+                        "key": "new",
+                        "colorName": "blue-gray",
+                        "name": "해야 할 일"
+                    }
+                },
+                "priority": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/priority/3",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/medium.svg",
+                    "name": "Medium",
+                    "id": "3"
+                },
+                "issuetype": {
+                    "self": "https://ssafy.atlassian.net/rest/api/3/issuetype/10000",
+                    "id": "10000",
+                    "description": "A big user story that needs to be broken down. Created by Jira Software - do not edit or delete.",
+                    "iconUrl": "https://ssafy.atlassian.net/images/icons/issuetypes/epic.svg",
+                    "name": "에픽",
+                    "subtask": false,
+                    "hierarchyLevel": 1
+                }
+            }
+        },
+        "timespent": null,
+        "customfield_10030": null,
+        "customfield_10031": 2.0,
+        "project": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14697",
+            "id": "14697",
+            "key": "S10P31E203",
+            "name": "S10P31E203",
+            "projectTypeKey": "software",
+            "simplified": false,
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=medium"
+            }
+        },
+        "fixVersions": [],
+        "aggregatetimespent": null,
+        "resolution": null,
+        "customfield_10035": [],
+        "customfield_10036": null,
+        "customfield_10037": null,
+        "customfield_10027": null,
+        "customfield_10028": null,
+        "customfield_10029": null,
+        "resolutiondate": null,
+        "workratio": -1,
+        "watches": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-644/watchers",
+            "watchCount": 1,
+            "isWatching": true
+        },
+        "issuerestriction": {
+            "issuerestrictions": {},
+            "shouldDisplay": false
+        },
+        "lastViewed": "2024-05-12T14:07:57.453+0900",
+        "created": "2024-05-11T19:37:17.754+0900",
+        "customfield_10020": null,
+        "customfield_10021": null,
+        "customfield_10022": null,
+        "priority": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+            "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+            "name": "Low",
+            "id": "4"
+        },
+        "customfield_10023": null,
+        "customfield_10024": null,
+        "customfield_10025": null,
+        "labels": [],
+        "customfield_10026": null,
+        "customfield_10016": null,
+        "customfield_10017": null,
+        "customfield_10018": {
+            "hasEpicLinkFieldDependency": false,
+            "showField": false,
+            "nonEditableReason": {
+                "reason": "EPIC_LINK_SHOULD_BE_USED",
+                "message": "에픽을 상위 항목으로 설정하려면 대신에 에픽 링크를 사용하세요."
+            }
+        },
+        "customfield_10019": "1|vi7obj:",
+        "aggregatetimeoriginalestimate": null,
+        "timeestimate": null,
+        "versions": [],
+        "issuelinks": [],
+        "assignee": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+            "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+            "emailAddress": "diduedidue@naver.com",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+            },
+            "displayName": "Bada",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "updated": "2024-05-12T14:07:57.313+0900",
+        "status": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/status/10000",
+            "description": "",
+            "iconUrl": "https://ssafy.atlassian.net/",
+            "name": "해야 할 일",
+            "id": "10000",
+            "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/2",
+                "id": 2,
+                "key": "new",
+                "colorName": "blue-gray",
+                "name": "해야 할 일"
+            }
+        },
+        "components": [],
+        "timeoriginalestimate": null,
+        "description": null,
+        "customfield_10010": null,
+        "customfield_10014": "S10P31E203-236",
+        "timetracking": {},
+        "customfield_10015": null,
+        "customfield_10005": null,
+        "customfield_10006": null,
+        "customfield_10007": null,
+        "security": null,
+        "customfield_10008": null,
+        "customfield_10009": null,
+        "attachment": [],
+        "aggregatetimeestimate": null,
+        "summary": "jiraTest용 이슈",
+        "creator": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+            "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+            "emailAddress": "diduedidue@naver.com",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+            },
+            "displayName": "Bada",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "subtasks": [],
+        "reporter": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3Aa311b13c-7f80-4151-8110-c4c300a6e89f",
+            "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+            "emailAddress": "diduedidue@naver.com",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+            },
+            "displayName": "Bada",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "customfield_10044": null,
+        "customfield_10000": "{}",
+        "aggregateprogress": {
+            "progress": 0,
+            "total": 0
+        },
+        "customfield_10045": null,
+        "customfield_10001": null,
+        "customfield_10002": null,
+        "customfield_10003": null,
+        "customfield_10004": null,
+        "customfield_10038": null,
+        "customfield_10039": null,
+        "environment": null,
+        "duedate": null,
+        "progress": {
+            "progress": 0,
+            "total": 0
+        },
+        "comment": {
+            "comments": [],
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/892641/comment",
+            "maxResults": 0,
+            "total": 0,
+            "startAt": 0
+        },
+        "votes": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/issue/S10P31E203-644/votes",
+            "votes": 0,
+            "hasVoted": false
+        },
+        "worklog": {
+            "startAt": 0,
+            "maxResults": 20,
+            "total": 0,
+            "worklogs": []
+        }
+    }
+}
