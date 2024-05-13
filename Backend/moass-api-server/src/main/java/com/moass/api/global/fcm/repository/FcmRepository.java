@@ -23,4 +23,6 @@ public interface FcmRepository extends ReactiveCrudRepository<FcmToken, Integer>
 
     @Query("SELECT token FROM FcmToken WHERE userId = :userId")
     Flux<String> findFcmTokensByUserId(String userId);
+
+    Flux<FcmToken> findAllByUserId(String userId);
 }

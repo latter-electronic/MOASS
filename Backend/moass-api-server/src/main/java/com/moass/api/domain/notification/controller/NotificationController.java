@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -35,6 +36,7 @@ public class NotificationController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CONSULTANT') or hasRole('COACH')")
     @PostMapping("/send")
     public Mono<ResponseEntity<ApiResponse>> saveNotification(@RequestParam(required=false,name = "userid") String userId,
                                                                                                                         @RequestParam(required=false, name="teamcode") String teamCode,
@@ -63,4 +65,12 @@ public class NotificationController {
                 .flatMap(readNotificationId -> ApiResponse.ok("알람 읽기완료", readNotificationId))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
+
+    @DeleteMapping("/read-all")
+    public Mono<ResponseEntity<ApiResponse>> markAllNotificationsAsRead(@Login UserInfo userInfo) {
+        return notificationService.markAllNotificationsAsRead(userInfo)
+                .flatMap(count -> ApiResponse.ok("모든 알림을 읽음 처리했습니다.", count))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("알림 읽기 처리 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
 }

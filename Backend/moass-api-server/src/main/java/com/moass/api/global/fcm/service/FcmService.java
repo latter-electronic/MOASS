@@ -3,13 +3,16 @@ package com.moass.api.global.fcm.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.moass.api.global.config.JsonConfig;
 import com.moass.api.global.fcm.dto.FcmMessageDto;
 import com.moass.api.global.fcm.dto.FcmNotificationDto;
 import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
 import com.moass.api.global.fcm.entity.FcmToken;
 import com.moass.api.global.fcm.repository.FcmRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -21,11 +24,12 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FcmService {
     private final FcmRepository fcmRepository;
-
+    private final JsonConfig jsonConfig;
     private final WebClient webClient = WebClient.builder().build();
     public Mono<FcmToken> saveOrUpdateFcmToken(String userId, FcmTokenSaveDto fcmTokenSaveDto) {
         String mobileDeviceId = fcmTokenSaveDto.getMobileDeviceId();
@@ -52,6 +56,7 @@ public class FcmService {
     }
 
     public Mono<Integer> sendMessageTo(String fcmToken, FcmNotificationDto fcmNotificationDto) {
+        log.info(createMessage(fcmToken,fcmNotificationDto));
         return Mono.fromCallable(this::getAccessToken)
                 .flatMap(token -> webClient.post()
                         .uri("https://fcm.googleapis.com/v1/projects/moass-b25d1/messages:send")
@@ -60,7 +65,7 @@ public class FcmService {
                         .bodyValue(createMessage(fcmToken,fcmNotificationDto))
                         .retrieve()
                         .bodyToMono(String.class)
-                        .doOnError(error -> System.out.println(error))
+                        .doOnError(error -> log.error("FCM 메세지 전송 실패: {}", error.getMessage(), error))
                         .map(response -> 1)
                         .onErrorReturn(0));
     }
@@ -77,7 +82,7 @@ public class FcmService {
 
 
     private String createMessage(String fcmToken, FcmNotificationDto fcmNotificationDto) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = jsonConfig.objectMapper();
         FcmMessageDto fcmMessageDto = FcmMessageDto.builder()
                 .message(FcmMessageDto.Message.builder()
                         .token(fcmToken)
@@ -90,20 +95,18 @@ public class FcmService {
                 .validateOnly(false)
                 .build();
         try {
+            log.info(fcmMessageDto.toString());
             return objectMapper.writeValueAsString(fcmMessageDto);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Creating FCM message failed", e);
+            throw new RuntimeException("FCM 메세지 생성실패", e);
         }
     }
 
-    public Mono<Integer> sendMessageToUser(String UserId,  FcmNotificationDto fcmNotificationDto) {
-        return fcmRepository.findFcmTokensByUserId(UserId)
-                .flatMap(token -> sendMessageTo(token,fcmNotificationDto))
+    public Mono<Integer> sendMessageToUser(String userId, FcmNotificationDto fcmNotificationDto) {
+        return fcmRepository.findAllByUserId(userId) // 모든 토큰을 조회합니다.
+                .flatMap(fcmToken -> sendMessageTo(fcmToken.getToken(), fcmNotificationDto))
                 .collectList()
-                .map(resultList -> {
-                    long successCount = resultList.stream().filter(result -> result == 1).count();
-                    return (int) successCount;
-                });
+                .map(resultList -> (int) resultList.stream().filter(result -> result == 1).count()); // 성공한 메시지의 수를 계산합니다.
     }
 
     public Mono<Integer> sendMessageToTeam(String teamCode,  FcmNotificationDto fcmNotificationDto) {
