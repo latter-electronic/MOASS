@@ -31,15 +31,15 @@ void main() async {
   final dio = Dio();
   dio.interceptors.add(TokenInterceptor(dio, storage));
 
+  final bool isLoggedIn = await checkLoginStatus(storage);
+  final bool isTokenValid =
+      isLoggedIn ? await checkTokenValidityAndRefresh(dio, storage) : false;
+
   // FCM 토큰 설정
   String? fcmToken = await FirebaseMessaging.instance.getToken();
   // 스토리지에 담기
   await storage.write(key: 'fcmToken', value: fcmToken);
   print('FCM Token: $fcmToken');
-
-  final bool isLoggedIn = await checkLoginStatus(storage);
-  final bool isTokenValid =
-      isLoggedIn ? await checkTokenValidityAndRefresh(dio, storage) : false;
 
   // 권한 요청
   FirebaseMessaging.instance.requestPermission(
@@ -107,9 +107,6 @@ void main() async {
       }
     }
   });
-
-  final accountApi = AccountApi(dio: dio, storage: storage);
-  final bool isLoggedIn = await _getLoginStatus(storage);
 
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
