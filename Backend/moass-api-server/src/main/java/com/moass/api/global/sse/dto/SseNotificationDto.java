@@ -11,29 +11,40 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SseNotificationDto extends NotificationBase {
+public class SseNotificationDto {
 
-    private String command="notification";
+    private String command = "notification";
+    private NotificationData data;
 
-    private String notificationId;
+    @Data
+    @NoArgsConstructor
+    public static class NotificationData extends NotificationBase {
+        private String notificationId;
+
+        public NotificationData(Notification notification) {
+            this.notificationId = notification.getNotificationId();
+            this.setSource(notification.getSource());
+            this.setIcon(notification.getIcon());
+            this.setTitle(notification.getTitle());
+            this.setBody(notification.getBody());
+            this.setSender(notification.getSender());
+            this.setRedirectUrl(notification.getRedirectUrl());
+            this.setDeletedAt(notification.getDeletedAt() != null ? notification.getDeletedAt() : null);
+            this.setCreatedAt(notification.getCreatedAt() != null ? notification.getCreatedAt() : null);
+        }
+
+        public NotificationData(String source, String title, String body){
+            this.setSource(source);
+            this.setTitle(title);
+            this.setBody(body);
+        }
+    }
 
     public SseNotificationDto(Notification notification) {
-        this.notificationId = notification.getNotificationId();
-        this.setSource(notification.getSource());
-        this.setIcon(notification.getIcon());
-        this.setTitle(notification.getTitle());
-        this.setBody(notification.getBody());
-        this.setSender(notification.getSender());
-        this.setRedirectUrl(notification.getRedirectUrl());
-        this.setDeletedAt(notification.getDeletedAt());
-        this.setCreatedAt(notification.getCreatedAt());
+        this.data = new NotificationData(notification);
     }
-
 
     public SseNotificationDto(String source, String title, String body){
-        this.setSource(source);
-        this.setTitle(title);
-        this.setBody(body);
+        this.data = new NotificationData(source, title, body);
     }
-
 }

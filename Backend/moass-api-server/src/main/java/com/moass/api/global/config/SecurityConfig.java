@@ -88,6 +88,7 @@ public class SecurityConfig {
                                 .pathMatchers("/upload/**").permitAll()
                                 .pathMatchers("/oauth2/jira/callback").permitAll()
                                 .pathMatchers("/device/coordinate/{deviceId}").permitAll()
+                                .pathMatchers("/webhook/**").permitAll()
                                 .pathMatchers("/**").authenticated()
                                 .anyExchange().permitAll()
                 )

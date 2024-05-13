@@ -42,6 +42,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JWTService jwtService;
     private final S3Service s3Service;
+
     public Mono<UserDetail> signUp(UserSignUpDto userDto) {
         return userRepository.findByUserEmailOrUserId(userDto.getUserEmail(), userDto.getUserId()).flatMap(dbUser -> Mono.<UserDetail>error(new CustomException("사용자가 이미 존재합니다.", HttpStatus.CONFLICT))).switchIfEmpty(ssafyUserRepository.findByUserId(userDto.getUserId()).switchIfEmpty(Mono.error(new CustomException("등록되어 있지 않는 사용자입니다.", HttpStatus.BAD_REQUEST))).flatMap(ssafyUser -> {
             User newUser = User.builder().userId(ssafyUser.getUserId()).userEmail(userDto.getUserEmail()).password(passwordEncoder.encode(userDto.getPassword())).build();
@@ -87,10 +88,10 @@ public class UserService {
                         teamNameUpdate(userInfo, userUpdateDto),
                         (profileUpdated, teamUpdated) -> profileUpdated || teamUpdated)
                 .doOnSuccess(result -> log.info("result: {}", result))
-                .flatMap(result -> (result ? Mono.just(true): Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST))));
+                .flatMap(result -> (result ? Mono.just(true) : Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST))));
     }
 
-    public Mono<Boolean> userProfileUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto){
+    public Mono<Boolean> userProfileUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
         return userRepository.findByUserId(userInfo.getUserId()).flatMap(user -> {
             boolean isUpdated = false;
 
@@ -132,7 +133,7 @@ public class UserService {
         }).switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<Boolean> teamNameUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto){
+    public Mono<Boolean> teamNameUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
         return teamRepository.findByUserId(userInfo.getUserId()).flatMap(team -> {
             boolean isUpdated = false;
             if (userUpdateDto.getTeamName() != null && !userUpdateDto.getTeamName().equals(team.getTeamName())) {
@@ -251,11 +252,11 @@ public class UserService {
         // 문법오류 해결
         return ssafyUserRepository.findByUserId(userCreateDto.getUserId())
                 .flatMap(existingUser -> Mono.error(new CustomException("이미 존재하는 사용자입니다.", HttpStatus.CONFLICT)))
-                        .switchIfEmpty(Mono.defer(() -> {
-                            SsafyUser newSsafyUser = new SsafyUser(userCreateDto);
-                            return ssafyUserRepository.saveForce(newSsafyUser)
-                                    .then(Mono.just(newSsafyUser));
-                        }));
+                .switchIfEmpty(Mono.defer(() -> {
+                    SsafyUser newSsafyUser = new SsafyUser(userCreateDto);
+                    return ssafyUserRepository.saveForce(newSsafyUser)
+                            .then(Mono.just(newSsafyUser));
+                }));
     }
 
     public Mono<String> profileImgUpload(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
@@ -267,7 +268,7 @@ public class UserService {
                     String fileKey = uploadResult.getKeys()[0];
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
-                                user.setProfileImg(s3config.getImageUrl()+"/"+fileKey);
+                                user.setProfileImg(s3config.getImageUrl() + "/" + fileKey);
                                 return userRepository.save(user).thenReturn(s3config.getImageUrl() + "/" + fileKey);
                             });
                 });
@@ -282,7 +283,7 @@ public class UserService {
                     String fileKey = uploadResult.getKeys()[0];
                     return userRepository.findByUserId(userInfo.getUserId())
                             .flatMap(user -> {
-                                user.setBackgroundImg(s3config.getImageUrl()+"/"+fileKey);
+                                user.setBackgroundImg(s3config.getImageUrl() + "/" + fileKey);
                                 return userRepository.save(user).thenReturn(s3config.getImageUrl() + "/" + fileKey);
                             });
                 });
@@ -318,26 +319,15 @@ public class UserService {
                         .map(deletedWidget -> new WidgetDetailDto(deletedWidget)));
     }
 
-    /**
-     public Mono<Object> getAllUsers(UserInfo userInfo) {
-     return ssafyUserRepository.findAll
-     }
+    public Mono<Boolean> deviceLogout(UserInfo userInfo) {
+        return userRepository.findByUserId(userInfo.getUserId())
+                .flatMap(user -> {
+                    if (user.getConnectFlag() == 1) {  // 연결되어 있는 경우
+                        return Mono.just(true);
+                    } else {
+                        return Mono.error(new CustomException("기기가 연결되어 있지 않습니다.", HttpStatus.BAD_REQUEST));
+                    }
+                });
+    }
 
-     */
-
-
-    /**
-     *
-     public Mono<Object> updateProfileImg(UserInfo userInfo, HttpHeaders headers, Flux<ByteBuffer> file) {
-     return s3ImageUploader.uploadImage(headers,file)
-     .flatMap(fileName -> userRepository.findByUserId(userInfo.getUserId())
-     .flatMap(user -> {
-     user.setProfileImg(fileName);
-     return userRepository.save(user);
-     })
-     .map(user -> fileName));
-
-     }
-
-     */
 }
