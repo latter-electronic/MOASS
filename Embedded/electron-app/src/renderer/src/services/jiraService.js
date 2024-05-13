@@ -130,11 +130,14 @@ export const getProject = async () => {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
-      .catch(error => {
-          console.error('Error fetching projects:', error);
-          throw error;
-      });
+    }).then(response => {
+        console.log("Project data received:", response.data.data );
+        return response.data;
+    })
+    .catch(error => {
+        console.error('Error fetching projects:', error);
+        throw error;
+    });
 };
 
 /**
