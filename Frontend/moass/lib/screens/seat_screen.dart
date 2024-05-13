@@ -24,6 +24,7 @@ class _SeatScreenState extends State<SeatScreen> {
   MyProfile? myProfile;
   bool isLoading = true;
   late MyInfoApi api;
+  FocusNode textfocus = FocusNode();
 
   @override
   void initState() {
@@ -48,9 +49,9 @@ class _SeatScreenState extends State<SeatScreen> {
   // 교육생 검색 관련 변수
   bool isOpenedButtonWidget = false;
 
-  void openButtonWidget(bool value) {
+  void toggleOpenButtonWidget() {
     setState(() {
-      isOpenedButtonWidget = value;
+      isOpenedButtonWidget = !isOpenedButtonWidget;
     });
   }
 
@@ -73,6 +74,11 @@ class _SeatScreenState extends State<SeatScreen> {
             .fetchUserProfile(value);
   }
 
+  // Refresh 아이콘을 누를 때 호출되는 콜백 함수
+  void handleRefresh() {
+    fetchMyInfo(); // 사용자 정보를 다시 불러옴
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,81 +87,86 @@ class _SeatScreenState extends State<SeatScreen> {
           icon: Icons.calendar_view_month_rounded,
         ),
         body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CategoryText(
-                          text:
-                              '${myProfile?.locationName}캠퍼스 ${myProfile?.classCode.split('').last}반'),
-                      IconButton(
-                        color: Theme.of(context).colorScheme.primary,
-                        onPressed: () {},
-                        icon: const Icon(Icons.refresh),
-                        style: ButtonStyle(
-                          iconColor: MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.primary),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              // 상태 처리 및 DropdownButton 작업 해야함
-
-              SizedBox(
-                height: 400,
-                width: double.infinity,
-                child: myProfile != null
-                    ? SeatMapWidget(
-                        openButtonWidget: openButtonWidget,
-                        setUserId: setUserId,
-                        classCode: myProfile!.classCode,
-                        callUserId: callUserId,
-                      )
-                    : const Center(child: CircularProgressIndicator()),
-              ),
-
-              const CategoryText(text: '교육생 조회'),
-              UserSearchForCallWidget(
-                openButtonWidget: openButtonWidget,
-                setUserId: setUserId,
-              ),
-              isOpenedButtonWidget
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: FloatingActionButton.extended(
-                          backgroundColor: const Color(0xFF3DB887),
-                          foregroundColor: Colors.white,
-                          onPressed: () {
-                            // print('부를 유저 아이디 : $callUserId');
-                            DeviceApi(
-                                    dio: Dio(),
-                                    storage: const FlutterSecureStorage())
-                                .callUser(callUserId);
-                            setState(() {
-                              isOpenedButtonWidget = !isOpenedButtonWidget;
-                            });
-                          },
-                          icon: const Icon(Icons.notifications_on),
-                          label: Text(
-                            '$callUserId 호출',
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600),
+          child: GestureDetector(
+            onTap: () {
+              textfocus.unfocus();
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CategoryText(
+                            text:
+                                '${myProfile?.locationName}캠퍼스 ${myProfile?.classCode.split('').last}반'),
+                        IconButton(
+                          color: Theme.of(context).colorScheme.primary,
+                          onPressed: handleRefresh,
+                          icon: const Icon(Icons.refresh),
+                          style: ButtonStyle(
+                            iconColor: MaterialStateProperty.all<Color>(
+                                Theme.of(context).colorScheme.primary),
                           ),
                         ),
-                      ),
-                    )
-                  : const SizedBox()
-            ],
+                      ],
+                    ),
+                  ],
+                ),
+                // 상태 처리 및 DropdownButton 작업 해야함
+
+                SizedBox(
+                  height: 400,
+                  width: double.infinity,
+                  child: myProfile != null
+                      ? SeatMapWidget(
+                          toggleOpenButtonWidget: toggleOpenButtonWidget,
+                          setUserId: setUserId,
+                          classCode: myProfile!.classCode,
+                          callUserId: callUserId,
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+
+                const CategoryText(text: '교육생 조회'),
+                UserSearchForCallWidget(
+                  toggleOpenButtonWidget: toggleOpenButtonWidget,
+                  setUserId: setUserId,
+                  textFocus: textfocus,
+                ),
+              ],
+            ),
           ),
-        ));
+        ),
+        bottomSheet: isOpenedButtonWidget
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FloatingActionButton.extended(
+                    backgroundColor: const Color(0xFF3DB887),
+                    foregroundColor: Colors.white,
+                    onPressed: () {
+                      // print('부를 유저 아이디 : $callUserId');
+                      DeviceApi(
+                              dio: Dio(), storage: const FlutterSecureStorage())
+                          .callUser(callUserId);
+                      setState(() {
+                        isOpenedButtonWidget = !isOpenedButtonWidget;
+                      });
+                    },
+                    icon: const Icon(Icons.notifications_on),
+                    label: Text(
+                      '$callUserId 호출',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              )
+            : const SizedBox());
   }
 }
