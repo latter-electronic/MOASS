@@ -31,6 +31,12 @@ void main() async {
   final dio = Dio();
   dio.interceptors.add(TokenInterceptor(dio, storage));
 
+  // FCM 토큰 설정
+  String? fcmToken = await FirebaseMessaging.instance.getToken();
+  // 스토리지에 담기
+  await storage.write(key: 'fcmToken', value: fcmToken);
+  print('FCM Token: $fcmToken');
+
   final bool isLoggedIn = await checkLoginStatus(storage);
   final bool isTokenValid =
       isLoggedIn ? await checkTokenValidityAndRefresh(dio, storage) : false;
@@ -164,7 +170,7 @@ Future<bool> refreshTokenRequest(Dio dio, FlutterSecureStorage storage) async {
   return false;
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool isLoggedIn;
 
   const MyApp({super.key, required this.isLoggedIn});
