@@ -120,6 +120,12 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                                 selectedCampusCode = campusCode[value - 1];
                                 print('선택한 캠퍼스 : $selectedCampusCode');
                               });
+                              List<Map<String, dynamic>> campusClasses =
+                                  await UserInfoApi(
+                                          dio: Dio(),
+                                          storage: const FlutterSecureStorage())
+                                      .fetchCampusInfo(selectedCampusCode);
+                              print(campusClasses.toString());
                             }),
                         if (selectedCampusIndex != null)
                           DropdownButton(

@@ -63,16 +63,19 @@ class UserInfoApi {
         print('No access token available');
         return [];
       }
+      print('요청 코드 : $locationCode');
 
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/user/search?locationcode=$locationCode',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
+      print('리턴 코드 : ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        print('조회 성공!');
-        campusClassesListInstance = response.data['classes'];
+        print(response.data);
+
+        // campusClassesListInstance = response.data['classes'];
 
         return campusClassesListInstance;
       } else {
@@ -80,7 +83,7 @@ class UserInfoApi {
         return [];
       }
     } on DioException catch (e) {
-      print('캠퍼스 정보 조회 실패');
+      print(' 캠퍼스 정보 조회 실패 ${e.message}');
       return [];
     }
   }
