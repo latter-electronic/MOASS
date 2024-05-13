@@ -21,7 +21,7 @@ import SSETestPage from "./pages/common/SSETestPage.jsx";
 export default function App() {
     return (
         <HashRouter>
-        <div className="flex min-h-screen font-noto-sans ml-1">
+        <div className="flex min-h-screen font-noto-sans">
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
