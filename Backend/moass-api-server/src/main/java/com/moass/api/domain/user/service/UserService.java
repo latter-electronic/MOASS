@@ -22,7 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -330,4 +330,16 @@ public class UserService {
                 });
     }
 
+    public Mono<Map<String, LocationSimpleInfoDto>> getAllLocationSimpleInfos() {
+        return locationRepository.findAll()
+                .flatMap(location ->
+                        classRepository.findAllClassByLocationCode(location.getLocationCode())
+                                .collectList()
+                                .map(classes -> new LocationSimpleInfoDto(location.getLocationName(),
+                                        classes.stream().map(Class::getClassCode).collect(Collectors.toList())))
+                                .map(dto -> new AbstractMap.SimpleEntry<>(location.getLocationCode(), dto))
+                )
+                .collectMap(Map.Entry::getKey, Map.Entry::getValue)
+                .defaultIfEmpty(new HashMap<>());
+    }
 }
