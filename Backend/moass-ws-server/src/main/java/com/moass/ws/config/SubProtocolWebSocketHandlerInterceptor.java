@@ -9,8 +9,7 @@ public class SubProtocolWebSocketHandlerInterceptor extends DelegatingIntroducti
     protected Object doProceed(MethodInvocation mi) throws Throwable {
         if(mi.getMethod().getName().equals("afterConnectionEstablished")) {
             WebSocketSession session = (WebSocketSession) mi.getArguments()[0];
-//            session.setTextMessageSizeLimit(50*1024*1024);
-            session.setTextMessageSizeLimit(Integer.MAX_VALUE);
+            session.setTextMessageSizeLimit(50*1024*1024);
         }
 
         return super.doProceed(mi);

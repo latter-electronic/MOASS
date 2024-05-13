@@ -1,7 +1,9 @@
 package com.moass.ws.service;
 
+import com.moass.ws.dto.BoardEnterDto;
 import com.moass.ws.dto.BoardRequestDto;
 import com.moass.ws.dto.BoardResponseDto;
+import com.moass.ws.dto.MessageDto;
 import com.moass.ws.entity.Board;
 import com.moass.ws.entity.BoardUser;
 import com.moass.ws.entity.User;
@@ -18,7 +20,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    private final Map<Integer, Set<User>> boards = new HashMap<>();
+    private final Map<Integer, MessageDto> boards = new HashMap<>();
     private final SimpMessagingTemplate template;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
@@ -38,10 +40,10 @@ public class BoardServiceImpl implements BoardService {
                 .build());
     }
 
-    public void enterBoard(BoardRequestDto dto) {
-        boardUserRepository.save(new BoardUser(dto.getBoardId(), dto.getUserId()));
+    public void enterBoard(BoardEnterDto boardEnterDto) {
+        boardUserRepository.save(new BoardUser(boardEnterDto.getBoardId(), boardEnterDto.getUserId()));
 
-        boards.get(dto.getBoardId()).add(userRepository.findById(dto.getUserId()).orElseThrow());
+        boards.get(boardEnterDto.getBoardId()).add(userRepository.findById(dto.getUserId()).orElseThrow());
 
         template.convertAndSend("/topic/board/" + dto.getBoardId(), BoardResponseDto.builder()
                 .boardId(dto.getBoardId())

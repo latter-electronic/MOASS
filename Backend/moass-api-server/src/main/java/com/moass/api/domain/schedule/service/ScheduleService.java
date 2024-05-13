@@ -1,9 +1,6 @@
 package com.moass.api.domain.schedule.service;
 
-import com.moass.api.domain.schedule.dto.TodoCreateDto;
-import com.moass.api.domain.schedule.dto.TodoDeleteDto;
-import com.moass.api.domain.schedule.dto.TodoDetailDto;
-import com.moass.api.domain.schedule.dto.TodoUpdateDto;
+import com.moass.api.domain.schedule.dto.*;
 import com.moass.api.domain.schedule.entity.Todo;
 import com.moass.api.domain.schedule.repository.TodoRepository;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -79,5 +76,11 @@ public class ScheduleService {
                         return Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST));
                     }
                 });
+    }
+
+    public Mono<List<CurriculumDto>> getCurriculum() {
+        String URL = null;
+
+        return null;
     }
 }

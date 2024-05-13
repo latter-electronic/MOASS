@@ -1,6 +1,8 @@
 package com.moass.ws.controller;
 
+import com.moass.ws.dto.BoardEnterDto;
 import com.moass.ws.dto.BoardRequestDto;
+import com.moass.ws.dto.MessageDto;
 import com.moass.ws.entity.Board;
 import com.moass.ws.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +27,9 @@ public class BoardController {
     }
 
     @MessageMapping("/enter")
-    public void enterBoard(BoardRequestDto boardRequestDto) {
+    public void enterBoard(BoardEnterDto boardEnterDto) {
         System.out.println("enter");
-        boardService.enterBoard(boardRequestDto);
+        boardService.enterBoard(boardEnterDto);
     }
 
     @MessageMapping("/quit")
@@ -37,7 +39,7 @@ public class BoardController {
 
     @MessageMapping("/draw")
     public void draw(String message) {
-        System.out.println("draw");
+        System.out.println(message);
         boardService.drawBoard(message);
     }
 }

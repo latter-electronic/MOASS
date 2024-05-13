@@ -72,4 +72,9 @@ public class ScheduleContoller {
                 .flatMap(todo -> ApiResponse.ok("할일 수정 성공", todo))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정실패 : "+ e.getMessage(), e.getStatus()));
     }
+
+    @GetMapping("/curriculum")
+    public Mono<ResponseEntity<ApiResponse>> getCurriculum(@Login UserInfo userInfo){
+        return null;
+    }
 }
