@@ -164,6 +164,10 @@ export default function Navbar() {
     navigate(`/ssetest`)
   }
 
+  const callNameplateTest = () => {
+    navigate(`/nameplate`)
+  }
+
   return (
     <nav className="flex flex-col justify-between w-navbarWidth h-screen bg-gray-800 text-white p-4 ">
       <div className="flex flex-col items-center">
@@ -321,6 +325,12 @@ export default function Navbar() {
                   onClick={callSSETest}
                 >
                   SSE 테스트
+                </button>
+                <button
+                  className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={callNameplateTest}
+                >
+                  명패
                 </button>
               </div>
             </div>
