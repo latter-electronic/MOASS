@@ -26,10 +26,8 @@ public class AuthManager implements ReactiveAuthenticationManager {
                 .flatMap(auth -> {
 
                     String token = auth.getCredentials();
-                    log.warn("token: {}", token);
                     if (jwtService.validateAccessToken(token)) {
                         String userEmail = jwtService.getUserInfoFromAccessToken(token).getUserEmail();
-                        log.warn("userEmail: {}", userEmail);
                         return processAuthentication(userEmail);
                     }
                     else {
