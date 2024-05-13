@@ -25,6 +25,10 @@ class _SeatScreenState extends State<SeatAdminScreen> {
   bool isLoading = true;
   late MyInfoApi api;
   FocusNode textfocus = FocusNode();
+  List campusList = ['서울캠퍼스', '대전캠퍼스', '광주캠퍼스', '구미캠퍼스', '부울경캠퍼스'];
+  List campusCode = ['A', 'B', 'C', 'D', 'E'];
+  int? selectedCampusIndex;
+  String selectedCampusCode = "";
 
   @override
   void initState() {
@@ -100,9 +104,31 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CategoryText(
-                            text:
-                                '${myProfile?.locationName}캠퍼스 ${myProfile?.classCode.split('').last}반'),
+                        DropdownButton(
+                            value: selectedCampusIndex,
+                            hint: const Text('캠퍼스를 선택하세요'),
+                            items: const [
+                              DropdownMenuItem(value: 1, child: Text('서울캠퍼스')),
+                              DropdownMenuItem(value: 2, child: Text('대전캠퍼스')),
+                              DropdownMenuItem(value: 3, child: Text('광주캠퍼스')),
+                              DropdownMenuItem(value: 4, child: Text('구미캠퍼스')),
+                              DropdownMenuItem(value: 5, child: Text('부울경캠퍼스')),
+                            ],
+                            onChanged: (int? value) async {
+                              setState(() {
+                                selectedCampusIndex = value!;
+                                selectedCampusCode = campusCode[value - 1];
+                                print('선택한 캠퍼스 : $selectedCampusCode');
+                              });
+                            }),
+                        if (selectedCampusIndex != null)
+                          DropdownButton(
+                            hint: const Text('반을 선택하세요'),
+                            items: const [DropdownMenuItem(child: Text('1반'))],
+                            onChanged: (value) {
+                              print(value);
+                            },
+                          ),
                         IconButton(
                           color: Theme.of(context).colorScheme.primary,
                           onPressed: handleRefresh,
