@@ -34,7 +34,6 @@ public class UserService {
     private final TeamRepository teamRepository;
     private final ClassRepository classRepository;
     private final LocationRepository locationRepository;
-    private final CustomUserRepository customUserRepository;
     private final S3ClientConfigurationProperties s3config;
     private final WidgetRepository widgetRepository;
 
@@ -74,14 +73,6 @@ public class UserService {
                         .flatMap(userSearchDetail -> Mono.just(new UserSearchInfoDto(userSearchDetail))));
     }
 
-    /**
-     * Todo
-     * 복잡도 해결
-     *
-     * @param userInfo
-     * @param userUpdateDto
-     * @return
-     */
     @Transactional
     public Mono<Boolean> userUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
         return Mono.zip(userProfileUpdate(userInfo, userUpdateDto),

@@ -11,8 +11,6 @@ public interface FcmRepository extends ReactiveCrudRepository<FcmToken, Integer>
 
     Mono<FcmToken> findByUserIdAndMobileDeviceId(String userId, String mobileDeviceId);
 
-    Flux<FcmToken> findByUserId(String userId);
-
     Mono<FcmToken> findByToken(String fcmToken);
 
     @Query("SELECT f.* FROM FcmToken f " +

@@ -39,7 +39,6 @@ public class NotificationService {
         String userId = userInfo.getUserId();
         PageRequest pageable = PageRequest.of(0, PageSize);
 
-        // totalCount 계산과 데이터 조회를 동시에 처리
         return notificationRepository.countByUserIdAndDeletedAtIsNull(userId)
                 .flatMap(totalCount -> {
                     Flux<Notification> notificationsFlux = (lastCreatedAt == null) ?

@@ -1,16 +1,13 @@
 package com.moass.api.domain.user.repository;
 
 import com.moass.api.domain.user.dto.LocationAndClassInfoDto;
-import com.moass.api.domain.user.dto.LocationSimpleInfoDto;
 import com.moass.api.domain.user.entity.Location;
-import com.moass.api.domain.user.entity.SsafyUser;
 import com.moass.api.domain.user.entity.UserSearchDetail;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Map;
 
 public interface LocationRepository  extends ReactiveCrudRepository<Location, Integer> {
 
