@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
-        (Route<dynamic> route) => false, // 모든 그 전의 경로를 삭제
+        (Route<dynamic> route) => false, // 모든 그 전의경로를 삭제
       );
     } else {
       setState(() {
