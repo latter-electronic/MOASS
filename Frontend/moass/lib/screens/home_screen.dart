@@ -10,6 +10,7 @@ import 'package:moass/screens/main_home_screen.dart';
 import 'package:moass/screens/seat_screen.dart';
 import 'package:moass/screens/board_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
+import 'package:moass/services/sse_listener_api.dart';
 import 'package:moass/widgets/bottom_navbar.dart';
 import 'package:moass/widgets/top_bar.dart'; // Import your CustomAppBar
 
@@ -29,6 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // SSE 구독
+    // SSEListener(storage: const FlutterSecureStorage()).connectUserEvent();
+    SSEListener(storage: const FlutterSecureStorage()).connectTeamEvent();
+
     fetchUserProfileAndSetup();
   }
 

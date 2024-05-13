@@ -12,7 +12,7 @@ class DeviceApi {
   // dio와 storage에 담긴 데이터 활용하겠다 선언
   DeviceApi({required this.dio, required this.storage});
 
-  // 우리반 조회
+  // 우리반 기기 조회
   Future<List<DeviceInfo>> fetchClassDevices(String? classcode) async {
     List<DeviceInfo> deviceInstances = [];
     // print('검색 클래스 코드 : $classcode');
@@ -75,6 +75,26 @@ class DeviceApi {
     } on DioException catch (e) {
       print('호출 에러: ${e.message}');
       return null;
+    }
+  }
+
+  // 디바이스 로그아웃
+  disconnectDevice() async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+
+      final response = await dio.post(
+        '$baseUrl/api/device/logout',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('로그아웃 성공!');
+        print('response.data["message"]');
+        return response.data["message"];
+      }
+    } on DioException catch (e) {
+      print('로그아웃 실패');
     }
   }
 }

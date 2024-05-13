@@ -7,14 +7,14 @@ import 'package:moass/model/user_info.dart';
 import 'package:moass/services/device_api.dart';
 
 class SeatMapWidget extends StatefulWidget {
-  final Function(bool) openButtonWidget;
+  final VoidCallback toggleOpenButtonWidget;
   final Function(String) setUserId;
   final String? classCode;
   String callUserId;
 
   SeatMapWidget(
       {super.key,
-      required this.openButtonWidget,
+      required this.toggleOpenButtonWidget,
       required this.setUserId,
       required this.classCode,
       required this.callUserId});
@@ -94,7 +94,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
                   if (device.userId != null) {
                     setState(() {
                       isUserSelected = !isUserSelected;
-                      widget.openButtonWidget(isUserSelected);
+                      widget.toggleOpenButtonWidget();
                       String selectedUser = device.userId!;
                       widget.setUserId(selectedUser);
                     });
