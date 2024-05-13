@@ -37,7 +37,7 @@ export default function JiraPage() {
 
         fetchIssues('10000', 'todo');
         fetchIssues('3', 'inProgress');
-        setIssues(prev => ({ ...prev, done: testDoneIssues.issues || [] }));
+        fetchIssues('10001', 'done');
     }, []);
 
     const onDragEnd = result => {
