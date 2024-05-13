@@ -157,7 +157,7 @@ export default function Navbar() {
   }
 
   const callTestLogin = () => {
-    navigate(`/testlogin`)
+    navigate(`/tagsuccess`)
   }
 
   const callSSETest = () => {
