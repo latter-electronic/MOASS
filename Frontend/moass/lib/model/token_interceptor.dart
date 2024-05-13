@@ -21,105 +21,43 @@ class TokenInterceptor extends Interceptor {
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
+      RequestOptions options = err.requestOptions;
       final refreshToken = await _storage.read(key: 'refreshToken');
-      final dio = Dio(); // 새 Dio 인스턴스 생성
 
       try {
-        final response = await dio.post(
+        final response = await _dio.post(
           'https://k10e203.p.ssafy.io/api/user/refresh',
-          data: {
-            "refreshToken": refreshToken,
-          },
+          options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),
+          // data: {
+          //   "refreshToken": refreshToken,
+          // },
         );
 
         final newAccessToken = response.data['accessToken'];
         await _storage.write(key: 'accessToken', value: newAccessToken);
 
-        err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
-        final opts = Options(
-          method: err.requestOptions.method,
-          headers: err.requestOptions.headers,
-        );
+        // 갱신된 accessToken으로 요청 헤더 업데이트
+        options.headers['Authorization'] = 'Bearer $newAccessToken';
+
+        // 원본 요청 재시도
         final clonedRequest = await _dio.request(
-          err.requestOptions.path,
-          options: opts,
-          data: err.requestOptions.data,
-          queryParameters: err.requestOptions.queryParameters,
+          options.path,
+          options: Options(
+            method: options.method,
+            headers: options.headers,
+          ),
+          data: options.data,
+          queryParameters: options.queryParameters,
         );
 
         return handler.resolve(clonedRequest);
       } catch (e) {
+        print('Token refresh failed: $e');
+        // 토큰 갱신 실패 시 오류 처리
         return handler.next(err);
       }
+    } else {
+      return super.onError(err, handler);
     }
-
-    return super.onError(err, handler);
   }
 }
-
-
-
-
-// import 'package:dio/dio.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-
-// class TokenInterceptor extends Interceptor {
-//   final Dio _dio;
-//   final SharedPreferences _prefs;
-
-//   TokenInterceptor(this._dio, this._prefs);
-
-//   @override
-//   Future<void> onRequest(
-//       RequestOptions options, RequestInterceptorHandler handler) async {
-//     final accessToken = _prefs.getString('accessToken');
-//     if (accessToken != null) {
-//       options.headers['Authorization'] = 'Bearer $accessToken';
-//     }
-//     return super.onRequest(options, handler);
-//   }
-
-//   @override
-//   Future<void> onError(
-//       DioException err, ErrorInterceptorHandler handler) async {
-//     // 401 Unauthorized 에러를 캐치
-//     if (err.response?.statusCode == 401) {
-//       final refreshToken = _prefs.getString('refreshToken');
-//       final dio = Dio(); // 새 Dio 인스턴스 생성
-
-//       try {
-//         // refreshToken으로 새 accessToken을 요청
-//         final response = await dio.post(
-//           'https://k10e203.p.ssafy.io/api/user/refresh',
-//           data: {
-//             "refreshToken": refreshToken,
-//           },
-//         );
-
-//         // 새로운 토큰 저장
-//         final newAccessToken = response.data['accessToken'];
-//         await _prefs.setString('accessToken', newAccessToken);
-
-//         // 원래 요청을 새 토큰으로 업데이트하여 재시도
-//         err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
-//         final opts = Options(
-//           method: err.requestOptions.method,
-//           headers: err.requestOptions.headers,
-//         );
-//         final clonedRequest = await _dio.request(
-//           err.requestOptions.path,
-//           options: opts,
-//           data: err.requestOptions.data,
-//           queryParameters: err.requestOptions.queryParameters,
-//         );
-
-//         return handler.resolve(clonedRequest);
-//       } catch (e) {
-//         // 토큰 갱신 실패
-//         return handler.next(err);
-//       }
-//     }
-
-//     return super.onError(err, handler);
-//   }
-// }
