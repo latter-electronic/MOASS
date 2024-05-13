@@ -166,20 +166,14 @@ public class SseService {
         sseCount++;
         userSinks.forEach((userId, sink) -> {
             log.info("User ID '{}' has {} subscribers.", userId, sink.currentSubscriberCount());
-            sink.tryEmitNext("Test message to user: " + userId);
-
         });
 
-        // 각 팀에게 테스트 메시지 전송
         teamSinks.forEach((teamCode, sink) -> {
             log.info("Team code '{}' has {} subscribers.", teamCode, sink.currentSubscriberCount());
-            sink.tryEmitNext("Test message to team: " + teamCode);
         });
 
-        // 각 반에게 테스트 메시지 전송
         classSinks.forEach((classCode, sink) -> {
             log.info("Class code '{}' has {} subscribers.", classCode, sink.currentSubscriberCount());
-            sink.tryEmitNext("Test message to class: " + classCode);
         });
     }
 }
