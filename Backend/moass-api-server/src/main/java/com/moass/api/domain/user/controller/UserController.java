@@ -187,16 +187,6 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("생성 실패 : "+e.getMessage(), e.getStatus()));
     }
 
-    /**
-    @GetMapping("/all")
-    public Mono<ResponseEntity<ApiResponse>> getAllUsers(@Login UserInfo userInfo){
-        return userService.getAllUsers(userInfo)
-                .flatMap(users -> ApiResponse.ok("조회완료",users))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
-    }
-    */
-
-
     @PostMapping(value = "/profileimg")
     public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.profileImgUpload(userInfo,headers,file)
@@ -237,6 +227,14 @@ public class UserController {
         return fcmService.saveOrUpdateFcmToken(userInfo.getUserId(), fcmtokenSaveDto)
                 .flatMap(savedToken -> ApiResponse.ok("FCM 토큰 저장 성공", savedToken))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("FCM 토큰 저장 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/locationinfo")
+    public Mono<ResponseEntity<ApiResponse>> getallLocationSimpleInfo(@Login UserInfo userInfo){
+        return userService.getAllLocationSimpleInfos()
+                .flatMap(locationInfoList -> ApiResponse.ok("조회완료", locationInfoList))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }

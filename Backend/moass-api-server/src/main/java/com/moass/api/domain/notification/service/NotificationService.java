@@ -8,6 +8,7 @@ import com.moass.api.domain.user.repository.ClassRepository;
 import com.moass.api.domain.user.repository.TeamRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
+import com.moass.api.global.fcm.dto.FcmNotificationDto;
 import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.sse.dto.SseNotificationDto;
 import com.moass.api.global.sse.dto.SseOrderDto;
@@ -38,7 +39,6 @@ public class NotificationService {
         String userId = userInfo.getUserId();
         PageRequest pageable = PageRequest.of(0, PageSize);
 
-        // totalCount 계산과 데이터 조회를 동시에 처리
         return notificationRepository.countByUserIdAndDeletedAtIsNull(userId)
                 .flatMap(totalCount -> {
                     Flux<Notification> notificationsFlux = (lastCreatedAt == null) ?
@@ -60,9 +60,8 @@ public class NotificationService {
         return notificationRepository.save(new Notification(userId, notificationSaveDto))
                 .flatMap(savedNotification -> {
                     Mono<Boolean> sseResult = sseService.notifyUser(userId, new SseNotificationDto(savedNotification));
-                    //Mono<Integer> fcmResult = fcmService.sendMessageTo(userId, new FcmNotificationDto(savedNotification));
-                    //return Mono.zip(sseResult, fcmResult, (sseSuccess, fcmSuccess) -> savedNotification);
-                    return sseResult.map(sseSuccess -> savedNotification);
+                    Mono<Integer> fcmResult = fcmService.sendMessageToUser(userId, new FcmNotificationDto(savedNotification));
+                    return Mono.zip(sseResult, fcmResult, (sseSuccess, fcmSuccess) -> savedNotification);
                 });
     }
 
@@ -99,5 +98,24 @@ public class NotificationService {
                             .thenReturn(notification.getNotificationId());
                 })
                 .switchIfEmpty(Mono.error(new CustomException("알림을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)));
+    }
+
+    public Mono<Long> markAllNotificationsAsRead(UserInfo userInfo) {
+        String userId = userInfo.getUserId();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        return notificationRepository.findByUserIdAndDeletedAtIsNull(userId)
+                .flatMap(notification -> {
+                    notification.setDeletedAt(currentTime);
+                    return notificationRepository.save(notification);
+                })
+                .doOnNext(savedNotification -> {
+                    sseService.notifyUser(userId, new SseOrderDto("readNotification", savedNotification.getNotificationId())).subscribe();
+                })
+                .count()
+                .onErrorResume(e -> {
+                    log.error("알림 읽기 처리 중 오류 발생", e);
+                    return Mono.just(0L);
+                });
     }
 }

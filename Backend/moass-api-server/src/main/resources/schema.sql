@@ -82,7 +82,7 @@ CREATE TABLE `FcmToken` (
                             `fcm_token_id`	INT	 AUTO_INCREMENT  KEY,
                             `user_id`	VARCHAR(20)	NOT NULL,
                             `mobile_device_id`	VARCHAR(50)	NOT NULL,
-                            `token`	VARCHAR(50)	NULL,
+                            `token`	VARCHAR(255)	NULL,
                             created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
                             updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                             FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)

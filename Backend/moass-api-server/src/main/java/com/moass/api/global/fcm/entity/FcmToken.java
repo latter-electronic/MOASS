@@ -17,7 +17,8 @@ import org.springframework.data.relational.core.mapping.Table;
 public class FcmToken extends Auditable {
 
     @Id
-    private String id;
+    @Field("fcm_token_id")
+    private String fcmTokenId;
 
     @Field("user_id")
     private String userId;

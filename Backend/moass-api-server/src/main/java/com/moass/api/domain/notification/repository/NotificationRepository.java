@@ -18,4 +18,6 @@ public interface NotificationRepository extends ReactiveMongoRepository<Notifica
     Flux<Notification> findByUserIdAndDeletedAtIsNullOrderByCreatedAtDesc(String userId, PageRequest pageable);
 
     Flux<Notification> findByUserIdAndDeletedAtIsNullAndCreatedAtLessThanOrderByCreatedAtDesc(String userId, LocalDateTime lastCreatedAt, PageRequest pageable);
+
+    Flux<Notification> findByUserIdAndDeletedAtIsNull(String userId);
 }

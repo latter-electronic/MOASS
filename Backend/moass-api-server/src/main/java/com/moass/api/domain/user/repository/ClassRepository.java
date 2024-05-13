@@ -1,7 +1,6 @@
 package com.moass.api.domain.user.repository;
 
 import com.moass.api.domain.user.entity.Class;
-import com.moass.api.domain.user.entity.Location;
 import com.moass.api.domain.user.entity.UserSearchDetail;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -11,6 +10,11 @@ import reactor.core.publisher.Mono;
 public interface ClassRepository extends ReactiveCrudRepository<Class, Integer> {
 
 
+    @Query("SELECT * FROM Class " +
+            "WHERE location_code = :locationCode " +
+            "ORDER BY " +
+            "  CAST(SUBSTRING(class_code, 1, 1) AS CHAR) ASC, " +
+            "  CAST(SUBSTRING(class_code, 2) AS UNSIGNED) ASC")
     Flux<Class> findAllClassByLocationCode(String locationCode);
 
     Mono<Class> findByClassCode(String classCode);
@@ -27,4 +31,5 @@ public interface ClassRepository extends ReactiveCrudRepository<Class, Integer> 
 
     @Query("SELECT EXISTS (SELECT 1 FROM Class WHERE class_code = :classCode)")
     Mono<Boolean> existsByClassCode(String classCode);
+
 }

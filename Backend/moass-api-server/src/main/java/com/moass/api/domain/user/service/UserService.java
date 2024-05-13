@@ -22,7 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,7 +34,6 @@ public class UserService {
     private final TeamRepository teamRepository;
     private final ClassRepository classRepository;
     private final LocationRepository locationRepository;
-    private final CustomUserRepository customUserRepository;
     private final S3ClientConfigurationProperties s3config;
     private final WidgetRepository widgetRepository;
 
@@ -74,14 +73,6 @@ public class UserService {
                         .flatMap(userSearchDetail -> Mono.just(new UserSearchInfoDto(userSearchDetail))));
     }
 
-    /**
-     * Todo
-     * 복잡도 해결
-     *
-     * @param userInfo
-     * @param userUpdateDto
-     * @return
-     */
     @Transactional
     public Mono<Boolean> userUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
         return Mono.zip(userProfileUpdate(userInfo, userUpdateDto),
@@ -330,4 +321,16 @@ public class UserService {
                 });
     }
 
+    public Mono<Map<String, LocationSimpleInfoDto>> getAllLocationSimpleInfos() {
+        return locationRepository.findAll()
+                .flatMap(location ->
+                        classRepository.findAllClassByLocationCode(location.getLocationCode())
+                                .collectList()
+                                .map(classes -> new LocationSimpleInfoDto(location.getLocationName(),
+                                        classes.stream().map(Class::getClassCode).collect(Collectors.toList())))
+                                .map(dto -> new AbstractMap.SimpleEntry<>(location.getLocationCode(), dto))
+                )
+                .collectMap(Map.Entry::getKey, Map.Entry::getValue)
+                .defaultIfEmpty(new HashMap<>());
+    }
 }
