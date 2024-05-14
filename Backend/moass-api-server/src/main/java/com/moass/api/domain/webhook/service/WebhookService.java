@@ -33,4 +33,10 @@ public class WebhookService {
         return gitlabRepository.saveForce(newGitlabToken)
                 .then(Mono.just(newGitlabToken));
     }
+
+    public Mono<String> validateGitlabToken(String gitlabTokenId) {
+        return gitlabRepository.findByGitlabTokenId(gitlabTokenId)
+                .flatMap(gitlabToken -> Mono.just(gitlabToken.getTeamCode())
+                .switchIfEmpty(Mono.error(new RuntimeException("Invalid Gitlab Token"))));
+    }
 }

@@ -13,4 +13,7 @@ public interface GitlabRepository extends ReactiveCrudRepository<GitlabToken, In
     @Query("INSERT INTO `GitlabToken` (gitlab_token_id, team_code) " +
             "VALUES (:#{#gitlabToken.gitlabTokenId}, :#{#gitlabToken.teamCode})")
     Mono<GitlabToken> saveForce(GitlabToken gitlabToken);
+
+    @Query("SELECT * FROM `GitlabToken` WHERE gitlab_token_id = :gitlabTokenId")
+    Mono<GitlabToken> findByGitlabTokenId(String gitlabTokenId);
 }
