@@ -25,6 +25,7 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
   late ReservationApi api;
   MyProfile? userProfile;
   List<int> _selectedTimes = []; // 여기에 선택된 시간을 저장합니다.
+  bool _isNotificationEnabled = false; // 체크박스 상태 변수, 기본값은 true
 
   @override
   void initState() {
@@ -78,7 +79,7 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
     try {
       Map<String, dynamic> createData = {
         "classCode": userProfile?.classCode,
-        "category": 'board',
+        "category": _isNotificationEnabled ? '1' : '2',
         "timeLimit": _currentLimit ~/ 30,
         "reservationName": _nameController.text,
         "colorCode":
@@ -188,6 +189,17 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
                 onChanged: (int? newValue) {
                   setState(() {
                     _currentLimit = newValue!;
+                  });
+                },
+              ),
+            ),
+            ListTile(
+              title: const Text('업무 탭에 예약 표출'),
+              trailing: Checkbox(
+                value: _isNotificationEnabled,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _isNotificationEnabled = value!;
                   });
                 },
               ),

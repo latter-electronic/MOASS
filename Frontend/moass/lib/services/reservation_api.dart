@@ -138,7 +138,7 @@ class ReservationApi {
     }
   }
 
-  // 예약 취소
+  // 예약 수정
   Future<void> reservationFix(Map<String, dynamic> fixData) async {
     String? accessToken = await storage.read(key: 'accessToken');
     if (accessToken == null) {
@@ -159,6 +159,29 @@ class ReservationApi {
     } on DioException catch (e) {
       print('예약 수정 에러: ${e.message}');
       throw Exception('Error making reservation request: ${e.message}');
+    }
+  }
+
+  // 예약 삭제
+  Future reservationDelete(reservationId) async {
+    try {
+      print('리저베이션아이디 : $reservationId');
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return [];
+      }
+      final response = await dio.delete(
+        '$baseUrl/api/reservation/$reservationId',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+      if (response.statusCode == 200) {
+        print('삭제 완료');
+      } else {
+        print('Failed to fetch reservation information');
+      }
+    } on DioException catch (e) {
+      print('Error fetching reservation information: ${e.message}');
     }
   }
 }
