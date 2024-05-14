@@ -36,4 +36,7 @@ public interface ReservationInfoRepository  extends ReactiveCrudRepository<Reser
     Mono<ReservationInfo> findByReservationInfoId(Integer infoId);
 
     Mono<ReservationInfo> findByReservationIdAndInfoTime(Integer reservationId, Integer infoTime);
+
+    @Query("DELETE FROM `ReservationInfo` WHERE reservation_id = :reservationId")
+    Mono<Void> deleteByReservationId(Integer reservationId);
 }

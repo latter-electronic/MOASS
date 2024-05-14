@@ -131,9 +131,15 @@ public class ReservationService {
         if (source.getColorCode() != null) target.setColorCode(source.getColorCode());
     }
 
+    @Transactional
     public Mono<Reservation> deleteReservation(Integer reservationId) {
         return reservationRepository.findByReservationId(reservationId)
-                .flatMap(reservation -> reservationRepository.delete(reservation).thenReturn(reservation))
-                .switchIfEmpty(Mono.error(new CustomException("해당 예약항목이 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
+                .switchIfEmpty(Mono.error(new CustomException("해당 예약 항목이 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
+                .flatMap(reservation ->
+                        userReservationInfoRepository.deleteByReservationId(reservation.getReservationId())
+                                .then(reservationInfoRepository.deleteByReservationId(reservationId))
+                                .then(reservationRepository.deleteById(reservationId))
+                                .thenReturn(reservation)
+                );
     }
 }
