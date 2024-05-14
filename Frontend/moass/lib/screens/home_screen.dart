@@ -49,11 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void setupWidgetOptions(int jobCode) {
     setState(() {
       _widgetOptions = [
-<<<<<<< Frontend/moass/lib/screens/home_screen.dart
         (jobCode == 1) ? const WorkScreen() : const WorkAdminScreen(),
-=======
-        const WorkScreen(),
->>>>>>> Frontend/moass/lib/screens/home_screen.dart
         (jobCode == 1)
             ? const ReservationScreen()
             : const ReservationAdminScreen(),

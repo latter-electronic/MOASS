@@ -32,6 +32,7 @@ class MyInfoApi {
       );
 
       if (response.statusCode == 200) {
+        print('유저 데이터 : ${response.data['data']}');
         return MyProfile.fromJson(response.data['data']);
       } else {
         print('Failed to load user profile');

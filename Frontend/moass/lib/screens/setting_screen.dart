@@ -55,6 +55,7 @@ class SettingScreen extends StatelessWidget {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
               var userProfile = snapshot.data;
+              // print('유저 프로필 : ${userProfile?.backgroundImg}');
               return Column(
                 children: [
                   Container(
@@ -86,7 +87,7 @@ class SettingScreen extends StatelessWidget {
                                             decoration: const BoxDecoration(
                                                 color: Colors.blue),
                                           ),
-                                          const Text('n번 기기'),
+                                          const Text('명패'),
                                         ]),
                                         TextButton(
                                           onPressed: () => showDialog<String>(
@@ -229,7 +230,7 @@ class SettingScreen extends StatelessWidget {
                                   builder: (context) =>
                                       SettingBackgroundPhotoScreen(
                                           backgroundImg:
-                                              userProfile.profileImg),
+                                              userProfile.backgroundImg),
                                 ),
                               );
                             },
