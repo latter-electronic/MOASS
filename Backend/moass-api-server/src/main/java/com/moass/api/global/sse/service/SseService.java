@@ -1,12 +1,15 @@
 package com.moass.api.global.sse.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.moass.api.domain.notification.dto.NotificationSendDto;
+import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
-import com.moass.api.global.exception.CustomException;
+import com.moass.api.global.sse.dto.SseNotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.*;
@@ -14,6 +17,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,6 +32,10 @@ public class SseService {
 
     private final UserRepository userRepository;
     private final SsafyUserRepository ssafyUserRepository;
+
+    private int sseCount=0;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public Mono<Boolean> userExists(String userId) {return userRepository.existsByUserId(userId);}
     public Mono<String> getTeamCode(String userId) {return ssafyUserRepository.findTeamCodeByUserId(userId);}
 
@@ -97,11 +105,11 @@ public class SseService {
     }
 
     // 사람에게 알림 보내기
-    public Mono<Boolean> notifyUser(String userId, String message) {
+    public Mono<Boolean> notifyUser(String userId, Object message) {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = userSinks.get(userId);
             if (sink != null) {
-                boolean result = sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("유저 SSE전송 실패 : " + userId);
                 }
@@ -112,11 +120,11 @@ public class SseService {
         });
     }
 
-    public Mono<Boolean> notifyTeam(String teamCode, String message) {
+    public Mono<Boolean> notifyTeam(String teamCode, Object message) {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = teamSinks.get(teamCode);
             if (sink != null) {
-                boolean result = sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("팀 SSE전송 실패 : " + teamCode);
                 }
@@ -131,7 +139,7 @@ public class SseService {
         return Mono.fromCallable(() -> {
             Sinks.Many<String> sink = classSinks.get(classCode);
             if (sink != null) {
-                boolean result = sink.tryEmitNext(message).isSuccess();
+                boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("반 SSE전송 실패 : " + classCode);
                 }
@@ -142,30 +150,33 @@ public class SseService {
         });
     }
 
-
+    private String createSseJsonMessage(Object data) {
+        try {
+            String json = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(data);
+            return json;
+        } catch (Exception e) {
+            log.error("JSON 변환 실패", e);
+            return "error! : "+e;
+        }
+    }
 
     @Scheduled(fixedRate = 10000)  // 10 seconds
     public void sendTestMessages() {
         log.info("userSinks size: {}", userSinks.size());
         log.info("teamSinks size: {}", teamSinks.size());
         log.info("classSinks size: {}", classSinks.size());
-
-        // 각 사용자에게 테스트 메시지 전송
+        Map<String,String> tmp= new HashMap<>();
+        sseCount++;
         userSinks.forEach((userId, sink) -> {
             log.info("User ID '{}' has {} subscribers.", userId, sink.currentSubscriberCount());
-            sink.tryEmitNext("Test message to user: " + userId);
         });
 
-        // 각 팀에게 테스트 메시지 전송
         teamSinks.forEach((teamCode, sink) -> {
             log.info("Team code '{}' has {} subscribers.", teamCode, sink.currentSubscriberCount());
-            sink.tryEmitNext("Test message to team: " + teamCode);
         });
 
-        // 각 반에게 테스트 메시지 전송
         classSinks.forEach((classCode, sink) -> {
             log.info("Class code '{}' has {} subscribers.", classCode, sink.currentSubscriberCount());
-            sink.tryEmitNext("Test message to class: " + classCode);
         });
     }
 }

@@ -1,14 +1,11 @@
 package com.moass.api.global.auth;
 
-import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -26,10 +23,8 @@ public class AuthManager implements ReactiveAuthenticationManager {
                 .flatMap(auth -> {
 
                     String token = auth.getCredentials();
-                    log.warn("token: {}", token);
                     if (jwtService.validateAccessToken(token)) {
                         String userEmail = jwtService.getUserInfoFromAccessToken(token).getUserEmail();
-                        log.warn("userEmail: {}", userEmail);
                         return processAuthentication(userEmail);
                     }
                     else {

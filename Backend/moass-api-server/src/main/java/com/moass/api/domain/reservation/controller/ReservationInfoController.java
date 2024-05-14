@@ -10,13 +10,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 
 @Slf4j
 @RestController
-@RequestMapping("/reservationInfo")
+@RequestMapping("/reservationinfo")
 @RequiredArgsConstructor
 public class ReservationInfoController {
 
@@ -55,6 +56,14 @@ public class ReservationInfoController {
         return reservationInfoService.deleteReservationInfo(userInfo,reservationInfoId)
                 .flatMap(deletedId -> ApiResponse.ok("예약 정보 삭제 성공",deletedId))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 정보 삭제 실패 : " + e.getMessage(),e.getStatus()));
+    }
+
+    @GetMapping
+    public Mono<ResponseEntity<ApiResponse>> getMyReservationInfos(@Login UserInfo userInfo){
+        Hooks.onOperatorDebug();
+        return reservationInfoService.getReservationInfo(userInfo.getUserId())
+                .flatMap(reservationDetailDtos -> ApiResponse.ok("예약 정보 조회 성공", reservationDetailDtos))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 정보 조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }

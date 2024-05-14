@@ -22,7 +22,7 @@ pipeline {
                     sh '''
                         docker rmi -f $(docker images -f "dangling=true" -q)
                     '''
-                    sh 'docker run -d -p 8080:8080 --name backend-ws backend-ws'
+                    sh 'docker run -d -p 9090:9090 --name backend-ws backend-ws'
                 }
             }
         }

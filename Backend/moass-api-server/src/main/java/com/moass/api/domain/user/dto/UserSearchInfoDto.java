@@ -25,6 +25,7 @@ public class UserSearchInfoDto {
     private String userName;
     private String positionName;
     private Integer statusId;
+    private String backgroundImg;
     private String profileImg;
     private Integer jobCode;
     private Integer connectFlag;
@@ -42,6 +43,7 @@ public class UserSearchInfoDto {
         this.userName = userSearchDetail.getUserName();
         this.positionName = userSearchDetail.getPositionName();
         this.statusId = userSearchDetail.getStatusId();
+        this.backgroundImg = userSearchDetail.getBackgroundImg();
         this.profileImg = userSearchDetail.getProfileImg();
         this.jobCode = userSearchDetail.getJobCode();
         this.connectFlag = userSearchDetail.getConnectFlag();

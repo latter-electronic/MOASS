@@ -13,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -132,6 +131,33 @@ public class UserTest {
     }
 
     @Nested
+    @DisplayName("[POST] 리프레시토큰 /user/refresh")
+    class 리프레시토큰{
+
+            @Test
+            @DisplayName("[200] 리프레시토큰")
+            void 리프레시토큰성공(){
+                webTestClient.post().uri("/user/refresh")
+                        .header("Authorization", refreshToken)
+                        .exchange()
+                        .expectStatus().isOk()
+                        .expectBody()
+                        .jsonPath("$.status").isEqualTo("200");
+            }
+
+            @Test
+            @DisplayName("[400] 리프레시토큰(잘못된 토큰제공)")
+            void 리프레시토큰실패(){
+                webTestClient.post().uri("/user/refresh")
+                        .header("Authorization", refreshToken+"1")
+                        .exchange()
+                        .expectStatus().isEqualTo(401)
+                        .expectBody()
+                        .jsonPath("$.status").isEqualTo("401");
+            }
+    }
+
+    @Nested
     @DisplayName("[GET] 조회 /user")
     class 조회 {
 
@@ -225,5 +251,34 @@ public class UserTest {
                     .expectBody()
                     .jsonPath("$.status").isEqualTo("409");
         }
+    }
+
+    @Nested
+    @DisplayName("[GET] 지역과 반만조회(어드민)")
+    class 지역과반조회 {
+        @Test
+        @DisplayName("[200] 정상조회")
+        void 지역과반정상조회(){
+            login(new UserLoginDto("master@com", "1234"));
+            webTestClient.get().uri("/user/locationinfo")
+                    .header("Authorization", accessToken) // 설정된 accessToken 사용
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @DisplayName("[403] 등록권한 부족")
+        void 지역과반조회권한부족(){
+            login(new UserLoginDto("weon1009@gmail.com", "1234"));
+            webTestClient.get().uri("/user/locationinfo")
+                    .header("Authorization", accessToken) // 설정된 accessToken 사용
+                    .exchange()
+                    .expectStatus().isEqualTo(403)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("403");
+        }
+
     }
 }

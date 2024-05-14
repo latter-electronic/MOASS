@@ -8,6 +8,10 @@ DROP TABLE IF EXISTS `Reservation`;
 DROP TABLE IF EXISTS `Position`;
 DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
+DROP TABLE IF EXISTS `Widget`;
+
+DROP TABLE IF EXISTS `FcmToken`;
+DROP TABLE IF EXISTS `JiraToken`;
 DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS `SsafyUser`;
 
@@ -60,20 +64,50 @@ CREATE TABLE `User`(
                        CONSTRAINT `FK_SSAFYUser_TO_User_1` FOREIGN KEY (`user_id`) REFERENCES `SsafyUser` (`user_id`)
 );
 
-CREATE TABLE `Seat` (
-                       `seat_id` INT NOT NULL AUTO_INCREMENT,
-                       `user_id` VARCHAR(20) NULL,
-                       `x_coord` VARCHAR(40) NULL,
-                       `y_coord` VARCHAR(20) NULL,
-                       PRIMARY KEY (`seat_id`),
-                       FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+CREATE TABLE JiraToken (
+                             jira_token_id INT AUTO_INCREMENT  KEY,
+                             user_id VARCHAR(20) NOT NULL,
+                             cloud_id VARCHAR(50) NOT NULL,
+                             jira_email VARCHAR(50) NOT NULL,
+                             access_token LONGTEXT NOT NULL,
+                             refresh_token LONGTEXT NOT NULL,
+                             expires_at TIMESTAMP NOT NULL DEFAULT (UTC_TIMESTAMP() + INTERVAL 1 HOUR),
+                             created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                             updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                             FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
+
+
+CREATE TABLE `FcmToken` (
+                            `fcm_token_id`	INT	 AUTO_INCREMENT  KEY,
+                            `user_id`	VARCHAR(20)	NOT NULL,
+                            `mobile_device_id`	VARCHAR(50)	NOT NULL,
+                            `token`	VARCHAR(255)	NULL,
+                            created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                            updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                            FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
+
+CREATE TABLE `Widget`(
+                        `widget_id` INT NOT NULL AUTO_INCREMENT,
+                        `user_id` VARCHAR(20) NOT NULL,
+                        `widget_img` VARCHAR(255) NOT NULL,
+                        `created_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                        `updated_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`widget_id`),
+                        FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
+
 
 CREATE TABLE `Device` (
                           `device_id` VARCHAR(40) NOT NULL,
                           `user_id` VARCHAR(20) NULL,
+                          `x_coord` INT NULL,
+                          `y_coord` INT NULL,
+                           `class_code` VARCHAR(5) NULL,
                           PRIMARY KEY (`device_id`),
-                          FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+                          FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`),
+                          FOREIGN KEY (`class_code`) REFERENCES `Class` (`class_code`)
 );
 
 
@@ -105,8 +139,8 @@ CREATE TABLE `ReservationInfo` (
                                    `info_name` VARCHAR(8) NOT NULL,
                                    `info_date` DATE NOT NULL,
                                    `info_time` INT NOT NULL,
-                                   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                   `created_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                                   `updated_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                                    PRIMARY KEY (`info_id`),
                                    FOREIGN KEY (`reservation_id`) REFERENCES `Reservation`(`reservation_id`),
                                    FOREIGN KEY (`user_id`) REFERENCES `User`(`user_id`)
@@ -126,7 +160,7 @@ CREATE TABLE `Board`
     `board_name` VARCHAR(255),
     `board_url` VARCHAR(255),
     `is_active` BOOLEAN,
-    `completed_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `completed_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
     PRIMARY KEY (`board_id`)
 );
 

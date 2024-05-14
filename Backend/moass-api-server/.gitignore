@@ -30,7 +30,7 @@ out/
 **/application-local.properties
 **/application-prod.properties
 **/application-test.properties
-
+**/firebase-admin-sdk.json
 
 # /src/main/resources/data.sql
 # /src/main/resources/schema.sql

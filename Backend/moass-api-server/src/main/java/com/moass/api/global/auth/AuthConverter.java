@@ -16,6 +16,7 @@ public class AuthConverter implements ServerAuthenticationConverter {
                         exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION)
                 )
                 .filter(s->s.startsWith("Bearer"))
+                .filter(s -> s.length() > 7)
                 .map(s-> s.substring(7))
                 .map(s-> new BearerToken(s));
     }

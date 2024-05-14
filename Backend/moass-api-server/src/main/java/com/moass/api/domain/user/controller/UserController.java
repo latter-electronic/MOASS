@@ -1,6 +1,7 @@
 package com.moass.api.domain.user.controller;
 
-import com.moass.api.domain.file.controller.FileController;
+import com.moass.api.domain.notification.dto.NotificationSendDto;
+import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.dto.UserCreateDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
@@ -13,8 +14,10 @@ import com.moass.api.global.auth.CustomUserDetails;
 import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
+import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
+import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
-import com.moass.api.global.service.S3Service;
+import com.moass.api.global.sse.dto.SseOrderDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,9 +42,12 @@ public class UserController {
 
     final UserService userService;
     final SseService sseService;
+    final FcmService fcmService;
     final JWTService jwtService;
     final PasswordEncoder encoder;
     final AuthManager authManager;
+    final NotificationService notificationService;
+
     @GetMapping("/auth")
     public Mono<String> auth(){
         return Mono.just("t");
@@ -54,15 +60,21 @@ public class UserController {
                 .flatMap(auth -> {
                     CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
                     UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
+                    Mono<Integer> teamNoty = notificationService.saveAndPushbyTeam(userInfo.getTeamCode(),new NotificationSendDto("server","팀원 로그인 알림 : "+userInfo.getUserName(),userInfo.getUserName()+"님이 로그인하셨습니다."));
 
-                    Mono<Boolean> teamNotify = sseService.notifyTeam(userInfo.getTeamCode(), "로그인성공 :" + userInfo.getUserName());
-                    Mono<Boolean> userNotify = sseService.notifyUser(userInfo.getUserId(), "로그인성공 :" + userInfo.getUserName());
-
-                    return Mono.when(teamNotify, userNotify)  // 두 알림의 성공 여부를 동시에 확인
-                            .then(jwtService.generateTokens(userInfo));
+                    return Mono.when(teamNoty)
+                                    .then(jwtService.generateTokens(userInfo));
                 })
                 .flatMap(tokens -> ApiResponse.ok("로그인 성공", tokens))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/devicelogout")
+    public Mono<ResponseEntity<ApiResponse>> deviceLogout(@Login UserInfo userInfo){
+        return userService.deviceLogout(userInfo)
+                .flatMap(logoutSuccess -> sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("logoutDevice", userInfo.getUserId()))
+                        .then(ApiResponse.ok("로그아웃 성공")))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("로그아웃 실패 : "+e.getMessage(), e.getStatus()));
     }
 
     @PostMapping("/signup")
@@ -72,7 +84,7 @@ public class UserController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("회원가입 실패: "+e.getMessage(),e.getStatus()));
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public Mono<ResponseEntity<ApiResponse>> refreshToken(@RequestHeader("Authorization") String authHeader){
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ApiResponse.error("토큰이 제공되지 않았거나 형식이 올바르지 않습니다.", HttpStatus.BAD_REQUEST); // 400 Bad Request
@@ -94,15 +106,16 @@ public class UserController {
      */
     @PatchMapping("/status")
     public Mono<ResponseEntity<ApiResponse>> changeUserStatus(@Login UserInfo userInfo, @RequestBody UserUpdateDto userUpdateDto){
-        return userService.UserUpdate(userInfo,userUpdateDto)
+        return userService.userUpdate(userInfo,userUpdateDto)
                 .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("수정완료",reqFilteredUserDetailDto))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
 
     @GetMapping
     public Mono<ResponseEntity<ApiResponse>> getUserDetails(@Login UserInfo userInfo, @RequestParam(required = false) String username) {
-        if(username != null) {
-            System.out.println(username);
+        log.info("NAME~@@@ : "+username);
+        if(username != null && !username.isEmpty()) {
+            log.info("NAME~! : "+username);
             return userService.findByUsername(userInfo, username)
                     .flatMap(userDetail -> ApiResponse.ok("사용자 정보 조회 성공", userDetail))
                     .onErrorResume(CustomException.class,e -> ApiResponse.error("사용자 정보 조회 실패: "+e.getMessage(), e.getStatus()));
@@ -121,6 +134,7 @@ public class UserController {
                 .switchIfEmpty(ApiResponse.ok("팀 조회 실패 : 해당 팀에 팀원이 존재하지 않습니다.", HttpStatus.NOT_FOUND))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("팀 조회 실패 : " + e.getMessage(), e.getStatus()));
     }
+
 
     @GetMapping("/search")
     public Mono<ResponseEntity<ApiResponse>> getTeam(@Login UserInfo userInfo,
@@ -173,28 +187,54 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("생성 실패 : "+e.getMessage(), e.getStatus()));
     }
 
-    /**
-    @GetMapping("/all")
-    public Mono<ResponseEntity<ApiResponse>> getAllUsers(@Login UserInfo userInfo){
-        return userService.getAllUsers(userInfo)
-                .flatMap(users -> ApiResponse.ok("조회완료",users))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("조회 실패 : "+e.getMessage(), e.getStatus()));
-    }
-    */
-
-
-    @PostMapping(value = "/profileImg")
+    @PostMapping(value = "/profileimg")
     public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.profileImgUpload(userInfo,headers,file)
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
 
-    @PostMapping(value = "/backgroundImg")
+    @PostMapping(value = "/backgroundimg")
     public Mono<ResponseEntity<ApiResponse>> updatebackgroundImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.backgroundImgUpload(userInfo,headers,file)
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping(value = "/widget")
+    public Mono<ResponseEntity<ApiResponse>> addWidgetImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
+        return userService.WidgetImgUpload(userInfo,headers,file)
+                .flatMap(fileName -> ApiResponse.ok("등록완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("등록 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @GetMapping(value = "/widget")
+    public Mono<ResponseEntity<ApiResponse>> getWidgetImg(@Login UserInfo userInfo){
+        return userService.getWidgetImg(userInfo)
+                .flatMap(fileName -> ApiResponse.ok("조회완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @DeleteMapping(value = "/widget/{widgetId}")
+    public Mono<ResponseEntity<ApiResponse>> deleteWidgetImg(@Login UserInfo userInfo, @PathVariable String widgetId){
+        return userService.deleteWidgetImg(userInfo,widgetId)
+                .flatMap(fileName -> ApiResponse.ok("삭제완료",fileName))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("삭제 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/fcmtoken")
+    public Mono<ResponseEntity<ApiResponse>> saveFcmToken(@Login UserInfo userInfo, @RequestBody FcmTokenSaveDto fcmtokenSaveDto){
+        return fcmService.saveOrUpdateFcmToken(userInfo.getUserId(), fcmtokenSaveDto)
+                .flatMap(savedToken -> ApiResponse.ok("FCM 토큰 저장 성공", savedToken))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("FCM 토큰 저장 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/locationinfo")
+    public Mono<ResponseEntity<ApiResponse>> getallLocationSimpleInfo(@Login UserInfo userInfo){
+        return userService.getAllLocationSimpleInfos()
+                .flatMap(locationInfoList -> ApiResponse.ok("조회완료", locationInfoList))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }

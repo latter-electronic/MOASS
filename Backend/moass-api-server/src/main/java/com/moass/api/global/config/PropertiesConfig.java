@@ -15,4 +15,8 @@ public class PropertiesConfig {
 
      private String accessKey;
      private String refreshKey;
+
+     private String jiraClientId;
+     private String jiraClientSecret;
+     private String jiraRedirectUri;
 }
