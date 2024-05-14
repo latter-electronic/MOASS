@@ -35,6 +35,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
 
   Future<XFile?> cropImage(XFile pickedFile) async {
     final croppedFile = await ImageCropper().cropImage(
+      aspectRatio: const CropAspectRatio(ratioX: 500, ratioY: 500),
       sourcePath: pickedFile.path,
       compressFormat: ImageCompressFormat.jpg,
       compressQuality: 100,
@@ -54,7 +55,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
     if (croppedFile != null) {
       return XFile(croppedFile.path);
     } else {
-      return XFile(pickedFile.path);
+      return null;
     }
   }
 
