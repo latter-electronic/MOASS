@@ -1,52 +1,93 @@
+// 보드 방 리스트 모델
 class BoardModel {
+  final int boardUserId;
   final int boardId;
   final String boardName;
-  final List<MemberImage> memberImages;
-  final List<ImageDetail> images;
+  final String boardUrl;
+  final bool isActive;
+  final DateTime? completedAt;
 
   BoardModel({
+    required this.boardUserId,
     required this.boardId,
     required this.boardName,
-    required this.memberImages,
-    required this.images,
+    required this.boardUrl,
+    required this.isActive,
+    this.completedAt,
   });
 
-  // JSON 데이터를 BoardModel 객체로 변환
-  factory BoardModel.fromJson(Map<String, dynamic> json) => BoardModel(
-        boardId: json['boardId'] ?? 0, // API 응답에 따라 'boardId' 항목 확인 필요
-        boardName: json['boardName'] ?? 'Unknown Board', // 기본값 설정
-        memberImages: (json['memberImages'] as List<dynamic>?)
-                ?.map((x) => MemberImage.fromJson(x))
-                .toList() ??
-            [], // 회원 이미지 리스트, API 응답에 따라 조정 필요
-        images: List<ImageDetail>.from(
-          json['images'].map((x) => ImageDetail.fromJson(x)),
-        ),
-      );
+  factory BoardModel.fromJson(Map<String, dynamic> json) {
+    return BoardModel(
+      boardUserId: json['boardUserId'],
+      boardId: json['boardId'],
+      boardName: json['boardName'],
+      boardUrl: json['boardUrl'],
+      isActive: json['isActive'],
+      completedAt: json['completedAt'] != null
+          ? DateTime.parse(json['completedAt'])
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'boardUserId': boardUserId,
+      'boardId': boardId,
+      'boardName': boardName,
+      'boardUrl': boardUrl,
+      'isActive': isActive,
+      'completedAt': completedAt?.toIso8601String(),
+    };
+  }
 }
 
-class MemberImage {
-  final int userId;
-  final String url;
+// 보드 스크린샷 리스트 모델
+class ScreenshotModel {
+  final int screenshotId;
+  final String screenshotUrl;
 
-  MemberImage({required this.userId, required this.url});
+  ScreenshotModel({
+    required this.screenshotId,
+    required this.screenshotUrl,
+  });
 
-  // JSON 데이터를 MemberImage 객체로 변환
-  factory MemberImage.fromJson(Map<String, dynamic> json) => MemberImage(
-        userId: json['userId'],
-        url: json['url'],
-      );
+  factory ScreenshotModel.fromJson(Map<String, dynamic> json) {
+    return ScreenshotModel(
+      screenshotId: json['screenshotId'],
+      screenshotUrl: json['screenshotUrl'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'screenshotId': screenshotId,
+      'screenshotUrl': screenshotUrl,
+    };
+  }
 }
 
-class ImageDetail {
-  final int imageId;
-  final String url;
 
-  ImageDetail({required this.imageId, required this.url});
+// // 보드 스크린샷 상세 모델
+// class ScreenshotDetailModel {
+//   final int screenshotId;
+//   final String screenshotUrl;
 
-  // JSON 데이터를 ImageDetail 객체로 변환
-  factory ImageDetail.fromJson(Map<String, dynamic> json) => ImageDetail(
-        imageId: json['screenshotId'],
-        url: json['screenshotUrl'],
-      );
-}
+//   ScreenshotModel({
+//     required this.screenshotId,
+//     required this.screenshotUrl,
+//   });
+
+//   factory ScreenshotModel.fromJson(Map<String, dynamic> json) {
+//     return ScreenshotModel(
+//       screenshotId: json['screenshotId'],
+//       screenshotUrl: json['screenshotUrl'],
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     return {
+//       'screenshotId': screenshotId,
+//       'screenshotUrl': screenshotUrl,
+//     };
+//   }
+// }

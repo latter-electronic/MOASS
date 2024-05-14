@@ -10,6 +10,7 @@ import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // 추가
 import 'package:moass/services/api_service.dart';
 
 // 백그라운드 메시지 설정
@@ -34,7 +35,8 @@ void main() async {
   if (isLoggedIn) {
     await initializeFirebaseAndNotifications(storage);
   }
-  runApp(MyApp(isLoggedIn: isLoggedIn, dio: dio, storage: storage));
+  runApp(ProviderScope(
+      child: MyApp(isLoggedIn: isLoggedIn, dio: dio, storage: storage)));
 }
 
 // Firebase 및 알림 초기화
@@ -155,8 +157,6 @@ class _MyAppState extends State<MyApp> {
       await apiService.manualRefresh();
     } catch (e) {
       print('Failed to refresh token: $e');
-      // 로그인이 필요하면 로그인 화면으로 이동
-      Navigator.pushReplacementNamed(context, '/loginScreen');
     }
   }
 

@@ -1,10 +1,7 @@
-// API 임시 설정
-
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/BoardModel.dart';
-import 'package:moass/services/myinfo_api.dart';
-import 'package:moass/model/myprofile.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BoardApi {
   final Dio dio;
@@ -13,9 +10,16 @@ class BoardApi {
 
   BoardApi({required this.dio, required this.storage});
 
-  Future<List<BoardModel>> fetchBoards(String userId) async {
+  // 모음보드 방 목록 들어오는 함수
+  Future<List<BoardModel>> fetchBoards() async {
     try {
-      final response = await dio.get('$baseUrl/board/$userId');
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+      }
+
+      final response = await dio.get('$baseUrl/board',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
       if (response.statusCode == 200) {
         List<dynamic> boardsJson = response.data['data'];
         return boardsJson.map((json) => BoardModel.fromJson(json)).toList();
@@ -26,4 +30,58 @@ class BoardApi {
       throw Exception('Failed to fetch boards: $e');
     }
   }
+
+  // 보드 사진 리스트
+  Future<List<ScreenshotModel>> boardScreenshotList(int boardUserId) async {
+    print('리스트에 들어간 값: $boardUserId');
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+      }
+      final response = await dio.get('$baseUrl/board/$boardUserId',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+      if (response.statusCode == 200) {
+        List<dynamic> boardsJson = response.data['data'];
+        return boardsJson
+            .map((json) => ScreenshotModel.fromJson(json))
+            .toList();
+      } else {
+        throw Exception('Failed to load screenshots');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch screenshots: $e');
+    }
+  }
+
+  // 보드 사진 상세
+  Future<ScreenshotModel> boardScreenshotDetail(int screenshotId) async {
+    print('스크린샷 아이디에 들어간 값: $screenshotId');
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+      }
+
+      final response =
+          await dio.get('$baseUrl//board/screenshot/$screenshotId');
+      if (response.statusCode == 200) {
+        return ScreenshotModel.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to load screenshot');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch screenshot: $e');
+    }
+  }
 }
+
+// Provider 정의
+final dioProvider = Provider((ref) => Dio());
+final storageProvider = Provider((ref) => const FlutterSecureStorage());
+
+final boardApiProvider = Provider<BoardApi>((ref) {
+  final dio = ref.watch(dioProvider);
+  final storage = ref.watch(storageProvider);
+  return BoardApi(dio: dio, storage: storage);
+});
