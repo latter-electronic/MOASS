@@ -4,11 +4,13 @@ import com.moass.api.global.config.BlockHoundCustomConfiguration;
 import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import reactor.blockhound. BlockHound;
 import reactor.core.publisher.Hooks;
 
 import java.util.TimeZone;
 
+@EnableScheduling
 @SpringBootApplication
 public class MoassApiServerApplication {
 
