@@ -19,8 +19,9 @@ import { deviceLogout } from './services/deviceService';
 import useAuthStore from './stores/AuthStore';
 
 export default function App() {
-    const { accessToken } = useAuthStore((state) => ({
+    const { accessToken, deviceId } = useAuthStore((state) => ({
         accessToken: state.accessToken,
+        deviceId: state.deviceId,
     }));
 
     useEffect(() => {
@@ -48,7 +49,7 @@ export default function App() {
 
     const handleLogoutDevice = async (studentId) => {
         try {
-            const logoutData = { deviceId: studentId, userId: studentId };
+            const logoutData = { deviceId: deviceId || 'dddd2', userId: studentId };
             await deviceLogout(logoutData);
             console.log(`Device with student ID ${studentId} logged out successfully.`);
         } catch (error) {
