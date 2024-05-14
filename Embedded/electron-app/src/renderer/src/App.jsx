@@ -13,7 +13,7 @@ import TagNFC from "./pages/common/TagNFCPage.jsx";
 import TagSuccess from "./pages/common/TagSuccessPage.jsx";
 import TestLoginPage from "./pages/common/TestLoginPage.jsx";
 import SSETestPage from "./pages/common/SSETestPage.jsx";
-import EventListener from "./components/EventListener.jsx"; // New component for event listening
+import EventListener from "./components/EventListener.jsx";
 
 export default function App() {
     return (

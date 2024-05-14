@@ -19,7 +19,7 @@ export default function EventListener({ children }) {
 
             eventService.startListening(async (newData) => {
                 try {
-                    const parsedData = JSON.parse(newData);
+                    const parsedData = JSON.parse(newData.data);
 
                     if (parsedData.command === 'order') {
                         if (parsedData.type === 'logoutDevice') {
@@ -54,6 +54,7 @@ export default function EventListener({ children }) {
 
         alert(`Call from: ${senderName}\nMessage: ${message}\nProfile: ${senderProfile}`);
 
+        // 페이지로 이동
         navigate('/callalert', { state: { message, senderName, senderProfile } });
     };
 
