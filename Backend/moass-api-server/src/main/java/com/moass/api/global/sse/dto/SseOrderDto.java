@@ -9,11 +9,22 @@ public class SseOrderDto {
 
     private String type;
 
-    private String message;
+    private Detail data;
 
-    public SseOrderDto(String type, String message) {
+    public SseOrderDto(String type, String detail,String message) {
         this.type = type;
-        this.message = message;
+        this.data = new Detail(detail,message);
+
     }
 
+    @Data
+    public static class Detail {
+        private String message;
+        private String detail;
+
+        public Detail(String detail, String message) {
+            this.detail = detail;
+            this.message = message;
+        }
+    }
 }

@@ -93,7 +93,7 @@ public class NotificationService {
                     notification.setDeletedAt(LocalDateTime.now());
                     return notificationRepository.save(notification)
                             .doOnSuccess(savedNotification -> {
-                                sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("readNotification", savedNotification.getNotificationId())).subscribe();
+                                sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("readNotification", savedNotification.getNotificationId(),null)).subscribe();
                             })
                             .thenReturn(notification.getNotificationId());
                 })
@@ -110,7 +110,7 @@ public class NotificationService {
                     return notificationRepository.save(notification);
                 })
                 .doOnNext(savedNotification -> {
-                    sseService.notifyUser(userId, new SseOrderDto("readNotification", savedNotification.getNotificationId())).subscribe();
+                    sseService.notifyUser(userId, new SseOrderDto("readNotification", savedNotification.getNotificationId(),null)).subscribe();
                 })
                 .count()
                 .onErrorResume(e -> {

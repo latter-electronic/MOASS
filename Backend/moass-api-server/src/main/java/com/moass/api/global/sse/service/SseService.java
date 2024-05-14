@@ -109,6 +109,8 @@ public class SseService {
                 boolean result = sink.tryEmitNext(createSseJsonMessage(message)).isSuccess();
                 if (!result) {
                     log.error("유저 SSE전송 실패 : " + userId);
+                }else{
+                    log.info("유저 SSE 전송 성공 :"+userId);
                 }
                 return result;
             }

@@ -2,10 +2,7 @@ package com.moass.api.domain.user.controller;
 
 import com.moass.api.domain.notification.dto.NotificationSendDto;
 import com.moass.api.domain.notification.service.NotificationService;
-import com.moass.api.domain.user.dto.UserCreateDto;
-import com.moass.api.domain.user.dto.UserLoginDto;
-import com.moass.api.domain.user.dto.UserSignUpDto;
-import com.moass.api.domain.user.dto.UserUpdateDto;
+import com.moass.api.domain.user.dto.*;
 import com.moass.api.domain.user.service.UserService;
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.AuthManager;
@@ -72,7 +69,7 @@ public class UserController {
     @PostMapping("/devicelogout")
     public Mono<ResponseEntity<ApiResponse>> deviceLogout(@Login UserInfo userInfo){
         return userService.deviceLogout(userInfo)
-                .flatMap(logoutSuccess -> sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("logoutDevice", userInfo.getUserId()))
+                .flatMap(logoutSuccess -> sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("logoutDevice", userInfo.getUserId(),null))
                         .then(ApiResponse.ok("로그아웃 성공")))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("로그아웃 실패 : "+e.getMessage(), e.getStatus()));
     }
@@ -235,6 +232,24 @@ public class UserController {
         return userService.getAllLocationSimpleInfos()
                 .flatMap(locationInfoList -> ApiResponse.ok("조회완료", locationInfoList))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/call")
+    public Mono<ResponseEntity<ApiResponse>> callUser(@Login UserInfo userInfo, @RequestBody UserCallDto userCallDto) {
+        return userService.callUser(userInfo, userCallDto.getUserId())
+                .flatMap(usersInfo -> {
+                    UserSearchInfoDto receiverInfo = usersInfo.getReceiverUserSearchInfoDto();
+                    UserSearchInfoDto senderInfo = usersInfo.getSenderUserSearchInfoDto();
+                    String senderProfileImg = senderInfo.getProfileImg();
+                    log.info(String.valueOf(senderInfo));
+                    log.info(String.valueOf(usersInfo));
+                    return sseService.notifyUser(receiverInfo.getUserId(),
+                                    new SseOrderDto("call", senderInfo.getUserName() + "," + senderProfileImg, userCallDto.getMessage()))
+                            .thenReturn(usersInfo)
+                            .flatMap(result -> ApiResponse.ok("호출 성공", result))
+                            .onErrorResume(e -> ApiResponse.error("알람 전송 실패 : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+                })
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("호출 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }
