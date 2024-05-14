@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 @Table("GitlabToken")
 @Data
-public class GitlabToken extends Auditable {
+public class GitlabHook extends Auditable {
 
     @Id
     @Column("gitlab_token_id")

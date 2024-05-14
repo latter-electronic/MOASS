@@ -1,19 +1,18 @@
 package com.moass.api.domain.webhook.repository;
 
-import com.moass.api.domain.user.entity.User;
-import com.moass.api.domain.webhook.entity.GitlabToken;
+import com.moass.api.domain.webhook.entity.GitlabHook;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
 
-public interface GitlabRepository extends ReactiveCrudRepository<GitlabToken, Integer> {
+public interface GitlabRepository extends ReactiveCrudRepository<GitlabHook, Integer> {
 
-    Mono<GitlabToken> findByTeamCode(String teamCode);
+    Mono<GitlabHook> findByTeamCode(String teamCode);
 
     @Query("INSERT INTO `GitlabToken` (gitlab_token_id, team_code) " +
             "VALUES (:#{#gitlabToken.gitlabTokenId}, :#{#gitlabToken.teamCode})")
-    Mono<GitlabToken> saveForce(GitlabToken gitlabToken);
+    Mono<GitlabHook> saveForce(GitlabHook gitlabHook);
 
     @Query("SELECT * FROM `GitlabToken` WHERE gitlab_token_id = :gitlabTokenId")
-    Mono<GitlabToken> findByGitlabTokenId(String gitlabTokenId);
+    Mono<GitlabHook> findByGitlabTokenId(String gitlabTokenId);
 }

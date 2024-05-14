@@ -2,7 +2,7 @@ package com.moass.api.domain.webhook.service;
 
 
 import com.moass.api.domain.user.repository.UserRepository;
-import com.moass.api.domain.webhook.entity.GitlabToken;
+import com.moass.api.domain.webhook.entity.GitlabHook;
 import com.moass.api.domain.webhook.repository.GitlabRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -21,22 +21,22 @@ public class WebhookService {
     public Mono<String> createGitlabWebhookConnectUrl(UserInfo userInfo) {
         return gitlabRepository.findByTeamCode(userInfo.getTeamCode())
                         .switchIfEmpty(createAndSaveGitlabToken(userInfo.getTeamCode()))
-                .map(GitlabToken::getGitlabTokenId);
+                .map(GitlabHook::getGitlabTokenId);
     }
 
-    private Mono<GitlabToken> createAndSaveGitlabToken(String teamCode) {
+    private Mono<GitlabHook> createAndSaveGitlabToken(String teamCode) {
         String uuid = UUID.randomUUID().toString();
-        GitlabToken newGitlabToken = new GitlabToken();
-        newGitlabToken.setGitlabTokenId(uuid);
-        newGitlabToken.setTeamCode(teamCode);
-        log.info("생성중" + newGitlabToken);
-        return gitlabRepository.saveForce(newGitlabToken)
-                .then(Mono.just(newGitlabToken));
+        GitlabHook newGitlabHook = new GitlabHook();
+        newGitlabHook.setGitlabTokenId(uuid);
+        newGitlabHook.setTeamCode(teamCode);
+        log.info("생성중" + newGitlabHook);
+        return gitlabRepository.saveForce(newGitlabHook)
+                .then(Mono.just(newGitlabHook));
     }
 
     public Mono<String> validateGitlabToken(String gitlabTokenId) {
         return gitlabRepository.findByGitlabTokenId(gitlabTokenId)
-                .flatMap(gitlabToken -> Mono.just(gitlabToken.getTeamCode())
+                .flatMap(gitlabHook -> Mono.just(gitlabHook.getTeamCode())
                 .switchIfEmpty(Mono.error(new RuntimeException("Invalid Gitlab Token"))));
     }
 }
