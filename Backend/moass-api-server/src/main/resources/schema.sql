@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
 DROP TABLE IF EXISTS `Widget`;
 
+DROP TABLE IF EXISTS `GitlabProject`;
+DROP TABLE IF EXISTS `GitlabHook`;
 DROP TABLE IF EXISTS `GitlabToken`;
 DROP TABLE IF EXISTS `FcmToken`;
 DROP TABLE IF EXISTS `JiraToken`;
@@ -78,6 +80,25 @@ CREATE TABLE JiraToken (
                              FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
 
+CREATE TABLE GitlabToken (
+                           gitlab_token_id INT AUTO_INCREMENT  KEY,
+                           user_id VARCHAR(20) NOT NULL,
+                           gitlab_email VARCHAR(50) NOT NULL,
+                           access_token LONGTEXT NOT NULL,
+                           refresh_token LONGTEXT NOT NULL,
+                           expires_at TIMESTAMP NOT NULL DEFAULT (UTC_TIMESTAMP() + INTERVAL 2 HOUR),
+                           created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                           updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                           FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
+
+CREATE TABLE GitlabProject (
+                        gitlab_project_id VARCHAR(8) NOT NULL,
+                        gitlab_token_id INT NOT NULL,
+                        gitlab_project_name VARCHAR(30) NOT NULL,
+                        PRIMARY KEY (`gitlab_project_id`),
+                        FOREIGN KEY (`gitlab_token_id`) REFERENCES `GitlabToken` (`gitlab_token_id`)
+);
 
 CREATE TABLE `FcmToken` (
                             `fcm_token_id`	INT	 AUTO_INCREMENT  KEY,
@@ -90,12 +111,12 @@ CREATE TABLE `FcmToken` (
 );
 
 
-CREATE TABLE `GitlabToken` (
-                               `gitlab_token_id`	VARCHAR(36)	NOT NULL,
+CREATE TABLE `GitlabHook` (
+                               `gitlab_hook_id`	VARCHAR(36)	NOT NULL,
                                `team_code`	VARCHAR(5)	NOT NULL,
                               `updated_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                              `created_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
-                            PRIMARY KEY (`gitlab_token_id`),
+                            PRIMARY KEY (`gitlab_hook_id`),
                             FOREIGN KEY (`team_code`) REFERENCES `Team` (`team_code`)
 );
 
