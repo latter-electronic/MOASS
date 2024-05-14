@@ -142,7 +142,7 @@ class MyInfoApi {
     }
   }
 
-  // 유저 프로필 사진 수정
+  // 유저 배경 사진 수정
   postUserbgPhoto(XFile image) async {
     try {
       // String base64Image1 = "";
@@ -170,10 +170,10 @@ class MyInfoApi {
 
       if (response.statusCode == 200) {
         print('유저 배경 이미지 변경 성공!');
-        return response;
+        return response.statusCode;
       } else {
         print('유저 배경 이미지 변경 실패');
-        return [];
+        return response.statusCode;
       }
     } on DioException catch (e) {
       print('배경 이미지 에러: ${e.message}');

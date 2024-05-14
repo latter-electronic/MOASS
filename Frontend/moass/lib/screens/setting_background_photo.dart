@@ -81,9 +81,10 @@ class _SettingWidgetPhotoScreenState
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () async {
-            await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+            var response = await MyInfoApi(
+                    dio: Dio(), storage: const FlutterSecureStorage())
                 .postUserbgPhoto(_image!);
-            if (context.mounted) {
+            if (context.mounted && response == 200) {
               Navigator.of(context).pop();
             }
           },
