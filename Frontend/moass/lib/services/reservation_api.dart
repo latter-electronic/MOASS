@@ -165,6 +165,7 @@ class ReservationApi {
   // 예약 삭제
   Future reservationDelete(reservationId) async {
     try {
+      print('리저베이션아이디 : $reservationId');
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
         print('No access token available');

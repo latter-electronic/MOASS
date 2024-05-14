@@ -10,9 +10,9 @@ class TokenInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final accessToken = await _storage.read(key: 'accessToken');
-    if (accessToken != null) {
-      options.headers['Authorization'] = 'Bearer $accessToken';
+    final refreshToken = await _storage.read(key: 'refreshToken');
+    if (refreshToken != null) {
+      options.headers['Authorization'] = 'Bearer $refreshToken';
     }
     return super.onRequest(options, handler);
   }
@@ -28,32 +28,17 @@ class TokenInterceptor extends Interceptor {
         final response = await _dio.post(
           'https://k10e203.p.ssafy.io/api/user/refresh',
           options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),
-          // data: {
-          //   "refreshToken": refreshToken,
-          // },
         );
 
-        final newAccessToken = response.data['accessToken'];
+        final newAccessToken = response.data['data']['accessToken'];
+        final newRefreshToken = response.data['data']['refreshToken'];
         await _storage.write(key: 'accessToken', value: newAccessToken);
+        await _storage.write(key: 'refreshToken', value: newRefreshToken);
 
         // 갱신된 accessToken으로 요청 헤더 업데이트
         options.headers['Authorization'] = 'Bearer $newAccessToken';
-
-        // 원본 요청 재시도
-        final clonedRequest = await _dio.request(
-          options.path,
-          options: Options(
-            method: options.method,
-            headers: options.headers,
-          ),
-          data: options.data,
-          queryParameters: options.queryParameters,
-        );
-
-        return handler.resolve(clonedRequest);
       } catch (e) {
         print('Token refresh failed: $e');
-        // 토큰 갱신 실패 시 오류 처리
         return handler.next(err);
       }
     } else {
