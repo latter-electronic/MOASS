@@ -17,7 +17,7 @@ public class User {
     @Column("user_id")
     private String userId;
 
-    @Column
+    @Column("user_email")
     private String userEmail;
 
     @Column("status_id")

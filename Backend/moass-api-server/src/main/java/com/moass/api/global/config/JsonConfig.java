@@ -26,4 +26,17 @@ public class JsonConfig {
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         return mapper;
     }
+
+    public static ObjectMapper nullableObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        JavaTimeModule module = new JavaTimeModule();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(formatter));
+
+        mapper.registerModule(module);
+        // 날짜/시간을 타임스탬프로 직렬화
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        return mapper;
+    }
 }

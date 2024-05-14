@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
 DROP TABLE IF EXISTS `Widget`;
 
+DROP TABLE IF EXISTS `GitlabToken`;
 DROP TABLE IF EXISTS `FcmToken`;
 DROP TABLE IF EXISTS `JiraToken`;
 DROP TABLE IF EXISTS `User`;
@@ -83,10 +84,22 @@ CREATE TABLE `FcmToken` (
                             `user_id`	VARCHAR(20)	NOT NULL,
                             `mobile_device_id`	VARCHAR(50)	NOT NULL,
                             `token`	VARCHAR(255)	NULL,
-                            created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
                             updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                            created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
                             FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
+
+
+CREATE TABLE `GitlabToken` (
+                               `gitlab_token_id`	VARCHAR(36)	NOT NULL,
+                               `team_code`	VARCHAR(5)	NOT NULL,
+                              `updated_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                             `created_at` TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                            PRIMARY KEY (`gitlab_token_id`),
+                            FOREIGN KEY (`team_code`) REFERENCES `Team` (`team_code`)
+);
+
+
 
 CREATE TABLE `Widget`(
                         `widget_id` INT NOT NULL AUTO_INCREMENT,

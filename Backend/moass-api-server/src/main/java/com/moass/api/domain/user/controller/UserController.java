@@ -2,10 +2,7 @@ package com.moass.api.domain.user.controller;
 
 import com.moass.api.domain.notification.dto.NotificationSendDto;
 import com.moass.api.domain.notification.service.NotificationService;
-import com.moass.api.domain.user.dto.UserCreateDto;
-import com.moass.api.domain.user.dto.UserLoginDto;
-import com.moass.api.domain.user.dto.UserSignUpDto;
-import com.moass.api.domain.user.dto.UserUpdateDto;
+import com.moass.api.domain.user.dto.*;
 import com.moass.api.domain.user.service.UserService;
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.AuthManager;
@@ -18,6 +15,7 @@ import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
 import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.sse.dto.SseOrderDto;
+import com.moass.api.global.sse.dto.SseUpdateDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,7 +70,7 @@ public class UserController {
     @PostMapping("/devicelogout")
     public Mono<ResponseEntity<ApiResponse>> deviceLogout(@Login UserInfo userInfo){
         return userService.deviceLogout(userInfo)
-                .flatMap(logoutSuccess -> sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("logoutDevice", userInfo.getUserId()))
+                .flatMap(logoutSuccess -> sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("logoutDevice", userInfo.getUserId(),null))
                         .then(ApiResponse.ok("로그아웃 성공")))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("로그아웃 실패 : "+e.getMessage(), e.getStatus()));
     }
@@ -96,19 +94,14 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : "+e.getMessage(), e.getStatus()));
     }
 
-
-    /**
-     * Todo
-     * SSE
-     * @param userInfo
-     * @param userUpdateDto
-     * @return
-     */
     @PatchMapping("/status")
     public Mono<ResponseEntity<ApiResponse>> changeUserStatus(@Login UserInfo userInfo, @RequestBody UserUpdateDto userUpdateDto){
-        return userService.userUpdate(userInfo,userUpdateDto)
-                .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("수정완료",reqFilteredUserDetailDto))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
+        return userService.userUpdate(userInfo, userUpdateDto)
+                .flatMap(reqFilteredUserDetailDto ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(reqFilteredUserDetailDto))
+                .flatMap(result -> ApiResponse.ok("수정 완료", result))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
 
     @GetMapping
@@ -190,6 +183,9 @@ public class UserController {
     @PostMapping(value = "/profileimg")
     public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.profileImgUpload(userInfo,headers,file)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
@@ -197,6 +193,9 @@ public class UserController {
     @PostMapping(value = "/backgroundimg")
     public Mono<ResponseEntity<ApiResponse>> updatebackgroundImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.backgroundImgUpload(userInfo,headers,file)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
@@ -204,6 +203,9 @@ public class UserController {
     @PostMapping(value = "/widget")
     public Mono<ResponseEntity<ApiResponse>> addWidgetImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.WidgetImgUpload(userInfo,headers,file)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("widgetUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("등록완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("등록 실패 : " + e.getMessage(), e.getStatus()));
     }
@@ -218,6 +220,9 @@ public class UserController {
     @DeleteMapping(value = "/widget/{widgetId}")
     public Mono<ResponseEntity<ApiResponse>> deleteWidgetImg(@Login UserInfo userInfo, @PathVariable String widgetId){
         return userService.deleteWidgetImg(userInfo,widgetId)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("widgetUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("삭제완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("삭제 실패 : " + e.getMessage(), e.getStatus()));
     }
@@ -235,6 +240,24 @@ public class UserController {
         return userService.getAllLocationSimpleInfos()
                 .flatMap(locationInfoList -> ApiResponse.ok("조회완료", locationInfoList))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/call")
+    public Mono<ResponseEntity<ApiResponse>> callUser(@Login UserInfo userInfo, @RequestBody UserCallDto userCallDto) {
+        return userService.callUser(userInfo, userCallDto.getUserId())
+                .flatMap(usersInfo -> {
+                    UserSearchInfoDto receiverInfo = usersInfo.getReceiverUserSearchInfoDto();
+                    UserSearchInfoDto senderInfo = usersInfo.getSenderUserSearchInfoDto();
+                    String senderProfileImg = senderInfo.getProfileImg();
+                    log.info(String.valueOf(senderInfo));
+                    log.info(String.valueOf(usersInfo));
+                    return sseService.notifyUser(receiverInfo.getUserId(),
+                                    new SseOrderDto("call", senderInfo.getUserName() + "," + senderProfileImg, userCallDto.getMessage()))
+                            .thenReturn(usersInfo)
+                            .flatMap(result -> ApiResponse.ok("호출 성공", result))
+                            .onErrorResume(e -> ApiResponse.error("알람 전송 실패 : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+                })
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("호출 실패 : " + e.getMessage(), e.getStatus()));
     }
 
 }

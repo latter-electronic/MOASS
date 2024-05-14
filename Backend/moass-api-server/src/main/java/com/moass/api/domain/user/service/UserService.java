@@ -333,4 +333,21 @@ public class UserService {
                 .collectMap(Map.Entry::getKey, Map.Entry::getValue)
                 .defaultIfEmpty(new HashMap<>());
     }
+
+    public Mono<SenderAndReceiverUserSearchInfoDto> callUser(UserInfo userInfo, String userId) {
+        return userRepository.findUserSearchDetailByUserId(userId)
+                .switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)))
+                .flatMap(receiverUser -> {
+                    if (userInfo.getJobCode() < receiverUser.getJobCode()) {
+                        return Mono.error(new CustomException("권한이 부족합니다.", HttpStatus.FORBIDDEN));
+                    }
+                    return userRepository.findUserSearchDetailByUserId(userInfo.getUserId())
+                            .switchIfEmpty(Mono.error(new CustomException("발신자 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
+                            .map(senderUser -> new SenderAndReceiverUserSearchInfoDto(
+                                    new UserSearchInfoDto(receiverUser),
+                                    new UserSearchInfoDto(senderUser)
+                            ));
+                });
+    }
+
 }

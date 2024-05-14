@@ -1,5 +1,8 @@
 package com.moass.api.domain.notification.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moass.api.domain.notification.dto.NotificationPageDto;
 import com.moass.api.domain.notification.dto.NotificationSendDto;
 import com.moass.api.domain.notification.entity.Notification;
@@ -33,6 +36,7 @@ public class NotificationService {
     private final FcmService fcmService;
     private final TeamRepository teamRepository;
     private final ClassRepository classRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final int PageSize = 10;
 
     public Mono<NotificationPageDto> getAllNotifications(UserInfo userInfo, String lastNotificationId, LocalDateTime lastCreatedAt) {
@@ -93,7 +97,7 @@ public class NotificationService {
                     notification.setDeletedAt(LocalDateTime.now());
                     return notificationRepository.save(notification)
                             .doOnSuccess(savedNotification -> {
-                                sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("readNotification", savedNotification.getNotificationId())).subscribe();
+                                sseService.notifyUser(userInfo.getUserId(), new SseOrderDto("readNotification", savedNotification.getNotificationId(),null)).subscribe();
                             })
                             .thenReturn(notification.getNotificationId());
                 })
@@ -110,12 +114,26 @@ public class NotificationService {
                     return notificationRepository.save(notification);
                 })
                 .doOnNext(savedNotification -> {
-                    sseService.notifyUser(userId, new SseOrderDto("readNotification", savedNotification.getNotificationId())).subscribe();
+                    sseService.notifyUser(userId, new SseOrderDto("readNotification", savedNotification.getNotificationId(),null)).subscribe();
                 })
                 .count()
                 .onErrorResume(e -> {
                     log.error("알림 읽기 처리 중 오류 발생", e);
                     return Mono.just(0L);
                 });
+    }
+
+    public Mono<Void> processGitlabEvent(String payload,String teamCode) {
+        return Mono.fromCallable(() -> parseGitlabPayload(payload))
+                .flatMap(notificationSendDto -> saveAndPushbyTeam(teamCode, notificationSendDto))
+                .then();
+    }
+
+    private NotificationSendDto parseGitlabPayload(String payload) throws JsonProcessingException {
+        JsonNode jsonNode = objectMapper.readTree(payload);
+        String source = "gitlab";
+        String title = jsonNode.path("object_kind").asText();
+        String body = "Event from GitLab: " + jsonNode.path("event_name").asText();
+        return new NotificationSendDto(source, title, body);
     }
 }

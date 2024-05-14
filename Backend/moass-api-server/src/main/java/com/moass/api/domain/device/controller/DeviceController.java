@@ -5,11 +5,14 @@ import com.moass.api.domain.device.dto.Coordinate;
 import com.moass.api.domain.device.dto.DeviceIdDto;
 import com.moass.api.domain.device.dto.ReqDeviceLoginDto;
 import com.moass.api.domain.device.service.DeviceService;
+import com.moass.api.domain.notification.dto.NotificationSendDto;
+import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.JWTService;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
+import com.moass.api.global.sse.dto.SseUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +28,15 @@ public class DeviceController {
 
     final DeviceService deviceService;
     final JWTService jwtService;
-
+    final NotificationService notificationService;
     @PostMapping("/login")
     public Mono<ResponseEntity<ApiResponse>> login(@RequestBody ReqDeviceLoginDto reqDeviceLoginDto) {
         return deviceService.deviceLogin(reqDeviceLoginDto)
-                .flatMap(tokens -> ApiResponse.ok("로그인 성공",tokens))
+                .flatMap(tokensAndUserInfo ->
+                        notificationService.saveAndPushNotification(tokensAndUserInfo.getUserInfo().getUserId(), new NotificationSendDto("server", "기기 로그인", "기기가 로그인되었습니다."))
+                                .thenReturn(tokensAndUserInfo)
+                )
+                .flatMap(tokensAndUserInfo -> ApiResponse.ok("로그인 성공", tokensAndUserInfo.getTokens()))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그인 실패 : " + e.getMessage(), e.getStatus()));
     }
 
