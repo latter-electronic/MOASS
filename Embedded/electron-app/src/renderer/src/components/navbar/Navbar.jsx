@@ -4,6 +4,7 @@ import { deviceLogout } from '../../services/deviceService'
 import { fetchUserInfo, updateUserStatus } from '../../services/userService.js'
 import useUIStore from '../../stores/UIStore.js'
 import AuthStore from '../../stores/AuthStore.js'; 
+import useGlobalStore from '../../stores/useGlobalStore.js'
 import { useFloating, useClick, useDismiss, useRole, useListNavigation, useInteractions, FloatingFocusManager, useTypeahead, offset, flip, size, autoUpdate, FloatingPortal } from '@floating-ui/react';
 
 import mainIcon from './navbar_icon_main.svg'
@@ -31,6 +32,11 @@ export default function Navbar() {
   const [selectedIndex, setSelectedIndex] = useState(null)
   const statusOptions = [ '자리비움', '착석중', '공가', '방해금지']
   const { accessToken, refreshToken } = AuthStore.getState()
+
+  const { user, setUser } = useGlobalStore(state => ({
+    user: state.user,
+    setUser: state.setUser
+  }))
 
   const backgroundColors = {
     착석중: 'bg-emerald-500',
@@ -87,21 +93,35 @@ export default function Navbar() {
   })
 
   const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions([
-    dismiss,
-    role,
-    listNav,
-    typeahead,
-    click
+    useDismiss(context),
+    useRole(context, { role: 'listbox' }),
+    useListNavigation(context, {
+      listRef: useRef(statusOptions.map(() => null)),
+      activeIndex,
+      selectedIndex,
+      onNavigate: setActiveIndex,
+      loop: true
+    }),
+    useTypeahead(context, {
+      listRef: useRef(statusOptions),
+      activeIndex,
+      selectedIndex,
+      onMatch: isOpen ? setActiveIndex : setSelectedIndex,
+      onTypingChange: (isTyping) => {}
+    }),
+    useClick(context, { event: 'mousedown' })
   ])
+
+  useEffect(() => {
+    setUser();
+  }, [setUser]);
 
   const handleSelect = async (index) => {
     setSelectedIndex(index);
     setIsOpen(false);
-    // Patch the new statusId to the server
+    // 상태 업데이트 로직
     try {
-      const updateData = {
-        statusId: index.toString(), // Convert index to string if your backend expects a string
-      };
+      const updateData = { statusId: index.toString() };
       const response = await updateUserStatus(updateData);
       console.log('Status update response:', response);
     } catch (error) {
@@ -176,7 +196,7 @@ export default function Navbar() {
           {...getReferenceProps()}
         >
           <img
-            src={testProfileImg}
+            src={user?.profileImg || testProfileImg} // 사용자 프로필 이미지 사용
             alt={selectedItemLabel || 'Select...'}
             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 rounded-full"
           />
