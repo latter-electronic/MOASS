@@ -13,13 +13,12 @@ class ApiService {
   Future<void> manualRefresh() async {
     String? accessToken = await storage.read(key: 'accessToken');
     String? refreshToken = await storage.read(key: 'refreshToken');
-    print('기존 token: $accessToken');
-    print('기존 리프레시 : $refreshToken');
+    print('기존 토큰값: $accessToken');
+    print('기존 리프레시 값 : $refreshToken');
     if (accessToken == null) {
       throw Exception('No access token available');
     }
     try {
-      print('트라이시도');
       final response = await dio.post(
         'https://cfe0-59-20-195-127.ngrok-free.app/api/user/refresh',
         options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),

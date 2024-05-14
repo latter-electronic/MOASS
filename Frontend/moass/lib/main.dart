@@ -161,7 +161,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _permissionWithNotification() async {
-    print('펄미스까지옴');
     if (await Permission.notification.isDenied &&
         !await Permission.notification.isPermanentlyDenied) {
       await [Permission.notification].request();
