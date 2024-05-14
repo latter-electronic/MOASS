@@ -15,6 +15,7 @@ import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
 import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
 import com.moass.api.global.sse.dto.SseOrderDto;
+import com.moass.api.global.sse.dto.SseUpdateDto;
 import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -93,19 +94,14 @@ public class UserController {
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("갱신 실패 : "+e.getMessage(), e.getStatus()));
     }
 
-
-    /**
-     * Todo
-     * SSE
-     * @param userInfo
-     * @param userUpdateDto
-     * @return
-     */
     @PatchMapping("/status")
     public Mono<ResponseEntity<ApiResponse>> changeUserStatus(@Login UserInfo userInfo, @RequestBody UserUpdateDto userUpdateDto){
-        return userService.userUpdate(userInfo,userUpdateDto)
-                .flatMap(reqFilteredUserDetailDto -> ApiResponse.ok("수정완료",reqFilteredUserDetailDto))
-                .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
+        return userService.userUpdate(userInfo, userUpdateDto)
+                .flatMap(reqFilteredUserDetailDto ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(reqFilteredUserDetailDto))
+                .flatMap(result -> ApiResponse.ok("수정 완료", result))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
 
     @GetMapping
@@ -187,6 +183,9 @@ public class UserController {
     @PostMapping(value = "/profileimg")
     public Mono<ResponseEntity<ApiResponse>> updateProfileImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.profileImgUpload(userInfo,headers,file)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("수정 실패 : "+e.getMessage(), e.getStatus()));
     }
@@ -194,6 +193,9 @@ public class UserController {
     @PostMapping(value = "/backgroundimg")
     public Mono<ResponseEntity<ApiResponse>> updatebackgroundImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.backgroundImgUpload(userInfo,headers,file)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("수정완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
     }
@@ -201,6 +203,9 @@ public class UserController {
     @PostMapping(value = "/widget")
     public Mono<ResponseEntity<ApiResponse>> addWidgetImg(@Login UserInfo userInfo, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
         return userService.WidgetImgUpload(userInfo,headers,file)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("widgetUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("등록완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("등록 실패 : " + e.getMessage(), e.getStatus()));
     }
@@ -215,6 +220,9 @@ public class UserController {
     @DeleteMapping(value = "/widget/{widgetId}")
     public Mono<ResponseEntity<ApiResponse>> deleteWidgetImg(@Login UserInfo userInfo, @PathVariable String widgetId){
         return userService.deleteWidgetImg(userInfo,widgetId)
+                .flatMap(fileName ->
+                        sseService.notifyUser(userInfo.getUserId(), new SseUpdateDto("widgetUpdate",null))
+                                .thenReturn(fileName))
                 .flatMap(fileName -> ApiResponse.ok("삭제완료",fileName))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("삭제 실패 : " + e.getMessage(), e.getStatus()));
     }

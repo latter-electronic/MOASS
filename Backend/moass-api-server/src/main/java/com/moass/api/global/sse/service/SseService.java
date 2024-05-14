@@ -7,6 +7,7 @@ import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
+import com.moass.api.global.config.JsonConfig;
 import com.moass.api.global.sse.dto.SseNotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +31,8 @@ public class SseService {
     private final UserRepository userRepository;
     private final SsafyUserRepository ssafyUserRepository;
 
+    private final JsonConfig jsonConfig;
     private int sseCount=0;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public Mono<Boolean> userExists(String userId) {return userRepository.existsByUserId(userId);}
     public Mono<String> getTeamCode(String userId) {return ssafyUserRepository.findTeamCodeByUserId(userId);}
@@ -151,7 +152,8 @@ public class SseService {
 
     private String createSseJsonMessage(Object data) {
         try {
-            String json = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(data);
+            ObjectMapper objectMapper = jsonConfig.nullableObjectMapper();
+            String json = objectMapper.writeValueAsString(data);
             return json;
         } catch (Exception e) {
             log.error("JSON 변환 실패", e);

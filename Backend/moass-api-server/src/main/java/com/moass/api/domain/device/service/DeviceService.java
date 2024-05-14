@@ -38,14 +38,15 @@ public class DeviceService {
 
 
     @Transactional
-    public Mono<Tokens> deviceLogin(ReqDeviceLoginDto reqDeviceLoginDto) {
+    public Mono<TokensAndUserInfo> deviceLogin(ReqDeviceLoginDto reqDeviceLoginDto) {
         return deviceLoginAuth(reqDeviceLoginDto)
                 .flatMap(userLoginDto -> updateUserConnectionFlag(userLoginDto.getUserEmail(), 1)
                         .then(userDetailsService.authenticate(userLoginDto.getUserEmail(), userLoginDto.getPassword(), true))
                         .flatMap(auth -> {
                             CustomUserDetails customUserDetails = (CustomUserDetails) auth.getPrincipal();
                             UserInfo userInfo = new UserInfo(customUserDetails.getUserDetail());
-                            return jwtService.generateTokens(userInfo);
+                            return jwtService.generateTokens(userInfo)
+                                    .map(tokens -> new TokensAndUserInfo(userInfo, tokens));
                         }));
     }
 
