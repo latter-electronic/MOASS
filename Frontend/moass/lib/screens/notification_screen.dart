@@ -45,7 +45,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           child: Column(
             children: [
               if (notiLists!.isNotEmpty)
-                for (var noti in notiLists!) const NotiWidget()
+                for (var noti in notiLists!) NotiWidget(noti: noti)
               else
                 const Center(child: Text('읽지 않은 알림이 없습니다'))
             ],
