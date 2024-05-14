@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -21,14 +22,41 @@ class _SettingWidgetPhotoScreenState
   XFile? _image; //이미지를 담을 변수 선언
   final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
 
-  //이미지를 가져오는 함수
+//이미지를 가져오는 함수
   Future getImage(ImageSource imageSource) async {
     //pickedFile에 ImagePicker로 가져온 이미지가 담김
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      setState(() {
-        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
-      });
+
+    XFile imageFile = XFile(pickedFile!.path);
+    var croppedFile = await cropImage(imageFile);
+    setState(() {
+      _image = croppedFile; //가져온 이미지를 _image에 저장
+    });
+  }
+
+  Future<XFile?> cropImage(XFile pickedFile) async {
+    final croppedFile = await ImageCropper().cropImage(
+      aspectRatio: const CropAspectRatio(ratioX: 1600, ratioY: 600),
+      sourcePath: pickedFile.path,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+      ],
+    );
+
+    // Returning the edited/cropped image if available, otherwise the original image
+    if (croppedFile != null) {
+      return XFile(croppedFile.path);
+    } else {
+      return null;
     }
   }
 
@@ -42,6 +70,7 @@ class _SettingWidgetPhotoScreenState
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const SizedBox(height: 200),
           const SizedBox(height: 30, width: double.infinity),
           _buildPhotoArea(),
           const SizedBox(height: 20),
@@ -53,7 +82,7 @@ class _SettingWidgetPhotoScreenState
         child: ElevatedButton(
           onPressed: () async {
             await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
-                .postUserWidgetPhoto(_image!);
+                .postUserbgPhoto(_image!);
             if (context.mounted) {
               Navigator.of(context).pop();
             }
@@ -68,20 +97,20 @@ class _SettingWidgetPhotoScreenState
     return _image != null
         ? SizedBox(
             width: 300,
-            height: 300,
+            height: 112.5,
             child: Image.file(File(_image!.path)), //가져온 이미지를 화면에 띄워주는 코드
           )
         : widget.backgroundImg != null
             ? SizedBox(
                 width: 300,
-                height: 300,
-                child: Image.network(widget.backgroundImg.toString()))
+                height: 112.5,
+                child: Image.network(widget.backgroundImg!))
             : Container(
                 width: 300,
-                height: 300,
+                height: 112.5,
                 color: Colors.grey,
                 child: const Center(
-                  child: Text('등록된 프로필 이미지가 없습니다'),
+                  child: Text('등록된 배경 이미지가 없습니다'),
                 ),
               );
   }

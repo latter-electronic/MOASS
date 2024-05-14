@@ -20,6 +20,13 @@ class SettingProfilePhotoScreen extends StatefulWidget {
 class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
   XFile? _image; //이미지를 담을 변수 선언
   final ImagePicker picker = ImagePicker(); //ImagePicker 초기화
+  late Image currentProfile;
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
 
   //이미지를 가져오는 함수
   Future getImage(ImageSource imageSource) async {
@@ -80,7 +87,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
         child: ElevatedButton(
           onPressed: () async {
             await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
-                .postUserWidgetPhoto(_image!);
+                .postUserProfilePhoto(_image!);
             if (context.mounted) {
               Navigator.of(context).pop();
             }
@@ -102,7 +109,7 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
             ? SizedBox(
                 width: 300,
                 height: 300,
-                child: Image.network(widget.profileImg.toString()))
+                child: Image.network(widget.profileImg!))
             : Container(
                 width: 300,
                 height: 300,
