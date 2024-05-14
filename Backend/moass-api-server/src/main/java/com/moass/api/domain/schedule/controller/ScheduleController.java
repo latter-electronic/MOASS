@@ -1,7 +1,6 @@
 package com.moass.api.domain.schedule.controller;
 
 import com.moass.api.domain.schedule.dto.TodoCreateDto;
-import com.moass.api.domain.schedule.dto.TodoDeleteDto;
 import com.moass.api.domain.schedule.dto.TodoUpdateDto;
 import com.moass.api.domain.schedule.service.ScheduleService;
 import com.moass.api.global.annotaion.Login;
@@ -19,7 +18,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/schedule")
 @RequiredArgsConstructor
-public class ScheduleContoller {
+public class ScheduleController {
 
     final ScheduleService scheduleService;
 
@@ -73,8 +72,10 @@ public class ScheduleContoller {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정실패 : "+ e.getMessage(), e.getStatus()));
     }
 
-    @GetMapping("/curriculum")
-    public Mono<ResponseEntity<ApiResponse>> getCurriculum(@Login UserInfo userInfo){
-        return null;
+    @GetMapping("/curriculum/{date}")
+    public Mono<ResponseEntity<ApiResponse>> getCurriculum(@Login UserInfo userInfo, @PathVariable String date){
+        return scheduleService.getCurriculum(date)
+                .flatMap(curriculum -> ApiResponse.ok("Curriculum 조회 완료", curriculum))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 }

@@ -52,6 +52,7 @@ dependencies {
     implementation 'software.amazon.awssdk:netty-nio-client'
 
     implementation 'org.seleniumhq.selenium:selenium-java:4.6.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {
