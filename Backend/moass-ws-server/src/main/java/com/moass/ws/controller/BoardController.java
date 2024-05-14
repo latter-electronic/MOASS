@@ -1,9 +1,12 @@
 package com.moass.ws.controller;
 
+import com.moass.ws.dto.BoardEnterDto;
 import com.moass.ws.dto.BoardRequestDto;
+import com.moass.ws.dto.MessageDto;
 import com.moass.ws.entity.Board;
 import com.moass.ws.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,25 +22,24 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @MessageMapping("/create")
-    public void createBoard(BoardRequestDto boardRequestDto) {
-        boardService.createBoard(boardRequestDto);
+//    @MessageMapping("/create")
+//    public void createBoard(BoardRequestDto boardRequestDto) {
+//        boardService.createBoard(boardRequestDto);
+//    }
+
+    @MessageMapping("/board/enter")
+    public void enterBoard(String message) {
+        boardService.enterBoard(message);
     }
 
-    @MessageMapping("/enter")
-    public void enterBoard(BoardRequestDto boardRequestDto) {
-        System.out.println("enter");
-        boardService.enterBoard(boardRequestDto);
-    }
+//    @MessageMapping("/quit")
+//    public void quitBoard(BoardRequestDto dto) {
+//        boardService.quitBoard(dto);
+//    }
 
-    @MessageMapping("/quit")
-    public void quitBoard(BoardRequestDto dto) {
-        boardService.quitBoard(dto);
-    }
-
-    @MessageMapping("/draw")
+    @MessageMapping("/board/draw")
     public void draw(String message) {
-        System.out.println("draw");
+        System.out.println(message);
         boardService.drawBoard(message);
     }
 }
