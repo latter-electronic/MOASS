@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class Oauth2Service {
+public class Oauth2JiraService {
 
     private final WebClient jiraAuthWebClient;
 
@@ -30,7 +30,7 @@ public class Oauth2Service {
     private final JiraTokenRepository jiraTokenRepository;
     private final PropertiesConfig propertiesConfig;
 
-    public Oauth2Service(WebClient.Builder webClientBuilder, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
+    public Oauth2JiraService(WebClient.Builder webClientBuilder, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
         this.jiraAuthWebClient = webClientBuilder.baseUrl("https://auth.atlassian.com").build();
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
@@ -127,8 +127,6 @@ public class Oauth2Service {
         log.info("리프레시 확인");
         return jiraTokenRepository.findByUserId(userId)
                 .flatMap(token -> {
-                    log.info(String.valueOf(token.getExpiresAt()));
-                    log.info(String.valueOf(LocalDateTime.now()));
                     if (token.getExpiresAt().isBefore(LocalDateTime.now())) {
                         log.info("시간초과로 리프레쉬됨");
                         return refreshAccessToken(token)
