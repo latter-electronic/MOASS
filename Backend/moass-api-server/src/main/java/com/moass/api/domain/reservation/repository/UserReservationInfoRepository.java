@@ -37,4 +37,9 @@ public interface UserReservationInfoRepository   extends ReactiveCrudRepository<
             "WHERE ur.info_id = :infoId " +
             "ORDER BY su.user_name ASC")
     Flux<UserSearchDetail> findUserSearchDetailByInfoId(Integer infoId);
+
+    @Query("DELETE uri FROM UserReservationInfo uri " +
+            "JOIN ReservationInfo ri ON uri.info_id = ri.info_id " +
+            "WHERE ri.reservation_id = :reservationId")
+    Mono<Void> deleteByReservationId(Integer reservationId);
 }
