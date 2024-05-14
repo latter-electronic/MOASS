@@ -45,7 +45,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
   @override
   void initState() {
     super.initState();
-    print('상속받은 클래스 코드 : ${widget.classCode}');
+    // print('상속받은 클래스 코드 : ${widget.classCode}');
     api = DeviceApi(
         dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
     fetchDeviceInfos();
