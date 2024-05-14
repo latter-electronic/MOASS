@@ -6,18 +6,23 @@ import 'package:moass/model/seat.dart';
 import 'package:moass/model/user_info.dart';
 import 'package:moass/services/device_api.dart';
 
+enum Menu { call, changeState }
+
 class SeatMapWidget extends StatefulWidget {
   final VoidCallback toggleOpenButtonWidget;
   final Function(String) setUserId;
   final String? classCode;
   String callUserId;
+  final int? jobCode;
 
-  SeatMapWidget(
-      {super.key,
-      required this.toggleOpenButtonWidget,
-      required this.setUserId,
-      required this.classCode,
-      required this.callUserId});
+  SeatMapWidget({
+    super.key,
+    required this.toggleOpenButtonWidget,
+    required this.setUserId,
+    required this.classCode,
+    required this.callUserId,
+    this.jobCode,
+  });
 
   @override
   State<SeatMapWidget> createState() => _SeatMapWidgetState();
@@ -28,6 +33,8 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
       TransformationController();
 
   bool isUserSelected = false;
+
+  AnimationStyle? _animationStyle;
 
   // 기기 정보를 받아오기 위한 변수
   final List<Seat> seatList = List.empty(growable: true);
@@ -84,29 +91,66 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
             size: const Size(942, 1495),
           ),
           for (final device in deviceInfos)
-            Positioned(
-              left: device.xcoord?.toDouble(),
-              top: device.ycoord?.toDouble(),
-              child: GestureDetector(
-                onTap: () {
-                  // 각 사각형을 터치했을 때의 동작 처리
-                  // print('사각형 클릭됨: ${seat.coordX}, ${seat.coordY}');
-                  if (device.userId != null) {
-                    setState(() {
-                      isUserSelected = !isUserSelected;
-                      widget.toggleOpenButtonWidget();
-                      String selectedUser = device.userId!;
-                      widget.setUserId(selectedUser);
-                    });
-                  }
-                },
-                child: Container(
-                  width: 85,
-                  height: 85,
-                  color: Colors.transparent,
-                ),
+            if (device.xcoord != null)
+              Positioned(
+                left: device.xcoord!.toDouble() - 3,
+                top: device.ycoord!.toDouble(),
+                child: PopupMenuButton<Menu>(
+                    popUpAnimationStyle: _animationStyle,
+                    position: PopupMenuPosition.under,
+                    icon: const Icon(
+                      Icons.bookmark,
+                      size: 70,
+                      color: Colors.transparent,
+                    ),
+                    onSelected: (Menu item) {},
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<Menu>>[
+                          PopupMenuItem<Menu>(
+                            value: Menu.call,
+                            child: ListTile(
+                                leading: const Icon(
+                                    Icons.notifications_active_sharp),
+                                title: const Text('호출하기'),
+                                onTap: () {
+                                  DeviceApi(
+                                          dio: Dio(),
+                                          storage: const FlutterSecureStorage())
+                                      .callUser(device.userId!);
+                                }),
+                          ),
+                          if (widget.jobCode != null)
+                            PopupMenuItem<Menu>(
+                              value: Menu.changeState,
+                              child: ListTile(
+                                  leading:
+                                      const Icon(Icons.change_circle_rounded),
+                                  title: const Text('공가 상태로 변경'),
+                                  onTap: () {
+                                    // 공가 상태로 변경하는 API
+                                  }),
+                            ),
+                        ]),
+                // child: GestureDetector(
+                //   onTap: () {
+                //     // 각 사각형을 터치했을 때의 동작 처리
+                //     // print('사각형 클릭됨: ${seat.coordX}, ${seat.coordY}');
+                //     if (device.userId != null) {
+                //       setState(() {
+                //         isUserSelected = !isUserSelected;
+                //         widget.toggleOpenButtonWidget();
+                //         String selectedUser = device.userId!;
+                //         widget.setUserId(selectedUser);
+                //       });
+                //     }
+                //   },
+                //   child: Container(
+                //     width: 85,
+                //     height: 85,
+                //     color: Colors.transparent,
+                //   ),
+                // ),
               ),
-            ),
         ]),
       ),
     ]);
