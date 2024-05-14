@@ -73,72 +73,75 @@ class _ReservationAdminScreenState extends State<ReservationAdminScreen> {
     return Scaffold(
       appBar:
           const TopBar(title: '시설/미팅 관리', icon: Icons.edit_calendar_outlined),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          // 지역,반정보 확인
-          CategoryText(
-              text:
-                  '${userProfile?.locationName} / ${userProfile?.classCode} 시설/미팅'),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              // 시설 생성 버튼
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(const Color(0xFF6ECEF5)),
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
-                  textStyle: MaterialStateProperty.all<TextStyle>(
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // 지역,반정보 확인
+            CategoryText(
+                text:
+                    '${userProfile?.locationName} / ${userProfile?.classCode} 시설/미팅'),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                // 시설 생성 버튼
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color(0xFF6ECEF5)),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                      const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 10.0),
+                    ),
                   ),
-                  padding: MaterialStateProperty.all<EdgeInsets>(
-                    const EdgeInsets.symmetric(
-                        horizontal: 32.0, vertical: 10.0),
-                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ReservationAdminCreate()),
+                    );
+                  },
+                  child: const Text('시설/팀미팅 생성하기'),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ReservationAdminCreate()),
-                  );
-                },
-                child: const Text('시설/팀미팅 생성하기'),
               ),
             ),
-          ),
-          // 시설 팀 미팅 제목
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: CategoryText(text: '시설 / 팀미팅'),
+            // 시설 팀 미팅 제목
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: CategoryText(text: '시설 / 팀미팅'),
+              ),
             ),
-          ),
-          // 날짜 설정
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                    icon: const Icon(Icons.arrow_back_ios),
-                    onPressed: () => _changeDate(false)),
-                Text(formattedDate,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
-                IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios),
-                    onPressed: () => _changeDate(true)),
-              ],
+            // 날짜 설정
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      onPressed: () => _changeDate(false)),
+                  Text(formattedDate,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold)),
+                  IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      onPressed: () => _changeDate(true)),
+                ],
+              ),
             ),
-          ),
-          // 시설 목록 현황박스
-          ...reservationDayData.map((data) =>
-              ReservationBox(reservation: data, selectedDate: formattedDate)),
-        ],
+            // 시설 목록 현황박스
+            ...reservationDayData.map((data) =>
+                ReservationBox(reservation: data, selectedDate: formattedDate)),
+          ],
+        ),
       ),
     );
   }

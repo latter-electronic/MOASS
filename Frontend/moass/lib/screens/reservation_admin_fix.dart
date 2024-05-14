@@ -87,23 +87,36 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
       print(fixData);
       await api.reservationFix(fixData);
       print('예약 수정 성공!');
-      completeReservation(context);
+      completeReservation(context, '예약 수정');
       // 성공 다이얼로그 표시
     } catch (e) {
       print('예약 수정 실패: $e');
       // 실패 다이얼로그 표시
-      showErrorDialog();
+      showErrorDialog('예약 수정');
+    }
+  }
+
+  // 예약 삭제 호출
+  Future<void> sendReservationDelete() async {
+    try {
+      await api.reservationDelete(widget.reservation.reservationId);
+      print(widget.reservation.reservationId);
+      print('예약 삭제 성공!');
+      completeReservation(context, '예약 삭제');
+    } catch (e) {
+      print('예약 삭제 실패: $e');
+      showErrorDialog('예약 삭제');
     }
   }
 
   // 예약 완료 팝업
-  void completeReservation(BuildContext context) {
+  void completeReservation(BuildContext context, String text) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('예약 수정 완료'),
-          content: const Text('예약 수정이 성공적으로 등록되었습니다.'),
+          title: Text('$text 성공'),
+          content: Text('$text 완료 하였습니다.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -122,13 +135,13 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
   }
 
   // 예약 실패 팝업
-  void showErrorDialog() {
+  void showErrorDialog(String text) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('예약 수정 실패'),
-          content: const Text('예약 수정에 실패하였습니다.'),
+          title: Text('$text 실패.'),
+          content: Text('$text 실패 하였습니다.'),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -201,9 +214,21 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
             ),
             const SizedBox(height: 20),
             Center(
-              child: ElevatedButton(
-                onPressed: sendReservationFix,
-                child: const Text('수정하기'),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: sendReservationFix,
+                    child: const Text('수정하기'),
+                  ),
+                  ElevatedButton(
+                    onPressed: sendReservationDelete,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade200, // 버튼 색상 설정
+                    ),
+                    child: const Text('삭제하기'),
+                  ),
+                ],
               ),
             ),
           ],
