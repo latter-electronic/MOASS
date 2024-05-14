@@ -156,7 +156,7 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {
       print('Failed to refresh token: $e');
       // 로그인이 필요하면 로그인 화면으로 이동
-      Navigator.pushReplacementNamed(context, '/loginScreen');
+      // Navigator.pushReplacementNamed(context, '/loginScreen');
     }
   }
 

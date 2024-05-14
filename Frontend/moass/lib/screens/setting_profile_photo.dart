@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -24,10 +25,36 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
   Future getImage(ImageSource imageSource) async {
     //pickedFile에 ImagePicker로 가져온 이미지가 담김
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
-    if (pickedFile != null) {
-      setState(() {
-        _image = XFile(pickedFile.path); //가져온 이미지를 _image에 저장
-      });
+
+    XFile imageFile = XFile(pickedFile!.path);
+    var croppedFile = await cropImage(imageFile);
+    setState(() {
+      _image = croppedFile; //가져온 이미지를 _image에 저장
+    });
+  }
+
+  Future<XFile?> cropImage(XFile pickedFile) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: pickedFile.path,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        IOSUiSettings(
+          title: 'Cropper',
+        ),
+      ],
+    );
+
+    // Returning the edited/cropped image if available, otherwise the original image
+    if (croppedFile != null) {
+      return XFile(croppedFile.path);
+    } else {
+      return XFile(pickedFile.path);
     }
   }
 
