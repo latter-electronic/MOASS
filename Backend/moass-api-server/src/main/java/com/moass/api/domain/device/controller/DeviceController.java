@@ -43,6 +43,10 @@ public class DeviceController {
     @PostMapping("/logout")
     public Mono<ResponseEntity<ApiResponse>> logout(@Login UserInfo userInfo) {
         return deviceService.deviceLogout(userInfo)
+                .flatMap(tokensAndUserInfo ->
+                        notificationService.saveAndPushNotification(userInfo.getUserId(), new NotificationSendDto("server", "기기 로그아웃", "기기가 로그아웃되었습니다."))
+                                .thenReturn(tokensAndUserInfo)
+                )
                 .flatMap(deviceId -> ApiResponse.ok("로그아웃 성공",deviceId))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("로그아웃 실패 : " + e.getMessage(), e.getStatus()));
     }
