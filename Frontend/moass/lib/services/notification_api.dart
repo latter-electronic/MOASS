@@ -41,4 +41,27 @@ class NotiApi {
     }
     return null;
   }
+
+  deleteNoti(String notificationId) async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return [];
+      }
+
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.delete(
+        '$baseUrl/api/notification/$notificationId',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('알림 삭제 완료!');
+        return;
+      }
+    } on DioException catch (e) {
+      print('Error: 삭제 실패! ${e.message}');
+    }
+  }
 }

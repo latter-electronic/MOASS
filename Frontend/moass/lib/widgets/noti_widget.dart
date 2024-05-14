@@ -1,6 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/notification_model.dart';
+import 'package:moass/services/notification_api.dart';
 
 class NotiWidget extends StatefulWidget {
   final Noti noti;
@@ -21,6 +24,9 @@ class _NotiWidgetState extends State<NotiWidget> {
 
   String _formatDate(String dateString) {
     DateTime createdAt = DateTime.parse(dateString);
+
+    // 한국 시간대로 변환
+    createdAt = createdAt.add(const Duration(hours: 9));
     DateTime now = DateTime.now();
 
     if (createdAt.year == now.year &&
@@ -48,6 +54,11 @@ class _NotiWidgetState extends State<NotiWidget> {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
+      onDismissed: (direction) {
+        NotiApi(dio: Dio(), storage: const FlutterSecureStorage())
+            .deleteNoti(widget.noti.notificationId);
+      },
+      direction: DismissDirection.horizontal,
       key: ValueKey(widget.noti.notificationId),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
