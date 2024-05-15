@@ -88,7 +88,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 25.0),
               ElevatedButton(
-                onPressed: _login,
+                onPressed: () async {
+                  await _login();
+                  await AccountApi(
+                          dio: Dio(), storage: const FlutterSecureStorage())
+                      .postFCMToken();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,

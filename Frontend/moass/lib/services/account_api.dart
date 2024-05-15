@@ -1,4 +1,5 @@
 // 계정 관련 API 요청
+import 'package:android_id/android_id.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/services/sse_listener_api.dart';
@@ -76,6 +77,31 @@ class AccountApi {
     } on DioException catch (e) {
       print('Sign Up failed with error: ${e.response?.statusCode}');
       return false;
+    }
+  }
+
+  // fcm 토큰 등록
+  postFCMToken() async {
+    String? fcmToken = await storage.read(key: 'fcmToken');
+    String? accessToken = await storage.read(key: 'accessToken');
+    const androidIdPlugin = AndroidId();
+    final String? androidId = await androidIdPlugin.getId();
+    print('안드로이드 ID : $androidId');
+
+    try {
+      final response = await dio.post('$baseUrl/api/user/fcmtoken',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: {
+            "mobileDeviceId": androidId,
+            "fcmToken": fcmToken,
+          });
+      if (response.statusCode == 200) {
+        print('FCM토큰 저장 완료');
+      } else {
+        print('FCM토큰 저장 실패');
+      }
+    } on DioException catch (e) {
+      print(e.message);
     }
   }
 }
