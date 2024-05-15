@@ -9,10 +9,12 @@ import 'package:url_launcher/url_launcher_string.dart';
 class SetRelatedAccount extends StatefulWidget {
   final String service;
   final String? userJiraMail;
+  final String? userGitlabMail;
   const SetRelatedAccount({
     super.key,
     required this.service,
     this.userJiraMail,
+    this.userGitlabMail,
   });
 
   @override
@@ -95,14 +97,23 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ))
-                    else
-                      const Text(
-                        '연결된 계정이 없습니다',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    else if (widget.service == 'gitlab')
+                      if (widget.userGitlabMail == 'null')
+                        const Text(
+                          '연결된 계정이 없습니다',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      else if (widget.userGitlabMail != 'null')
+                        Text(
+                          widget.userGitlabMail ?? '연결된 계정이 없습니다',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
                     Text(
                       widget.service,
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
