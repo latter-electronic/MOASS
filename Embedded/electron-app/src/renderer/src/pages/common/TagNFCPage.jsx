@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthStore from '../../stores/AuthStore.js';
+import useGlobalStore from '../../stores/useGlobalStore.js';
 import { deviceLogin } from '../../services/deviceService.js';
 import tagging_space from '../../assets/tag_nfc.png';
 
@@ -8,23 +9,25 @@ export default function TagNFC() {
   const [deviceId, setDeviceId] = useState('');
   const [cardSerialId, setCardSerialId] = useState('');
   const { login } = AuthStore((state) => ({ login: state.login }));
+  const { fetchUserInfo } = useGlobalStore((state) => ({ fetchUserInfo: state.fetchUserInfo }));
   const navigate = useNavigate();
 
   const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login');
 
-  const handleSuccessfulLogin = useCallback((accessToken, refreshToken, deviceId, cardSerialId) => {
+  const handleSuccessfulLogin = useCallback(async (accessToken, refreshToken, deviceId, cardSerialId) => {
     login(accessToken, refreshToken, deviceId, cardSerialId);
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('deviceId', deviceId);
     localStorage.setItem('cardSerialId', cardSerialId);
 
+    await fetchUserInfo();  // 사용자 정보 불러오기
     navigate('/tagsuccess');
     setTimeout(() => {
       navigate('/');
     }, 2000);
     ipcLoginHandle();
-  }, [login, navigate]);
+  }, [login, fetchUserInfo, navigate]);
 
   const handleLogin = useCallback(async () => {
     if (deviceId && cardSerialId) {

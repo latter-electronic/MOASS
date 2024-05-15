@@ -1,18 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import tag_wave from '../../assets/tag_wave.svg';
 import useGlobalStore from '../../stores/useGlobalStore';
 
 export default function TagSuccess() {
-  const { user, fetchUserInfo } = useGlobalStore(state => ({
-    user: state.user,
-    fetchUserInfo: state.fetchUserInfo
-  }))
-
-  useEffect(() => {
-    if (!user) {
-      fetchUserInfo()  // 사용자 정보가 없다면 정보를 불러온다.
-    }
-  }, [fetchUserInfo, user])
+  const { user } = useGlobalStore((state) => ({ user: state.user }));
 
   const backgroundStyle = {
     backgroundImage: `url(${tag_wave})`,
@@ -28,5 +19,5 @@ export default function TagSuccess() {
         {user ? <p>반갑습니다, {user.userName}님!</p> : <p>사용자 정보를 불러오는 중...</p>}
       </div>
     </div>
-  )
+  );
 }
