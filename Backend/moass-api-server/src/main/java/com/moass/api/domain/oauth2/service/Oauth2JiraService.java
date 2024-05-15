@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -37,7 +38,9 @@ public class Oauth2JiraService {
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
                 .build();
         this.jiraApiWebClient = webClientBuilder.baseUrl("https://api.atlassian.com")
-                .exchangeStrategies(strategies)
+                .exchangeStrategies(ExchangeStrategies.builder()
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
+                        .build())
                 .build();
         this.jiraTokenRepository = jiraTokenRepository;
         this.propertiesConfig = propertiesConfig;
@@ -93,7 +96,9 @@ public class Oauth2JiraService {
                                             return jiraTokenRepository.save(newToken);
                                         }));
                             });
-                });
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .doOnTerminate(() -> log.info("jira 연결 완료"));
     }
 
     private String extractCloudId(List<Map<String, Object>> resources) {
