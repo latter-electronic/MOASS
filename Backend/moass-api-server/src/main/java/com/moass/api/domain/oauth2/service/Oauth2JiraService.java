@@ -31,6 +31,7 @@ public class Oauth2JiraService {
     private final PropertiesConfig propertiesConfig;
 
     public Oauth2JiraService(WebClient.Builder webClientBuilder, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
+        log.info("Oauth2JiraService 초기화");
         this.jiraAuthWebClient = webClientBuilder.baseUrl("https://auth.atlassian.com").build();
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
