@@ -24,4 +24,9 @@ public class Screenshot {
 
     @Column("screenshot_url")
     private String screenshotUrl;
+
+    public Screenshot(Integer boardUserId, String screenshotUrl) {
+        this.boardUserId = boardUserId;
+        this.screenshotUrl = screenshotUrl;
+    }
 }
