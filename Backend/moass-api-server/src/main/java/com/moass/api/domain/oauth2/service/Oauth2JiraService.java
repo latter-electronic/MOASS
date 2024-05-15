@@ -47,6 +47,7 @@ public class Oauth2JiraService {
         this.propertiesConfig = propertiesConfig;
     }
 
+
     public Mono<JiraToken> exchangeCodeForToken(String code, String state) {
         return jiraAuthWebClient.post()
                 .uri("/oauth/token")
