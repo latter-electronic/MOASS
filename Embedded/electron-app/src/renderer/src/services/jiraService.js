@@ -25,8 +25,8 @@ export const getCurrentUser = async () => {
             'Content-Type': 'application/json'
         }
     }).then(response => {
-        response.data
-        console.log(response.data);
+        response.data.data
+        console.log("지라로그인 유저", response.data.data);
     })
     .catch(error => {
         console.error('Error fetching current user details:', error);
@@ -55,7 +55,10 @@ export const fetchCurrentSprintIssues = async (statusId) => {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
+    }).then(response => {
+        console.log(response.data.data)
+        return response.data.data;
+    })
       .catch(error => {
           console.error('Error fetching current sprint issues based on status:', error);
           throw error;
@@ -81,7 +84,9 @@ export const getIssueDetails = async (issueIdOrKey) => {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
+    }).then(response => {
+        return response.data
+    })
       .catch(error => {
           console.error(`Error fetching details for issue ${issueIdOrKey}:`, error);
           throw error;
@@ -131,7 +136,7 @@ export const getProject = async () => {
             'Content-Type': 'application/json'
         }
     }).then(response => {
-        console.log("Project data received:", response.data.data );
+        console.log("Project data received:", response.data.data.values[0].key );
         return response.data.data;
     })
     .catch(error => {

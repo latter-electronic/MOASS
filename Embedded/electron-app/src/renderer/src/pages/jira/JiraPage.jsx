@@ -19,7 +19,7 @@ export default function JiraPage() {
         inProgress: [],
         done: []
     });
-    const [loading, setLoading] = useState({ todo: true, inProgress: true, done: false });
+    const [loading, setLoading] = useState({ todo: true, inProgress: true, done: true });
     const [selectedProfile, setSelectedProfile] = useState(null);
 
     useEffect(() => {
