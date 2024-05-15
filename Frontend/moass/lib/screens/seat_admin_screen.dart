@@ -107,80 +107,89 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        DropdownButton(
-                            value: selectedCampusIndex,
-                            hint: const Text('캠퍼스를 선택하세요'),
-                            items: const [
-                              DropdownMenuItem(value: 1, child: Text('서울캠퍼스')),
-                              DropdownMenuItem(value: 2, child: Text('대전캠퍼스')),
-                              DropdownMenuItem(value: 3, child: Text('광주캠퍼스')),
-                              DropdownMenuItem(value: 4, child: Text('구미캠퍼스')),
-                              DropdownMenuItem(value: 5, child: Text('부울경캠퍼스')),
-                            ],
-                            onChanged: (int? value) async {
-                              setState(() {
-                                // 클래스 코드 초기화
-                                selectedClassCode = "";
-                                // 인덱스 정하고
-                                selectedCampusIndex = value!;
-                                // 코드 설정
-                                selectedCampusCode = campusCode[value - 1];
-                                // 캠퍼스 코드도 설정
-                                selectedClassCode = selectedCampusCode;
-                                // print('선택한 캠퍼스 : $selectedCampusCode');
-                                selectedCampusClasses.clear();
-                                selectedClass = null;
-                              });
-                              var selectedCampusInfo = await UserInfoApi(
-                                      dio: Dio(),
-                                      storage: const FlutterSecureStorage())
-                                  .getCampusClasses(selectedCampusCode);
-                              setState(() {
-                                campusInfo = selectedCampusInfo;
-                                for (var classes
-                                    in selectedCampusInfo!.classes) {
-                                  selectedCampusClasses.add(
-                                      '${classes.toString().split('').last}반');
-                                }
-                              });
-                              print(campusInfo?.classes);
-                            }),
-                        if (selectedCampusIndex != null && campusInfo != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           DropdownButton(
-                            value: selectedClass,
-                            hint: const Text('반을 선택하세요'),
-                            items: selectedCampusClasses
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              var tempSelectedClass =
-                                  selectedCampusCode + value!.split("").first;
-                              setState(() {
-                                print('임시코드: $tempSelectedClass');
-                                selectedClass = value;
-                                selectedClassCode = tempSelectedClass;
-                              });
-                              tempSelectedClass = "";
-                              // print(value);
-                            },
+                              value: selectedCampusIndex,
+                              hint: const Text('캠퍼스를 선택하세요'),
+                              items: const [
+                                DropdownMenuItem(
+                                    value: 1, child: Text('서울캠퍼스')),
+                                DropdownMenuItem(
+                                    value: 2, child: Text('대전캠퍼스')),
+                                DropdownMenuItem(
+                                    value: 3, child: Text('광주캠퍼스')),
+                                DropdownMenuItem(
+                                    value: 4, child: Text('구미캠퍼스')),
+                                DropdownMenuItem(
+                                    value: 5, child: Text('부울경캠퍼스')),
+                              ],
+                              onChanged: (int? value) async {
+                                setState(() {
+                                  // 클래스 코드 초기화
+                                  selectedClassCode = "";
+                                  // 인덱스 정하고
+                                  selectedCampusIndex = value!;
+                                  // 코드 설정
+                                  selectedCampusCode = campusCode[value - 1];
+                                  // 캠퍼스 코드도 설정
+                                  selectedClassCode = selectedCampusCode;
+                                  // print('선택한 캠퍼스 : $selectedCampusCode');
+                                  selectedCampusClasses.clear();
+                                  selectedClass = null;
+                                });
+                                var selectedCampusInfo = await UserInfoApi(
+                                        dio: Dio(),
+                                        storage: const FlutterSecureStorage())
+                                    .getCampusClasses(selectedCampusCode);
+                                setState(() {
+                                  campusInfo = selectedCampusInfo;
+                                  for (var classes
+                                      in selectedCampusInfo!.classes) {
+                                    selectedCampusClasses.add(
+                                        '${classes.toString().split('').last}반');
+                                  }
+                                });
+                                print(campusInfo?.classes);
+                              }),
+                          if (selectedCampusIndex != null && campusInfo != null)
+                            DropdownButton(
+                              value: selectedClass,
+                              hint: const Text('반을 선택하세요'),
+                              items: selectedCampusClasses
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                var tempSelectedClass =
+                                    selectedCampusCode + value!.split("").first;
+                                setState(() {
+                                  print('임시코드: $tempSelectedClass');
+                                  selectedClass = value;
+                                  selectedClassCode = tempSelectedClass;
+                                });
+                                tempSelectedClass = "";
+                                // print(value);
+                              },
+                            ),
+                          IconButton(
+                            color: Theme.of(context).colorScheme.primary,
+                            onPressed: handleRefresh,
+                            icon: const Icon(Icons.refresh),
+                            style: ButtonStyle(
+                              iconColor: MaterialStateProperty.all<Color>(
+                                  Theme.of(context).colorScheme.primary),
+                            ),
                           ),
-                        IconButton(
-                          color: Theme.of(context).colorScheme.primary,
-                          onPressed: handleRefresh,
-                          icon: const Icon(Icons.refresh),
-                          style: ButtonStyle(
-                            iconColor: MaterialStateProperty.all<Color>(
-                                Theme.of(context).colorScheme.primary),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
