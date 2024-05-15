@@ -49,7 +49,10 @@ module.exports = {
         jmagenta: "#943D73",
         jmagentaB: "#FDD0EC",
         jgray: "#44546F",
-        jgrayB: "#DCDFE4"
+        jgrayB: "#DCDFE4",
+        jdark_grey: "#FFFFFF",
+        jdark_greyB: "#626F86",
+        jdark_greenB: "#1F845A",
       },
       width: {
         navbarWidth: '6.5rem',

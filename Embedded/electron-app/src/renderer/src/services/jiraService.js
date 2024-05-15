@@ -50,19 +50,29 @@ export const fetchCurrentSprintIssues = async (statusId) => {
         url: `/rest/api/3/search?jql=project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'&fields=customfield_10014,summary,priority,assignee,customfield_10031&maxResults=240`
     };
 
-    return axios.post(prefix, data, {
+    const issues = await axios.post(prefix, data, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => {
-        console.log(response.data.data)
-        return response.data.data;
-    })
+    }).then(response => response.data.data.issues)
       .catch(error => {
           console.error('Error fetching current sprint issues based on status:', error);
           throw error;
       });
+
+    const issuesWithEpics = await Promise.all(issues.map(async issue => {
+        if (issue.fields.customfield_10014) {
+            const epicData = await getIssueDetails(issue.fields.customfield_10014);
+            issue.epic = {
+                name: epicData.fields.customfield_10011,
+                color: epicData.fields.customfield_10017
+            };
+        }
+        return issue;
+    }));
+
+    return { issues: issuesWithEpics };
 };
 
 /**
