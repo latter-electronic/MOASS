@@ -14,6 +14,7 @@ import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.fcm.dto.FcmTokenSaveDto;
 import com.moass.api.global.fcm.service.FcmService;
 import com.moass.api.global.response.ApiResponse;
+import com.moass.api.global.sse.dto.SseNotificationDto;
 import com.moass.api.global.sse.dto.SseOrderDto;
 import com.moass.api.global.sse.dto.SseUpdateDto;
 import com.moass.api.global.sse.service.SseService;
@@ -102,6 +103,20 @@ public class UserController {
                                 .thenReturn(reqFilteredUserDetailDto))
                 .flatMap(result -> ApiResponse.ok("수정 완료", result))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("수정 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{userId}/status")
+    public Mono<ResponseEntity<ApiResponse>> adminChangeUserStatus(@PathVariable String userId, @RequestBody UserUpdateDto userUpdateDto) {
+        return userService.adminUpdateUserStatus(userId, userUpdateDto)
+                .flatMap(reqFilteredUserDetailDto ->
+                        sseService.notifyUser(userId, new SseUpdateDto("statusUpdate",null))
+                                .thenReturn(reqFilteredUserDetailDto))
+                .flatMap(reqFilteredUserDetailDto ->
+                        notificationService.saveAndPushNotification(userId,new NotificationSendDto("server","상태변경 알림","관리자에 의해 상태가 변경되었습니다."))
+                                .thenReturn(reqFilteredUserDetailDto))
+                .flatMap(updatedUser -> ApiResponse.ok("사용자 상태가 성공적으로 수정되었습니다.", updatedUser))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("사용자 상태 수정 실패 : " + e.getMessage(), e.getStatus()));
     }
 
     @GetMapping

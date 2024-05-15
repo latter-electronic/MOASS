@@ -6,7 +6,6 @@ import com.moass.api.domain.oauth2.dto.GitlabIssuesAndMergeRequestsDto;
 import com.moass.api.domain.oauth2.dto.TokenResponseDto;
 import com.moass.api.domain.oauth2.entity.GitlabProject;
 import com.moass.api.domain.oauth2.entity.GitlabToken;
-import com.moass.api.domain.oauth2.entity.JiraToken;
 import com.moass.api.domain.oauth2.repository.GitlabProjectRepository;
 import com.moass.api.domain.oauth2.repository.GitlabTokenRepository;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -15,9 +14,9 @@ import com.moass.api.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -172,6 +171,18 @@ public class Oauth2GitlabService {
                         .flatMap(projects -> findProjectByName(projects, projectName)
                                 .flatMap(project -> saveProject(userId, project))
                         ));
+    }
+
+    @Transactional
+    public Mono<GitlabProject> deleteProjectByName(String userId, String projectName) {
+        return gitlabTokenRepository.findByUserId(userId)
+                .switchIfEmpty(Mono.error(new CustomException("연동된 GitLab 계정이 없습니다.", HttpStatus.FORBIDDEN)))
+                .flatMap(token -> gitlabProjectRepository.findByGitlabTokenIdAndProjectName(token.getGitlabTokenId(), projectName)
+                        .switchIfEmpty(Mono.error(new CustomException("존재하지 않는 프로젝트 이름입니다.", HttpStatus.NOT_FOUND)))
+                        .flatMap(project -> gitlabProjectRepository.delete(project)
+                                .then(Mono.just(project))
+                        )
+                );
     }
 
     private Mono<JsonNode> getProjects(String accessToken) {
