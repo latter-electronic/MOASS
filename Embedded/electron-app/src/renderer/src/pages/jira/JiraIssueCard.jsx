@@ -10,14 +10,16 @@ export default function JiraIssueCard({ issue }) {
     const { customfield_10014, summary, priority, assignee, customfield_10031 } = issue.fields;
 
     useEffect(() => {
+        console.log(issue)
         if (customfield_10014) {
+            console.log('돌아가 에픽')
             getIssueDetails(customfield_10014)
                 .then(data => {
-                    setEpicName(data.data.fields.customfield_10011);
-                    setEpicColor(data.data.fields.customfield_10017);
+                    setEpicName(data.fields.customfield_10011);
+                    setEpicColor(data.fields.customfield_10017);
                 })
                 .catch(error => console.error('Failed to fetch epic details:', error));
-        }
+        } else { console.log('안돌아가 에픽')}
     }, [customfield_10014]);
 
     return (

@@ -85,7 +85,7 @@ export const getIssueDetails = async (issueIdOrKey) => {
             'Content-Type': 'application/json'
         }
     }).then(response => {
-        return response.data
+        return response.data.data
     })
       .catch(error => {
           console.error(`Error fetching details for issue ${issueIdOrKey}:`, error);
