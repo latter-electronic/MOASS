@@ -26,12 +26,13 @@ class _SettingWidgetPhotoScreenState
   Future getImage(ImageSource imageSource) async {
     //pickedFile에 ImagePicker로 가져온 이미지가 담김
     final XFile? pickedFile = await picker.pickImage(source: imageSource);
-
-    XFile imageFile = XFile(pickedFile!.path);
-    var croppedFile = await cropImage(imageFile);
-    setState(() {
-      _image = croppedFile; //가져온 이미지를 _image에 저장
-    });
+    if (pickedFile != null) {
+      XFile? imageFile = XFile(pickedFile.path);
+      var croppedFile = await cropImage(imageFile);
+      setState(() {
+        _image = croppedFile; //가져온 이미지를 _image에 저장
+      });
+    }
   }
 
   Future<XFile?> cropImage(XFile pickedFile) async {
