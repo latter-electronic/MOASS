@@ -75,15 +75,24 @@ public class UserService {
 
     @Transactional
     public Mono<Boolean> userUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
-        return Mono.zip(userProfileUpdate(userInfo, userUpdateDto),
-                        teamNameUpdate(userInfo, userUpdateDto),
+        return Mono.zip(userProfileUpdate(userInfo.getUserId(), userUpdateDto),
+                        teamNameUpdate(userInfo.getUserId(), userUpdateDto),
                         (profileUpdated, teamUpdated) -> profileUpdated || teamUpdated)
                 .doOnSuccess(result -> log.info("result: {}", result))
                 .flatMap(result -> (result ? Mono.just(true) : Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST))));
     }
 
-    public Mono<Boolean> userProfileUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
-        return userRepository.findByUserId(userInfo.getUserId()).flatMap(user -> {
+    @Transactional
+    public Mono<Boolean> adminUpdateUserStatus(String userId, UserUpdateDto userUpdateDto) {
+        return Mono.zip(userProfileUpdate(userId, userUpdateDto),
+                        teamNameUpdate(userId, userUpdateDto),
+                        (profileUpdated, teamUpdated) -> profileUpdated || teamUpdated)
+                .doOnSuccess(result -> log.info("result: {}", result))
+                .flatMap(result -> (result ? Mono.just(true) : Mono.error(new CustomException("변경된 사항이 없습니다.", HttpStatus.BAD_REQUEST))));
+    }
+
+    public Mono<Boolean> userProfileUpdate(String userId, UserUpdateDto userUpdateDto) {
+        return userRepository.findByUserId(userId).flatMap(user -> {
             boolean isUpdated = false;
 
             if (userUpdateDto.getUserEmail() != null && !userUpdateDto.getUserEmail().equals(user.getUserEmail())) {
@@ -124,8 +133,8 @@ public class UserService {
         }).switchIfEmpty(Mono.error(new CustomException("사용자가 존재하지 않습니다.", HttpStatus.NOT_FOUND)));
     }
 
-    public Mono<Boolean> teamNameUpdate(UserInfo userInfo, UserUpdateDto userUpdateDto) {
-        return teamRepository.findByUserId(userInfo.getUserId()).flatMap(team -> {
+    public Mono<Boolean> teamNameUpdate(String userId, UserUpdateDto userUpdateDto) {
+        return teamRepository.findByUserId(userId).flatMap(team -> {
             boolean isUpdated = false;
             if (userUpdateDto.getTeamName() != null && !userUpdateDto.getTeamName().equals(team.getTeamName())) {
                 team.setTeamName(userUpdateDto.getTeamName());
