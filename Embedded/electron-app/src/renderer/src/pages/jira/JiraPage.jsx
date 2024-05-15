@@ -8,8 +8,7 @@ import profile3 from '../../assets/images/jira/jiraProfileImg3.png';
 import profile4 from '../../assets/images/jira/jiraProfileImg4.png';
 import profile5 from '../../assets/images/jira/jiraProfileImg5.png';
 import profile6 from '../../assets/images/jira/jiraProfileImg6.png';
-import { fetchCurrentSprintIssues } from '../../services/jiraService.js';
-import testDoneIssues from './proxyTest/testJson10001.json';
+import { fetchCurrentSprintIssues, changeIssueStatus } from '../../services/jiraService.js';
 
 const profileImages = [profile1, profile2, profile3, profile4, profile5, profile6];
 
@@ -26,6 +25,7 @@ export default function JiraPage() {
         async function fetchIssues(statusId, column) {
             try {
                 const data = await fetchCurrentSprintIssues(statusId);
+                console.log(data.issues);
                 setIssues(prev => ({ ...prev, [column]: data.issues || [] }));
             } catch (error) {
                 console.error('Error fetching issues:', error);
@@ -40,7 +40,7 @@ export default function JiraPage() {
         fetchIssues('10001', 'done');
     }, []);
 
-    const onDragEnd = result => {
+    const onDragEnd = async result => {
         const { source, destination } = result;
         if (!destination) {
             return;
@@ -51,14 +51,37 @@ export default function JiraPage() {
 
         const sourceColumn = issues[source.droppableId];
         const destColumn = issues[destination.droppableId];
-        const [removed] = sourceColumn.splice(source.index, 1);
-        destColumn.splice(destination.index, 0, removed);
+        const [movedIssue] = sourceColumn.splice(source.index, 1);
+        destColumn.splice(destination.index, 0, movedIssue);
 
-        setIssues(prev => ({
-            ...prev,
-            [source.droppableId]: sourceColumn,
-            [destination.droppableId]: destColumn
-        }));
+        // 상태 ID 매핑
+        const transitionIdMapping = {
+            'todo': '11',
+            'inProgress': '21',
+            'done': '31'
+        };
+        const newTransitionId = transitionIdMapping[destination.droppableId];
+
+        if (newTransitionId) {
+            try {
+                await changeIssueStatus(movedIssue.id, newTransitionId);
+                setIssues(prev => ({
+                    ...prev,
+                    [source.droppableId]: sourceColumn,
+                    [destination.droppableId]: destColumn
+                }));
+            } catch (error) {
+                console.error('Error changing issue status:', error);
+                // 원래 상태로 되돌리기
+                sourceColumn.splice(destination.index, 1);
+                destColumn.splice(source.index, 0, movedIssue);
+                setIssues(prev => ({
+                    ...prev,
+                    [source.droppableId]: sourceColumn,
+                    [destination.droppableId]: destColumn
+                }));
+            }
+        }
     };
 
     const getStatusName = (key) => {
@@ -79,7 +102,6 @@ export default function JiraPage() {
             <div className="mx-auto p-6 h-screen overflow-hidden">
                 <div className="flex items-center text-white font-extrabold text-3xl mb-5">
                     <div>S10P31E203 보드</div>
-                    {/* <img src={dropdownArrow} alt="화살표" className="ml-2" /> */}
                     <div className="flex -space-x-2 ml-6">
                         {profileImages.map((avatar, index) => (
                             <button
