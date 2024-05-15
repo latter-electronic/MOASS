@@ -61,6 +61,13 @@ public class Oauth2GitlabController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("Gitlab 프로젝트 저장 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+    @DeleteMapping("/projects")
+    public Mono<ResponseEntity<ApiResponse>> deleteProjectByName(@Login UserInfo userInfo, @RequestParam(name="projectname") String projectName) {
+        return oauth2GitlabService.deleteProjectByName(userInfo.getUserId(), projectName)
+                .flatMap(project -> ApiResponse.ok("프로젝트 삭제 성공", project))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("Gitlab 프로젝트 삭제 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
     @GetMapping("/projectinfos")
     public Mono<ResponseEntity<ApiResponse>> getProjectInfos(@Login UserInfo userInfo) {
         return oauth2GitlabService.getOpenIssuesAndMergeRequests(userInfo.getUserId())
