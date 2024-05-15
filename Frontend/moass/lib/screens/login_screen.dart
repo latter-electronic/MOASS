@@ -65,7 +65,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const _Title(),
+              const SizedBox(
+                height: 160,
+              ),
+              Image.asset('assets/img/logo_basic.png'),
               const SizedBox(height: 16.0),
               const _SubTitleId(),
               CustomLoginFormField(
@@ -87,7 +90,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue.shade300,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w800),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(3),
                   ),
@@ -98,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   '로그인',
                   style: TextStyle(
                       fontSize: 24,
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
               ),

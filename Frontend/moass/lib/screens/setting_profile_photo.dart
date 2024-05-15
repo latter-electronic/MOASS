@@ -86,14 +86,32 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
       bottomSheet: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white,
+              textStyle: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w800)),
           onPressed: () async {
-            await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
-                .postUserProfilePhoto(_image!);
-            if (context.mounted) {
-              Navigator.of(context).pop();
+            if (_image != null) {
+              await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+                  .postUserProfilePhoto(_image!);
+              if (context.mounted) {
+                Navigator.of(context).pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  backgroundColor: Color(0xFF3DB887),
+                  content: Text('프로필 이미지 변경 성공!'),
+                  duration: Duration(seconds: 3),
+                ));
+              }
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                backgroundColor: Color(0xFFD24B4E),
+                content: Text('사진 파일을 선택해주세요'),
+                duration: Duration(seconds: 1),
+              ));
             }
           },
-          child: const Text('위젯 이미지 수정하기'),
+          child: const Text('프로필 이미지 수정하기'),
         ),
       ),
     );
@@ -126,17 +144,37 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white,
+              textStyle: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w800)),
           onPressed: () {
             getImage(ImageSource.camera); //getImage 함수를 호출해서 카메라로 찍은 사진 가져오기
           },
-          child: const Text("카메라"),
+          child: const Row(
+            children: [
+              Icon(Icons.camera_alt_outlined),
+              Text("  카메라"),
+            ],
+          ),
         ),
         const SizedBox(width: 30),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Colors.white,
+              textStyle: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w800)),
           onPressed: () {
             getImage(ImageSource.gallery); //getImage 함수를 호출해서 갤러리에서 사진 가져오기
           },
-          child: const Text("갤러리"),
+          child: const Row(
+            children: [
+              Icon(Icons.photo_library_outlined),
+              Text("  갤러리"),
+            ],
+          ),
         ),
       ],
     );

@@ -327,8 +327,18 @@ class SettingScreen extends StatelessWidget {
                             ),
                             actions: <Widget>[
                               TextButton(
+                                style: TextButton.styleFrom(
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    foregroundColor: Colors.white,
+                                    textStyle: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800)),
                                 onPressed: () => Navigator.pop(context, '취소'),
-                                child: const Text('취소'),
+                                child: const Text(
+                                  '취소',
+                                  style: TextStyle(fontWeight: FontWeight.w800),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () {

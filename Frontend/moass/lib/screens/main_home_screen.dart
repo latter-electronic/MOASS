@@ -83,6 +83,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   }
 
   @override
+  void didUpdateWidget(covariant MainHomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 페이지가 업데이트될 때 fetchReservations()를 호출하여 상태를 업데이트합니다.
+    fetchReservations();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final myInfoApi =
         MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());

@@ -83,8 +83,8 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
                             setState(() {
                               isChecked = value!;
                             });
-                            print('투두아이디 : ${widget.todoId}');
-                            print('항목 체크 여부 : $isChecked');
+                            // print('투두아이디 : ${widget.todoId}');
+                            // print('항목 체크 여부 : $isChecked');
                             ToDoListApi(
                                     dio: Dio(),
                                     storage: const FlutterSecureStorage())
