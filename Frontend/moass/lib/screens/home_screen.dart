@@ -72,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: _widgetOptions.isNotEmpty
             ? _widgetOptions.elementAt(_selectedIndex)
-            : const CircularProgressIndicator(),
+            : const Text('로그인이 풀렸어요'),
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex,

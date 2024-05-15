@@ -53,6 +53,45 @@ class UserInfoApi {
     }
   }
 
+  // 캠퍼스 반 목록 조회
+  Future<CampusInfo?> getCampusClasses(String? locationCode) async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+      }
+      // print(accessToken);
+
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.get(
+        '$baseUrl/api/user/locationinfo',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+      // print('리턴 코드 : ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        // CampusInfo campusA = response.data['data']['A'];
+        // CampusInfo campusB = response.data['data']['B'];
+        // CampusInfo campusC = response.data['data']['C'];
+        // CampusInfo campusD = response.data['data']['D'];
+        // CampusInfo campusE = response.data['data']['E'];
+
+        var campusInfo = response.data['data'][locationCode];
+        CampusInfo campusInfoInstance = CampusInfo.fromJson(campusInfo);
+
+        // campusClassesListInstance = response.data['classes'];
+
+        return campusInfoInstance;
+      } else {
+        print('Failed to load user profile');
+      }
+    } on DioException catch (e) {
+      print(' 캠퍼스 정보 조회 실패 ${e.message}');
+      return null;
+    }
+    return null;
+  }
+
   // 캠퍼스 조회
   Future<List<Map<String, dynamic>>> fetchCampusInfo(
       String? locationCode) async {

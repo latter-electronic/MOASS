@@ -25,10 +25,14 @@ class _SeatScreenState extends State<SeatAdminScreen> {
   bool isLoading = true;
   late MyInfoApi api;
   FocusNode textfocus = FocusNode();
+  CampusInfo? campusInfo;
   List campusList = ['서울캠퍼스', '대전캠퍼스', '광주캠퍼스', '구미캠퍼스', '부울경캠퍼스'];
   List campusCode = ['A', 'B', 'C', 'D', 'E'];
   int? selectedCampusIndex;
   String selectedCampusCode = "";
+  List<String> selectedCampusClasses = [];
+  String? selectedClass;
+  String selectedClassCode = "";
 
   @override
   void initState() {
@@ -81,6 +85,8 @@ class _SeatScreenState extends State<SeatAdminScreen> {
   // Refresh 아이콘을 누를 때 호출되는 콜백 함수
   void handleRefresh() {
     fetchMyInfo(); // 사용자 정보를 다시 불러옴
+    selectedCampusIndex = null;
+    selectedClass = null;
   }
 
   @override
@@ -116,23 +122,51 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                             ],
                             onChanged: (int? value) async {
                               setState(() {
+                                // 클래스 코드 초기화
+                                selectedClassCode = "";
+                                // 인덱스 정하고
                                 selectedCampusIndex = value!;
+                                // 코드 설정
                                 selectedCampusCode = campusCode[value - 1];
-                                print('선택한 캠퍼스 : $selectedCampusCode');
+                                // 캠퍼스 코드도 설정
+                                selectedClassCode = selectedCampusCode;
+                                // print('선택한 캠퍼스 : $selectedCampusCode');
+                                selectedCampusClasses.clear();
+                                selectedClass = null;
                               });
-                              List<Map<String, dynamic>> campusClasses =
-                                  await UserInfoApi(
-                                          dio: Dio(),
-                                          storage: const FlutterSecureStorage())
-                                      .fetchCampusInfo(selectedCampusCode);
-                              print(campusClasses.toString());
+                              var selectedCampusInfo = await UserInfoApi(
+                                      dio: Dio(),
+                                      storage: const FlutterSecureStorage())
+                                  .getCampusClasses(selectedCampusCode);
+                              setState(() {
+                                campusInfo = selectedCampusInfo;
+                                for (var classes
+                                    in selectedCampusInfo!.classes) {
+                                  selectedCampusClasses.add(
+                                      '${classes.toString().split('').last}반');
+                                }
+                              });
+                              print(campusInfo?.classes);
                             }),
-                        if (selectedCampusIndex != null)
+                        if (selectedCampusIndex != null && campusInfo != null)
                           DropdownButton(
+                            value: selectedClass,
                             hint: const Text('반을 선택하세요'),
-                            items: const [DropdownMenuItem(child: Text('1반'))],
+                            items: selectedCampusClasses
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                             onChanged: (value) {
-                              print(value);
+                              var tempSelectedClass =
+                                  selectedClassCode + value!;
+                              setState(() {
+                                selectedClass = value;
+                                selectedClassCode = tempSelectedClass;
+                              });
+                              // print(value);
                             },
                           ),
                         IconButton(
@@ -157,7 +191,7 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                       ? SeatMapWidget(
                           toggleOpenButtonWidget: toggleOpenButtonWidget,
                           setUserId: setUserId,
-                          classCode: myProfile!.classCode,
+                          classCode: selectedClassCode,
                           callUserId: callUserId,
                         )
                       : const Center(child: CircularProgressIndicator()),
