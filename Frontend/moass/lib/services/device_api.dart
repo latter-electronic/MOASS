@@ -15,7 +15,7 @@ class DeviceApi {
   // 우리반 기기 조회
   Future<List<DeviceInfo>> fetchClassDevices(String? classcode) async {
     List<DeviceInfo> deviceInstances = [];
-    // print('검색 클래스 코드 : $classcode');
+    print('검색 클래스 코드 : $classcode');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {

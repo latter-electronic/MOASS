@@ -29,6 +29,16 @@ class SeatMapWidget extends StatefulWidget {
 }
 
 class _SeatMapWidgetState extends State<SeatMapWidget> {
+  @override
+  void didUpdateWidget(SeatMapWidget oldWidget) {
+    if (oldWidget.classCode != widget.classCode) {
+      // classCode가 변경됐을 때만 새로 빌드하도록 함
+      fetchDeviceInfos();
+      setState(() {});
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   final TransformationController _transformationController =
       TransformationController();
 
@@ -346,5 +356,5 @@ class SeatMap extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

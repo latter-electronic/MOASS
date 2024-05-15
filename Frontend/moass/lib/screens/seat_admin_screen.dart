@@ -161,11 +161,13 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                             }).toList(),
                             onChanged: (value) {
                               var tempSelectedClass =
-                                  selectedClassCode + value!;
+                                  selectedCampusCode + value!.split("").first;
                               setState(() {
+                                print('임시코드: $tempSelectedClass');
                                 selectedClass = value;
                                 selectedClassCode = tempSelectedClass;
                               });
+                              tempSelectedClass = "";
                               // print(value);
                             },
                           ),
@@ -193,9 +195,11 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                           setUserId: setUserId,
                           classCode: selectedClassCode,
                           callUserId: callUserId,
+                          jobCode: myProfile?.jobCode,
                         )
                       : const Center(child: CircularProgressIndicator()),
                 ),
+                Text(selectedClassCode),
 
                 const CategoryText(text: '교육생 조회'),
                 UserSearchForCallWidget(
