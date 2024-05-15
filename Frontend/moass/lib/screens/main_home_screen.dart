@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
+import 'package:moass/model/reservation_model.dart';
 import 'package:moass/screens/notification_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
+import 'package:moass/services/reservation_api.dart';
 import 'package:moass/services/sse_listener_api.dart';
 import 'package:moass/widgets/check_box.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -28,10 +31,17 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   late int selectedSeatedState;
   // final storage = new FlutterSecureStorage();
   // String? test = "";
+  DateTime selectedDate = DateTime.now();
+  List<MyReservationModel> reservations = [];
+  bool isReservationLoading = true;
+  late ReservationApi api;
 
   @override
   initState() {
     super.initState();
+    api = ReservationApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
+    fetchReservations();
   }
 
   // seeTestSSE() async {
@@ -54,6 +64,21 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
       if (selectedSeatedState == 0) {
         selectedSeatedState = 1;
       }
+    });
+  }
+
+  Future<void> fetchReservations() async {
+    setState(() => isReservationLoading = true);
+    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    var result = await api.myReservationinfo(); // API 호출
+    setState(() {
+      // null 체크
+      reservations = result
+          .where((res) =>
+              DateFormat('yyyy.MM.dd').format(DateTime.parse(res.infoDate)) ==
+              DateFormat('yyyy.MM.dd').format(selectedDate))
+          .toList();
+      isReservationLoading = false;
     });
   }
 
@@ -458,19 +483,50 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               const CategoryText(text: '할 일 목록'),
               const ToDoListWidget(),
               const CategoryText(text: '오늘 내 예약'),
-              const SizedBox(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 20),
-                    child: Column(
-                      children: [
-                        ScheduleBox(title: '플립보드 1', time: '10:00 - 11:00'),
-                        ScheduleBox(title: '팀 미팅', time: '11:00 - 12:00'),
-                      ],
+              isReservationLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: reservations.length,
+                      itemBuilder: (context, index) {
+                        var reservation = reservations[index];
+                        String timeSlot = convertTimeFromIndex(
+                            reservation.infoTime); // 시간 변환 함수 호출
+
+                        return Card(
+                          margin: const EdgeInsets.all(8.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          elevation: 8.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  width: double.infinity,
+                                  decoration: const BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10.0))),
+                                  child: Text(reservation.infoName,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 18))),
+                              Container(
+                                padding: const EdgeInsets.all(8.0),
+                                width: double.infinity,
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.vertical(
+                                        bottom: Radius.circular(10.0))),
+                                child: Text(timeSlot, // 시간 표시
+                                    style:
+                                        const TextStyle(color: Colors.black54)),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                ),
-              )
             ],
           ),
         ));
@@ -503,4 +559,11 @@ class MyStateSelector extends StatelessWidget {
       )),
     );
   }
+}
+
+// infoTime을 시간으로 바꿔주는 함수
+String convertTimeFromIndex(int index) {
+  int hour = 9 + (index - 1) ~/ 2; // 9시부터 시작하므로
+  int minute = (index % 2 == 1) ? 0 : 30;
+  return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
 }

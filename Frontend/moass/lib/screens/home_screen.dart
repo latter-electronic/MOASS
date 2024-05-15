@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // SSE 구독
-    // SSEListener(storage: const FlutterSecureStorage()).connectUserEvent();
+    SSEListener(storage: const FlutterSecureStorage()).connectUserEvent();
     SSEListener(storage: const FlutterSecureStorage()).connectTeamEvent();
 
     fetchUserProfileAndSetup();

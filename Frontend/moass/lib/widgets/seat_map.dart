@@ -126,7 +126,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
                                   DeviceApi(
                                           dio: Dio(),
                                           storage: const FlutterSecureStorage())
-                                      .callUser(device.userId!);
+                                      .callUser(device.userId!, "");
                                 }),
                           ),
                           if (widget.jobCode != null)

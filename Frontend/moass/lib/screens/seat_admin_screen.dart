@@ -223,7 +223,7 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                       // print('부를 유저 아이디 : $callUserId');
                       DeviceApi(
                               dio: Dio(), storage: const FlutterSecureStorage())
-                          .callUser(callUserId);
+                          .callUser(callUserId, "");
                       setState(() {
                         isOpenedButtonWidget = !isOpenedButtonWidget;
                       });
