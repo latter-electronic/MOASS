@@ -16,6 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +39,7 @@ public class Oauth2JiraService {
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
                 .build();
         this.jiraApiWebClient = webClientBuilder.baseUrl("https://api.atlassian.com")
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
-                        .build())
+                .exchangeStrategies(strategies)
                 .build();
         this.jiraTokenRepository = jiraTokenRepository;
         this.propertiesConfig = propertiesConfig;
@@ -97,6 +96,8 @@ public class Oauth2JiraService {
                                         }));
                             });
                 })
+                .timeout(Duration.ofSeconds(10)) // Timeout 설정
+                .doOnError(throwable -> log.error("cloudId와 토큰 저장 중 오류 발생", throwable))
                 .subscribeOn(Schedulers.boundedElastic())
                 .doOnTerminate(() -> log.info("jira 연결 완료"));
     }
@@ -106,17 +107,6 @@ public class Oauth2JiraService {
             return null;
         }
         return (String) resources.get(0).get("id");
-    }
-
-    private Mono<JiraToken> storeToken(String userId, TokenResponseDto response) {
-        log.info(String.valueOf(response));
-        JiraToken token = JiraToken.builder()
-                .userId(userId)
-                .accessToken(response.getAccessToken())
-                .refreshToken(response.getRefreshToken())
-                .build();
-
-        return jiraTokenRepository.save(token);
     }
 
     private Map<String, Object> prepareTokenRequest(String code) {
