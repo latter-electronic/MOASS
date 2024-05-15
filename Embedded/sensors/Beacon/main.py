@@ -1,5 +1,3 @@
-# DamaskRose
-# 자동 좌석도 생성 기능
 from collections import deque
 from bluepy.btle import Scanner, DefaultDelegate
 import numpy as np
@@ -8,7 +6,7 @@ import requests
 import time
 import os
 from dotenv import load_dotenv
-from scipy.optimize import least_squares, minimize
+from scipy.optimize import minimize
 
 load_dotenv()  # 환경 변수 로드
 server_url = os.getenv('SERVER_URL')
@@ -17,17 +15,38 @@ class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
 
+class KalmanFilter:
+    def __init__(self, process_variance=1e-2, measurement_variance=1):
+        self.process_variance = process_variance
+        self.measurement_variance = measurement_variance
+        self.posteri_estimate = 0.0
+        self.posteri_error_estimate = 1.0
+
+    def update(self, measurement):
+        priori_estimate = self.posteri_estimate
+        priori_error_estimate = self.posteri_error_estimate + self.process_variance
+
+        blending_factor = priori_error_estimate / (priori_estimate + self.measurement_variance)
+        self.posteri_estimate = priori_estimate + blending_factor * (measurement - priori_estimate)
+        self.posteri_error_estimate = (1 - blending_factor) * priori_error_estimate
+
+        return self.posteri_estimate
+
 class RSSISmoother:
     def __init__(self, window_size=10):
         self.rssi_queues = {}
         self.window_size = window_size
-    
+        self.filters = {}
+
     def add_rssi(self, beacon_id, rssi):
         if beacon_id not in self.rssi_queues:
             self.rssi_queues[beacon_id] = deque(maxlen=self.window_size)
-        self.rssi_queues[beacon_id].append(rssi)
+            self.filters[beacon_id] = KalmanFilter()
+
+        filtered_rssi = self.filters[beacon_id].update(rssi)
+        self.rssi_queues[beacon_id].append(filtered_rssi)
         return np.mean(self.rssi_queues[beacon_id])
-    
+
 def get_serial_number():
     with open('/proc/cpuinfo', 'r') as f:
         for line in f:
@@ -36,77 +55,64 @@ def get_serial_number():
     return None
 
 def calculate_distance(rssi, tx_power):
-    # if rssi == 0:
-    #     return -1.0
-    # ratio = rssi * 1.0 / tx_power
-    # if ratio < 1.0:
-    #     return ratio ** 10
-    # else:
-    #     return (0.89976) * (ratio ** 7.7095) + 0.111
-
     if rssi == 0:
         return -1.0
-    
+
     ratio_db = tx_power - rssi
-    ratio_linear = 10 ** (ratio_db / (10 * 1))
-    
+    ratio_linear = 10 ** (ratio_db / 10)
     distance = math.sqrt(ratio_linear)
     return distance
 
-def get_coordinates(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc):
-    A = 2 * xb - 2 * xa
-    B = 2 * yb - 2 * ya
-    C = dist_a**2 - dist_b**2 - xa**2 + xb**2 - ya**2 + yb**2
-    D = 2 * xc - 2 * xb
-    E = 2 * yc - 2 * yb
-    F = dist_b**2 - dist_c**2 - xb**2 + xc**2 - yb**2 + yc**2
-    x = (C * E - F * B) / (E * A - B * D)
-    y = (C * D - A * F) / (B * D - A * E)
-    return (x, y)
-
 def find_position(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc):
-    """
-    세 원의 교차점을 찾는 함수를 최적화 방법으로 개선
-    각 원의 중심과 반지름을 이용하여 교차점 좌표를 계산
-    """
     def objective(p):
         x, y = p
         return ((x - xa)**2 + (y - ya)**2 - dist_a**2)**2 + \
                ((x - xb)**2 + (y - yb)**2 - dist_b**2)**2 + \
                ((x - xc)**2 + (y - yc)**2 - dist_c**2)**2
 
-    # 초기 추정치는 비콘의 중심점을 사용
     x_guess = (xa + xb + xc) / 3
     y_guess = (ya + yb + yc) / 3
     initial_guess = [x_guess, y_guess]
-    
-    # 최적화 실행
+
     result = minimize(objective, initial_guess, method='L-BFGS-B')
-    
-    # 최적화 결과에서 x, y 좌표 추출
+
     if result.success:
         optimized_x, optimized_y = result.x
         return optimized_x, optimized_y
     else:
         raise RuntimeError("Optimization failed: " + result.message)
 
+def send_position(x, y):
+    patch_url = f"{server_url}/api/device/coordinate/{device_id}"
+    data = {
+        "xcoord": x, 
+        "ycoord": y
+    }
+    response = requests.patch(patch_url, json=data)
+    print("Response from server:", response.text)
+
+def calculate_distance_moved(pos1, pos2):
+    return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
+
 # --------------------------------------------------------------------------------------------------
 
 device_id = get_serial_number()
 
-# 강의실, 책상 크기(cm)
-room_width = 942
-room_height = 1495 
-desk_width = 85
-desk_height = 85 
+# 비콘 좌표 (삼각형 배치)
+# xa, ya = 0, 0      # MOASS_1: 강의실 좌상단 모서리
+# xb, yb = 942, 0    # MOASS_2: 강의실 우상단 모서리
+# xc, yc = 0, 1495   # MOASS_3: 강의실 좌하단 모서리
 
-# 비콘 좌표
-xa, ya = 1, 747.5   # MOASS_1
-xb, yb = 940, 0     # MOASS_2
-xc, yc = 941, 1490  # MOASS_3
+xa, ya = 0, 0      # MOASS_1: 강의실 좌상단 모서리
+xb, yb = 262, 0    # MOASS_2: 강의실 우상단 모서리
+xc, yc = 0, 295   # MOASS_3: 강의실 좌하단 모서리
 
 rssi_smoother = RSSISmoother(window_size=5)
 scanner = Scanner().withDelegate(ScanDelegate())
+
+# 초기 좌표 설정
+last_position = None
+threshold_distance = 50.0  # 좌표 변화 임계값 (cm)
 
 while True:
     print('Scanning....')
@@ -133,9 +139,6 @@ while True:
         dist_a = distances.get('MOASS_1', None)
         dist_b = distances.get('MOASS_2', None)
         dist_c = distances.get('MOASS_3', None)
-        rssi_a = rssi_values.get('MOASS_1', 0)
-        rssi_b = rssi_values.get('MOASS_2', 0)
-        rssi_c = rssi_values.get('MOASS_3', 0)
 
         if None not in [dist_a, dist_b, dist_c]:  # Ensure all distances are available
             x, y = find_position(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc)
@@ -144,21 +147,19 @@ while True:
             y_cm = int(y)  # 소수점 제거
             print(f'Computed coordinates: X = {x_cm}, Y = {y_cm}')
 
-            x, y = get_coordinates(dist_a, dist_b, dist_c, xa, ya, xb, yb, xc, yc)
-            print(f'X: {x}, y: {y}')
-            time.sleep(1)
-
-            # patch_url = f"{server_url}/api/device/coordinate/{device_id}"
-            # data = {
-            #     "xcoord": x_cm, 
-            #     "ycoord": y_cm
-            #     }
-            # response = requests.patch(patch_url, json=data)
-            # print("Response from server:", response.text)
+            if last_position is None:
+                # 초기 실행 시 좌표 전송
+                send_position(x_cm, y_cm)
+                last_position = (x_cm, y_cm)
+            else:
+                # 좌표 변화가 임계값을 초과할 경우에만 전송
+                distance_moved = calculate_distance_moved(last_position, (x_cm, y_cm))
+                if distance_moved > threshold_distance:
+                    # send_position(x_cm, y_cm)
+                    last_position = (x_cm, y_cm)
         else:
             print('One or more distances are missing')
     else:
         print('Fail to measure position')
-        time.sleep(5)
 
     time.sleep(20)
