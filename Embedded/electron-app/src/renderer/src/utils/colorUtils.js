@@ -1,20 +1,26 @@
-// utils/colorUtils.js
-export function getEpicColorClasses(epicName) {
-    const colorMap = {
-        "[EM] IoT 기기 설계": { text: "text-jteal", bg: "bg-jtealB" },
-        "[EM] 임베디드 공통": { text: "text-jgreen", bg: "bg-jgreenB" },
-        "[공통] 회의": { text: "text-jgreen", bg: "bg-jgreenB" },
-        "[공통] 팀 일정": { text: "text-jyellow", bg: "bg-jyellowB" },
-        "[EM] 메인 화면": { text: "text-jteal", bg: "bg-jtealB" },
-        "[EM] 알림 화면": { text: "text-jteal", bg: "bg-jtealB" },
-        "[EM] 이음보드 페이지": { text: "text-jteal", bg: "bg-jtealB" },
-        "[EM] Jira 페이지": { text: "text-jblue", bg: "bg-jblueB" },
-        "[BE] API - Gitlab": { text: "text-jpurple", bg: "bg-jpurpleB" },
-        "[공통] 프로젝트 설계": { text: "text-jpurple", bg: "bg-jpurpleB" },
-        "[공통] 기타": { text: "text-jgray", bg: "bg-jgrayB" },
-        "[EM] 좌석도 기능": { text: "text-jteal", bg: "bg-jtealB" }
-    };
-
-    const defaultColor = { text: "text-jpurple", bg: "bg-jpurpleB" };
-    return colorMap[epicName] || defaultColor;
-}
+export const epicColors = {
+    lime: "#4C6B1F",
+    limeB: "#D3F1A7",
+    red: "#AE2E24",
+    redB: "#FFD5D2",
+    orange: "#A54800",
+    orangeB: "#FEDEC8",
+    yellow: "#7F5F01",
+    yellowB: "#F8E6A0",
+    green: "#216E4E",
+    greenB: "#BAF3DB",
+    teal: "#206A83",
+    tealB: "#C6EDFB",
+    blue: "#0055CC",
+    blueB: "#CCE0FF",
+    purple: "#5E4DB2",
+    purpleB: "#DFD8FD",
+    magenta: "#943D73",
+    magentaB: "#FDD0EC",
+    gray: "#44546F",
+    grayB: "#DCDFE4",
+    dark_grey: "#FFFFFF",
+    dark_greyB: "#626F86",
+    dark_green: "#1F845A",
+    dark_greenB: "#BAF3DB",
+};
