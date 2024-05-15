@@ -61,6 +61,8 @@ public class Oauth2JiraService {
                 .header("Authorization", "Bearer " + response.getAccessToken())
                 .retrieve()
                 .bodyToMono(List.class)
+                .timeout(Duration.ofSeconds(10)) // 타임아웃 설정
+                .doOnError(throwable -> log.error("cloudId를 가져오는 중 오류 발생", throwable))
                 .flatMap(resources -> {
                     String cloudId = extractCloudId(resources);
                     if (cloudId == null) {
@@ -71,6 +73,8 @@ public class Oauth2JiraService {
                             .header("Authorization", "Bearer " + response.getAccessToken())
                             .retrieve()
                             .bodyToMono(JsonNode.class)
+                            .timeout(Duration.ofSeconds(10)) // 타임아웃 설정
+                            .doOnError(throwable -> log.error("사용자 정보를 가져오는 중 오류 발생", throwable))
                             .flatMap(userInfo -> {
                                 String emailAddress = userInfo.path("emailAddress").asText();
                                 log.info("User Email: {}", emailAddress);
@@ -81,7 +85,7 @@ public class Oauth2JiraService {
                                             existingToken.setJiraEmail(emailAddress);
                                             existingToken.setAccessToken(response.getAccessToken());
                                             existingToken.setRefreshToken(response.getRefreshToken());
-                                            existingToken.setExpiresAt(LocalDateTime.now().plusHours(1));
+                                            existingToken.setExpiresAt(LocalDateTime.now().plusHours(1)); // 만료 시간 설정
                                             return jiraTokenRepository.save(existingToken);
                                         })
                                         .switchIfEmpty(Mono.defer(() -> {
@@ -91,6 +95,7 @@ public class Oauth2JiraService {
                                                     .jiraEmail(emailAddress)
                                                     .accessToken(response.getAccessToken())
                                                     .refreshToken(response.getRefreshToken())
+                                                    .expiresAt(LocalDateTime.now().plusHours(1)) // 만료 시간 설정
                                                     .build();
 
                                             return jiraTokenRepository.save(newToken);
