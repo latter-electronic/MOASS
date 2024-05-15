@@ -21,6 +21,6 @@ export const epicColors = {
     grayB: "#DCDFE4",
     dark_grey: "#FFFFFF",
     dark_greyB: "#626F86",
-    dark_green: "#1F845A",
-    dark_greenB: "#BAF3DB",
+    dark_green: "#FFFFFF",
+    dark_greenB: "#1F845A",
 };
