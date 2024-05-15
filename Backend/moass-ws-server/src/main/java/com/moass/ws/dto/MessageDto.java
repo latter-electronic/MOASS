@@ -1,22 +1,25 @@
 package com.moass.ws.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@ToString
 public class MessageDto {
 
-    private Integer boardId;
-    private Set<String> ids;
-    private Set<String> palette;
+    private List<String> users;
+    private List<UserDto> userDetails;
+    private List<String> colors;
     private Map<String, List<Integer>> data;
+
+    public MessageDto() {
+        this.users = new ArrayList<>();
+        this.userDetails = new ArrayList<>();
+        this.colors = new ArrayList<>();
+        this.data = new HashMap<>();
+    }
+
 }

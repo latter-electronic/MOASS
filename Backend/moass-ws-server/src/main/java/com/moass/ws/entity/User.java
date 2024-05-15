@@ -5,10 +5,9 @@ import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
 public class User {
 
     @Id
@@ -39,4 +38,5 @@ public class User {
 
     @Column(name = "position_name")
     private String  positionName;
+
 }
