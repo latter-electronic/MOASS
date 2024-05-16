@@ -98,6 +98,7 @@ flutter:
         - assets/img/logo_jira.png
         - assets/img/logo_gitlab.png
         - assets/img/noti_icon.png
+        - assets/img/nullProfile.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware
