@@ -8,6 +8,30 @@ const prefix = 'api/oauth2/jira/proxy';
 
 
 /**
+ * 현재 Jira 연결 상태 확인(프록시x)
+ * 
+ * @returns {Promise} Jira 연결 상태
+ */
+export const checkJiraConnection = async () => {
+    const { accessToken } = AuthStore.getState();
+    const url = '/api/oauth2/jira/isconnected';
+
+    return axios.get(url, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        return response.data; // 연결 상태 반환
+    })
+    .catch(error => {
+        console.error('Error checking Jira connection status:', error);
+        throw error;
+    });
+};
+
+
+/**
  * 현재 로그인한 사용자의 Jira 정보 조회
  * 
  * @returns {Promise} 사용자 정보
