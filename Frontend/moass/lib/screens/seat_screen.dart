@@ -157,12 +157,17 @@ class _SeatScreenState extends State<SeatScreen> {
                       setState(() {
                         isOpenedButtonWidget = !isOpenedButtonWidget;
                       });
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        backgroundColor: Color(0xFF3DB887),
+                        content: Text('호출을 보냈습니다!'),
+                        duration: Duration(seconds: 3),
+                      ));
                     },
                     icon: const Icon(Icons.notifications_on),
-                    label: Text(
-                      '$callUserId 호출',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600),
+                    label: const Text(
+                      '호출하기',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),

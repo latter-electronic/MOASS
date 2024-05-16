@@ -5,6 +5,7 @@ import 'package:moass/model/device_info.dart';
 import 'package:moass/model/seat.dart';
 import 'package:moass/model/user_info.dart';
 import 'package:moass/services/device_api.dart';
+import 'package:moass/services/user_info_api.dart';
 
 enum Menu { call, changeState }
 
@@ -127,6 +128,12 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
                                           dio: Dio(),
                                           storage: const FlutterSecureStorage())
                                       .callUser(device.userId!, "");
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    backgroundColor: Color(0xFF3DB887),
+                                    content: Text('호출을 보냈습니다!'),
+                                    duration: Duration(seconds: 3),
+                                  ));
                                 }),
                           ),
                           if (widget.jobCode != null)
@@ -136,7 +143,30 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
                                   leading:
                                       const Icon(Icons.change_circle_rounded),
                                   title: const Text('공가 상태로 변경'),
-                                  onTap: () {
+                                  onTap: () async {
+                                    var response = await UserInfoApi(
+                                            dio: Dio(),
+                                            storage:
+                                                const FlutterSecureStorage())
+                                        .patchUserStatus(device.userId!);
+
+                                    if (response == 200) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        backgroundColor: Color(0xFF3DB887),
+                                        content: Text('교육생 공가 처리를 완료했습니다!'),
+                                        duration: Duration(seconds: 3),
+                                      ));
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        backgroundColor:
+                                            const Color(0xFFD24B4E),
+                                        content: Text(
+                                            '상태 변경에 실패했습니다! 에러코드 ${response.toString()}'),
+                                        duration: const Duration(seconds: 3),
+                                      ));
+                                    }
                                     // 공가 상태로 변경하는 API
                                   }),
                             ),
@@ -281,7 +311,9 @@ class SeatMap extends CustomPainter {
         ..color = deviceInfo.userId != null
             ? deviceInfo.userSearchDetail?.statusId == 1
                 ? const Color(0xFF3DB887)
-                : const Color(0xFFFFBC1F)
+                : deviceInfo.userSearchDetail?.statusId == 0
+                    ? const Color(0xFFFFBC1F)
+                    : const Color(0xFFD70000)
             : Colors.grey
         ..isAntiAlias = true;
 

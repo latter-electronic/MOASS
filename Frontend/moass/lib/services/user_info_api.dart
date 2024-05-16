@@ -196,4 +196,34 @@ class UserInfoApi {
       return null;
     }
   }
+
+  // 선택한 유저 정보 수정
+  // 유저 상태 수정
+  patchUserStatus(String userId) async {
+    try {
+      Map data = {'statusId': 4};
+      var body = json.encode(data);
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.patch('$baseUrl/api/user/$userId/status',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+          data: body);
+
+      if (response.statusCode == 200) {
+        print('유저 상태변경 성공!');
+        return response.statusCode;
+      } else {
+        print('유저 상태변경 실패');
+        return response.statusCode;
+      }
+    } on DioException catch (e) {
+      print('Error fetching user status: ${e.message}');
+      return null;
+    }
+  }
 }
