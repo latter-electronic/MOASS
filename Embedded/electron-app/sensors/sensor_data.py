@@ -11,6 +11,7 @@ import threading
 import RPi.GPIO as GPIO
 from dotenv import load_dotenv
 from adafruit_pn532.i2c import PN532_I2C
+import subprocess
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 load_dotenv()
@@ -30,11 +31,8 @@ motion_state = None
 logged_in = False
 logged_in_lock = threading.Lock()
 
-# NO_MOTION_TIMEOUT = 300  # 5 minutes
-# LONG_SIT_TIMEOUT = 7200  # 2 hours
-
-NO_MOTION_TIMEOUT = 20  # 20 seconds
-LONG_SIT_TIMEOUT = 60  #  30 seconds
+NO_MOTION_TIMEOUT = 30  # 30 seconds
+LONG_SIT_TIMEOUT = 120  # 2 minutes
 
 print("Waiting for NFC card...", file=sys.stderr)
 
@@ -52,11 +50,10 @@ def listen_for_commands():
                     if data.get("action") == "login":
                         logged_in = True
                         print(f"Login signal received: {data}", file=sys.stderr)
-                        print(f"Logined python: {logged_in}", file=sys.stderr)
                     elif data.get("action") == "logout":
                         logged_in = False
                         print(f"Logout signal received: {data}", file=sys.stderr)
-                        print(f"Logined python: {logged_in}", file=sys.stderr)
+                        check_aod_and_set_display_power()  
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", str(e), file=sys.stderr)
         except Exception as e:
@@ -92,29 +89,48 @@ def handle_login_response(device_id, card_serial_id):
         sys.stdout.flush()
         print(nfc_data, file=sys.stderr)
 
-def handle_motion_detection():
+def handle_logged_in_state():
     global last_motion_time, motion_state
     try:
         current_time = time.time()
         if GPIO.input(motion_sensor_pin):
             last_motion_time = current_time
-
-        # Check for LONG_SIT
-        if current_time - last_motion_time <= LONG_SIT_TIMEOUT:
-            if motion_state != 'LONG_SIT':
-                motion_state = 'LONG_SIT'
-                send_motion_status("LONG_SIT")
-
-        # Check for AWAY
-        if current_time - last_motion_time > NO_MOTION_TIMEOUT:
-            if motion_state != 'AWAY':
-                motion_state = 'AWAY'
-                send_motion_status("AWAY")
+            # Check for LONG_SIT
+            if (current_time - last_motion_time) >= LONG_SIT_TIMEOUT:
+                if motion_state != 'LONG_SIT':
+                    motion_state = 'LONG_SIT'
+                    send_motion_status("LONG_SIT")
+        else:
+            # Check for AWAY
+            if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
+                if motion_state != 'AWAY':
+                    motion_state = 'AWAY'
+                    send_motion_status("AWAY")
 
     except Exception as e:
         print(f"An error occurred during motion detection: {e}", file=sys.stderr)
         traceback.print_exc()
 
+def handle_logged_out_state():
+    global last_motion_time, motion_state
+    try:
+        current_time = time.time()
+        if GPIO.input(motion_sensor_pin):
+            last_motion_time = current_time
+            if motion_state != 'AOD':
+                motion_state = 'AOD'
+                print(motion_state, file=sys.stderr)
+                set_display_power(True)
+        else:
+            if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
+                if motion_state != 'AWAY':
+                    motion_state = 'AWAY'
+                    print(motion_state, file=sys.stderr)
+                    set_display_power(False)
+
+    except Exception as e:
+        print(f"An error occurred during motion detection: {e}", file=sys.stderr)
+        traceback.print_exc()
 
 def send_motion_status(status):
     motion_data = json.dumps({
@@ -125,6 +141,19 @@ def send_motion_status(status):
     })
     sys.stdout.write(motion_data + '\n')
     sys.stdout.flush()
+
+def set_display_power(on):
+    if on:
+        subprocess.run(['vcgencmd', 'display_power', '1'])
+    else:
+        subprocess.run(['vcgencmd', 'display_power', '0'])
+
+def check_aod_and_set_display_power():
+    global motion_state
+    if motion_state != 'AOD':
+        set_display_power(False)
+    else:
+        set_display_power(True)
 
 # -----------------------------------------------------------------
 
@@ -139,16 +168,15 @@ if __name__ == '__main__':
             with logged_in_lock:
                 current_logged_in_status = logged_in
 
-            if not current_logged_in_status:
+            if current_logged_in_status:
+                handle_logged_in_state()
+            else:
                 card_serial_id = read_uid()
                 if card_serial_id:
                     print(card_serial_id, file=sys.stderr)
-                    logged_in = handle_login_response(device_id, card_serial_id)
-                elif GPIO.input(motion_sensor_pin) and motion_state != 'AOD':
-                    motion_state = 'AOD'
-                    send_motion_status("AOD")
-            else:
-                handle_motion_detection()
+                    handle_login_response(device_id, card_serial_id)
+                else:
+                    handle_logged_out_state()
 
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", str(e), file=sys.stderr)

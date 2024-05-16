@@ -6,6 +6,11 @@ import { spawn } from 'child_process';
 import readline from 'readline';
 import icon from '../../resources/icon.png?asset'
 
+// 라즈베리파이에서만 하드웨어 가속 비활성화
+// if (process.platform === 'linux' && require('fs').existsSync('/etc/rpi-issue')) {
+//   app.disableHardwareAcceleration();
+// }
+
 let mainWindow = null
 let secondWindow = null
 let pythonProcess = null
@@ -80,51 +85,59 @@ function createSecondWindow(display) {
 function setupPythonProcess(mainWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
-    const pythonPath = '/home/pi/myenv/bin/python';
-    const scriptPath = join(__dirname, '../../sensors/sensor_data.py');
-    const pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' });
+    const pythonPath = '/home/pi/myenv/bin/python'
+    const scriptPath = join(__dirname, '../../sensors/sensor_data.py')
+    const pythonProcess = spawn(pythonPath, [scriptPath], { encoding: 'utf8' })
 
 
     pythonProcess.on('error', (err) => {
-      console.error('Failed to start Python process:', err);
+      console.error('Failed to start Python process:', err)
     });
 
     pythonProcess.stdout.on('data', (data) => {
-      console.log(`Python stdout: ${data.toString('utf8')}`);
+      console.log(`Python stdout: ${data.toString('utf8')}`)
     });
 
     pythonProcess.stderr.on('data', (data) => {
-      console.error(`Python stderr:', ${data.toString('utf8')}`);
+      console.error(`Python stderr:', ${data.toString('utf8')}`)
     })
 
     pythonProcess.on('close', (code) => {
-      console.log(`Python process exited with code ${code}`);
+      console.log(`Python process exited with code ${code}`)
     })
 
     const readlineSensorData = readline.createInterface({
       input: pythonProcess.stdout,
     })
-
+    
     readlineSensorData.on('line', (data) => {
-      console.log(`Received Sensor Data: ${data.toString('utf8')}`);
+      const dataStr = data.toString('utf8').trim()
+      console.log(`Received Sensor Data: ${dataStr}`)
+    
       if (!mainWindow.isDestroyed()) { // mainWindow가 파괴되지 않았는지 확인
         try {
-          const message = JSON.parse(data.toString());
-          switch (message.type) {
-            case 'NFC_DATA':
-              mainWindow.webContents.send('nfc-data', message.data) // nfc-data 전송
-              break
-            case 'MOTION_DETECTED':
-              mainWindow.webContents.send('motion-detected', message.data)  // motion-detected 전송
-              break
-            default:
-              console.log('Received unknown message type:', message.type)
+          // JSON 형식인지 확인
+          if (dataStr.startsWith('{') && dataStr.endsWith('}')) {
+            const message = JSON.parse(dataStr);
+            switch (message.type) {
+              case 'NFC_DATA':
+                mainWindow.webContents.send('nfc-data', message.data); // nfc-data 전송
+                break;
+              case 'MOTION_DETECTED':
+                mainWindow.webContents.send('motion-detected', message.data); // motion-detected 전송
+                break;
+              default:
+                console.log('Received unknown message type:', message.type);
+            }
+          } else {
+            console.log(`Non-JSON data received and ignored: ${dataStr}`);
           }
         } catch (error) {
-          console.error('Error parsing data from Python:', error)
+          console.error('Error parsing data from Python:', error);
         }
       }
-    })
+    });
+    
 
     ipcMain.on('login-success', (event, data) => {
       console.log('Login success data received:', data);
@@ -174,26 +187,6 @@ app.whenReady().then(() => {
   createWindow()
   const primaryDisplay = screen.getPrimaryDisplay()
   console.log('Primary Display:', primaryDisplay)
-
-  // if (process.platform === 'linux') {
-  //   ipcMain.on('login-success', (event, data) => {
-  //     console.log('Login success data received:', data);
-  //     if (pythonProcess && pythonProcess.stdin.writable) {
-  //         pythonProcess.stdin.write(JSON.stringify({action: data}) + '\n');
-  //     } else {
-  //       console.log('Python process is not available or not writable.');
-  //     }
-  //   })
-
-  //   ipcMain.on('logout-success', (event, data) => {
-  //     console.log('Logout success data received:', data);
-  //     if (pythonProcess && pythonProcess.stdin.writable) {
-  //         pythonProcess.stdin.write(JSON.stringify({action: data}) + '\n')
-  //     } else {
-  //       console.log('Python process is not available or not writable.')
-  //     }
-  //   })
-  // }
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

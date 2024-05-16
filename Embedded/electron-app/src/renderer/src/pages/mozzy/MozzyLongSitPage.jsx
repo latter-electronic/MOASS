@@ -11,7 +11,7 @@ function LongSit({ isOpen, onClose }) {
         <MozzyModal isOpen={isOpen} onRequestClose={handleModalClose}>
             <div className="flex flex-col items-center justify-center text-black p-8">
                 < h2 className="text-2xl font-bold mb-4">
-                    오래 앉아 있었으니 스트레칭을 해주세요
+                    오래 앉아 있었으니 스트레칭을 해주세요!
                 </h2>
             </div>
         </MozzyModal>
