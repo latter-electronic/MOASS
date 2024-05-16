@@ -1,11 +1,12 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moass/model/boardModel.dart';
 import 'package:moass/screens/board_screenshot_detail_screen.dart';
 import 'package:moass/services/board_api.dart';
 import 'package:moass/widgets/top_bar.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
 
 class BoardDetailScreen extends ConsumerWidget {
   final int boardId;
@@ -47,7 +48,7 @@ class BoardDetailScreen extends ConsumerWidget {
                 ...screenshots.map((screenshot) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 16.0), // 간격 조정
+                        vertical: 8.0, horizontal: 16.0),
                     child: CustomDismissible(
                       screenshot: screenshot,
                       boardApi: boardApi,
@@ -103,7 +104,6 @@ class _CustomDismissibleState extends State<CustomDismissible> {
       },
       onHorizontalDragEnd: (details) async {
         if (_dragExtent <= _maxDragDistance / 2) {
-          // Show confirmation dialog for deletion
           final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -142,7 +142,6 @@ class _CustomDismissibleState extends State<CustomDismissible> {
             );
           }
         } else if (_dragExtent >= -_maxDragDistance / 2) {
-          // Show confirmation dialog for download
           final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -235,19 +234,23 @@ class _CustomDismissibleState extends State<CustomDismissible> {
   }
 
   Future<void> _downloadImage(BuildContext context, String url) async {
-    final status = await Permission.storage.request();
-    if (status.isGranted) {
-      await FlutterDownloader.enqueue(
-        url: url,
-        savedDir: '/sdcard/Download',
-        fileName: 'screenshot${widget.screenshot.screenshotId}.jpg',
-        showNotification: true,
-        openFileFromNotification: true,
-      );
-    } else {
+    try {
+      // 다운로드 디렉토리 경로 가져오기
+      Directory directory = Directory('/storage/emulated/0/Download');
+
+      String filePath =
+          '${directory.path}/screenshot${widget.screenshot.screenshotId}.jpg';
+      await Dio().download(url, filePath);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("저장소 권한이 필요합니다."),
+          content: Text("다운로드가 완료되었습니다."),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("다운로드 실패: $e"),
         ),
       );
     }
