@@ -99,13 +99,13 @@ def calculate_distance_moved(pos1, pos2):
 device_id = get_serial_number()
 
 # 비콘 좌표 (삼각형 배치)
-# xa, ya = 0, 0      # MOASS_1: 강의실 좌상단 모서리
-# xb, yb = 942, 0    # MOASS_2: 강의실 우상단 모서리
-# xc, yc = 0, 1495   # MOASS_3: 강의실 좌하단 모서리
-
 xa, ya = 0, 0      # MOASS_1: 강의실 좌상단 모서리
-xb, yb = 262, 0    # MOASS_2: 강의실 우상단 모서리
-xc, yc = 0, 295   # MOASS_3: 강의실 좌하단 모서리
+xb, yb = 942, 1495    # MOASS_2: 강의실 우상단 모서리
+xc, yc = 0, 1495   # MOASS_3: 강의실 좌하단 모서리
+
+# xa, ya = 0, 0      # MOASS_1: 강의실 좌상단 모서리
+# xb, yb = 262, 0    # MOASS_2: 강의실 우상단 모서리
+# xc, yc = 0, 295   # MOASS_3: 강의실 좌하단 모서리
 
 rssi_smoother = RSSISmoother(window_size=5)
 scanner = Scanner().withDelegate(ScanDelegate())
@@ -155,7 +155,7 @@ while True:
                 # 좌표 변화가 임계값을 초과할 경우에만 전송
                 distance_moved = calculate_distance_moved(last_position, (x_cm, y_cm))
                 if distance_moved > threshold_distance:
-                    # send_position(x_cm, y_cm)
+                    send_position(x_cm, y_cm)
                     last_position = (x_cm, y_cm)
         else:
             print('One or more distances are missing')
