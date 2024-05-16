@@ -84,4 +84,35 @@ class GitlabApi {
       return null;
     }
   }
+
+  // 등록 프로젝트 이슈, 머지 리퀘스트 가져오기
+  Future<ProjectModel?> fetchGitlabProjectInfo(String projectName) async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return null;
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.get(
+        '$baseUrl/api/oauth2/gitlab/projectinfos',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('깃랩 정보 가져오기 성공!');
+        print(
+            '깃랩 데이터 : ${response.data['data'][projectName].first.toString()}');
+        return ProjectModel.fromJson(response.data['data'][projectName].first);
+      } else {
+        print('깃랩 정보를 가져오지 못했습니다');
+        return null;
+      }
+    } on DioException catch (e) {
+      print('깃렙 정보 에러 ${e.message}');
+      return null;
+    }
+    return null;
+  }
 }

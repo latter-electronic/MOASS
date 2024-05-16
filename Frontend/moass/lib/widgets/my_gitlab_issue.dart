@@ -23,6 +23,7 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
   late List<GitlabProject>? userGitlabProjects = [];
   late List<String>? userGitlabProjectsName = [];
   String? selectedProject;
+  ProjectModel? currentProject;
 
   @override
   void initState() {
@@ -71,27 +72,38 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (value) {
-                  setState() {
+                onChanged: (value) async {
+                  setState(() {
                     selectedProject = value;
-                  }
+                  });
+
+                  var tempProject = await GitlabApi(
+                          dio: Dio(), storage: const FlutterSecureStorage())
+                      .fetchGitlabProjectInfo(selectedProject!);
+                  setState(() {
+                    currentProject = tempProject;
+                    print(currentProject.toString());
+                  });
                   // print(value);
                 },
               ),
             )
           else
             const SizedBox(
-              height: 300,
+              height: 200,
               child: Center(
                 child: Text('Gitlab 계정 연동을 확인해주세요'),
               ),
             ),
-          const Column(
-            children: [
-              GitlabIssueCardWidget(),
-              GitlabMRCardWidget(),
-            ],
-          ),
+          if (currentProject != null && currentProject!.issues.isNotEmpty)
+            for (var issue in currentProject!.issues)
+              GitlabIssueCardWidget(
+                issue: issue,
+              ),
+          if (currentProject != null &&
+              currentProject!.mergeRequests.isNotEmpty)
+            for (var mergeRequest in currentProject!.mergeRequests)
+              const GitlabMRCardWidget(),
         ],
       ),
     );
