@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleBox extends StatelessWidget {
@@ -32,6 +31,7 @@ class ScheduleBox extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // 스케쥴 이름
             Expanded(
               flex: 2,
               child: Container(
@@ -45,13 +45,16 @@ class ScheduleBox extends StatelessWidget {
                 ),
               ),
             ),
+            // 스케쥴 시간
             Expanded(
               flex: 1,
               child: Container(
                 decoration: const BoxDecoration(color: Colors.white),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(time),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(time),
+                  ),
                 ),
               ),
             ),
