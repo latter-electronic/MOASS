@@ -101,7 +101,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
             size: const Size(942, 1495),
           ),
           for (final device in deviceInfos)
-            if (device.xcoord != null)
+            if (device.userSearchDetail != null)
               Positioned(
                 left: device.xcoord!.toDouble() - 3,
                 top: device.ycoord!.toDouble(),
