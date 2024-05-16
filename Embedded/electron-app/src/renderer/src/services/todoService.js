@@ -36,3 +36,25 @@ export const updateTodo = (updateData) => {
         }
     });
 };
+
+/**
+ * 특정 날짜의 에듀싸피 일정 가져오기
+ * 
+ * @param {string} date 조회할 날짜 (형식: YYYY-MM-DD)
+ * @returns {Promise} 에듀싸피 일정 조회 결과
+ */
+export const fetchCurriculum = (date) => {
+    const { accessToken } = AuthStore.getState();
+    const url = `/api/schedule/curriculum/${date}`;
+
+    return axios.get(url, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => response.data)
+    .catch(error => {
+        console.error(`Error fetching curriculum for date ${date}:`, error);
+        throw error;
+    });
+};

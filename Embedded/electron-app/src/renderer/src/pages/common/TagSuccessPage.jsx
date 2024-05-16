@@ -1,9 +1,5 @@
-<<<<<<< 741e3dcdfa20519e1d305a78daee9580abcac8fb
 import React, { useEffect } from 'react';
 import './TagSuccess.css'
-=======
-import React from 'react';
->>>>>>> 37c3631eb981b4324f973d46353e31c0077d5ccd
 import tag_wave from '../../assets/tag_wave.svg';
 import useGlobalStore from '../../stores/useGlobalStore';
 
