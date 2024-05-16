@@ -5,6 +5,7 @@ import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.JsonConfig;
+import com.moass.api.global.sse.dto.SseNotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -47,7 +48,7 @@ public class SseService {
                         Sinks.Many<String> sink = userSinks.computeIfAbsent(userInfo.getUserId(), k -> Sinks.many().multicast().onBackpressureBuffer());
                         return sink.asFlux()
                                 .doOnSubscribe(subscription -> {
-                                    //sink.tryEmitNext("개인채널 구독 완료 : "+userInfo.getUserId());
+                                    sink.tryEmitNext(createSseJsonMessage(new SseNotificationDto("server", "구독","유저채널 구독완료")));
                                 })
                                 .doFinally(signalType -> {
                                     if (sink.currentSubscriberCount() == 0) {
@@ -71,7 +72,7 @@ public class SseService {
                     return sink.asFlux()
                             .doOnSubscribe(subscription -> {
                                 log.info("Subscribing to team: " + teamCode + " by user: " + userInfo.getUserId());
-                                //sink.tryEmitNext("팀채널 구독 완료 : " + teamCode);
+                                sink.tryEmitNext(createSseJsonMessage(new SseNotificationDto("server", "구독","팀채널 구독완료")));
                             })
                             .doFinally(signalType -> {
                                 log.info("Subscription ended or cancelled for team: " + teamCode + " by user: " + userInfo.getUserId());
