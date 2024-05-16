@@ -10,7 +10,7 @@ import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // 추가
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moass/services/api_service.dart';
 
 // 백그라운드 메시지 설정

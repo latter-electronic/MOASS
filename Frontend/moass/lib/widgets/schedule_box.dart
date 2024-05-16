@@ -30,6 +30,7 @@ class ScheduleBox extends StatelessWidget {
         children: [
           Container(
               width: 230,
+              // height: double.maxFinite,
               decoration: const BoxDecoration(color: Color(0xFFD70000)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -40,6 +41,7 @@ class ScheduleBox extends StatelessWidget {
               )),
           Container(
             width: 120,
+            // height: double.maxFinite,
             decoration: const BoxDecoration(color: Colors.white),
             child: Padding(
               padding: const EdgeInsets.all(8.0),

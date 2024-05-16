@@ -4,21 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/reservation_model.dart';
+import 'package:moass/model/scheduleModel.dart';
 import 'package:moass/services/reservation_api.dart';
+import 'package:moass/services/schedule_api.dart'; // ScheduleApi 가져오기
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/meeting_table.dart';
 import 'package:moass/widgets/schedule_box.dart';
 import 'package:moass/widgets/top_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // 추가
 
-class WorkAdminScreen extends StatefulWidget {
+class WorkAdminScreen extends ConsumerStatefulWidget {
   const WorkAdminScreen({super.key});
 
   @override
   _WorkAdminScreenState createState() => _WorkAdminScreenState();
 }
 
-class _WorkAdminScreenState extends State<WorkAdminScreen> {
+class _WorkAdminScreenState extends ConsumerState<WorkAdminScreen> {
   List<ReservationDayModel> reservations = [];
+  List<Course> courses = []; // Schedule 데이터를 담을 리스트 추가
   bool isLoading = true;
   String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -30,6 +34,7 @@ class _WorkAdminScreenState extends State<WorkAdminScreen> {
         formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       });
       fetchReservations();
+      fetchScheduleData(); // Schedule 데이터 가져오기
     });
   }
 
@@ -47,6 +52,15 @@ class _WorkAdminScreenState extends State<WorkAdminScreen> {
     }
   }
 
+  Future<void> fetchScheduleData() async {
+    final api = ScheduleApi(dio: Dio(), storage: const FlutterSecureStorage());
+    final scheduleData = await api.fetchSchedule(formattedDate);
+    setState(() {
+      courses = scheduleData.courses; // Schedule 데이터를 courses 리스트에 추가
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     String displayDate = DateFormat('yyyy. MM. dd(EEE)', 'ko_KR')
@@ -60,7 +74,11 @@ class _WorkAdminScreenState extends State<WorkAdminScreen> {
       body: SingleChildScrollView(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
-            : buildContent(displayDate),
+            : Padding(
+                // Add Padding to ensure finite size
+                padding: const EdgeInsets.all(16.0),
+                child: buildContent(displayDate),
+              ),
       ),
     );
   }
@@ -74,12 +92,10 @@ class _WorkAdminScreenState extends State<WorkAdminScreen> {
           alignment: Alignment.topRight,
           child: Text(displayDate),
         ),
-        ...reservations.expand((reservation) => reservation.reservationInfoList
-            .where((info) => info.infoState == 1)
-            .map((info) => ScheduleBox(
-                  title: reservation.reservationName,
-                  time: '${info.infoName} - ${info.infoTime}',
-                ))),
+        ...courses.map((course) => ScheduleBox(
+              title: course.title,
+              time: course.period,
+            )),
         const SizedBox(height: 20),
         const CategoryText(text: '미팅 일정'),
         Align(

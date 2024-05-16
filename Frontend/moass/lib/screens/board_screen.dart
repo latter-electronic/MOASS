@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:moass/model/BoardModel.dart';
+import 'package:moass/model/boardModel.dart';
 import 'package:moass/screens/board_detail_screen.dart';
 import 'package:moass/services/board_api.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -74,13 +74,15 @@ class BoardScreen extends ConsumerWidget {
                               _buildScreenshotImages(screenshots),
                             ],
                           ),
-                          trailing: (screenshots.isNotEmpty)
-                              ? Image.network(
-                                  screenshots[0].screenshotUrl,
-                                  width: 150,
-                                  height: 70,
-                                )
-                              : const SizedBox(width: 50, height: 50),
+                          // 이미지의 오른쪽에 띄울 수 있는 메인 이미지
+                          //
+                          // trailing: (screenshots.isNotEmpty)
+                          //     ? Image.network(
+                          //         screenshots[0].screenshotUrl,
+                          //         width: 150,
+                          //         height: 70,
+                          //       )
+                          //     : const SizedBox(width: 50, height: 50),
                           onTap: () {
                             Navigator.push(
                               context,

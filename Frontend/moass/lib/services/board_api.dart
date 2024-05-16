@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:moass/model/BoardModel.dart';
+import 'package:moass/model/boardModel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BoardApi {
@@ -63,8 +63,30 @@ class BoardApi {
         print('No access token available');
       }
 
-      final response =
-          await dio.get('$baseUrl//board/screenshot/$screenshotId');
+      final response = await dio.get('$baseUrl/board/screenshot/$screenshotId',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+      if (response.statusCode == 200) {
+        return ScreenshotModel.fromJson(response.data['data']);
+      } else {
+        throw Exception('Failed to load screenshot');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch screenshot: $e');
+    }
+  }
+
+  // 보드 사진 삭제
+  Future<ScreenshotModel> boardScreenshotDelete(int screenshotId) async {
+    print('삭제할 스크린샷 아이디: $screenshotId');
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+      }
+
+      final response = await dio.delete(
+          '$baseUrl/board/screenshot/$screenshotId',
+          options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
       if (response.statusCode == 200) {
         return ScreenshotModel.fromJson(response.data['data']);
       } else {
