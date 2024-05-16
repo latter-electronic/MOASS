@@ -45,9 +45,12 @@ export const fetchCurrentSprintIssues = async (statusId) => {
     const { accessToken } = AuthStore.getState();
     const projectData = await getProject();
     const projectKey = projectData.values[0].key;
+    const currentUser = await getCurrentUser(); // 현재 사용자 정보 가져오기
+    const reporterEmail = currentUser.emailAddress; // 사용자 이메일 주소
+
     const data = {
         method: "get",
-        url: `/rest/api/3/search?jql=project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'&fields=customfield_10014,summary,priority,assignee,customfield_10031&maxResults=240`
+        url: `/rest/api/3/search?jql=project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = '${reporterEmail}'&fields=customfield_10014,summary,priority,assignee,customfield_10031&maxResults=240`
     };
 
     const issues = await axios.post(prefix, data, {
