@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/myprofile.dart';
-import 'package:moass/screens/home_screen.dart';
+import 'package:moass/riverpod/my_profile_river.dart';
 import 'package:moass/screens/setting_background_photo.dart';
 import 'package:moass/screens/setting_profile_photo.dart';
 import 'package:moass/screens/setting_related_account.dart';
@@ -15,14 +14,14 @@ import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/services/account_api.dart';
-import 'package:moass/screens/login_screen.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final AccountApi accountApi = AccountApi(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final myInfoApi = ref.read(myInfoApiProvider);
+    final accountApi = AccountApi(
       dio: Dio(), // 이 부분은 실제 앱 설정에 따라 변경 가능
       storage: const FlutterSecureStorage(),
     );
@@ -37,9 +36,6 @@ class SettingScreen extends StatelessWidget {
         );
       }
     }
-
-    final myInfoApi =
-        MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
 
     return Scaffold(
       appBar: const TopBar(

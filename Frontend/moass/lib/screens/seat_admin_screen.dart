@@ -208,7 +208,6 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                         )
                       : const Center(child: CircularProgressIndicator()),
                 ),
-                Text(selectedClassCode),
 
                 const CategoryText(text: '교육생 조회'),
                 UserSearchForCallWidget(

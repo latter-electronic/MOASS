@@ -339,7 +339,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.asset('assets/img/crying_mozzi.png'),
-                                    const Text('현재 연결된 기기가 없어요.'),
+                                    Text(
+                                        '${userProfile.userName}님, 지금 연결된 기기가 없어요.'),
                                     const Text('명패에 태그하면 기기 상태를 확인할 수 있어요!')
                                   ],
                                 )),

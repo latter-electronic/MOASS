@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:moass/model/related_gitlab_account.dart';
 
-class GitlabIssueCardWidget extends StatelessWidget {
-  const GitlabIssueCardWidget({super.key});
+class GitlabIssueCardWidget extends StatefulWidget {
+  final Issue issue;
+  const GitlabIssueCardWidget({super.key, required this.issue});
 
+  @override
+  State<GitlabIssueCardWidget> createState() => _GitlabIssueCardWidgetState();
+}
+
+class _GitlabIssueCardWidgetState extends State<GitlabIssueCardWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -18,15 +25,31 @@ class GitlabIssueCardWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8.0),
               decoration: const BoxDecoration(color: Color(0xFFF66A26)),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '이슈명(issue.title)',
-                    style: TextStyle(
+                    widget.issue.title,
+                    style: const TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w600),
                   ),
-                  Text('issue.author.name'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(widget.issue.author.avatarUrl),
+                        radius: 8,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Text(
+                          widget.issue.author.name,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -37,12 +60,17 @@ class GitlabIssueCardWidget extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('이슈 설명(issue.description)'),
+                    Text(widget.issue.description),
                     Text(
-                      'issue.task_status : 0 of 0 checklist items completed',
+                      '생성 시간 : ${widget.issue.createdAt}',
                       style:
                           TextStyle(fontSize: 12, color: Colors.grey.shade600),
                     ),
+                    Text(
+                      '수정 시간 : ${widget.issue.updatedAt}',
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    )
                   ],
                 )),
           ],
