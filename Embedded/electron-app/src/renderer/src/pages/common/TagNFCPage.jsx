@@ -110,7 +110,7 @@ export default function TagNFC() {
           alt="tagging space"
           />
           <div className="flex mt-6 ml-10">
-            <p className='mt-10 text-4xl'>여기에 학생증을 태깅해주세요!</p>
+            <p className='mt-10 text-4xl'>여기에 학생증을 태깅해 주세요!</p>
           </div>
         </div>
         <div>
@@ -163,7 +163,7 @@ export default function TagNFC() {
           <img
             src={MozzyLogin}
             alt="Mozzy Login"
-            className="cursor-pointer"
+            className="cursor-pointer mt-14"
             onClick={handleImageClick}
           />
         )}
