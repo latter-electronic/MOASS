@@ -42,7 +42,6 @@ export default function JiraPage() {
         async function fetchIssues(statusId, column) {
             try {
                 const data = await fetchCurrentSprintIssues(statusId);
-                console.log(data.issues);
                 setIssues(prev => ({ ...prev, [column]: data.issues || [] }));
             } catch (error) {
                 console.error('Error fetching issues:', error);

@@ -10,15 +10,32 @@ const API_URL = '/api/user';
  * @returns {Promise} 사용자 정보 결과
  */
 export const fetchUserInfo = async () => {
-    // AuthStore에서 액세스 토큰 가져오기
     const { accessToken } = AuthStore.getState();
 
-    // 요청 헤더에 액세스 토큰 추가
     return axios.get(API_URL, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
         }
     });
+};
+
+/**
+ * 액세스 토큰 갱신
+ *
+ * @returns {Promise} 갱신된 토큰 정보
+ */
+export const refreshAccessToken = async () => {
+    const { refreshToken } = AuthStore.getState();
+    const response = await axios.post(`${API_URL}/refresh`, {}, {
+        headers: {
+            'Authorization': `Bearer ${refreshToken}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    const { accessToken } = response.data.data;
+    AuthStore.getState().login(accessToken, refreshToken, AuthStore.getState().deviceId, AuthStore.getState().cardSerialId);
+    return accessToken;
 };
 
 /**

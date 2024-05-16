@@ -1,23 +1,9 @@
 import axios from "axios";
 import AuthStore from '../stores/AuthStore.js';
-
-const MOASS_API_URL = "https://k10e203.p.ssafy.io";
-const MOZZY_LUNCH_URL = "https://ssafyfood-www-jong.koyeb.app";
-
-async function refreshAccessToken() {
-    const { refreshToken } = AuthStore.getState();
-    const response = await axios.post(`${MOASS_API_URL}/api/user/refresh`, {}, {
-        headers: {
-            'Authorization': `Bearer ${refreshToken}`
-        }
-    });
-
-    const { accessToken } = response.data.data;
-    AuthStore.getState().login(accessToken, refreshToken, AuthStore.getState().deviceId, AuthStore.getState().cardSerialId);
-    return accessToken;
-}
+import { refreshAccessToken } from './userService.js';
 
 export function moassApiAxios() {
+    const MOASS_API_URL = "https://k10e203.p.ssafy.io";
     const instance = axios.create({
         baseURL: MOASS_API_URL,
         withCredentials: true,
@@ -68,6 +54,7 @@ export function moassApiAxios() {
 }
 
 export function mozzyLunchApiAxios() {
+    const MOZZY_LUNCH_URL = "https://ssafyfood-www-jong.koyeb.app";
     return axios.create({
         baseURL: MOZZY_LUNCH_URL,
     });
