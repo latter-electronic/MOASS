@@ -1,76 +1,68 @@
-// TagNFCPage.jsx
-import React, { useState, useEffect, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
-import AuthStore from '../../stores/AuthStore.js'
-import { deviceLogin } from '../../services/deviceService.js'
-import tagging_space from '../../assets/tag_nfc.png'
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AuthStore from '../../stores/AuthStore.js';
+import useGlobalStore from '../../stores/useGlobalStore.js';
+import { deviceLogin } from '../../services/deviceService.js';
+import tagging_space from '../../assets/tag_nfc.png';
 
 export default function TagNFC() {
-  const [deviceId, setDeviceId] = useState('')
-  const [cardSerialId, setCardSerialId] = useState('')
-  const [triggerLogin, setTriggerLogin] = useState(false)
-  const { login } = AuthStore((state) => ({
-    login: state.login,
-  }))
+  const [deviceId, setDeviceId] = useState('');
+  const [cardSerialId, setCardSerialId] = useState('');
+  const { login } = AuthStore((state) => ({ login: state.login }));
+  const { fetchUserInfo } = useGlobalStore((state) => ({ fetchUserInfo: state.fetchUserInfo }));
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
-  // 수정 필요함
-  const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login')
+  const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login');
 
-  // 로그인 성공 후 로직
-  const handleSuccessfulLogin = useCallback((accessToken, refreshToken, deviceId, cardSerialId) => {
-    login(accessToken, refreshToken, deviceId, cardSerialId)
-    localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('refreshToken', refreshToken)
-    localStorage.setItem('deviceId', deviceId)
-    localStorage.setItem('cardSerialId', cardSerialId)
+  const handleSuccessfulLogin = useCallback(async (accessToken, refreshToken, deviceId, cardSerialId) => {
+    login(accessToken, refreshToken, deviceId, cardSerialId);
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('deviceId', deviceId);
+    localStorage.setItem('cardSerialId', cardSerialId);
 
-    navigate('/tagsuccess')
+    await fetchUserInfo();  // 사용자 정보 불러오기
+    navigate('/tagsuccess');
     setTimeout(() => {
-      navigate('/')
-      console.log('navigate 실행 완료')
-    }, 2000)
-    ipcLoginHandle()
-  }, [login, navigate])
+      navigate('/');
+    }, 2000);
+    ipcLoginHandle();
+  }, [login, fetchUserInfo, navigate]);
 
-  // 일반 로그인 로직
   const handleLogin = useCallback(async () => {
     if (deviceId && cardSerialId) {
       try {
-        const response = await deviceLogin({ deviceId, cardSerialId })
-        const { accessToken, refreshToken } = response.data.data
-        console.log(`로그인 성공: \nAccessToken: ${accessToken}\nRefreshToken: ${refreshToken}`)
-        handleSuccessfulLogin(accessToken, refreshToken, deviceId, cardSerialId)
+        const response = await deviceLogin({ deviceId, cardSerialId });
+        const { accessToken, refreshToken } = response.data.data;
+        handleSuccessfulLogin(accessToken, refreshToken, deviceId, cardSerialId);
       } catch (error) {
-        alert(`로그인 실패: ${error.response?.data?.message}`)
+        alert(`로그인 실패: ${error.response?.data?.message}`);
       }
     }
-  }, [deviceId, cardSerialId, handleSuccessfulLogin])
+  }, [deviceId, cardSerialId, handleSuccessfulLogin]);
 
   const handleNfcData = useCallback((event, data) => {
-    setDeviceId(data.deviceId)
-    setCardSerialId(data.cardSerialId)
-    setTriggerLogin(true)
-  }, [])
+    setDeviceId(data.deviceId);
+    setCardSerialId(data.cardSerialId);
+  }, []);
 
   useEffect(() => {
-    if (triggerLogin) {
+    if (deviceId && cardSerialId) {
       handleLogin();
-      setTriggerLogin(false);
     }
-  }, [triggerLogin, handleLogin]);
+  }, [deviceId, cardSerialId, handleLogin]);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('nfc-data', handleNfcData);
     return () => {
-      window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData)
+      window.electron.ipcRenderer.removeListener('nfc-data', handleNfcData);
     };
-  }, [handleNfcData])
+  }, [handleNfcData]);
 
   const handleSubmit = (event) => {
-    event.preventDefault()
-    setTriggerLogin(true)
-  }
+    event.preventDefault();
+    handleLogin();
+  };
 
   return (
     <div className="flex flex-row justify-between h-dvh w-full p-12 text-center text-white">
@@ -112,8 +104,7 @@ export default function TagNFC() {
           </div>
         </form>
       </div>
-      <div className="flex-1 flex flex-col">
-      </div>
+      <div className="flex-1 flex flex-col"></div>
       <div className="flex-1 flex flex-col items-center justify-center">
         <img
           className="flex justify-center items-center size-21"
@@ -125,5 +116,5 @@ export default function TagNFC() {
         </div>
       </div>
     </div>
-  )
+  );
 }

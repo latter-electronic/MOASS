@@ -18,6 +18,7 @@ const useGlobalStore = create((set) => ({
     "positionName": null,
     "statusId": 0,
     "profileImg": null,
+    "backgroundImg": null,
     "jobCode": 0,
     "connectFlag": 0,
     "xcoord": null,

@@ -8,8 +8,7 @@ import profile3 from '../../assets/images/jira/jiraProfileImg3.png';
 import profile4 from '../../assets/images/jira/jiraProfileImg4.png';
 import profile5 from '../../assets/images/jira/jiraProfileImg5.png';
 import profile6 from '../../assets/images/jira/jiraProfileImg6.png';
-import { fetchCurrentSprintIssues } from '../../services/jiraService.js';
-import testDoneIssues from './proxyTest/testJson10001.json';
+import { fetchCurrentSprintIssues, changeIssueStatus, checkJiraConnection } from '../../services/jiraService.js';
 
 const profileImages = [profile1, profile2, profile3, profile4, profile5, profile6];
 
@@ -19,13 +18,31 @@ export default function JiraPage() {
         inProgress: [],
         done: []
     });
-    const [loading, setLoading] = useState({ todo: true, inProgress: true, done: false });
+    const [loading, setLoading] = useState({ todo: true, inProgress: true, done: true });
     const [selectedProfile, setSelectedProfile] = useState(null);
+    const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
+        async function checkConnectionAndFetchIssues() {
+            try {
+                const connectionStatus = await checkJiraConnection();
+                if (connectionStatus.data !== "null") {
+                    setIsConnected(true);
+                    fetchIssues('10000', 'todo');
+                    fetchIssues('3', 'inProgress');
+                    fetchIssues('10001', 'done');
+                } else {
+                    console.error('Jira is not connected');
+                }
+            } catch (error) {
+                console.error('Error checking Jira connection:', error);
+            }
+        }
+
         async function fetchIssues(statusId, column) {
             try {
                 const data = await fetchCurrentSprintIssues(statusId);
+                console.log(data.issues);
                 setIssues(prev => ({ ...prev, [column]: data.issues || [] }));
             } catch (error) {
                 console.error('Error fetching issues:', error);
@@ -35,12 +52,10 @@ export default function JiraPage() {
             }
         }
 
-        fetchIssues('10000', 'todo');
-        fetchIssues('3', 'inProgress');
-        setIssues(prev => ({ ...prev, done: testDoneIssues.issues || [] }));
+        checkConnectionAndFetchIssues();
     }, []);
 
-    const onDragEnd = result => {
+    const onDragEnd = async result => {
         const { source, destination } = result;
         if (!destination) {
             return;
@@ -51,14 +66,37 @@ export default function JiraPage() {
 
         const sourceColumn = issues[source.droppableId];
         const destColumn = issues[destination.droppableId];
-        const [removed] = sourceColumn.splice(source.index, 1);
-        destColumn.splice(destination.index, 0, removed);
+        const [movedIssue] = sourceColumn.splice(source.index, 1);
+        destColumn.splice(destination.index, 0, movedIssue);
 
-        setIssues(prev => ({
-            ...prev,
-            [source.droppableId]: sourceColumn,
-            [destination.droppableId]: destColumn
-        }));
+        // 상태 ID 매핑
+        const transitionIdMapping = {
+            'todo': '11',
+            'inProgress': '21',
+            'done': '31'
+        };
+        const newTransitionId = transitionIdMapping[destination.droppableId];
+
+        if (newTransitionId) {
+            try {
+                await changeIssueStatus(movedIssue.id, newTransitionId);
+                setIssues(prev => ({
+                    ...prev,
+                    [source.droppableId]: sourceColumn,
+                    [destination.droppableId]: destColumn
+                }));
+            } catch (error) {
+                console.error('Error changing issue status:', error);
+                // 원래 상태로 되돌리기
+                sourceColumn.splice(destination.index, 1);
+                destColumn.splice(source.index, 0, movedIssue);
+                setIssues(prev => ({
+                    ...prev,
+                    [source.droppableId]: sourceColumn,
+                    [destination.droppableId]: destColumn
+                }));
+            }
+        }
     };
 
     const getStatusName = (key) => {
@@ -79,7 +117,6 @@ export default function JiraPage() {
             <div className="mx-auto p-6 h-screen overflow-hidden">
                 <div className="flex items-center text-white font-extrabold text-3xl mb-5">
                     <div>S10P31E203 보드</div>
-                    {/* <img src={dropdownArrow} alt="화살표" className="ml-2" /> */}
                     <div className="flex -space-x-2 ml-6">
                         {profileImages.map((avatar, index) => (
                             <button
@@ -93,39 +130,43 @@ export default function JiraPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-5 h-full w-[88vw] ml-4">
-                    {Object.keys(issues).map((key, index) => (
-                        <Droppable key={key} droppableId={key}>
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className="flex flex-col bg-white/10 p-3 rounded-lg flex-1"
-                                >
-                                    <h3 className="text-white/70 text-lg ml-1 font-light mb-4">{getStatusName(key)}</h3>
-                                    <div className="h-[76vh] overflow-auto scrollbar-hide">
-                                        {loading[key] ? <div className="flex justify-center items-center h-full"><div className="text-lg text-white/30 font-normal">로딩 중...</div></div> : issues[key].length ? issues[key].map((issue, i) => (
-                                            <Draggable key={issue.id} draggableId={issue.id} index={i}>
-                                                {(provided) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                    >
-                                                        <IssueCard issue={issue} />
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        )) : <div className="flex justify-center items-center h-full">
-                                            <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
-                                        </div>}
-                                        {provided.placeholder}
+                {isConnected ? (
+                    <div className="grid grid-cols-3 gap-5 h-full w-[88vw] ml-4">
+                        {Object.keys(issues).map((key, index) => (
+                            <Droppable key={key} droppableId={key}>
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        className="flex flex-col bg-white/10 p-3 rounded-lg flex-1"
+                                    >
+                                        <h3 className="text-white/70 text-lg ml-1 font-light mb-4">{getStatusName(key)}</h3>
+                                        <div className="h-[76vh] overflow-auto scrollbar-hide">
+                                            {loading[key] ? <div className="flex justify-center items-center h-full"><div className="text-lg text-white/30 font-normal">로딩 중...</div></div> : issues[key].length ? issues[key].map((issue, i) => (
+                                                <Draggable key={issue.id} draggableId={issue.id} index={i}>
+                                                    {(provided) => (
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                        >
+                                                            <IssueCard issue={issue} />
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            )) : <div className="flex justify-center items-center h-full">
+                                                <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
+                                            </div>}
+                                            {provided.placeholder}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
-                </div>
+                                )}
+                            </Droppable>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-white text-center text-xl">Jira와 연결되지 않았습니다.</div>
+                )}
             </div>
         </DragDropContext>
     );
