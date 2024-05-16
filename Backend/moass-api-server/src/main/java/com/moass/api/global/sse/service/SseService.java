@@ -1,14 +1,10 @@
 package com.moass.api.global.sse.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.moass.api.domain.notification.dto.NotificationSendDto;
-import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.JsonConfig;
-import com.moass.api.global.sse.dto.SseNotificationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +14,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -182,5 +181,20 @@ public class SseService {
         classSinks.forEach((classCode, sink) -> {
             log.info("Class code '{}' has {} subscribers.", classCode, sink.currentSubscriberCount());
         });
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
+        MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
+
+        log.info("Heap Memory: Used={}MB, Max={}MB, Committed={}MB",
+                bytesToMB(heapMemoryUsage.getUsed()),
+                bytesToMB(heapMemoryUsage.getMax()),
+                bytesToMB(heapMemoryUsage.getCommitted()));
+        log.info("Non-Heap Memory: Used={}MB, Max={}MB, Committed={}MB",
+                bytesToMB(nonHeapMemoryUsage.getUsed()),
+                bytesToMB(nonHeapMemoryUsage.getMax()),
+                bytesToMB(nonHeapMemoryUsage.getCommitted()));
+    }
+    private long bytesToMB(long bytes) {
+        return bytes / (1024 * 1024);
     }
 }
