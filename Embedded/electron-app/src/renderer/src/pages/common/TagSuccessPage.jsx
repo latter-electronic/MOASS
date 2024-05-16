@@ -1,4 +1,9 @@
+<<<<<<< 741e3dcdfa20519e1d305a78daee9580abcac8fb
+import React, { useEffect } from 'react';
+import './TagSuccess.css'
+=======
 import React from 'react';
+>>>>>>> 37c3631eb981b4324f973d46353e31c0077d5ccd
 import tag_wave from '../../assets/tag_wave.svg';
 import useGlobalStore from '../../stores/useGlobalStore';
 
@@ -14,8 +19,12 @@ export default function TagSuccess() {
   };
 
   return (
-    <div style={backgroundStyle} className="flex flex-row justify-between h-dvh w-full">
-      <div className="flex flex-1 justify-center items-center text-8xl">
+    <div className="pulse-container">
+      <div className="pulse" style={{ animationDelay: '-6s' }}></div>
+      <div className="pulse" style={{ animationDelay: '-4s' }}></div>
+      <div className="pulse" style={{ animationDelay: '-2s' }}></div>
+      <div className="pulse" style={{ animationDelay: '0s' }}></div>
+      <div className="flex flex-row justify-center items-center text-8xl w-full h-full z-50">
         {user ? <p>반갑습니다, {user.userName}님!</p> : <p>사용자 정보를 불러오는 중...</p>}
       </div>
     </div>
