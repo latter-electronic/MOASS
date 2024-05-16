@@ -33,8 +33,8 @@ logged_in_lock = threading.Lock()
 # NO_MOTION_TIMEOUT = 300  # 5 minutes
 # LONG_SIT_TIMEOUT = 7200  # 2 hours
 
-NO_MOTION_TIMEOUT = 30  # 5 minutes
-LONG_SIT_TIMEOUT = 720  # 2 hours
+NO_MOTION_TIMEOUT = 60  # 20 seconds
+LONG_SIT_TIMEOUT = 30  #  30 seconds
 
 print("Waiting for NFC card...", file=sys.stderr)
 
@@ -52,9 +52,11 @@ def listen_for_commands():
                     if data.get("action") == "login":
                         logged_in = True
                         print(f"Login signal received: {data}", file=sys.stderr)
+                        print(f"Logined python: {logged_in}", file=sys.stderr)
                     elif data.get("action") == "logout":
                         logged_in = False
                         print(f"Logout signal received: {data}", file=sys.stderr)
+                        print(f"Logined python: {logged_in}", file=sys.stderr)
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", str(e), file=sys.stderr)
         except Exception as e:
@@ -95,17 +97,24 @@ def handle_motion_detection():
     try:
         current_time = time.time()
         if GPIO.input(motion_sensor_pin):
-            if motion_state != 'LONG_SIT' and (current_time - last_motion_time > LONG_SIT_TIMEOUT):
+            last_motion_time = current_time
+
+        # Check for LONG_SIT
+        if current_time - last_motion_time <= LONG_SIT_TIMEOUT:
+            if motion_state != 'LONG_SIT':
                 motion_state = 'LONG_SIT'
                 send_motion_status("LONG_SIT")
-            last_motion_time = current_time
-        else:
-            if motion_state != 'AWAY' and (current_time - last_motion_time > NO_MOTION_TIMEOUT):
+
+        # Check for AWAY
+        if current_time - last_motion_time > NO_MOTION_TIMEOUT:
+            if motion_state != 'AWAY':
                 motion_state = 'AWAY'
                 send_motion_status("AWAY")
+
     except Exception as e:
         print(f"An error occurred during motion detection: {e}", file=sys.stderr)
         traceback.print_exc()
+
 
 def send_motion_status(status):
     motion_data = json.dumps({
