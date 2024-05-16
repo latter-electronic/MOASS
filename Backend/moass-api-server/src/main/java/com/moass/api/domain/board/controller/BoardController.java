@@ -7,9 +7,13 @@ import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.nio.ByteBuffer;
 
 @Slf4j
 @RestController
@@ -26,6 +30,13 @@ public class BoardController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+    @GetMapping("/create")
+    public Mono<ResponseEntity<ApiResponse>> createBoard(){
+        return boardService.createBoard()
+                .flatMap(board -> ApiResponse.ok("Board 생성 완료", board))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("생성 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
     @GetMapping("/{boardUserId}")
     public Mono<ResponseEntity<ApiResponse>> getScreenshotList(@PathVariable Integer boardUserId){
         return boardService.getScreenshotList(boardUserId)
@@ -38,6 +49,13 @@ public class BoardController {
         return boardService.getScreenshot(screenshotId)
                 .flatMap(screenshot -> ApiResponse.ok("Screenshot 조회 완료", screenshot))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PostMapping("/screenshot/{boardId}")
+    public Mono<ResponseEntity<ApiResponse>> createScreenshot(@Login UserInfo userInfo, @PathVariable Integer boardId, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
+        return boardService.screenshotUpload(userInfo,boardId,headers,file)
+                .flatMap(fileName -> ApiResponse.ok("캡쳐 완료",fileName))
+                .onErrorResume(CustomException.class,e -> ApiResponse.error("캡쳐 실패 : "+e.getMessage(), e.getStatus()));
     }
 
     @DeleteMapping("/screenshot/{screenshotId}")
