@@ -23,6 +23,7 @@ class SetRelatedAccount extends StatefulWidget {
 
 class _SetRelatedAccountState extends State<SetRelatedAccount> {
   bool isOpenedButtonWidget = false;
+  late String textformFieldValue;
 
   openButtonWidget() {
     setState(() {
@@ -174,6 +175,38 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                       child: const Text('계정 연동'),
                     ),
                   )
+                ],
+              )
+            else if (widget.userGitlabMail != null)
+              Column(
+                children: [
+                  TextField(
+                    controller: TextEditingController(),
+                    onChanged: (value) {
+                      textformFieldValue = value;
+                    },
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: OutlinedButton(
+                            onPressed: () async {
+                              String gitlabConnectUrl = await GitlabApi(
+                                      dio: Dio(),
+                                      storage: const FlutterSecureStorage())
+                                  .requestConnectGitlab();
+                              await launchUrlString(gitlabConnectUrl);
+                              setState() {
+                                isOpenedButtonWidget = false;
+                              }
+                            },
+                            style: const ButtonStyle(),
+                            child: const Text('프로젝트 등록')),
+                      )
+                    ],
+                  ),
                 ],
               )
             else
