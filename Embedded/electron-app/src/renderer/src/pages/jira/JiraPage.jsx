@@ -20,8 +20,25 @@ export default function JiraPage() {
     });
     const [loading, setLoading] = useState({ todo: true, inProgress: true, done: true });
     const [selectedProfile, setSelectedProfile] = useState(null);
+    const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
+        async function checkConnectionAndFetchIssues() {
+            try {
+                const connectionStatus = await checkJiraConnection();
+                if (connectionStatus.data !== "null") {
+                    setIsConnected(true);
+                    fetchIssues('10000', 'todo');
+                    fetchIssues('3', 'inProgress');
+                    fetchIssues('10001', 'done');
+                } else {
+                    console.error('Jira is not connected');
+                }
+            } catch (error) {
+                console.error('Error checking Jira connection:', error);
+            }
+        }
+
         async function fetchIssues(statusId, column) {
             try {
                 const data = await fetchCurrentSprintIssues(statusId);
@@ -35,9 +52,7 @@ export default function JiraPage() {
             }
         }
 
-        fetchIssues('10000', 'todo');
-        fetchIssues('3', 'inProgress');
-        fetchIssues('10001', 'done');
+        checkConnectionAndFetchIssues();
     }, []);
 
     const onDragEnd = async result => {
@@ -115,39 +130,43 @@ export default function JiraPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-5 h-full w-[88vw] ml-4">
-                    {Object.keys(issues).map((key, index) => (
-                        <Droppable key={key} droppableId={key}>
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                    className="flex flex-col bg-white/10 p-3 rounded-lg flex-1"
-                                >
-                                    <h3 className="text-white/70 text-lg ml-1 font-light mb-4">{getStatusName(key)}</h3>
-                                    <div className="h-[76vh] overflow-auto scrollbar-hide">
-                                        {loading[key] ? <div className="flex justify-center items-center h-full"><div className="text-lg text-white/30 font-normal">로딩 중...</div></div> : issues[key].length ? issues[key].map((issue, i) => (
-                                            <Draggable key={issue.id} draggableId={issue.id} index={i}>
-                                                {(provided) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                    >
-                                                        <IssueCard issue={issue} />
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        )) : <div className="flex justify-center items-center h-full">
-                                            <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
-                                        </div>}
-                                        {provided.placeholder}
+                {isConnected ? (
+                    <div className="grid grid-cols-3 gap-5 h-full w-[88vw] ml-4">
+                        {Object.keys(issues).map((key, index) => (
+                            <Droppable key={key} droppableId={key}>
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.droppableProps}
+                                        className="flex flex-col bg-white/10 p-3 rounded-lg flex-1"
+                                    >
+                                        <h3 className="text-white/70 text-lg ml-1 font-light mb-4">{getStatusName(key)}</h3>
+                                        <div className="h-[76vh] overflow-auto scrollbar-hide">
+                                            {loading[key] ? <div className="flex justify-center items-center h-full"><div className="text-lg text-white/30 font-normal">로딩 중...</div></div> : issues[key].length ? issues[key].map((issue, i) => (
+                                                <Draggable key={issue.id} draggableId={issue.id} index={i}>
+                                                    {(provided) => (
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                        >
+                                                            <IssueCard issue={issue} />
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            )) : <div className="flex justify-center items-center h-full">
+                                                <div className="text-2xl text-white/10 font-normal mb-6">해당 상태의 이슈가 없어요</div>
+                                            </div>}
+                                            {provided.placeholder}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
-                </div>
+                                )}
+                            </Droppable>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-white text-center text-xl">Jira와 연결되지 않았습니다.</div>
+                )}
             </div>
         </DragDropContext>
     );
