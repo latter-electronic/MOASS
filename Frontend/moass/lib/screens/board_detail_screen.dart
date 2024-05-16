@@ -240,7 +240,7 @@ class _CustomDismissibleState extends State<CustomDismissible> {
       await FlutterDownloader.enqueue(
         url: url,
         savedDir: '/sdcard/Download',
-        fileName: 'screenshot.jpg',
+        fileName: 'screenshot${widget.screenshot.screenshotId}.jpg',
         showNotification: true,
         openFileFromNotification: true,
       );
