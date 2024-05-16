@@ -8,6 +8,31 @@ const prefix = 'api/oauth2/jira/proxy';
 
 
 /**
+ * 현재 Jira 연결 상태 확인(프록시x)
+ * 
+ * @returns {Promise} Jira 연결 상태
+ */
+export const checkJiraConnection = async () => {
+    const { accessToken } = AuthStore.getState();
+    const url = '/api/oauth2/jira/isconnected';
+
+    return axios.get(url, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        }
+    }).then(response => {
+        console.log(response.data)
+        return response.data; // 연결 상태 반환
+    })
+    .catch(error => {
+        console.error('Error checking Jira connection status:', error);
+        throw error;
+    });
+};
+
+
+/**
  * 현재 로그인한 사용자의 Jira 정보 조회
  * 
  * @returns {Promise} 사용자 정보
@@ -25,8 +50,8 @@ export const getCurrentUser = async () => {
             'Content-Type': 'application/json'
         }
     }).then(response => {
-        response.data
-        console.log(response.data);
+        response.data.data
+        console.log("지라로그인 유저", response.data.data);
     })
     .catch(error => {
         console.error('Error fetching current user details:', error);
@@ -45,21 +70,37 @@ export const fetchCurrentSprintIssues = async (statusId) => {
     const { accessToken } = AuthStore.getState();
     const projectData = await getProject();
     const projectKey = projectData.values[0].key;
+    const currentUser = await checkJiraConnection(); // 현재 사용자 정보 가져오기
+    const reporterEmail = currentUser.data; // 사용자 이메일 주소
+
     const data = {
         method: "get",
-        url: `/rest/api/3/search?jql=project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = 'diduedidue@naver.com'&fields=customfield_10014,summary,priority,assignee,customfield_10031&maxResults=240`
+        url: `/rest/api/3/search?jql=project = '${projectKey}' AND sprint IN openSprints() AND status = '${statusId}' AND reporter = '${reporterEmail}'&fields=customfield_10014,summary,priority,assignee,customfield_10031&maxResults=240`
     };
 
-    return axios.post(prefix, data, {
+    const issues = await axios.post(prefix, data, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
+    }).then(response => response.data.data.issues)
       .catch(error => {
           console.error('Error fetching current sprint issues based on status:', error);
           throw error;
       });
+
+    const issuesWithEpics = await Promise.all(issues.map(async issue => {
+        if (issue.fields.customfield_10014) {
+            const epicData = await getIssueDetails(issue.fields.customfield_10014);
+            issue.epic = {
+                name: epicData.fields.customfield_10011,
+                color: epicData.fields.customfield_10017
+            };
+        }
+        return issue;
+    }));
+
+    return { issues: issuesWithEpics };
 };
 
 /**
@@ -81,7 +122,9 @@ export const getIssueDetails = async (issueIdOrKey) => {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
+    }).then(response => {
+        return response.data.data
+    })
       .catch(error => {
           console.error(`Error fetching details for issue ${issueIdOrKey}:`, error);
           throw error;
@@ -130,11 +173,14 @@ export const getProject = async () => {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
-      .catch(error => {
-          console.error('Error fetching projects:', error);
-          throw error;
-      });
+    }).then(response => {
+        console.log("Project data received:", response.data.data.values[0].key );
+        return response.data.data;
+    })
+    .catch(error => {
+        console.error('Error fetching projects:', error);
+        throw error;
+    });
 };
 
 /**
@@ -165,7 +211,7 @@ export const changeIssueStatus = async (issueIdOrKey, transitionId) => {
         return response;
     })
     .catch(error => {
-        console.error(`Error updating status for issue ${issueIdOrKey}:`, error);
+        console.error(`Error updating status for issue ${issueIdOrKey}:`, error.response || error.message);
         throw error;
     });
 };

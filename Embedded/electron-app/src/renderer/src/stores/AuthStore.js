@@ -3,14 +3,19 @@ import { create } from 'zustand';
 import useGlobalStore from './useGlobalStore.js';
 
 const AuthStore = create((set) => ({
-  isAuthenticated: false, // 로그인 상태
+  isAuthenticated: false,
   accessToken: '',
   refreshToken: '',
   deviceId: '',
   cardSerialId: '',
-  isCheckingAuth: true, // 로그인 상태 확인 중인지 나타내는 변수
+  isCheckingAuth: true,
 
   login: (accessToken, refreshToken, deviceId, cardSerialId) => {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('deviceId', deviceId);
+    localStorage.setItem('cardSerialId', cardSerialId);
+
     set({
       isAuthenticated: true,
       accessToken,
@@ -19,8 +24,7 @@ const AuthStore = create((set) => ({
       cardSerialId,
       isCheckingAuth: false,
     });
-    useGlobalStore.getState().fetchUserInfo(); // 사용자 정보 갱신
-    console.log(useGlobalStore.user)
+    useGlobalStore.getState().fetchUserInfo();
   },
 
   logout: () => {
@@ -35,7 +39,7 @@ const AuthStore = create((set) => ({
       refreshToken: null,
       deviceId: null,
       cardSerialId: null,
-      isCheckingAuth: false, // 확인 완료
+      isCheckingAuth: false,
     });
   },
 

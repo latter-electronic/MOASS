@@ -1,9 +1,16 @@
-import garden from '../../assets/call_garden.svg'
+import React from 'react';
 import mozzy from '../../assets/call_mozzy.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function CallAlert() {
+export default function CallAlertPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { message, senderName, senderProfile } = location.state || {
+    message: '지수님 필드트립 관련 잠깐 로비로 나와주실 수 있으실까요?',
+    senderName: '이정원(교육프로)',
+    senderProfile: garden, // default image
+  };
 
   const handlePageClick = () => { // 개발용 뒤로가기
     navigate(-1);
@@ -15,10 +22,10 @@ export default function CallAlert() {
         <div className="bg-white rounded-full flex items-center px-4 py-2">
           <img
             className="size-12 rounded-full mr-3"
-            src={garden}
+            src={senderProfile}
             alt="profile image"
           />
-          <span className="text-xl text-black">이정원(교육프로)</span>
+          <span className="text-xl text-black">{senderName}</span>
         </div>
       </div>
       <div className="flex-1 flex flex-col">
@@ -28,7 +35,7 @@ export default function CallAlert() {
         <div className="flex-1 flex items-center justify-center text-12xl font-bold">호출</div>
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-gray-500 bg-opacity-50 py-2 px-4 rounded-full inline-block">
-            <span>지수님 필드트립 관련 잠깐 로비로 나와주실 수 있으실까요?</span>
+            <span>{message}</span>
           </div>
         </div>
       </div>

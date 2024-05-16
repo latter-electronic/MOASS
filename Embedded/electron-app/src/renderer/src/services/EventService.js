@@ -11,28 +11,48 @@ class EventService {
         console.log('Initializing Event Source...');
         this.eventSource = new EventSourcePolyfill(this.url, {
             headers: this.headers,
+            withCredentials: true,
         });
 
         this.eventSource.onopen = () => {
             console.log('Connection to SSE opened');
         };
 
+        this.eventSource.onmessage = (event) => {
+            this.onMessage && this.onMessage(event);
+        };
+
         this.eventSource.onerror = (error) => {
             console.error('EventSource error:', error);
-            this.eventSource.close();
+            if (error.eventPhase === EventSource.CLOSED) {
+                this.reconnect();
+            }
         };
+
+        // Optional: Heartbeat to keep the connection alive
+        this.heartbeatInterval = setInterval(() => {
+            if (this.eventSource.readyState === EventSourcePolyfill.CLOSED) {
+                this.reconnect();
+            }
+        }, 45000); // Check every 45 seconds
     }
 
     startListening(onMessage) {
         console.log('Listening for messages...');
-        this.eventSource.onmessage = (event) => {
-            const data = event.data;
-            onMessage(data); // 파싱하지 않고 그대로 전달
-        };
+        this.onMessage = onMessage;
     }
 
     stopListening() {
+        clearInterval(this.heartbeatInterval);
         this.eventSource.close();
+    }
+
+    reconnect() {
+        this.stopListening();
+        setTimeout(() => {
+            console.log('Reconnecting to SSE...');
+            this.initEventSource();
+        }, 1000); // 1초 후에 재연결 시도
     }
 }
 
