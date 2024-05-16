@@ -1,24 +1,26 @@
+// reservationService.js
 import { moassApiAxios } from './apiConfig';
 import AuthStore from '../stores/AuthStore.js';
 
 const axios = moassApiAxios();
-const prefix = 'api/schedule';
 
 /**
- * 예약 정보 가져오기
+ * 나의 예약 정보 조회
  * 
  * @returns {Promise} 예약 정보 조회 결과
  */
-export const fetchReservationInfo = async () => {
+export const fetchReservationInfo = () => {
     const { accessToken } = AuthStore.getState();
 
-    return axios.get(`${prefix}/reservationinfo`, {
+    return axios.get('/api/reservationinfo', {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
         }
-    }).then(response => response.data)
-      .catch(error => {
-          console.error('Error fetching reservation info:', error);
-          throw error;
-      });
+    })
+    .then(response => response.data)
+    .catch(error => {
+        console.error('Error fetching reservation info:', error);
+        throw error;
+    });
 };

@@ -1,35 +1,64 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCurriculum } from '../../services/todoService.js';
+import { fetchReservationInfo } from '../../services/reservationService.js';
 
-import profileImg1 from './test/profileImg1.png'
-import profileImg2 from './test/profileImg2.png'
-import profileImg3 from './test/profileImg3.png'
+import profileImg1 from './test/profileImg1.png';
+import profileImg2 from './test/profileImg2.png';
+import profileImg3 from './test/profileImg3.png';
 
 export default function HomeScheduleComponent() {
     const [schedules, setSchedules] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchSchedules = async () => {
             try {
-                const response = await fetchCurriculum('2024-05-13');
-                if (response.data && response.data.courses) {
-                    const formattedSchedules = response.data.courses.map((course, index) => ({
-                        id: index + 1,
+                const [curriculumResponse, reservationResponse] = await Promise.all([
+                    fetchCurriculum('2024-05-13'),
+                    fetchReservationInfo()
+                ]);
+
+                let formattedCurriculumSchedules = [];
+                if (curriculumResponse.data && curriculumResponse.data.courses) {
+                    formattedCurriculumSchedules = curriculumResponse.data.courses.map((course, index) => ({
+                        id: `curriculum-${index + 1}`,
                         type: `[${course.majorCategory}]`,
                         title: course.title,
                         time: course.period,
                         color: 'border-blue-500',
                         location: `${course.teacher} / ${course.room}`
                     }));
-                    setSchedules(formattedSchedules);
                 }
-            } catch (error) {
-                console.error('Error fetching curriculum:', error);
+
+                let formattedReservationSchedules = [];
+                if (reservationResponse.data) {
+                    formattedReservationSchedules = reservationResponse.data.flatMap((reservation, index) =>
+                        reservation.reservationInfoList ? reservation.reservationInfoList.map((info, subIndex) => ({
+                            id: `reservation-${index}-${subIndex}`,
+                            type: '',
+                            title: reservation.reservationName,
+                            time: `${info.infoDate} ${info.infoTime}`, // Adjust as needed
+                            color: 'border-pink-500', // Adjust color as needed
+                            location: info.infoName,
+                            participants: 6, // Example participant number, adjust as needed
+                            avatars: [profileImg1, profileImg2, profileImg3] // Example avatars, adjust as needed
+                        })) : []
+                    );
+                }
+
+                setSchedules([...formattedCurriculumSchedules, ...formattedReservationSchedules]);
+            } catch (err) {
+                console.error('Error fetching schedules:', err);
+                setError('Failed to load schedules');
             }
         };
 
         fetchSchedules();
     }, []);
+
+    if (error) {
+        return <div className="text-red-500">{error}</div>;
+    }
 
     return (
         <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
