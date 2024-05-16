@@ -209,7 +209,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                               : const EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
-                            // 강조효과 테두리
+                            // 강조효과 테두리 나중에 필요할시 사용
                             // side: BorderSide(
                             //   color: index == 0
                             //       ? const Color.fromARGB(255, 144, 109, 225)
