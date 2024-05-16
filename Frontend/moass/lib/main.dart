@@ -149,7 +149,8 @@ class _MyAppState extends State<MyApp> {
       initializeFirebaseAndNotifications(const FlutterSecureStorage());
     }
     mainTokenRefresh();
-    _permissionWithNotification();
+    // 저장소권한 확인
+    // _permissionWithNotification();
   }
 
   void mainTokenRefresh() async {
@@ -160,12 +161,13 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _permissionWithNotification() async {
-    if (await Permission.notification.isDenied &&
-        !await Permission.notification.isPermanentlyDenied) {
-      await [Permission.notification].request();
-    }
-  }
+// // 저장소 권한 확인
+//   void _permissionWithNotification() async {
+//     if (await Permission.notification.isDenied &&
+//         !await Permission.notification.isPermanentlyDenied) {
+//       await [Permission.notification].request();
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {

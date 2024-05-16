@@ -16,7 +16,6 @@ import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/sse_listener_api.dart';
 import 'package:moass/widgets/bottom_navbar.dart';
 import 'package:moass/widgets/top_bar.dart';
-import 'package:permission_handler/permission_handler.dart'; // Import your CustomAppBar
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -70,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _requestStoragePermission(context); // 저장소 권한 요청
+    // _requestStoragePermission(context); // 저장소 권한 요청
 
     return Scaffold(
       body: Center(
@@ -86,18 +85,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _requestStoragePermission(BuildContext context) async {
-    if (await Permission.storage.isDenied) {
-      final status = await Permission.storage.request();
-      if (status.isGranted) {
-        print('Storage permission granted');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('저장소 권한이 필요합니다.'),
-          ),
-        );
-      }
-    }
-  }
+  // 저장소 권한 확인
+  // void _requestStoragePermission(BuildContext context) async {
+  //   if (await Permission.storage.isDenied) {
+  //     final status = await Permission.storage.request();
+  //     if (status.isGranted) {
+  //       print('Storage permission granted');
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('저장소 권한이 필요합니다.'),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 }
