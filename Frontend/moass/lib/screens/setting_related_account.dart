@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/model/related_gitlab_account.dart';
 import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/services/jira_api.dart';
 import 'package:moass/widgets/top_bar.dart';
@@ -20,6 +21,7 @@ class _SettingRelatedAccountScreenState
   late String? userJiraMail = '정보를 불러오고 있습니다...';
   late String? userGitlabMail = '정보를 불러오고 있습니다...';
   late JiraApi jiraApi;
+  late List<GitlabProject>? userGitlabProjects = [];
 
   @override
   initState() {
@@ -43,6 +45,7 @@ class _SettingRelatedAccountScreenState
       // null 체크
       userJiraMail = result?.userMail;
       userGitlabMail = gitlabResult?.gitlabEmail;
+      userGitlabProjects = gitlabResult?.gitlabProjects;
 
       print(userGitlabMail);
 
@@ -63,6 +66,7 @@ class _SettingRelatedAccountScreenState
           SetRelatedAccount(
             service: 'gitlab',
             userGitlabMail: userGitlabMail,
+            userGitlabProject: userGitlabProjects,
           ),
         ]));
   }

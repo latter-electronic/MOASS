@@ -49,13 +49,38 @@ class GitlabApi {
 
       if (response.statusCode == 200) {
         print('깃랩 정보 가져오기 성공!');
-        return RelatedGitlabAccount.fromJson(response.data);
+        return RelatedGitlabAccount.fromJson(response.data['data']);
       } else {
         print('깃랩 정보를 가져오지 못했습니다');
         return null;
       }
     } on DioException catch (e) {
       print('깃렙 정보 에러 ${e.message}');
+      return null;
+    }
+  }
+
+  requestSubmitProject(String projectname) async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return null;
+      }
+      final response = await dio.post(
+        '$baseUrl/api/oauth2/gitlab/projects?projectname=$projectname',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        var message = response.data['status'];
+        return message;
+      } else {
+        var message = response.data['status'];
+        return message;
+      }
+    } on DioException catch (e) {
+      print('Gitlab 프로젝트 연동 실패: ${e.message}');
       return null;
     }
   }
