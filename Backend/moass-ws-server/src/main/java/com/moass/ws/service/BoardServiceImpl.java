@@ -3,9 +3,11 @@ package com.moass.ws.service;
 import com.moass.ws.dto.BoardEnterDto;
 import com.moass.ws.dto.MessageDto;
 import com.moass.ws.dto.UserDto;
+import com.moass.ws.entity.Board;
 import com.moass.ws.entity.BoardUser;
 import com.moass.ws.entity.SsafyUser;
 import com.moass.ws.entity.User;
+import com.moass.ws.repository.BoardRepository;
 import com.moass.ws.repository.BoardUserRepository;
 import com.moass.ws.repository.SsafyUserRepository;
 import com.moass.ws.repository.UserRepository;
@@ -23,9 +25,14 @@ public class BoardServiceImpl implements BoardService {
     private final SimpMessagingTemplate template;
     private final UserRepository userRepository;
     private final SsafyUserRepository ssafyUserRepository;
+    private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
 
     private final String[] colors = {"", "000000", "ff0000", "0000ff", "008000", "ff7f00", "8b00ff"};
+
+    public void createBoard(Board board) {
+        boardRepository.save(board);
+    }
 
     public void enterBoard(BoardEnterDto boardEnterDto) {
         if (!boards.containsKey(boardEnterDto.getBoardId())) {
