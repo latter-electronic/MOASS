@@ -10,12 +10,13 @@ class SetRelatedAccount extends StatefulWidget {
   final String service;
   final String? userJiraMail;
   final String? userGitlabMail;
-  const SetRelatedAccount({
-    super.key,
-    required this.service,
-    this.userJiraMail,
-    this.userGitlabMail,
-  });
+  final List? userGitlabProject;
+  const SetRelatedAccount(
+      {super.key,
+      required this.service,
+      this.userJiraMail,
+      this.userGitlabMail,
+      this.userGitlabProject});
 
   @override
   State<SetRelatedAccount> createState() => _SetRelatedAccountState();
@@ -118,7 +119,28 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                     Text(
                       widget.service,
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
-                    )
+                    ),
+                    if (widget.userGitlabProject != null)
+                      if (widget.userGitlabProject!.isNotEmpty)
+                        Row(
+                          children: [
+                            for (var project in widget.userGitlabProject!)
+                              Container(
+                                decoration: const BoxDecoration(
+                                    color: Color(0xFFF66A26),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(3))),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Text(
+                                  project.gitlabProjectName.toString(),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              )
+                          ],
+                        )
                   ],
                 ),
               ],
@@ -180,11 +202,20 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
             else if (widget.userGitlabMail != null)
               Column(
                 children: [
-                  TextField(
-                    controller: TextEditingController(),
-                    onChanged: (value) {
-                      textformFieldValue = value;
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 20),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          label: Text(
+                        '등록할 레포지토리 이름을 입력하세요',
+                        style: TextStyle(color: Colors.black.withOpacity(0.5)),
+                      )),
+                      controller: TextEditingController(),
+                      onChanged: (value) {
+                        textformFieldValue = value;
+                      },
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -193,11 +224,18 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                         padding: const EdgeInsets.all(8.0),
                         child: OutlinedButton(
                             onPressed: () async {
-                              String gitlabConnectUrl = await GitlabApi(
+                              int statusCode = await GitlabApi(
                                       dio: Dio(),
                                       storage: const FlutterSecureStorage())
-                                  .requestConnectGitlab();
-                              await launchUrlString(gitlabConnectUrl);
+                                  .requestSubmitProject(textformFieldValue);
+                              if (statusCode == 200) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                  backgroundColor: Color(0xFF3DB887),
+                                  content: Text('프로젝트 등록 성공!'),
+                                  duration: Duration(seconds: 3),
+                                ));
+                              }
                               setState() {
                                 isOpenedButtonWidget = false;
                               }

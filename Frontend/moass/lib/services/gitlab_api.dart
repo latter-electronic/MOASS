@@ -73,10 +73,10 @@ class GitlabApi {
       );
 
       if (response.statusCode == 200) {
-        var message = response.data['message'];
+        var message = response.data['status'];
         return message;
       } else {
-        var message = response.data['message'];
+        var message = response.data['status'];
         return message;
       }
     } on DioException catch (e) {
