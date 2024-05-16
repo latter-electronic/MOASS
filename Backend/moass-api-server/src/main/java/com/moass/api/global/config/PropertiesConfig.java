@@ -26,5 +26,8 @@ public class PropertiesConfig {
 
     private String mmBaseUri;
     private String mmRedirectUri;
+    private String mmWebhookUri1;
+    private String mmWebhookUri2;
+
 
 }
