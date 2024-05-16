@@ -23,4 +23,8 @@ public class PropertiesConfig {
      private String gitlabClientId;
     private String gitlabClientSecret;
     private String gitlabRedirectUri;
+
+    private String mmBaseUri;
+    private String mmRedirectUri;
+
 }
