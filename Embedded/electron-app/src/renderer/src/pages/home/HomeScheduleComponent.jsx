@@ -1,83 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchCurriculum } from '../../services/todoService.js';
 
 import profileImg1 from './test/profileImg1.png'
 import profileImg2 from './test/profileImg2.png'
 import profileImg3 from './test/profileImg3.png'
 
 export default function HomeScheduleComponent() {
-    const schedules = 
-        [
-            {
-                id: 1,
-                type: '[Live]',
-                title: '게임업계 동향 소개',
-                time: '09:00 - 10:00',
-                color: 'border-blue-500',
-                location: '박찬국 Youtube Live'
-            },
-            {
-                id: 2,
-                type: '[자율 PJT]',
-                title: '프로젝트 진행',
-                time: '10:00 - 12:00',
-                color: 'border-blue-500',
-                location: '담당강사 / 부울경 202'
-            },
-            {
-                id: 3,
-                type: '',
-                title: '플립보드 예약',
-                time: '10:00 - 11:00',
-                color: 'border-pink-500',
-                location: '1번 플립보드',
-                participants: 6, // 참가자 수
-                avatars: [ // 참가자 프로필 이미지
-                    profileImg1,
-                    profileImg2,
-                    profileImg3
-                ]
-            },
-            {
-                id: 4,
-                type: '[자율 PJT]',
-                title: '프로젝트 진행',
-                time: '11:00 - 12:00',
-                color: 'border-blue-500',
-                location: '담당강사 / 부울경 202'
-            },
-            {
-                id: 5,
-                type: '',
-                title: '자치회+지역대표 회의',
-                time: '12:00 - 13:00',
-                color: 'border-stone-400',
-                location: '로비 / 메모장 챙기기'
-            },
-            {
-                id: 6,
-                type: '',
-                title: '점심 시간',
-                time: '13:00 - 14:00',
-                color: 'border-blue-500',
-                location: ''
-            },
-            {
-                id: 7,
-                type: '[자율 PJT]',
-                title: '프로젝트 진행',
-                time: '14:00 - 17:00',
-                color: 'border-blue-500',
-                location: '담당강사 / 부울경 202'
-            },
-            {
-                id: 8,
-                type: '',
-                title: '종료 미팅',
-                time: '17:00 - 18:00',
-                color: 'border-blue-500',
-                location: '담당강사 / 부울경 202'
+    const [schedules, setSchedules] = useState([]);
+
+    useEffect(() => {
+        const fetchSchedules = async () => {
+            try {
+                const response = await fetchCurriculum('2024-05-13');
+                if (response.data && response.data.courses) {
+                    const formattedSchedules = response.data.courses.map((course, index) => ({
+                        id: index + 1,
+                        type: `[${course.majorCategory}]`,
+                        title: course.title,
+                        time: course.period,
+                        color: 'border-blue-500',
+                        location: `${course.teacher} / ${course.room}`
+                    }));
+                    setSchedules(formattedSchedules);
+                }
+            } catch (error) {
+                console.error('Error fetching curriculum:', error);
             }
-        ];
+        };
+
+        fetchSchedules();
+    }, []);
 
     return (
         <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
