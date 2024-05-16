@@ -28,6 +28,7 @@ GPIO.setup(motion_sensor_pin, GPIO.IN)
 
 last_motion_time = time.time()
 motion_state = None
+stay_start_time = None
 logged_in = False
 logged_in_lock = threading.Lock()
 
@@ -90,13 +91,17 @@ def handle_login_response(device_id, card_serial_id):
         print(nfc_data, file=sys.stderr)
 
 def handle_logged_in_state():
-    global last_motion_time, motion_state
+    global last_motion_time, motion_state, stay_start_time
     try:
         current_time = time.time()
         if GPIO.input(motion_sensor_pin):
+            if motion_state == 'AWAY':
+                motion_state = 'STAY'
+                stay_start_time = current_time
+                send_motion_status("STAY")
             last_motion_time = current_time
             # Check for LONG_SIT
-            if (current_time - last_motion_time) >= LONG_SIT_TIMEOUT:
+            if stay_start_time and (current_time - stay_start_time) >= LONG_SIT_TIMEOUT:
                 if motion_state != 'LONG_SIT':
                     motion_state = 'LONG_SIT'
                     send_motion_status("LONG_SIT")
@@ -105,6 +110,7 @@ def handle_logged_in_state():
             if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
                 if motion_state != 'AWAY':
                     motion_state = 'AWAY'
+                    stay_start_time = None  # Reset the stay start time
                     send_motion_status("AWAY")
 
     except Exception as e:
@@ -116,9 +122,8 @@ def handle_logged_out_state():
     try:
         current_time = time.time()
         if GPIO.input(motion_sensor_pin):
-            last_motion_time = current_time
-            if motion_state != 'AOD':
-                motion_state = 'AOD'
+            if motion_state != 'STAY':
+                motion_state = 'STAY'
                 print(motion_state, file=sys.stderr)
                 set_display_power(True)
         else:
