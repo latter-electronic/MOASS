@@ -160,14 +160,12 @@ class User {
 
 // 지역 조회
 class CampusInfo {
-  final String locationCode;
   final String locationName;
-  final List<Map<String, dynamic>> classes;
+  final List<dynamic> classes;
 
   // CampusInfo({required this.locationCode, required this.locationName, required this.classes});
 
   CampusInfo.fromJson(Map<String, dynamic> json)
-      : locationCode = json['locationCode'],
-        locationName = json['locationName'],
+      : locationName = json['locationName'],
         classes = json['classes'];
 }

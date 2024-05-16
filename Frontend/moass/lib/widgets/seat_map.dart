@@ -29,6 +29,16 @@ class SeatMapWidget extends StatefulWidget {
 }
 
 class _SeatMapWidgetState extends State<SeatMapWidget> {
+  @override
+  void didUpdateWidget(SeatMapWidget oldWidget) {
+    if (oldWidget.classCode != widget.classCode) {
+      // classCode가 변경됐을 때만 새로 빌드하도록 함
+      fetchDeviceInfos();
+      setState(() {});
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
   final TransformationController _transformationController =
       TransformationController();
 
@@ -45,7 +55,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
   @override
   void initState() {
     super.initState();
-    print('상속받은 클래스 코드 : ${widget.classCode}');
+    // print('상속받은 클래스 코드 : ${widget.classCode}');
     api = DeviceApi(
         dio: Dio(), storage: const FlutterSecureStorage()); // Initialize here
     fetchDeviceInfos();
@@ -116,7 +126,7 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
                                   DeviceApi(
                                           dio: Dio(),
                                           storage: const FlutterSecureStorage())
-                                      .callUser(device.userId!);
+                                      .callUser(device.userId!, "");
                                 }),
                           ),
                           if (widget.jobCode != null)
@@ -346,5 +356,5 @@ class SeatMap extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

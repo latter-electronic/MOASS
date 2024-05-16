@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/screens/login_screen.dart';
+import 'package:moass/screens/main_admin_home_screen.dart';
 import 'package:moass/screens/reservation_admin_screen.dart';
 import 'package:moass/screens/work_admin_screen.dart';
 import 'package:moass/screens/seat_admin_screen.dart';
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     // SSE 구독
-    // SSEListener(storage: const FlutterSecureStorage()).connectUserEvent();
+    SSEListener(storage: const FlutterSecureStorage()).connectUserEvent();
     SSEListener(storage: const FlutterSecureStorage()).connectTeamEvent();
 
     fetchUserProfileAndSetup();
@@ -54,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         (jobCode == 1)
             ? const ReservationScreen()
             : const ReservationAdminScreen(),
-        const MainHomeScreen(),
+        (jobCode == 1) ? const MainHomeScreen() : const MainAdminScreen(),
         jobCode == 1 ? const SeatScreen() : const SeatAdminScreen(),
         const BoardScreen(),
       ];

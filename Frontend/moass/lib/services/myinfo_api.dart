@@ -32,6 +32,7 @@ class MyInfoApi {
       );
 
       if (response.statusCode == 200) {
+        print('유저 데이터 : ${response.data['data']}');
         return MyProfile.fromJson(response.data['data']);
       } else {
         print('Failed to load user profile');
@@ -102,6 +103,84 @@ class MyInfoApi {
     }
   }
 
+  // 유저 프로필 사진 수정
+  postUserProfilePhoto(XFile image) async {
+    try {
+      // String base64Image1 = "";
+      final mimeType = lookupMimeType(image.path);
+      Uint8List convertedImage = File(image.path).readAsBytesSync();
+      var len = convertedImage.length;
+      var type = ContentType(image.toString(), image.toString());
+
+      // print('길이 : $len, 타입: $mimeType');
+
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.post('$baseUrl/api/user/profileimg',
+          options: Options(headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-type': mimeType,
+            'Content-Length': len,
+          }),
+          data: Stream.fromIterable(convertedImage.map((e) => [e])));
+
+      if (response.statusCode == 200) {
+        print('유저 프로필 이미지 변경 성공!');
+        return response;
+      } else {
+        print('유저 프로필 이미지 변경 실패');
+        return [];
+      }
+    } on DioException catch (e) {
+      print('프로필 이미지 에러: ${e.message}');
+      return null;
+    }
+  }
+
+  // 유저 배경 사진 수정
+  postUserbgPhoto(XFile image) async {
+    try {
+      // String base64Image1 = "";
+      final mimeType = lookupMimeType(image.path);
+      Uint8List convertedImage = File(image.path).readAsBytesSync();
+      var len = convertedImage.length;
+      var type = ContentType(image.toString(), image.toString());
+
+      // print('길이 : $len, 타입: $mimeType');
+
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        // print('No access token available');
+        return [];
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.post('$baseUrl/api/user/backgroundimg',
+          options: Options(headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-type': mimeType,
+            'Content-Length': len,
+          }),
+          data: Stream.fromIterable(convertedImage.map((e) => [e])));
+
+      if (response.statusCode == 200) {
+        print('유저 배경 이미지 변경 성공!');
+        return response.statusCode;
+      } else {
+        print('유저 배경 이미지 변경 실패');
+        return response.statusCode;
+      }
+    } on DioException catch (e) {
+      print('배경 이미지 에러: ${e.message}');
+      return null;
+    }
+  }
+
   // 유저 위젯 사진 수정
   postUserWidgetPhoto(XFile image) async {
     try {
@@ -120,6 +199,7 @@ class MyInfoApi {
       }
       // print(accessToken);
       // API요청, 헤더에 토큰 넣기
+      // 주소 고쳐줄 것
       final response = await dio.post('$baseUrl/api/user/profileimg',
           options: Options(headers: {
             'Authorization': 'Bearer $accessToken',

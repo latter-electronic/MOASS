@@ -15,7 +15,7 @@ class DeviceApi {
   // 우리반 기기 조회
   Future<List<DeviceInfo>> fetchClassDevices(String? classcode) async {
     List<DeviceInfo> deviceInstances = [];
-    // print('검색 클래스 코드 : $classcode');
+    print('검색 클래스 코드 : $classcode');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
@@ -50,9 +50,9 @@ class DeviceApi {
   }
 
   // 유저 호출
-  callUser(String userId) async {
+  callUser(String userId, String? message) async {
     try {
-      Map data = {'userId': userId};
+      Map data = {'userId': userId, 'message': ''};
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
@@ -61,7 +61,7 @@ class DeviceApi {
       }
       // print(accessToken);
       // API요청, 헤더에 토큰 넣기
-      final response = await dio.post('$baseUrl/api/device/call',
+      final response = await dio.post('$baseUrl/api/user/call',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
           data: body);
 
