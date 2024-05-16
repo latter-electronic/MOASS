@@ -11,4 +11,12 @@ public class NotificationSendDto extends NotificationBase{
     public NotificationSendDto(String source, String title, String body){
         super(source, title, body);
     }
+
+    public NotificationSendDto(String title, String source, String body, String sender){
+        super(title, source, body, sender);
+    }
+
+    public NotificationSendDto(MmParseDto mmParseDto){
+        super(mmParseDto.getTitle(),mmParseDto.getSource(), mmParseDto.getBody(),mmParseDto.getSender());
+    }
 }
