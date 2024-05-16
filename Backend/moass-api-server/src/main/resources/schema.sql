@@ -138,6 +138,7 @@ CREATE TABLE `MMToken` (
 CREATE TABLE `MMTeam` (
                           `mm_team_id` VARCHAR(40) NOT NULL,
                           `mm_team_name` VARCHAR(40) NOT NULL,
+                            `mm_team_icon` VARCHAR(100) NOT NULL,
                           CONSTRAINT `PK_MMTEAM` PRIMARY KEY (`mm_team_id`)
 );
 
