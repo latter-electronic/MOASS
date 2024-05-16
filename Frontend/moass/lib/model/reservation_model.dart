@@ -60,6 +60,8 @@ class UserSearchInfoDto {
 class MyReservationModel {
   final int infoId;
   final int reservationId;
+  final String reservationName;
+  final String colorCode;
   final String userId;
   final int infoState;
   final String infoName;
@@ -70,6 +72,8 @@ class MyReservationModel {
   MyReservationModel({
     required this.infoId,
     required this.reservationId,
+    required this.reservationName,
+    required this.colorCode,
     required this.userId,
     required this.infoState,
     required this.infoName,
@@ -82,6 +86,8 @@ class MyReservationModel {
     return MyReservationModel(
       infoId: json['infoId'],
       reservationId: json['reservationId'],
+      reservationName: json['reservationName'],
+      colorCode: json['colorCode'],
       userId: json['userId'],
       infoState: json['infoState'],
       infoName: json['infoName'],
