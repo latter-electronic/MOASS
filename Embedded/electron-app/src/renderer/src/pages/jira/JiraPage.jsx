@@ -8,7 +8,7 @@ import profile3 from '../../assets/images/jira/jiraProfileImg3.png';
 import profile4 from '../../assets/images/jira/jiraProfileImg4.png';
 import profile5 from '../../assets/images/jira/jiraProfileImg5.png';
 import profile6 from '../../assets/images/jira/jiraProfileImg6.png';
-import { fetchCurrentSprintIssues, changeIssueStatus } from '../../services/jiraService.js';
+import { fetchCurrentSprintIssues, changeIssueStatus, checkJiraConnection } from '../../services/jiraService.js';
 
 const profileImages = [profile1, profile2, profile3, profile4, profile5, profile6];
 

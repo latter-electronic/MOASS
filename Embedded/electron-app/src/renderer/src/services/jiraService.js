@@ -22,6 +22,7 @@ export const checkJiraConnection = async () => {
             'Content-Type': 'application/json'
         }
     }).then(response => {
+        console.log(response.data)
         return response.data; // 연결 상태 반환
     })
     .catch(error => {
@@ -69,8 +70,8 @@ export const fetchCurrentSprintIssues = async (statusId) => {
     const { accessToken } = AuthStore.getState();
     const projectData = await getProject();
     const projectKey = projectData.values[0].key;
-    const currentUser = await getCurrentUser(); // 현재 사용자 정보 가져오기
-    const reporterEmail = currentUser.emailAddress; // 사용자 이메일 주소
+    const currentUser = await checkJiraConnection(); // 현재 사용자 정보 가져오기
+    const reporterEmail = currentUser.data; // 사용자 이메일 주소
 
     const data = {
         method: "get",
