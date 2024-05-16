@@ -40,7 +40,7 @@ class WorkScreen extends StatelessWidget {
           ),
 
           // 나의 지라
-          CategoryText(text: '나의 Gitlab Issue'),
+          CategoryText(text: '나의 Gitlab 프로젝트'),
           MyGitlabIssue(),
         ],
       ),

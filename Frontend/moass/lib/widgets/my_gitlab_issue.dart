@@ -103,7 +103,13 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
           if (currentProject != null &&
               currentProject!.mergeRequests.isNotEmpty)
             for (var mergeRequest in currentProject!.mergeRequests)
-              const GitlabMRCardWidget(),
+              GitlabMRCardWidget(
+                mergeRequest: mergeRequest,
+              ),
+          if (currentProject != null &&
+              currentProject!.issues.isEmpty &&
+              currentProject!.mergeRequests.isEmpty)
+            const Text('현재 활성화된 이슈나 머지 리퀘스트가 없습니다'),
         ],
       ),
     );

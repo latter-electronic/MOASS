@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moass/model/related_gitlab_account.dart';
 
 class GitlabIssueCardWidget extends StatefulWidget {
-  final IssueModel issue;
+  final Issue issue;
   const GitlabIssueCardWidget({super.key, required this.issue});
 
   @override
