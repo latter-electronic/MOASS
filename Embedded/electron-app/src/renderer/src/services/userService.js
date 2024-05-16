@@ -65,3 +65,17 @@ export const updateUserStatus = async (updateData) => {
         throw error;
     }
 };
+
+/**
+ * 엑세스토큰 갱신
+ * 
+ * @returns {Promise} 토큰 갱신 결과
+ */
+export const refreshAccessToken = () => {
+    const { refreshToken } = AuthStore.getState();
+    return axios.post('/api/user/refresh', {}, {
+        headers: {
+            'Authorization': `Bearer ${refreshToken}`
+        }
+    });
+};
