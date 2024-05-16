@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/services/jira_api.dart';
 import 'package:moass/widgets/top_bar.dart';
 
@@ -17,6 +18,7 @@ class SettingRelatedAccountScreen extends StatefulWidget {
 class _SettingRelatedAccountScreenState
     extends State<SettingRelatedAccountScreen> {
   late String? userJiraMail = '정보를 불러오고 있습니다...';
+  late String? userGitlabMail = '정보를 불러오고 있습니다...';
   late JiraApi jiraApi;
 
   @override
@@ -32,9 +34,17 @@ class _SettingRelatedAccountScreenState
     // setState(() => isLoading = true);
     // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     var result = await jiraApi.fetchJiraAccount(); // API 호출
+    var gitlabResult =
+        await GitlabApi(dio: Dio(), storage: const FlutterSecureStorage())
+            .fetchGitlabAccount();
+    print('깃랩 메일 : ${gitlabResult?.gitlabEmail}');
+    print('깃랩 프로젝트 : ${gitlabResult?.gitlabProjects}');
     setState(() {
       // null 체크
       userJiraMail = result?.userMail;
+      userGitlabMail = gitlabResult?.gitlabEmail;
+
+      print(userGitlabMail);
 
       // isLoading = false;
     });
@@ -50,7 +60,10 @@ class _SettingRelatedAccountScreenState
         body: Column(children: [
           SetRelatedAccount(service: 'jira', userJiraMail: userJiraMail),
           const SetRelatedAccount(service: 'mattermost'),
-          const SetRelatedAccount(service: 'gitlab'),
+          SetRelatedAccount(
+            service: 'gitlab',
+            userGitlabMail: userGitlabMail,
+          ),
         ]));
   }
 }

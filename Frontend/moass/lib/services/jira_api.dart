@@ -36,6 +36,33 @@ class JiraApi {
     }
   }
 
+  // 계정 연동 삭제
+  disconnectJiraAccount() async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        print('No access token available');
+        return null;
+      }
+      // print(accessToken);
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.delete(
+        '$baseUrl/api/oauth2/jira/connect',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        return response.statusCode;
+      } else {
+        print('Failed to load user profile');
+        return null;
+      }
+    } on DioException catch (e) {
+      print('Error fetching user profile: ${e.message}');
+      return null;
+    }
+  }
+
   requestConnectJira() async {
     String jiraAuthURL = "";
     try {

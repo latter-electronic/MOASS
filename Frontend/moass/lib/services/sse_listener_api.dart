@@ -44,7 +44,7 @@ class SSEListener {
       });
     }, onError: (oops) {
       print('유저 이벤트 연결 실패!');
-      userEvent.disconnect();
+      // userEvent.disconnect();
       // Oops! Time to handle those little hiccups.
       // You can also choose to disconnect here
     },
@@ -90,7 +90,7 @@ class SSEListener {
       },
       onError: (oops) {
         print('팀 이벤트 연결 실패!');
-        teamEvent.disconnect();
+        // teamEvent.disconnect();
         // Oops! Time to handle those little hiccups.
         // You can also choose to disconnect here
       },

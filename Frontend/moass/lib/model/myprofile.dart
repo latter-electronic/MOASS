@@ -10,6 +10,7 @@ class MyProfile {
   final String? positionName;
   final int statusId;
   final String? profileImg;
+  final String? backgroundImg;
   final int jobCode;
   final int connectFlag;
 
@@ -25,6 +26,7 @@ class MyProfile {
     this.positionName,
     required this.statusId,
     this.profileImg,
+    this.backgroundImg,
     required this.jobCode,
     required this.connectFlag,
   });
@@ -42,6 +44,7 @@ class MyProfile {
       positionName: json['positionName'],
       statusId: json['statusId'],
       profileImg: json['profileImg'],
+      backgroundImg: json['backgroundImg'],
       jobCode: json['jobCode'],
       connectFlag: json['connectFlag'],
     );

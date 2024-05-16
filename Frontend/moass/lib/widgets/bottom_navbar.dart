@@ -29,7 +29,7 @@ class BottomNavBar extends StatelessWidget {
             icon: Icon(Icons.dashboard_outlined), label: '모음보드'),
       ],
       unselectedItemColor: Colors.grey.shade400,
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: const Color(0xFF6ECEF5),
     );
   }
 }

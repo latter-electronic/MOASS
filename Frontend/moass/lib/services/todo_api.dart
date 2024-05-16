@@ -19,7 +19,7 @@ class ToDoListApi {
         print('No access token available');
         return [];
       }
-      // print(accessToken);
+      print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/schedule/todo',

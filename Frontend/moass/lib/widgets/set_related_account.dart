@@ -2,16 +2,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/services/jira_api.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SetRelatedAccount extends StatefulWidget {
   final String service;
   final String? userJiraMail;
+  final String? userGitlabMail;
   const SetRelatedAccount({
     super.key,
     required this.service,
     this.userJiraMail,
+    this.userGitlabMail,
   });
 
   @override
@@ -94,14 +97,23 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ))
-                    else
-                      const Text(
-                        '연결된 hook URL이 없습니다',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    else if (widget.service == 'gitlab')
+                      if (widget.userGitlabMail == 'null')
+                        const Text(
+                          '연결된 계정이 없습니다',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )
+                      else if (widget.userGitlabMail != 'null')
+                        Text(
+                          widget.userGitlabMail ?? '연결된 계정이 없습니다',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
                     Text(
                       widget.service,
                       style: TextStyle(color: Colors.black.withOpacity(0.6)),
@@ -171,9 +183,18 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          String gitlabConnectUrl = await GitlabApi(
+                                  dio: Dio(),
+                                  storage: const FlutterSecureStorage())
+                              .requestConnectGitlab();
+                          await launchUrlString(gitlabConnectUrl);
+                          setState() {
+                            isOpenedButtonWidget = false;
+                          }
+                        },
                         style: const ButtonStyle(),
-                        child: const Text('URL 등록')),
+                        child: const Text('계정 연동')),
                   )
                 ],
               )
