@@ -6,9 +6,11 @@ import useAuthStore from '../stores/AuthStore';
 
 export default function EventListener({ children }) {
     const navigate = useNavigate();
-    const { accessToken, deviceId } = useAuthStore((state) => ({
+    const { accessToken, deviceId, cardSerialId, logout } = useAuthStore((state) => ({
         accessToken: state.accessToken,
         deviceId: state.deviceId,
+        cardSerialId: state.cardSerialId,  // userId
+        logout: state.logout,
     }));
 
     useEffect(() => {
@@ -43,8 +45,13 @@ export default function EventListener({ children }) {
             const logoutData = { deviceId: deviceId || 'dddd2', userId: studentId };
             await deviceLogout(logoutData);
             console.log(`Device with student ID ${studentId} logged out successfully.`);
+
+            logout();  // store 상태 변경
+            alert('로그아웃 성공!');
+            navigate('/login');
         } catch (error) {
             console.error('Failed to logout device:', error);
+            alert('로그아웃 중 에러 발생');
         }
     };
 
