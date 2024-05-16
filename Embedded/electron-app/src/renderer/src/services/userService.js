@@ -22,28 +22,6 @@ export const fetchUserInfo = async () => {
 };
 
 /**
- * 액세스 토큰 갱신
- *
- * @returns {Promise} 갱신된 토큰 정보
- */
-export const refreshToken = async () => {
-    // AuthStore에서 리프레시 토큰 가져오기
-    const { refreshToken } = AuthStore.getState();
-
-    // 리프레시 토큰으로 새 액세스 토큰 요청
-    const response = await axios.post(`${API_URL}/refresh`, {}, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-
-    // 새로운 토큰 저장 및 반환
-    AuthStore.getState().login(response.data.data.accessToken, refreshToken);
-    return response.data;
-};
-
-
-/**
  * 사용자 상태 업데이트
  *
  * @param {Object} updateData - 업데이트할 사용자 데이터
@@ -64,18 +42,4 @@ export const updateUserStatus = async (updateData) => {
         console.error('Error updating user status:', error.response);
         throw error;
     }
-};
-
-/**
- * 엑세스토큰 갱신
- * 
- * @returns {Promise} 토큰 갱신 결과
- */
-export const refreshAccessToken = () => {
-    const { refreshToken } = AuthStore.getState();
-    return axios.post('/api/user/refresh', {}, {
-        headers: {
-            'Authorization': `Bearer ${refreshToken}`
-        }
-    });
 };
