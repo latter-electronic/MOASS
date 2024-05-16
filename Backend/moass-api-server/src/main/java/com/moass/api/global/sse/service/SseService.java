@@ -47,7 +47,7 @@ public class SseService {
                         Sinks.Many<String> sink = userSinks.computeIfAbsent(userInfo.getUserId(), k -> Sinks.many().multicast().onBackpressureBuffer());
                         return sink.asFlux()
                                 .doOnSubscribe(subscription -> {
-                                    sink.tryEmitNext("개인채널 구독 완료 : "+userInfo.getUserId());
+                                    //sink.tryEmitNext("개인채널 구독 완료 : "+userInfo.getUserId());
                                 })
                                 .doFinally(signalType -> {
                                     if (sink.currentSubscriberCount() == 0) {
@@ -71,7 +71,7 @@ public class SseService {
                     return sink.asFlux()
                             .doOnSubscribe(subscription -> {
                                 log.info("Subscribing to team: " + teamCode + " by user: " + userInfo.getUserId());
-                                sink.tryEmitNext("팀채널 구독 완료 : " + teamCode);
+                                //sink.tryEmitNext("팀채널 구독 완료 : " + teamCode);
                             })
                             .doFinally(signalType -> {
                                 log.info("Subscription ended or cancelled for team: " + teamCode + " by user: " + userInfo.getUserId());
