@@ -31,8 +31,8 @@ class AccountApi {
         throw Exception(response.data['message'] ?? "로그인 실패");
       }
     } on DioException catch (e) {
-      print(e.response?.data);
-      throw Exception(e.response?.data['message'] ?? '로그인에 실패했습니다.');
+      print('Login failed with error: ${e.response?.statusCode}');
+      return false;
     }
   }
   // 수정전

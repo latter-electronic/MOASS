@@ -50,7 +50,7 @@ class MeetingTable extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: labelColor,
+              color: backgroundColor,
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10)),

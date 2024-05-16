@@ -48,8 +48,10 @@ dependencies:
     intl: ^0.19.0
     # 색상을 선택해서 추출할 수 있는 컬러 픽커 라이브러리
     flutter_colorpicker: ^1.0.3
-    # 전연관리를 위한 라이브러리
+    # 전역관리를 위한 라이브러리
     flutter_riverpod: ^2.5.1
+    # 사진 다운을 위한 라이브러리
+    flutter_downloader: ^1.11.7
 
 
     # 파일 타입 확인을 위한 라이브러리

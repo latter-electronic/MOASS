@@ -20,7 +20,7 @@ class ApiService {
     }
     try {
       final response = await dio.post(
-        'https://cfe0-59-20-195-127.ngrok-free.app/api/user/refresh',
+        '$baseUrl/api/user/refresh',
         options: Options(headers: {'Authorization': 'Bearer $refreshToken'}),
       );
 

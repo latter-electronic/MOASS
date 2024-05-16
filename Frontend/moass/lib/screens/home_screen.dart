@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
+import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/main_admin_home_screen.dart';
 import 'package:moass/screens/reservation_admin_screen.dart';
 import 'package:moass/screens/work_admin_screen.dart';
@@ -15,7 +16,7 @@ import 'package:moass/screens/board_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/sse_listener_api.dart';
 import 'package:moass/widgets/bottom_navbar.dart';
-import 'package:moass/widgets/top_bar.dart'; // Import your CustomAppBar
+import 'package:moass/widgets/top_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -69,11 +70,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // _requestStoragePermission(context); // 저장소 권한 요청
+
     return Scaffold(
       body: Center(
         child: _widgetOptions.isNotEmpty
             ? _widgetOptions.elementAt(_selectedIndex)
-            : const CircularProgressIndicator(),
+            // 무한로딩시 => 로그인으로 이동 IF 바텀네브바 보이면 다시 수정
+            : const LoginScreen(),
       ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex,
@@ -81,4 +85,20 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  // 저장소 권한 확인
+  // void _requestStoragePermission(BuildContext context) async {
+  //   if (await Permission.storage.isDenied) {
+  //     final status = await Permission.storage.request();
+  //     if (status.isGranted) {
+  //       print('Storage permission granted');
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text('저장소 권한이 필요합니다.'),
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 }

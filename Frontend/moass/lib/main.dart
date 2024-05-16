@@ -10,6 +10,7 @@ import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:moass/services/api_service.dart';
 
 // 백그라운드 메시지 설정
@@ -34,7 +35,8 @@ void main() async {
   if (isLoggedIn) {
     await initializeFirebaseAndNotifications(storage);
   }
-  runApp(MyApp(isLoggedIn: isLoggedIn, dio: dio, storage: storage));
+  runApp(ProviderScope(
+      child: MyApp(isLoggedIn: isLoggedIn, dio: dio, storage: storage)));
 }
 
 // Firebase 및 알림 초기화
@@ -147,7 +149,8 @@ class _MyAppState extends State<MyApp> {
       initializeFirebaseAndNotifications(const FlutterSecureStorage());
     }
     mainTokenRefresh();
-    _permissionWithNotification();
+    // 저장소권한 확인
+    // _permissionWithNotification();
   }
 
   void mainTokenRefresh() async {
@@ -160,12 +163,13 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _permissionWithNotification() async {
-    if (await Permission.notification.isDenied &&
-        !await Permission.notification.isPermanentlyDenied) {
-      await [Permission.notification].request();
-    }
-  }
+// // 저장소 권한 확인
+//   void _permissionWithNotification() async {
+//     if (await Permission.notification.isDenied &&
+//         !await Permission.notification.isPermanentlyDenied) {
+//       await [Permission.notification].request();
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {
