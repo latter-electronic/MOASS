@@ -2,7 +2,9 @@ package com.moass.api.domain.board.service;
 
 import com.moass.api.domain.board.dto.BoardDetailDto;
 import com.moass.api.domain.board.dto.ScreenshotDetailDto;
+import com.moass.api.domain.board.entity.Board;
 import com.moass.api.domain.board.entity.Screenshot;
+import com.moass.api.domain.board.repository.BoardRepository;
 import com.moass.api.domain.board.repository.BoardUserRepository;
 import com.moass.api.domain.board.repository.ScreenshotRepository;
 import com.moass.api.domain.reservation.entity.Reservation;
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
+    private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
     private final ScreenshotRepository screenshotRepository;
     private final S3Service s3Service;
@@ -37,6 +40,11 @@ public class BoardService {
                 .collectList()
                 .map(boards -> boards.stream().map(BoardDetailDto::new).toList())
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Board를 찾을 수 없습니다.")));
+    }
+
+    public Mono<Board> createBoard() {
+        Board board = new Board();
+        return boardRepository.save(board).then(Mono.just(board));
     }
 
     public Mono<List<ScreenshotDetailDto>> getScreenshotList(Integer boardUserId) {
