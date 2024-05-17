@@ -4,6 +4,7 @@ import EventService from '../services/EventService';
 import { deviceLogout } from '../services/deviceService';
 import useAuthStore from '../stores/AuthStore';
 import useTodoStore from '../stores/todoStore';
+import useNotiStore from '../stores/notiStore';
 import { fetchTodos } from '../services/todoService'; // fetchTodos 임포트 추가
 // import { updateUserStatus } from '../services/userService'
 
