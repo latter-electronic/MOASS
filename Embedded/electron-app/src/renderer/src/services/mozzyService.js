@@ -10,6 +10,6 @@ const API_URL = 'ssafy_food/today_menu'
  */
 export const fetchLunchMenu = async () => {
     const response = axios.get(API_URL)
-    console.log(response)
+    // console.log(response)
     return response
 }

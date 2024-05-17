@@ -1,0 +1,8 @@
+@keyframes flash {
+    0%, 100% { background-color: #38b2ac; }
+    50% { background-color: #c5e3e1; }
+  }
+  
+  .flash-animation {
+    animation: flash 1s infinite;
+  }

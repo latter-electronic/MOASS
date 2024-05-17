@@ -17,7 +17,6 @@ export default function HomeTodoListComponent() {
             try {
                 const response = await fetchTodos();
                 if (isMounted) { // 컴포넌트가 마운트 상태일 때만 상태 업데이트
-                    console.log("Todos Loaded:", response.data.data); // 로그 추가
                     setTodos(response.data.data.map(todo => ({
                         todoId: todo.todoId,
                         content: todo.content,
