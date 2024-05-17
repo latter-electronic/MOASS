@@ -1,10 +1,12 @@
 package com.moass.api.domain.notification.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder
 public class NotificationSendDto extends NotificationBase{
 
     private String notificationId;
@@ -16,4 +18,9 @@ public class NotificationSendDto extends NotificationBase{
     public NotificationSendDto(MmParseDto mmParseDto){
         super(mmParseDto.getTitle(),mmParseDto.getSource(), mmParseDto.getBody(),mmParseDto.getSender(),mmParseDto.getIcon());
     }
+
+    public NotificationSendDto(String title, String source, String body, String sender, String icon){
+        super(title, source, body, sender, icon);
+    }
+
 }
