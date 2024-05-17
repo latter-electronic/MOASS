@@ -81,10 +81,18 @@ class _WorkScreenState extends ConsumerState<WorkScreen> {
           alignment: Alignment.topRight,
           child: Text(displayDate),
         ),
-        ...courses.map((course) => ScheduleBox(
-              title: course.title,
-              time: course.period,
-            )),
+        Align(
+          alignment: Alignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ...courses.map((course) => ScheduleBox(
+                    title: course.title,
+                    time: course.period,
+                  )),
+            ],
+          ),
+        ),
         const SizedBox(height: 20),
 
         // 나의 지라
