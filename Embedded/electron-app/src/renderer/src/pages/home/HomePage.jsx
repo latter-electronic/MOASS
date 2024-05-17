@@ -6,6 +6,7 @@ import Calendar from './CalendarWidget.jsx'
 import TodoList from './HomeTodoListComponent.jsx'
 import Schedule from './HomeScheduleComponent.jsx'
 import MozzyModal from '../mozzy/MozzyMainPage..jsx'
+import LongSitModal from '../mozzy/MozzyLongSitPage.jsx'
 
 import testImg1 from './test/swiper-slide-test-img-1.png'
 import testImg2 from './test/swiper-slide-test-img-2.jpg'
@@ -22,6 +23,7 @@ import { getCurrentUser } from '../../services/jiraService.js'
 
 export default function HomePage() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [longSitModalIsOpen, setLongSitModalIsOpen] = useState(false);
     const navigate = useNavigate();
     const { checkStoredAuth, isAuthenticated } = AuthStore((state) => ({
         checkStoredAuth: state.checkStoredAuth,
@@ -36,6 +38,14 @@ export default function HomePage() {
         setModalIsOpen(false);
     };
 
+    const openLongSitModal = () => {
+        setLongSitModalIsOpen(true);
+    };
+
+    const closeLongSitModal = () => {
+        setLongSitModalIsOpen(false);
+    };
+
     const callAlertFunction = () => {  // 개발용
         navigate(`/callalert`);
     };
@@ -46,12 +56,20 @@ export default function HomePage() {
         getCurrentUser()
       }, [])
     
-    //   useEffect(() => {
-    //     console.log('isAuthenticated:', isAuthenticated)
-    //     if (!isAuthenticated) {
-    //       navigate('/tagnfc')
-    //     }
-    //   }, [isAuthenticated, navigate])
+    useEffect(() => {
+        // Electron에서 'motion-detected' 메시지를 수신
+        window.electron.ipcRenderer.on('motion-detected', (event, data) => {
+            console.log('LongSit data: ', data.status)
+            if (data.status === 'LONG_SIT') {
+                openLongSitModal();
+            }
+        });
+
+        // 컴포넌트 언마운트 시 이벤트 리스너 제거
+        return () => {
+            window.electron.ipcRenderer.removeAllListeners('motion-detected');
+        };
+    }, []);
 
     useEffect(() => {
         const { accessToken, refreshToken } = AuthStore.getState()
@@ -106,6 +124,7 @@ export default function HomePage() {
                     <div className="mt-6">
                         <img src={Mozzy} alt="Mozzy" className="size-60" onClick={openModal} />
                         <MozzyModal isOpen={modalIsOpen} onClose={closeModal}/>
+                        <LongSitModal isOpen={longSitModalIsOpen} onClose={closeLongSitModal} />
                     </div>
                 </div>
             </div>

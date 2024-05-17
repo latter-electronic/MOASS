@@ -37,7 +37,16 @@ module.exports = {
       },
       borderWidth: {
         '3': '3px'
-      }
+      },
+      keyframes: {
+        'bounce-left-right': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(-10px)' },
+        },
+      },
+      animation: {
+        'bounce-left-right': 'bounce-left-right 1s infinite',
+      },
     },
   },
   plugins: [require("tailwind-scrollbar-hide")],

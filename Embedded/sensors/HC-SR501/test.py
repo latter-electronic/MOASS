@@ -2,27 +2,31 @@ import RPi.GPIO as GPIO
 import time
 
 # GPIO 핀 번호 설정
-sensor_pin = 17  # 센서 연결 핀 번호
+motion_sensor_pin = 17  # 센서 핀 연결 번호
 
+# GPIO 모드 설정
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(sensor_pin, GPIO.IN) 
+GPIO.setup(motion_sensor_pin, GPIO.IN)
 
-def main():
-    try:
-        print("PIR Module Test (CTRL+C to exit)")
-        time.sleep(2)  # 초기화 시간
-        print("Ready")
+try:
+    print("PIR 모션 센서 테스트 시작 (Ctrl+C로 종료)")
+    time.sleep(2)  # 센서 안정화 시간
 
-        while True:
-            if GPIO.input(sensor_pin):
-                print("Motion Detected!")
-            else:
-                print('Not detected')
-            time.sleep(0.1)  # 검사 간격 설정
+    while True:
+        if GPIO.input(motion_sensor_pin):
+            print("모션 감지됨!")
+            # 모션이 감지된 후에는 모션이 없을 때까지 대기
+            start_time = time.time()
+            while GPIO.input(motion_sensor_pin):
+                time.sleep(0.1)  # 모션이 지속되는 동안 잠시 대기
+            end_time = time.time()
+            print(f"모션 유지 시간: {end_time - start_time:.2f} 초")
 
-    except KeyboardInterrupt:
-        print("Program stopped by User")
-        GPIO.cleanup()  # GPIO 설정 초기화
+        time.sleep(0.1)  # 상태 확인 주기 조정
 
-if __name__ == "__main__":
-    main()
+except KeyboardInterrupt:
+    print("테스트 종료")
+
+finally:
+    GPIO.cleanup()  # GPIO 설정 초기화
+
