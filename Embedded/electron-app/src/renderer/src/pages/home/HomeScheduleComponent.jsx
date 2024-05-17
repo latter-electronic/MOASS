@@ -9,6 +9,7 @@ import profileImg3 from './test/profileImg3.png';
 export default function HomeScheduleComponent() {
     const [schedules, setSchedules] = useState([]);
     const [error, setError] = useState(null);
+    const [cache, setCache] = useState({}); // 캐시 상태 추가
 
     const getFormattedDate = (date) => {
         const options = { month: 'long', day: 'numeric', weekday: 'long' }; // 연도를 제외한 옵션
@@ -21,29 +22,35 @@ export default function HomeScheduleComponent() {
                 // 하드코딩된 날짜 리스트
                 const dates = ['2024-05-16', '2024-05-17'];
 
-                // 각 날짜에 대한 커리큘럼 데이터를 가져옴
-                const curriculumPromises = dates.map(date => fetchCurriculum(date));
-                const curriculumResponses = await Promise.all(curriculumPromises);
-                const reservationResponse = await fetchReservationInfo();
-
                 let formattedCurriculumSchedules = [];
-                curriculumResponses.forEach((curriculumResponse, dateIndex) => {
-                    if (curriculumResponse.data && curriculumResponse.data.courses) {
-                        const date = dates[dateIndex];
-                        const formattedSchedules = curriculumResponse.data.courses.map((course, index) => ({
-                            id: `curriculum-${dateIndex}-${index + 1}`,
-                            date: date, // 날짜 추가
-                            type: `[${course.majorCategory}]`,
-                            title: course.title,
-                            time: course.period,
-                            color: 'border-blue-500',
-                            location: `${course.teacher} / ${course.room}`
-                        }));
-                        formattedCurriculumSchedules = [...formattedCurriculumSchedules, ...formattedSchedules];
-                    }
-                });
-
                 let formattedReservationSchedules = [];
+
+                // 각 날짜에 대한 커리큘럼 데이터를 가져옴
+                for (const date of dates) {
+                    if (cache[date]) {
+                        // 캐시에 데이터가 있는 경우
+                        formattedCurriculumSchedules = [...formattedCurriculumSchedules, ...cache[date]];
+                    } else {
+                        // 캐시에 데이터가 없는 경우 API 호출
+                        const curriculumResponse = await fetchCurriculum(date);
+                        if (curriculumResponse.data && curriculumResponse.data.courses) {
+                            const formattedSchedules = curriculumResponse.data.courses.map((course, index) => ({
+                                id: `curriculum-${date}-${index + 1}`,
+                                date: date, // 날짜 추가
+                                type: `[${course.majorCategory}]`,
+                                title: course.title,
+                                time: course.period,
+                                color: 'border-blue-500',
+                                location: `${course.teacher} / ${course.room}`
+                            }));
+                            formattedCurriculumSchedules = [...formattedCurriculumSchedules, ...formattedSchedules];
+                            // 캐시에 저장
+                            setCache(prevCache => ({ ...prevCache, [date]: formattedSchedules }));
+                        }
+                    }
+                }
+
+                const reservationResponse = await fetchReservationInfo();
                 if (reservationResponse.data) {
                     formattedReservationSchedules = reservationResponse.data.flatMap((reservation, index) =>
                         reservation.reservationInfoList ? reservation.reservationInfoList.map((info, subIndex) => ({
@@ -68,7 +75,7 @@ export default function HomeScheduleComponent() {
         };
 
         fetchSchedules();
-    }, []);
+    }, [cache]);
 
     if (error) {
         return <div className="text-red-500">{error}</div>;
@@ -84,7 +91,7 @@ export default function HomeScheduleComponent() {
     }, {});
 
     return (
-        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-80px)] scrollbar-hide items-center">
+        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
             {Object.keys(groupedSchedules).map((date) => (
                 <div key={date} className="w-full max-w-screen-sm ml-8">
                     <div className="flex items-center">
