@@ -89,3 +89,22 @@ export const deleteScreenshotById = (screenshotId) => {
         }
     });
 };
+
+/**
+ * 보드 생성
+ * 
+ * @param {Object} boardData 보드 생성 데이터
+ * @param {number} userId 사용자 ID
+ * @returns {Promise} 보드 생성 결과
+ */
+export const createBoard = (boardData, userId) => {
+    const { accessToken } = AuthStore.getState();
+    const url = `/room?userId=${userId}`;
+
+    return axios.post(url, boardData, {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`, 
+            'Content-Type': 'application/json'
+        }
+    });
+};
