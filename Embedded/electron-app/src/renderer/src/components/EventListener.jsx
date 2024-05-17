@@ -16,7 +16,7 @@ export default function EventListener({ children }) {
         logout: state.logout,
     }));
 
-    const setTodos = useTodoStore(state => state.setTodos);
+    const addNotification = useNotiStore(state => state.addNotification);
 
     // const handleUserStatusData = useCallback((event, data) => {
     //     const status = data.status === 'AWAY' ? '0' : data.status === 'STAY' ? '1' : null;
@@ -44,7 +44,7 @@ export default function EventListener({ children }) {
             });
 
             eventService.startListening(async (newData) => {
-                console.log("SSE Data Received:", newData.data); // 로그 추가
+                console.log("SSE Data Received:", newData.data);
                 try {
                     const parsedData = JSON.parse(newData.data);
 
@@ -55,9 +55,9 @@ export default function EventListener({ children }) {
                         } else if (parsedData.type === 'call') {
                             handleCallEvent(parsedData.data);
                         }
-                    } else if (parsedData.command === 'update' && parsedData.target === 'todoUpdate') {
-                        // SSE에서 Todo 업데이트 명령을 수신하면 Todo 리스트를 다시 로드합니다.
-                        await reloadTodos();
+                    } else if (parsedData.command === 'notification') {
+                        // 알림 데이터 처리
+                        addNotification(parsedData.data);
                     }
                 } catch (error) {
                     console.error('Failed to parse data:', error);
@@ -67,23 +67,6 @@ export default function EventListener({ children }) {
             return () => eventService.stopListening();
         }
     }, [accessToken]);
-
-    const reloadTodos = async () => {
-        try {
-            const response = await fetchTodos();
-            console.log("Reloading Todos:", response.data.data); // 로그 추가
-            setTodos(response.data.data.map(todo => ({
-                todoId: todo.todoId,
-                content: todo.content,
-                completedFlag: todo.completedFlag,
-                createdAt: todo.createdAt,
-                updatedAt: todo.updatedAt,
-                completedAt: todo.completedAt,
-            })));
-        } catch (err) {
-            console.error("Failed to reload todos:", err);
-        }
-    };
 
     const handleLogoutDevice = async (studentId) => {
         try {

@@ -1,41 +1,43 @@
-import { useState } from 'react'
-import { SwipeableList, SwipeableListItem, LeadingActions, TrailingActions, SwipeAction } from 'react-swipeable-list';
-import 'react-swipeable-list/dist/styles.css'
+import { useEffect } from 'react';
+import { SwipeableList, SwipeableListItem, TrailingActions, SwipeAction } from 'react-swipeable-list';
+import 'react-swipeable-list/dist/styles.css';
 
-import NotiMM from './NotiMMComponent.jsx'
-import NotiGitlab from './NotiGitlabComponent.jsx'
-import NotiSsafy from './NotiSsafyComponent.jsx'
-import NotiDetail from './NotiDetailComponent.jsx'
+import { readAllNotifications, getRecentNotifications } from '../../services/notiService';
+import useNotiStore from '../../stores/notiStore';
+import NotiMM from './NotiMMComponent.jsx';
+import NotiSsafy from './NotiSsafyComponent.jsx';
 
-import checkIcon from './testImg/check-icon.svg'
-import mozzySleep from './testImg/mozzy-sleep.svg'
-
+import checkIcon from './testImg/check-icon.svg';
+import mozzySleep from './testImg/mozzy-sleep.svg';
 
 export default function NotiPage() {
-  const [notices, setNotices] = useState([{
-    id: 1,
-    title: '설문이',
-    content: '(240503) 10기 자율프로젝트 4주차 만족도 설문',
-    date: '오후 6:00'
-  },
-  {
-    id: 2,
-    title: '공지가',
-    content: '[운영] 2학기 자율프로젝트 4주차 안내',
-    date: '오후 4:00'
-  },
-  {
-    id: 3,
-    title: '설문이',
-    content: '(240503) 10기 자율프로젝트 4주차 만족도 설문',
-    date: '오후 6:00'
-  },
-  {
-    id: 4,
-    title: '공지가',
-    content: '[운영] 2학기 자율프로젝트 4주차 안내',
-    date: '오후 4:00'
-  }]);
+  const notices = useNotiStore(state => state.notifications);
+  const clearNotifications = useNotiStore(state => state.clearNotifications);
+  const addNotification = useNotiStore(state => state.addNotification);
+
+  useEffect(() => {
+    loadRecentNotifications();
+  }, []);
+
+  const handleClearAll = async () => {
+    try {
+      await readAllNotifications();
+      clearNotifications();
+    } catch (error) {
+      console.error('Failed to clear all notifications:', error);
+    }
+  };
+
+  const loadRecentNotifications = async () => {
+    try {
+      const response = await getRecentNotifications();
+      response.data.notifications.forEach(notification => {
+        addNotification(notification);
+      });
+    } catch (error) {
+      console.error('Failed to load recent notifications:', error);
+    }
+  };
 
   const trailingActions = (id) => (
     <TrailingActions>
@@ -43,21 +45,18 @@ export default function NotiPage() {
         destructive={true}
         onClick={() => handleDelete(id)}
       >
+        {/* 자식 요소 추가 */}
+        <div className="text-red-600">Delete</div>
       </SwipeAction>
     </TrailingActions>
   );
 
   const handleDelete = (id) => {
-    setNotifications(notifications.filter(noti => noti.id !== id));
-  };
-
-  const handleClearAll = () => {
-    setNotices([]); // 모든 알림 삭제
+    clearNotifications(notices.filter(noti => noti.notificationId !== id));
   };
 
   return (
     <div className="flex h-screen">
-
       {/* 왼쪽 섹션: 알림 목록 */}
       <div className="w-1/3 bg-navy p-6 flex flex-col">
         <div className="flex justify-between items-center mb-4">
@@ -69,22 +68,31 @@ export default function NotiPage() {
           </button>
         </div>
         <div className="flex-grow overflow-auto mt-4 scrollbar-hide">
-          {/* 알림 컴포넌트들을 여기에 렌더링 */}
-          <NotiMM />
-          <NotiGitlab />
-          <SwipeableList>
-            {notices.map(notice => (
-              <SwipeableListItem
-                key={notice.id}
-                trailingActions={trailingActions(notice.id)}
-              >
-                <NotiSsafy notice={notice} />
-              </SwipeableListItem>
-            ))}
+          <SwipeableList className="scrollbar-hide">
+            {notices.map((notice) => {
+              const key = notice.notificationId;
+              if (notice.source === 'mattermost') {
+                return (
+                  <SwipeableListItem
+                    key={key}
+                    trailingActions={trailingActions(notice.notificationId)}
+                  >
+                    <NotiMM notice={notice} />
+                  </SwipeableListItem>
+                );
+              }
+              return (
+                <SwipeableListItem
+                  key={key}
+                  trailingActions={trailingActions(notice.notificationId)}
+                >
+                  <NotiSsafy notice={notice} />
+                </SwipeableListItem>
+              );
+            })}
           </SwipeableList>
         </div>
       </div>
-
       {/* 오른쪽 섹션: 상세 페이지 */}
       <div className="flex flex-col w-2/3 bg-gray-800/50 justify-center text-center items-center">
         <div className="mb-4">

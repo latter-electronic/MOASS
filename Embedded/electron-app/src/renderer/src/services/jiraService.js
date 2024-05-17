@@ -193,12 +193,16 @@ export const getProject = async () => {
 export const changeIssueStatus = async (issueIdOrKey, transitionId) => {
     const { accessToken } = AuthStore.getState();
     const payload = {
-        transition: {
-            id: transitionId
-        }
+        method: 'post',
+        url: `/rest/api/3/issue/${issueIdOrKey}/transitions`,
+        body: JSON.stringify({
+            transition: {
+                id: transitionId
+            }
+        })
     };
 
-    return axios.post(`${prefix}/rest/api/3/issue/${issueIdOrKey}/transitions`, payload, {
+    return axios.post(prefix, payload, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
