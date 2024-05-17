@@ -22,7 +22,7 @@ const LunchMenuStore = create((set, get) => ({
         try {
             const response = await fetchLunchMenu()
             if (response.data.attachments) {
-                console.log(response.data.attachments)
+                // console.log(response.data.attachments)
                 set({ lunchMenus: response.data.attachments })
             } else {
                 console.log('올바른 데이터가 아닙니다:', response.data)
