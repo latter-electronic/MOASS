@@ -11,7 +11,7 @@ export default function HomeScheduleComponent() {
     const [error, setError] = useState(null);
 
     const getFormattedDate = (date) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+        const options = { month: 'long', day: 'numeric', weekday: 'long' }; // 연도를 제외한 옵션
         return new Date(date).toLocaleDateString('ko-KR', options);
     };
 
@@ -81,8 +81,11 @@ export default function HomeScheduleComponent() {
         <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
             {Object.keys(groupedSchedules).map((date) => (
                 <div key={date} className="w-full max-w-screen-sm ml-8">
-                    <div className="text-white/50 p-2 rounded-t-md">
-                        {getFormattedDate(date)}
+                    <div className="flex items-center">
+                        <div className="text-white/50 p-2">
+                            {getFormattedDate(date)}
+                        </div>
+                        <div className="flex-grow border-t border-white/50 mx-2"></div>
                     </div>
                     {groupedSchedules[date].map((schedule) => (
                         <div key={schedule.id} className={`flex items-center p-4 rounded-lg shadow-md w-full bg-white max-w-screen-sm mb-4`}>
