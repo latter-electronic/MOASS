@@ -17,14 +17,15 @@ export default function HomeTodoListComponent() {
             try {
                 const response = await fetchTodos();
                 if (isMounted) { // 컴포넌트가 마운트 상태일 때만 상태 업데이트
-                    setTodos(response.data.data.map(todo => ({
+                    const sortedTodos = response.data.data.map(todo => ({
                         todoId: todo.todoId,
                         content: todo.content,
                         completedFlag: todo.completedFlag,
                         createdAt: todo.createdAt,
                         updatedAt: todo.updatedAt,
                         completedAt: todo.completedAt,
-                    })));
+                    })).sort((a, b) => a.completedFlag - b.completedFlag);
+                    setTodos(sortedTodos);
                 }
             } catch (err) {
                 if (isMounted) {
@@ -57,9 +58,9 @@ export default function HomeTodoListComponent() {
                 completedFlag: updatedTodo.completedFlag
             });
             if (response.data && response.status === 200) {
-                setTodos(
-                    todos.map(t => t.todoId === todoId ? updatedTodo : t)
-                );
+                const updatedTodos = todos.map(t => t.todoId === todoId ? updatedTodo : t);
+                updatedTodos.sort((a, b) => a.completedFlag - b.completedFlag);
+                setTodos(updatedTodos);
             } else {
                 throw new Error("Server responded with no error but no data or unexpected status");
             }
