@@ -91,7 +91,7 @@ export default function HomeScheduleComponent() {
     }, {});
 
     return (
-        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
+        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-70px)] scrollbar-hide items-center">
             {Object.keys(groupedSchedules).map((date) => (
                 <div key={date} className="w-full max-w-screen-sm ml-8">
                     <div className="flex items-center">

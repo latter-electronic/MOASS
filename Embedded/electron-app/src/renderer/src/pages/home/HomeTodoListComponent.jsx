@@ -1,23 +1,23 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { fetchTodos } from '../../services/todoService.js'
-import AuthStore from '../../stores/AuthStore.js';
+import React, { useState, useEffect } from 'react';
+import { fetchTodos, updateTodo } from '../../services/todoService.js';
+import useTodoStore from '../../stores/todoStore.js';
 
 export default function HomeTodoListComponent() {
-    const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { accessToken, refreshToken } = AuthStore.getState()
+    const todos = useTodoStore(state => state.todos);
+    const setTodos = useTodoStore(state => state.setTodos);
 
     useEffect(() => {
+        let isMounted = true; // 컴포넌트 마운트 상태를 추적
+
         const loadTodos = async () => {
             setIsLoading(true);
             setError(null);
             try {
-                if (!accessToken) {
-                    setTodos(null)
-                } else {
-                    const response = await fetchTodos();  // Todo 가져오기
+                const response = await fetchTodos();
+                if (isMounted) { // 컴포넌트가 마운트 상태일 때만 상태 업데이트
+                    console.log("Todos Loaded:", response.data.data); // 로그 추가
                     setTodos(response.data.data.map(todo => ({
                         todoId: todo.todoId,
                         content: todo.content,
@@ -25,31 +25,25 @@ export default function HomeTodoListComponent() {
                         createdAt: todo.createdAt,
                         updatedAt: todo.updatedAt,
                         completedAt: todo.completedAt,
-                    })))
-                };
+                    })));
+                }
             } catch (err) {
-                setError(err.message);  // 에러
-                setTodos([
-                    { todoId: 1, userId: "1058448", content: 'BRENA 투어', completedFlag: false, createdAt: "2024-04-27T16:22:41.575", updatedAt: "2024-04-27T16:22:41.575", completedAt: null },
-                    { todoId: 2, userId: "1058448", content: '2주차 KPT 회고', completedFlag: false, createdAt: "2024-04-27T16:22:43.876", updatedAt: "2024-04-27T16:22:43.876", completedAt: null },
-                    { todoId: 3, userId: "1058448", content: '코치님한테 여쭤볼거', completedFlag: false, createdAt: "2024-04-27T16:22:46.746", updatedAt: "2024-04-27T16:22:46.746", completedAt: null },
-                    { todoId: 4, userId: "1058448", content: '노트북 챙기기', completedFlag: false, createdAt: "2024-04-27T16:23:46.746", updatedAt: "2024-04-27T16:24:46.746", completedAt: null },
-                ]);
+                if (isMounted) {
+                    setError(err.message);
+                }
             } finally {
-                setIsLoading(false);  // 로딩 상태 해제
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         };
 
         loadTodos();
-    }, []);
 
-    // const toggleTodo = (todoId) => {     // 보여주기용 todo
-    //     setTodos(
-    //         todos.map((todo) =>
-    //             todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
-    //         )
-    //     );
-    // };
+        return () => {
+            isMounted = false; // 컴포넌트가 언마운트되면 상태 업데이트 방지
+        };
+    }, [setTodos]);
 
     const toggleTodo = async (todoId) => {
         const todo = todos.find(t => t.todoId === todoId);
@@ -65,24 +59,24 @@ export default function HomeTodoListComponent() {
             });
             if (response.data && response.status === 200) {
                 setTodos(
-                    todos?.map(t => t.todoId === todoId ? updatedTodo : t)
+                    todos.map(t => t.todoId === todoId ? updatedTodo : t)
                 );
             } else {
                 throw new Error("Server responded with no error but no data or unexpected status");
             }
         } catch (err) {
-            setError("Todo 상태를 업데이트하는데 실패했습니다: " + err.message);
+            setError("Failed to update Todo status: " + err.message);
         }
     };
 
-    if (isLoading) return <div>로딩중...</div>;
-    // if (error) return <div>To do List를 가져오는데 실패했어요😥{error}</div>;  // 개발 완료후 바꾸기
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Failed to load To-Do list: {error}</div>;
 
     return (
         <div className="bg-white/5 p-6 rounded-lg w-72 mt-5 h-60 scrollbar-hide overflow-y-auto">
-            <h1 className="text-white text-2xl font-bold mb-4">To do List ✨</h1>
+            <h1 className="text-white text-2xl font-bold mb-4">To-Do List ✨</h1>
             <ul>
-                {todos?.map((todo) => (
+                {todos.map((todo) => (
                     <li key={todo.todoId} className="flex items-center mb-2 text-xl">
                         <input
                             id={`todo-${todo.todoId}`}
@@ -92,7 +86,7 @@ export default function HomeTodoListComponent() {
                             className="form-checkbox h-5 w-5 text-blue-600"
                         />
                         <label htmlFor={`todo-${todo.todoId}`} className="ml-2 text-white font-light cursor-pointer">
-                            <span className={todo.isCompleted ? 'line-through' : ''}>
+                            <span className={todo.completedFlag ? 'line-through' : ''}>
                                 {todo.content}
                             </span>
                         </label>
