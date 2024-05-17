@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/services/jira_api.dart';
+import 'package:moass/services/mattermost_api.dart';
 import 'package:moass/widgets/custom_login_form.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -233,8 +234,30 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: OutlinedButton(
-                              onPressed: () {
-                                () {};
+                              onPressed: () async {
+                                var response = await MatterMostApi(
+                                        dio: Dio(),
+                                        storage: const FlutterSecureStorage())
+                                    .connectMMAcount(mmUserId, mmPassword);
+                                if (response == 200) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    backgroundColor: Color(0xFF3DB887),
+                                    content: Text('MatterMost 계정 연결 성공!'),
+                                    duration: Duration(seconds: 3),
+                                  ));
+                                  setState(() {
+                                    isOpenedButtonWidget = false;
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: const Color(0xFFD24B4E),
+                                    content: Text(
+                                        'MatterMost 계정 연동에 실패했습니다. 에러 : ${response.toString()}'),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                }
                               },
                               style: const ButtonStyle(),
                               child: const Text('계정 연동'),

@@ -39,8 +39,8 @@ class _SettingRelatedAccountScreenState
     var gitlabResult =
         await GitlabApi(dio: Dio(), storage: const FlutterSecureStorage())
             .fetchGitlabAccount();
-    print('깃랩 메일 : ${gitlabResult?.gitlabEmail}');
-    print('깃랩 프로젝트 : ${gitlabResult?.gitlabProjects}');
+    // print('깃랩 메일 : ${gitlabResult?.gitlabEmail}');
+    // print('깃랩 프로젝트 : ${gitlabResult?.gitlabProjects}');
     setState(() {
       // null 체크
       userJiraMail = result?.userMail;
