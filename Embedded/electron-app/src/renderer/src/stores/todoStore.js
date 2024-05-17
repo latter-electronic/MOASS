@@ -1,17 +1,10 @@
-import {create} from 'zustand';
+import create from 'zustand';
 
 const useTodoStore = create((set) => ({
     todos: [],
-    setTodos: (newTodos) => set({ todos: newTodos }),
-    addTodo: (todo) => set((state) => ({ todos: [...state.todos, todo] })),
-    updateTodo: (updatedTodo) => set((state) => ({
-        todos: state.todos.map((todo) =>
-            todo.todoId === updatedTodo.todoId ? updatedTodo : todo
-        )
-    })),
-    removeTodo: (todoId) => set((state) => ({
-        todos: state.todos.filter((todo) => todo.todoId !== todoId)
-    })),
+    lastFetched: null,
+    setTodos: (todos) => set({ todos }),
+    setLastFetched: (timestamp) => set({ lastFetched: timestamp }),
 }));
 
 export default useTodoStore;

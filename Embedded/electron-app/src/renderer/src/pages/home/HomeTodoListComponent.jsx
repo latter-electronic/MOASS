@@ -7,43 +7,39 @@ export default function HomeTodoListComponent() {
     const [error, setError] = useState(null);
     const todos = useTodoStore(state => state.todos);
     const setTodos = useTodoStore(state => state.setTodos);
+    const lastFetched = useTodoStore(state => state.lastFetched);
+    const setLastFetched = useTodoStore(state => state.setLastFetched);
 
     useEffect(() => {
-        let isMounted = true; // 컴포넌트 마운트 상태를 추적
-
         const loadTodos = async () => {
+            // 캐시된 데이터 확인
+            if (lastFetched && (Date.now() - lastFetched < 60000)) { // 1분 이내에 불러온 데이터가 있으면 캐시 사용
+                return;
+            }
+
             setIsLoading(true);
             setError(null);
             try {
                 const response = await fetchTodos();
-                if (isMounted) { // 컴포넌트가 마운트 상태일 때만 상태 업데이트
-                    const sortedTodos = response.data.data.map(todo => ({
-                        todoId: todo.todoId,
-                        content: todo.content,
-                        completedFlag: todo.completedFlag,
-                        createdAt: todo.createdAt,
-                        updatedAt: todo.updatedAt,
-                        completedAt: todo.completedAt,
-                    })).sort((a, b) => a.completedFlag - b.completedFlag);
-                    setTodos(sortedTodos);
-                }
+                const sortedTodos = response.data.data.map(todo => ({
+                    todoId: todo.todoId,
+                    content: todo.content,
+                    completedFlag: todo.completedFlag,
+                    createdAt: todo.createdAt,
+                    updatedAt: todo.updatedAt,
+                    completedAt: todo.completedAt,
+                })).sort((a, b) => a.completedFlag - b.completedFlag);
+                setTodos(sortedTodos);
+                setLastFetched(Date.now()); // 데이터 불러온 시간 저장
             } catch (err) {
-                if (isMounted) {
-                    setError(err.message);
-                }
+                setError(err.message);
             } finally {
-                if (isMounted) {
-                    setIsLoading(false);
-                }
+                setIsLoading(false);
             }
         };
 
         loadTodos();
-
-        return () => {
-            isMounted = false; // 컴포넌트가 언마운트되면 상태 업데이트 방지
-        };
-    }, [setTodos]);
+    }, [setTodos, setLastFetched, lastFetched]);
 
     const toggleTodo = async (todoId) => {
         const todo = todos.find(t => t.todoId === todoId);
