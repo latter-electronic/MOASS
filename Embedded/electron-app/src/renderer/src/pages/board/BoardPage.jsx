@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 
 import headerIcon from '../../assets/images/board/board-header-icon.svg';
-import gara from './test/gara.svg';
+import mainImg from '../../assets/images/board/board-main-image.svg';
+import boardMozzy from '../../assets/images/board/board-mozzy-image.svg'
 
 export default function BoardPage() {
     const navigate = useNavigate();
@@ -30,7 +31,23 @@ export default function BoardPage() {
                     이전 기록 보기 &gt;&gt;
                 </span>
             </div>
-            <img src={gara} alt="가라이미지" className="mt-8 cursor-pointer" onClick={() => callTestFunction()} />
+            <div className="grid grid-cols-[3fr,1fr] h-11/12">
+                <div className="flex items-end">
+                    <img 
+                        src={mainImg} 
+                        alt="보드 메인 이미지" 
+                        className="ml-5 w-full h-auto"
+                        onClick={() => callTestFunction()} 
+                    />
+                </div>
+                <div className="flex items-end">
+                    <img 
+                        src={boardMozzy} 
+                        alt="보드 모찌 이미지" 
+                        className="w-11/12"
+                    />
+                </div>
+            </div>
         </div>
     );
 }

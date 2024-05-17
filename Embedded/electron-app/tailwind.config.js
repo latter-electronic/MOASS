@@ -31,6 +31,9 @@ module.exports = {
         gitlabRed: '#E14328',
         primary: '#6ECEF5',
       },
+      height: {
+        '11/12': '85.6%',
+      },
       width: {
         navbarWidth: '6.5rem',
         '76': '19rem'
