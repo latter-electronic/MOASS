@@ -11,6 +11,7 @@ import com.moass.api.global.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -205,6 +206,8 @@ public class Oauth2JiraService {
                     }
                     String fullUrl = String.format("/ex/jira/%s%s", token.getCloudId(), jiraProxyRequestDto.getUrl());
                     log.info(fullUrl);
+                    log.info(String.valueOf(jiraProxyRequestDto));
+
                     WebClient.RequestHeadersSpec<?> requestSpec;
 
                     switch (jiraProxyRequestDto.getMethod().toUpperCase()) {
@@ -212,7 +215,7 @@ public class Oauth2JiraService {
                             requestSpec = jiraApiWebClient.post()
                                     .uri(fullUrl)
                                     .header("Authorization", "Bearer " + token.getAccessToken())
-                                    .body(Mono.just(jiraProxyRequestDto.getBody()), JsonNode.class);
+                                    .body(BodyInserters.fromValue(jiraProxyRequestDto.getBody()));
                             break;
                         case "GET":
                         default:
