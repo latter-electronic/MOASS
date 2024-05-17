@@ -277,10 +277,9 @@ public class MattermostService {
         String callbackUri1 = propertiesConfig.getMmWebhookUri1();
         String callbackUri2 = propertiesConfig.getMmWebhookUri2();
         String[] callbackUris = new String[]{callbackUri1, callbackUri2};
-
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/v4/hooks/outgoing")
                 .queryParam("channel_id", channelId);
-
+        log.info("웹훅 연동중 팀 : {} , 채널: {}. uri : {}", teamId, channelId,builder.toUriString());
         return mmApiWebClient.get()
                 .uri(builder.toUriString())
                 .header("Authorization", "Bearer " + token)
@@ -298,7 +297,7 @@ public class MattermostService {
                 })
                 .then(Mono.just(true))
                 .onErrorResume(e -> {
-                    log.error("Failed to create or update outgoing webhook", e);
+                    log.error("웹훅 업데이트중 에러발생", e);
                     return Mono.just(false);
                 });
     }
@@ -319,8 +318,7 @@ public class MattermostService {
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(Void.class)
-                .doOnSuccess(unused -> log.info("Outgoing webhook created successfully"))
-                .doOnError(error -> log.error("Failed to create outgoing webhook", error));
+                .doOnError(error -> log.error("웹훅 생성중 에러", error,requestBody));
     }
 
     private Mono<Void> deleteOutgoingWebhook(String webhookId, String token) {
@@ -329,8 +327,8 @@ public class MattermostService {
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Void.class)
-                .doOnSuccess(unused -> log.info("Outgoing webhook deleted successfully"))
-                .doOnError(error -> log.error("Failed to delete outgoing webhook", error));
+                .doOnSuccess(v -> log.info("웹훅 삭제 성공",webhookId))
+                .doOnError(error -> log.error("웹훅 삭제중 에러", error));
     }
 
     public Mono<MMToken> isConnected(String userId) {

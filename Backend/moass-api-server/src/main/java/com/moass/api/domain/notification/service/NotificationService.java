@@ -148,9 +148,10 @@ public class NotificationService {
         return Mono.fromCallable(() -> parseMattermostPayload(payload))
                 .flatMap(mmParseDto -> {
                     String channelId = mmParseDto.getChannelId();
-                    return mmChannelRepository.findById(channelId)
-                            .flatMap(mmChannel -> {
-                                mmParseDto.setTitle(mmChannel.getMmChannelName());
+                    return mmChannelRepository.findDetailByChannelId(channelId)
+                            .flatMap(mmChannelDetail -> {
+                                mmParseDto.setTitle(mmChannelDetail.getMmChannelName());
+                                mmParseDto.setIcon(mmChannelDetail.getMmTeamIcon());
                                 return userMmChannelRepository.findByMmChannelId(channelId)
                                         .flatMap(userMmChannel -> saveAndPushNotification(userMmChannel.getUserId(), new NotificationSendDto(mmParseDto)))
                                         .then();
@@ -165,7 +166,7 @@ public class NotificationService {
         String body = jsonNode.path("text").asText();
         String sender = jsonNode.path("user_name").asText();
         log.info(String.valueOf(jsonNode));
-        MmParseDto mmParseDto = new MmParseDto(source,body,channelId,sender,"");
+        MmParseDto mmParseDto = new MmParseDto(source,body,channelId,sender,"","");
         return mmParseDto;
     }
 }

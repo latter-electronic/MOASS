@@ -11,5 +11,6 @@ public class MmParseDto {
     private String channelId;
     private String sender;
     private String title;
+    private String icon;
 
 }
