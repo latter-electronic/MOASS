@@ -95,21 +95,43 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
                 child: Text('Gitlab 계정 연동을 확인해주세요'),
               ),
             ),
+          if (currentProject != null)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Project Issue',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
           if (currentProject != null && currentProject!.issues.isNotEmpty)
             for (var issue in currentProject!.issues)
               GitlabIssueCardWidget(
                 issue: issue,
               ),
+          if (currentProject != null && currentProject!.issues.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Center(child: Text('현재 활성화된 이슈가 없습니다')),
+            ),
+          if (currentProject != null)
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Text(
+                'Merge Request',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
           if (currentProject != null &&
               currentProject!.mergeRequests.isNotEmpty)
             for (var mergeRequest in currentProject!.mergeRequests)
               GitlabMRCardWidget(
                 mergeRequest: mergeRequest,
               ),
-          if (currentProject != null &&
-              currentProject!.issues.isEmpty &&
-              currentProject!.mergeRequests.isEmpty)
-            const Text('현재 활성화된 이슈나 머지 리퀘스트가 없습니다'),
+          if (currentProject != null && currentProject!.mergeRequests.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Center(child: Text('현재 열린 MR이 없습니다')),
+            ),
         ],
       ),
     );
