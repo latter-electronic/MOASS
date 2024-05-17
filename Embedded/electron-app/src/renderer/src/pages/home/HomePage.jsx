@@ -59,7 +59,7 @@ export default function HomePage() {
     useEffect(() => {
         // Electron에서 'motion-detected' 메시지를 수신
         window.electron.ipcRenderer.on('motion-detected', (event, data) => {
-            console.log('LongSit data: ', data.status)
+            console.log('status data: ', data.status)
             if (data.status === 'LONG_SIT') {
                 openLongSitModal();
             }

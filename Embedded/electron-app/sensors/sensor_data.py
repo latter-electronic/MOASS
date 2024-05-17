@@ -122,15 +122,15 @@ def handle_logged_out_state():
     try:
         current_time = time.time()
         if GPIO.input(motion_sensor_pin):
-            if motion_state != 'STAY':
-                motion_state = 'STAY'
+            if motion_state != 'LOGOUT_STAY':
+                motion_state = 'LOGOUT_STAY'
                 print(motion_state, file=sys.stderr)
                 set_display_power(True)
             last_motion_time = current_time
         else:
             if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
-                if motion_state != 'AWAY':
-                    motion_state = 'AWAY'
+                if motion_state != 'LOGOUT_AWAY':
+                    motion_state = 'LOGOUT_AWAY'
                     print(motion_state, file=sys.stderr)
                     set_display_power(False)
     except Exception as e:

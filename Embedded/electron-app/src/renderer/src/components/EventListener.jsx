@@ -5,7 +5,7 @@ import { deviceLogout } from '../services/deviceService';
 import useAuthStore from '../stores/AuthStore';
 import useTodoStore from '../stores/todoStore';
 import { fetchTodos } from '../services/todoService'; // fetchTodos 임포트 추가
-import { updateUserStatus } from '../services/userService'
+// import { updateUserStatus } from '../services/userService'
 
 export default function EventListener({ children }) {
     const navigate = useNavigate();
@@ -18,22 +18,23 @@ export default function EventListener({ children }) {
 
     const setTodos = useTodoStore(state => state.setTodos);
 
-    const handleUserStatusData = useCallback(async (event, data) => {
-        const status = data.status === 'AWAY' ? '0' : '1'; 
-        await updateUserStatus({ statusId: status }).then(() => {
-            console.log(`User status updated to ${data.status}`);
-        }).catch(error => {
-            console.error('Error updating user status:', error);
-        });
-    }, []);
+    // const handleUserStatusData = useCallback((event, data) => {
+    //     const status = data.status === 'AWAY' ? '0' : data.status === 'STAY' ? '1' : null;
+    //     console.log(status)
+    //     updateUserStatus({ statusId: status }).then(() => {
+    //         console.log(`User status updated to ${data.status}`);
+    //     }).catch(error => {
+    //         console.error('Error updating user status:', error);
+    //     });
+    // }, []);
 
-    useEffect(() => {
-        window.electron.ipcRenderer.on('motion-detected', handleUserStatusData);
+    // useEffect(() => {
+    //     window.electron.ipcRenderer.on('motion-detected', handleUserStatusData);
 
-        return () => {
-            window.electron.ipcRenderer.removeListener('motion-detected', handleUserStatusData);
-        };
-    }, [handleUserStatusData]);
+    //     return () => {
+    //         window.electron.ipcRenderer.removeListener('motion-detected', handleUserStatusData);
+    //     };
+    // }, [handleUserStatusData]);
 
 
     useEffect(() => {
