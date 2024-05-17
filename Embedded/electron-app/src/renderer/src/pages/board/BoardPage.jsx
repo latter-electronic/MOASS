@@ -6,6 +6,7 @@ import useGlobalStore from '../../stores/useGlobalStore';
 import headerIcon from '../../assets/images/board/board-header-icon.svg';
 import mainImg from '../../assets/images/board/board-main-image.svg';
 import boardMozzy from '../../assets/images/board/board-mozzy-image.svg';
+import testData from './test/board-test-data.json'
 
 export default function BoardPage() {
     const navigate = useNavigate();
