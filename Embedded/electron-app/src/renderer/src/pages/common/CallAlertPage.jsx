@@ -34,8 +34,8 @@ export default function CallAlertPage() {
         </div>
         <div className="flex-1 flex items-center justify-center text-12xl font-bold">호출</div>
         <div className="flex-1 flex items-center justify-center">
-          <div className="bg-gray-500 bg-opacity-50 py-2 px-4 rounded-full inline-block">
-            <span>{message}</span>
+          <div className="bg-opacity-50 py-2 px-4 rounded-full inline-block">
+            {/* <span>{message}</span> */}
           </div>
         </div>
       </div>

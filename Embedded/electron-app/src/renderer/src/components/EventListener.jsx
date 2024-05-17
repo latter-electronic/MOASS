@@ -60,7 +60,7 @@ export default function EventListener({ children }) {
         const { message, detail } = data;
         const [senderName, senderProfile] = detail.split(',');
 
-        alert(`Call from: ${senderName}\nMessage: ${message}\nProfile: ${senderProfile}`);
+        // alert(`Call from: ${senderName}\nMessage: ${message}\nProfile: ${senderProfile}`);
 
         // 페이지로 이동
         navigate('/callalert', { state: { message, senderName, senderProfile } });
