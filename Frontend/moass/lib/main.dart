@@ -81,6 +81,7 @@ Future<void> initializeFirebaseAndNotifications(
             channel.name,
             importance: Importance.max,
             priority: Priority.high,
+            icon: "@drawable/ic_notification",
           ),
         ),
       )
