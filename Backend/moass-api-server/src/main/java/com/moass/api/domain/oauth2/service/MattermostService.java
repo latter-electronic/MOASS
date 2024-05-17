@@ -339,17 +339,22 @@ public class MattermostService {
     }
 
     @Transactional
-    public Mono<Void> disconnectMattermost(String userId) {
+    public Mono<String> disconnectMattermost(String userId) {
         return mmTokenRepository.findByUserId(userId)
                 .flatMap(token -> {
                     log.info("Found token for userId {}: {}", userId, token);
                     return userMmChannelRepository.deleteByUserId(userId)
-                            .then(mmTokenRepository.deleteByUserId(userId))
-                            .then();
+                            .onErrorResume(e -> {
+                                log.warn("Failed to delete UserMMChannel for userId {}: {}", userId, e.getMessage());
+                                return Mono.empty();
+                            })
+                            .then(mmTokenRepository.delete(token))
+                            .then(Mono.just(token.getUserId()));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.warn("No token found for userId {}", userId);
                     return Mono.error(new CustomException("Mattermost 연결 정보가 없습니다.", HttpStatus.NOT_FOUND));
                 }));
     }
+
 }

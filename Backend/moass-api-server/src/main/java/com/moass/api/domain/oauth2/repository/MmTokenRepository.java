@@ -9,5 +9,6 @@ public interface MmTokenRepository  extends ReactiveCrudRepository<MMToken, Stri
     @Query("SELECT * FROM MMToken WHERE user_id = :userId")
     Mono<MMToken> findByUserId(String userId);
 
+    @Query("DELETE FROM MMToken WHERE user_id = :userId")
     Mono<Void> deleteByUserId(String userId);
 }
