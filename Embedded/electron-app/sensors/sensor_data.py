@@ -27,13 +27,13 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(motion_sensor_pin, GPIO.IN)
 
 last_motion_time = time.time()
-motion_state = None
+motion_state = 'AWAY'
 stay_start_time = None
 logged_in = False
 logged_in_lock = threading.Lock()
 
 NO_MOTION_TIMEOUT = 30  # 30 seconds
-LONG_SIT_TIMEOUT = 120  # 2 minutes
+LONG_SIT_TIMEOUT = 60  # 2 minutes
 
 print("Waiting for NFC card...", file=sys.stderr)
 
@@ -95,7 +95,7 @@ def handle_logged_in_state():
     try:
         current_time = time.time()
         if GPIO.input(motion_sensor_pin):
-            if motion_state == 'AWAY':
+            if motion_state == 'AWAY' or motion_state == 'LONG_SIT':
                 motion_state = 'STAY'
                 stay_start_time = current_time
                 send_motion_status("STAY")
@@ -126,13 +126,13 @@ def handle_logged_out_state():
                 motion_state = 'STAY'
                 print(motion_state, file=sys.stderr)
                 set_display_power(True)
+            last_motion_time = current_time
         else:
             if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
                 if motion_state != 'AWAY':
                     motion_state = 'AWAY'
                     print(motion_state, file=sys.stderr)
                     set_display_power(False)
-
     except Exception as e:
         print(f"An error occurred during motion detection: {e}", file=sys.stderr)
         traceback.print_exc()

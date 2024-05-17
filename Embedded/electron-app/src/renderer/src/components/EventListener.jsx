@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EventService from '../services/EventService';
 import { deviceLogout } from '../services/deviceService';
 import useAuthStore from '../stores/AuthStore';
-import useNotiStore from '../stores/notiStore';
+import useTodoStore from '../stores/todoStore';
+import { fetchTodos } from '../services/todoService'; // fetchTodos 임포트 추가
+import { updateUserStatus } from '../services/userService'
 
 export default function EventListener({ children }) {
     const navigate = useNavigate();
@@ -15,6 +17,24 @@ export default function EventListener({ children }) {
     }));
 
     const addNotification = useNotiStore(state => state.addNotification);
+
+    const handleUserStatusData = useCallback(async (event, data) => {
+        const status = data.status === 'AWAY' ? '0' : '1'; 
+        await updateUserStatus({ statusId: status }).then(() => {
+            console.log(`User status updated to ${data.status}`);
+        }).catch(error => {
+            console.error('Error updating user status:', error);
+        });
+    }, []);
+
+    useEffect(() => {
+        window.electron.ipcRenderer.on('motion-detected', handleUserStatusData);
+
+        return () => {
+            window.electron.ipcRenderer.removeListener('motion-detected', handleUserStatusData);
+        };
+    }, [handleUserStatusData]);
+
 
     useEffect(() => {
         if (accessToken) {
