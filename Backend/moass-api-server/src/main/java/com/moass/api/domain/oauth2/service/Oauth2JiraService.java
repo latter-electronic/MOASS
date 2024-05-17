@@ -235,7 +235,8 @@ public class Oauth2JiraService {
                                                     fullUrl),
                                             HttpStatus.INTERNAL_SERVER_ERROR
                                     ))))
-                            .bodyToMono(JsonNode.class);
+                            .bodyToMono(JsonNode.class)
+                            .defaultIfEmpty(null);
                 });
     }
 
