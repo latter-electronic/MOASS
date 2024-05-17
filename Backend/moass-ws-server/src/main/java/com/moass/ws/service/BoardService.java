@@ -6,7 +6,7 @@ import com.moass.ws.entity.Board;
 
 public interface BoardService {
 
-    void createBoard(Board board);
+    Board createBoard(Board board);
     void enterBoard(BoardEnterDto boardEnterDto);
 //    void quitBoard(BoardRequestDto dto);
     void drawBoard(Integer boardId, MessageDto message);

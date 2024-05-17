@@ -15,13 +15,13 @@ public class Room {
     private String id;
 
     @Field
+    private Integer boardId;
+
+    @Field
     private String name;
 
     @Field
     private String description;
-
-    @Field
-    private String address;
 
     List<String> participants;
     List<Drawing> drawings;
