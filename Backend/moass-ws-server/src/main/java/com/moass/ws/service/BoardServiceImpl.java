@@ -30,8 +30,8 @@ public class BoardServiceImpl implements BoardService {
 
     private final String[] colors = {"", "000000", "ff0000", "0000ff", "008000", "ff7f00", "8b00ff"};
 
-    public void createBoard(Board board) {
-        boardRepository.save(board);
+    public Board createBoard(Board board) {
+        return boardRepository.save(board);
     }
 
     public void enterBoard(BoardEnterDto boardEnterDto) {

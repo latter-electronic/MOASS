@@ -8,11 +8,11 @@ import lombok.Setter;
 public class RoomActionsDTO {
     private String userId;
     private String payload;
-    private String roomId;
+    private Integer boardId;
 
-    public RoomActionsDTO(String userId, String payload, String roomId) {
+    public RoomActionsDTO(String userId, String payload, Integer boardId) {
         this.userId = userId;
         this.payload = payload;
-        this.roomId = roomId;
+        this.boardId = boardId;
     }
 }

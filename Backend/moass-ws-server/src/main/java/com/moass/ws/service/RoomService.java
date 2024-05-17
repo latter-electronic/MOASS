@@ -14,7 +14,7 @@ public interface RoomService {
 
     void deleteRoom(String roomId);
 
-    Optional<Room> getRoom(String roomId);
+    Optional<Room> getRoom(Integer boardId);
 
     List<Room> getAllRooms();
 }

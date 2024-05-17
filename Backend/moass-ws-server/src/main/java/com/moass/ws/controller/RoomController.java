@@ -32,8 +32,10 @@ public class RoomController {
 
     @PostMapping
     public ResponseEntity<Room> createRoom(@RequestBody Room room) {
+        Board board = boardService.createBoard(new Board(room));
+        room.setBoardId(board.getBoardId());
+        System.out.println(board.getBoardId());
         roomService.save(room);
-        boardService.createBoard(new Board(room));
         return ResponseEntity.ok(room);
     }
 
@@ -55,7 +57,7 @@ public class RoomController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Room> getRoom(@PathVariable String id) {
+    public ResponseEntity<Room> getRoom(@PathVariable Integer id) {
         Optional<Room> room = roomService.getRoom(id);
         if (room.isPresent()) {
             return new ResponseEntity<>(room.get(), HttpStatus.OK);

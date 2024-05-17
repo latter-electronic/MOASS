@@ -30,8 +30,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Optional<Room> getRoom(String roomId) {
-        return roomDao.findById(roomId);
+    public Optional<Room> getRoom(Integer boardId) {
+        return roomDao.findByBoardId(boardId);
     }
 
     @Override

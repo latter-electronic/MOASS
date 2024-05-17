@@ -2,10 +2,16 @@ package com.moass.ws.entity;
 
 import com.moass.ws.model.Room;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Board {
 
     @Id
@@ -27,7 +33,6 @@ public class Board {
 
     public Board(Room room) {
         this.boardName = room.getName();
-        this.boardUrl = room.getAddress();
         this.isActive = true;
     }
 }

@@ -1,5 +1,6 @@
 package com.moass.ws.controller;
 
+import com.moass.ws.dao.RoomDao;
 import com.moass.ws.model.ActionResponseDTO;
 import com.moass.ws.model.Coordinates;
 import com.moass.ws.model.Room;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,6 +27,9 @@ public class WebSocketTextController {
 
     @Autowired
     private BoardUserRepository boardUserRepository;
+
+    @Autowired
+    private RoomDao roomDao;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -38,15 +43,15 @@ public class WebSocketTextController {
         return coordinates;
     }
 
-    @MessageMapping("/send/{roomId}/user")
-    @SendTo("/topic/{roomId}/user")
+    @MessageMapping("/send/{boardId}/user")
+    @SendTo("/topic/{boardId}/user")
     public ActionResponseDTO joinUser(@Payload RoomActionsDTO roomActions) {
         String userId = roomActions.getUserId();
         String action = roomActions.getPayload();
-        String roomId = roomActions.getRoomId();
+        Integer boardId = roomActions.getBoardId();
 
         Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(roomId));
+        query.addCriteria(Criteria.where("boardId").is(boardId));
         Update updateQuery = new Update();
 
         if(action.equals("CONNECT_USER")) {
@@ -54,18 +59,20 @@ public class WebSocketTextController {
             mongoTemplate.updateFirst(query, updateQuery, Room.class);
 
             String message = "User " + userId + " has successfully connected!";
-            Room room = mongoTemplate.findById(roomId, Room.class);
+            Room room = roomDao.findByBoardId(boardId).orElseThrow();
             return new ActionResponseDTO(message, room.getParticipants());
         } else if(action.equals("DISCONNECT_USER")) {
             updateQuery.pull("participants", userId);
             mongoTemplate.updateFirst(query, updateQuery, Room.class);
 
+            Room room = roomDao.findByBoardId(boardId).orElseThrow();
+
             // If the room is empty, delete it from DB
-            if(mongoTemplate.findById(roomId, Room.class).getParticipants().size() == 0)
+            if(room.getParticipants().isEmpty())
                 mongoTemplate.remove(query, Room.class);
 
             String message = "User " + userId + " has disconnected!";
-            return new ActionResponseDTO(message, mongoTemplate.findById(roomId, Room.class).getParticipants());
+            return new ActionResponseDTO(message, room.getParticipants());
         } else {
             return new ActionResponseDTO("Not supported", new ArrayList<String>());
         }
