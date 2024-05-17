@@ -132,14 +132,14 @@ class MyInfoApi {
 
       if (response.statusCode == 200) {
         print('유저 프로필 이미지 변경 성공!');
-        return response;
+        return response.statusCode;
       } else {
         print('유저 프로필 이미지 변경 실패');
-        return [];
+        return response.statusCode;
       }
     } on DioException catch (e) {
       print('프로필 이미지 에러: ${e.message}');
-      return null;
+      return e.message;
     }
   }
 
