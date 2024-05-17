@@ -215,6 +215,7 @@ public class Oauth2JiraService {
                             requestSpec = jiraApiWebClient.post()
                                     .uri(fullUrl)
                                     .header("Authorization", "Bearer " + token.getAccessToken())
+                                    .header("Content-Type", "application/json")
                                     .body(BodyInserters.fromValue(jiraProxyRequestDto.getBody()));
                             break;
                         case "GET":
