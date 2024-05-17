@@ -8,7 +8,7 @@ import profile3 from '../../assets/images/jira/jiraProfileImg3.png';
 import profile4 from '../../assets/images/jira/jiraProfileImg4.png';
 import profile5 from '../../assets/images/jira/jiraProfileImg5.png';
 import profile6 from '../../assets/images/jira/jiraProfileImg6.png';
-import { fetchCurrentSprintIssues, changeIssueStatus, checkJiraConnection } from '../../services/jiraService.js';
+import { fetchCurrentSprintIssues, changeIssueStatus, checkJiraConnection, getProject } from '../../services/jiraService.js';
 
 const profileImages = [profile1, profile2, profile3, profile4, profile5, profile6];
 
@@ -21,6 +21,8 @@ export default function JiraPage() {
     const [loading, setLoading] = useState({ todo: true, inProgress: true, done: true });
     const [selectedProfile, setSelectedProfile] = useState(null);
     const [isConnected, setIsConnected] = useState(false);
+    const [projectKey, setProjectKey] = useState('');
+
 
     useEffect(() => {
         async function checkConnectionAndFetchIssues() {
@@ -28,6 +30,11 @@ export default function JiraPage() {
                 const connectionStatus = await checkJiraConnection();
                 if (connectionStatus.data !== "null") {
                     setIsConnected(true);
+
+                    const projectData = await getProject();
+                    const projectKey = projectData.values[0].key;
+                    setProjectKey(projectKey);
+
                     fetchIssues('10000', 'todo');
                     fetchIssues('3', 'inProgress');
                     fetchIssues('10001', 'done');
@@ -115,8 +122,8 @@ export default function JiraPage() {
         <DragDropContext onDragEnd={onDragEnd}>
             <div className="mx-auto p-6 h-screen overflow-hidden">
                 <div className="flex items-center text-white font-extrabold text-3xl mb-5">
-                    <div>S10P31E203 보드</div>
-                    <div className="flex -space-x-2 ml-6">
+                    <div>{projectKey} 보드</div>
+                    {/* <div className="flex -space-x-2 ml-6">
                         {profileImages.map((avatar, index) => (
                             <button
                                 key={index}
@@ -126,7 +133,7 @@ export default function JiraPage() {
                                 <img src={avatar} alt={`participant ${index + 1}`} className="w-full h-full rounded-full" />
                             </button>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
 
                 {isConnected ? (
