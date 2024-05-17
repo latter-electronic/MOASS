@@ -18,9 +18,9 @@ export default function EventListener({ children }) {
 
     const setTodos = useTodoStore(state => state.setTodos);
 
-    const handleUserStatusData = useCallback((event, data) => {
+    const handleUserStatusData = useCallback(async (event, data) => {
         const status = data.status === 'AWAY' ? '0' : '1'; 
-        updateUserStatus({ statusId: status }).then(() => {
+        await updateUserStatus({ statusId: status }).then(() => {
             console.log(`User status updated to ${data.status}`);
         }).catch(error => {
             console.error('Error updating user status:', error);
