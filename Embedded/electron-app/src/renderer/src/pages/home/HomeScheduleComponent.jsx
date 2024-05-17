@@ -18,24 +18,30 @@ export default function HomeScheduleComponent() {
     useEffect(() => {
         const fetchSchedules = async () => {
             try {
-                const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
-                const [curriculumResponse, reservationResponse] = await Promise.all([
-                    fetchCurriculum(today), // Use today's date
-                    fetchReservationInfo()
-                ]);
+                // 하드코딩된 날짜 리스트
+                const dates = ['2024-05-16', '2024-05-17'];
+
+                // 각 날짜에 대한 커리큘럼 데이터를 가져옴
+                const curriculumPromises = dates.map(date => fetchCurriculum(date));
+                const curriculumResponses = await Promise.all(curriculumPromises);
+                const reservationResponse = await fetchReservationInfo();
 
                 let formattedCurriculumSchedules = [];
-                if (curriculumResponse.data && curriculumResponse.data.courses) {
-                    formattedCurriculumSchedules = curriculumResponse.data.courses.map((course, index) => ({
-                        id: `curriculum-${index + 1}`,
-                        date: today, // 날짜 추가
-                        type: `[${course.majorCategory}]`,
-                        title: course.title,
-                        time: course.period,
-                        color: 'border-blue-500',
-                        location: `${course.teacher} / ${course.room}`
-                    }));
-                }
+                curriculumResponses.forEach((curriculumResponse, dateIndex) => {
+                    if (curriculumResponse.data && curriculumResponse.data.courses) {
+                        const date = dates[dateIndex];
+                        const formattedSchedules = curriculumResponse.data.courses.map((course, index) => ({
+                            id: `curriculum-${dateIndex}-${index + 1}`,
+                            date: date, // 날짜 추가
+                            type: `[${course.majorCategory}]`,
+                            title: course.title,
+                            time: course.period,
+                            color: 'border-blue-500',
+                            location: `${course.teacher} / ${course.room}`
+                        }));
+                        formattedCurriculumSchedules = [...formattedCurriculumSchedules, ...formattedSchedules];
+                    }
+                });
 
                 let formattedReservationSchedules = [];
                 if (reservationResponse.data) {
@@ -78,7 +84,7 @@ export default function HomeScheduleComponent() {
     }, {});
 
     return (
-        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-100px)] scrollbar-hide items-center">
+        <div className="flex flex-col space-y-4 overflow-y-auto h-[calc(100vh-80px)] scrollbar-hide items-center">
             {Object.keys(groupedSchedules).map((date) => (
                 <div key={date} className="w-full max-w-screen-sm ml-8">
                     <div className="flex items-center">
