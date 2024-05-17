@@ -112,15 +112,15 @@ export default function BoardPage() {
                             </div>
                         </div>
                     ) : (
-                        <div className="absolute inset-0 flex flex-col justify-center items-center">
+                        <div className="absolute inset-0 flex flex-col justify-center items-center gap-3">
                             <div className="text-center text-2xl text-gray-500">
                                 현재 생성된 이음보드가 없어요 :&lt;
                             </div>
                             <button
                                 onClick={handleCreateBoard}
-                                className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                className="mt-4 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-2xl px-5 py-2.5 text-center me-2 mb-2"
                             >
-                                보드 생성하기
+                                이음보드 시작하기
                             </button>
                         </div>
                     )}
