@@ -211,7 +211,8 @@ public class Oauth2JiraService {
                         case "POST":
                             requestSpec = jiraApiWebClient.post()
                                     .uri(fullUrl)
-                                    .header("Authorization", "Bearer " + token.getAccessToken());
+                                    .header("Authorization", "Bearer " + token.getAccessToken())
+                                    .body(Mono.just(jiraProxyRequestDto.getBody()), JsonNode.class);
                             break;
                         case "GET":
                         default:
