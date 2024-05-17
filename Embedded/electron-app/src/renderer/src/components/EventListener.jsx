@@ -23,7 +23,7 @@ export default function EventListener({ children }) {
             });
 
             eventService.startListening(async (newData) => {
-                console.log("SSE Data Received:", newData.data); // 로그 추가
+                console.log("SSE Data Received:", newData.data);
                 try {
                     const parsedData = JSON.parse(newData.data);
 
