@@ -6,17 +6,19 @@ import com.moass.ws.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
 
-    @MessageMapping("/board/enter")
+    @MessageMapping("/enter")
     public void enterBoard(BoardEnterDto boardEnterDto) {
         System.out.println(boardEnterDto);
         boardService.enterBoard(boardEnterDto);
@@ -27,7 +29,7 @@ public class BoardController {
 //        boardService.quitBoard(dto);
 //    }
 
-    @MessageMapping("/board/{boardId}")
+    @MessageMapping("/{boardId}")
     public void draw(@DestinationVariable Integer boardId, MessageDto message) {
         System.out.println(message);
         boardService.drawBoard(boardId, message);
