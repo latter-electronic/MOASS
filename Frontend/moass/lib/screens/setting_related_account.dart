@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:moass/model/related_MM_account.dart';
 import 'package:moass/model/related_gitlab_account.dart';
 import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/services/jira_api.dart';
+import 'package:moass/services/mattermost_api.dart';
 import 'package:moass/widgets/top_bar.dart';
 
 import '../widgets/set_related_account.dart';
@@ -22,6 +24,7 @@ class _SettingRelatedAccountScreenState
   late String? userGitlabMail = '정보를 불러오고 있습니다...';
   late JiraApi jiraApi;
   late List<GitlabProject>? userGitlabProjects = [];
+  late List<MattermostTeam>? userMattermostTeamList = [];
 
   @override
   initState() {
@@ -39,6 +42,9 @@ class _SettingRelatedAccountScreenState
     var gitlabResult =
         await GitlabApi(dio: Dio(), storage: const FlutterSecureStorage())
             .fetchGitlabAccount();
+    var mmTeamResult =
+        await MatterMostApi(dio: Dio(), storage: const FlutterSecureStorage())
+            .fetchMatterMostChannels();
     // print('깃랩 메일 : ${gitlabResult?.gitlabEmail}');
     // print('깃랩 프로젝트 : ${gitlabResult?.gitlabProjects}');
     setState(() {
@@ -46,8 +52,9 @@ class _SettingRelatedAccountScreenState
       userJiraMail = result?.userMail;
       userGitlabMail = gitlabResult?.gitlabEmail;
       userGitlabProjects = gitlabResult?.gitlabProjects;
+      userMattermostTeamList = mmTeamResult;
 
-      print(userGitlabMail);
+      // print(userGitlabMail);
 
       // isLoading = false;
     });
@@ -64,6 +71,26 @@ class _SettingRelatedAccountScreenState
           child: Column(children: [
             SetRelatedAccount(service: 'jira', userJiraMail: userJiraMail),
             const SetRelatedAccount(service: 'mattermost'),
+            userMattermostTeamList != null
+                ? Column(
+                    children: [
+                      for (MattermostTeam userMattermostTeam
+                          in userMattermostTeamList!)
+                        for (MattermostChannel userMattermostChannel
+                            in userMattermostTeam.mmChannelList)
+                          Column(
+                            children: [
+                              Text(
+                                userMattermostTeam.mmTeamName,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Text(userMattermostChannel.channelName),
+                            ],
+                          ),
+                    ],
+                  )
+                : const SizedBox(),
             SetRelatedAccount(
               service: 'gitlab',
               userGitlabMail: userGitlabMail,

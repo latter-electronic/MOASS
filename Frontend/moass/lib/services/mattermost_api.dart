@@ -52,12 +52,13 @@ class MatterMostApi {
       // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
-        '$baseUrl/api/oauth2/jira/isconnected',
+        '$baseUrl/api/oauth2/mm/channels',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
 
       if (response.statusCode == 200) {
         final List<dynamic> mattermostTeamList = response.data['data'];
+        // print('MM 채널 정보 : ${response.data['data'].toString()}');
         for (var mattermostTeam in mattermostTeamList) {
           matterMostTeamListInstance
               .add(MattermostTeam.fromJson(mattermostTeam));
