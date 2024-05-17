@@ -65,6 +65,11 @@ const AuthStore = create((set) => ({
     }
     set({ isCheckingAuth: false });
   },
+
+  updateAccessToken: (newAccessToken) => {
+    localStorage.setItem('accessToken', newAccessToken);
+    set({ accessToken: newAccessToken });
+  },
 }));
 
 export default AuthStore;

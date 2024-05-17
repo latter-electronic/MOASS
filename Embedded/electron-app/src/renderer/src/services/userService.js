@@ -34,7 +34,7 @@ export const refreshAccessToken = async () => {
     });
 
     const { accessToken } = response.data.data;
-    AuthStore.getState().login(accessToken, refreshToken, AuthStore.getState().deviceId, AuthStore.getState().cardSerialId);
+    AuthStore.getState().updateAccessToken(accessToken);
     return accessToken;
 };
 
