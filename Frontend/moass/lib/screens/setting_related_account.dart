@@ -60,14 +60,16 @@ class _SettingRelatedAccountScreenState
           title: '연동 계정 관리',
           icon: Icons.settings,
         ),
-        body: Column(children: [
-          SetRelatedAccount(service: 'jira', userJiraMail: userJiraMail),
-          const SetRelatedAccount(service: 'mattermost'),
-          SetRelatedAccount(
-            service: 'gitlab',
-            userGitlabMail: userGitlabMail,
-            userGitlabProject: userGitlabProjects,
-          ),
-        ]));
+        body: SingleChildScrollView(
+          child: Column(children: [
+            SetRelatedAccount(service: 'jira', userJiraMail: userJiraMail),
+            const SetRelatedAccount(service: 'mattermost'),
+            SetRelatedAccount(
+              service: 'gitlab',
+              userGitlabMail: userGitlabMail,
+              userGitlabProject: userGitlabProjects,
+            ),
+          ]),
+        ));
   }
 }
