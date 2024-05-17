@@ -73,19 +73,19 @@ export default function HomeTodoListComponent() {
     if (error) return <div>Failed to load To-Do list: {error}</div>;
 
     return (
-        <div className="bg-white/5 p-6 rounded-lg w-72 mt-5 h-60 scrollbar-hide overflow-y-auto">
+        <div className="bg-white/5 p-6 rounded-lg w-72 mt-5 h-60 overflow-y-auto scrollbar-hide">
             <h1 className="text-white text-2xl font-bold mb-4">To-Do List ✨</h1>
             <ul>
                 {todos.map((todo) => (
-                    <li key={todo.todoId} className="flex items-center mb-2 text-xl">
+                    <li key={todo.todoId} className="flex items-start mb-2 text-xl">
                         <input
                             id={`todo-${todo.todoId}`}
                             type="checkbox"
                             checked={todo.completedFlag}
                             onChange={() => toggleTodo(todo.todoId)}
-                            className="form-checkbox h-5 w-5 text-blue-600"
+                            className="form-checkbox h-5 w-5 text-blue-600 mt-1 flex-shrink-0"
                         />
-                        <label htmlFor={`todo-${todo.todoId}`} className="ml-2 text-white font-light cursor-pointer">
+                        <label htmlFor={`todo-${todo.todoId}`} className="ml-2 text-white font-light cursor-pointer break-words">
                             <span className={todo.completedFlag ? 'line-through' : ''}>
                                 {todo.content}
                             </span>
