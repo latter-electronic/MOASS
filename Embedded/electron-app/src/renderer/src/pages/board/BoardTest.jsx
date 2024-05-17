@@ -7,7 +7,7 @@ export default function BoardTest() {
     return (
         <div className="w-screen h-screen bg-white">
             <iframe
-                src="http://k10e203.p.ssafy.io:5001/boards/J-VR-Dvm0K7Fmr7pG9IHauWLXDG-5EImxUqbI5EUV3Y-"
+                src="https://wbo.ophir.dev/boards/moass1"
                 title="Embedded Board"
                 className="w-full h-full bg-white"
                 allowFullScreen
