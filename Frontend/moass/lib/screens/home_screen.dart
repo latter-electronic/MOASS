@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/screens/login_screen.dart';
 import 'package:moass/screens/main_admin_home_screen.dart';
@@ -16,7 +15,6 @@ import 'package:moass/screens/board_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/sse_listener_api.dart';
 import 'package:moass/widgets/bottom_navbar.dart';
-import 'package:moass/widgets/top_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Widget> _widgetOptions = [];
   final MyInfoApi _api =
       MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -45,21 +44,27 @@ class _HomeScreenState extends State<HomeScreen> {
     MyProfile? profile = await _api.fetchUserProfile();
     if (profile != null) {
       setupWidgetOptions(profile.jobCode);
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
+      );
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void setupWidgetOptions(int jobCode) {
-    setState(() {
-      _widgetOptions = [
-        (jobCode == 1) ? const WorkScreen() : const WorkAdminScreen(),
-        (jobCode == 1)
-            ? const ReservationScreen()
-            : const ReservationAdminScreen(),
-        (jobCode == 1) ? const MainHomeScreen() : const MainAdminScreen(),
-        jobCode == 1 ? const SeatScreen() : const SeatAdminScreen(),
-        const BoardScreen(),
-      ];
-    });
+    _widgetOptions = [
+      (jobCode == 1) ? const WorkScreen() : const WorkAdminScreen(),
+      (jobCode == 1)
+          ? const ReservationScreen()
+          : const ReservationAdminScreen(),
+      (jobCode == 1) ? const MainHomeScreen() : const MainAdminScreen(),
+      jobCode == 1 ? const SeatScreen() : const SeatAdminScreen(),
+      const BoardScreen(),
+    ];
   }
 
   void _onItemTapped(int index) {
@@ -70,35 +75,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // _requestStoragePermission(context); // 저장소 권한 요청
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: MainHomeScreen(),
+        ),
+      );
+    }
 
     return Scaffold(
       body: Center(
         child: _widgetOptions.isNotEmpty
             ? _widgetOptions.elementAt(_selectedIndex)
-            // 무한로딩시 => 로그인으로 이동 IF 바텀네브바 보이면 다시 수정
-            : const LoginScreen(),
+            : const CircularProgressIndicator(), // 로딩 표시
       ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _selectedIndex,
-        onItemSelected: _onItemTapped,
-      ),
+      bottomNavigationBar: _widgetOptions.isNotEmpty
+          ? BottomNavBar(
+              currentIndex: _selectedIndex,
+              onItemSelected: _onItemTapped,
+            )
+          : null,
     );
   }
-
-  // 저장소 권한 확인
-  // void _requestStoragePermission(BuildContext context) async {
-  //   if (await Permission.storage.isDenied) {
-  //     final status = await Permission.storage.request();
-  //     if (status.isGranted) {
-  //       print('Storage permission granted');
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text('저장소 권한이 필요합니다.'),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
 }

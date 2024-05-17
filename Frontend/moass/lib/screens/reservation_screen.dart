@@ -113,6 +113,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
   @override
   Widget build(BuildContext context) {
     String formattedDate = DateFormat('yyyy. MM. dd').format(selectedDate);
+    DateTime now = DateTime.now();
+
+    // 유효한 예약 항목 필터링
+    List<MyReservationModel> validReservations = reservations
+        .where((reservation) => now.isBefore(convertEndTimeFromIndex(
+            reservation.infoDate, reservation.infoTime)))
+        .toList();
 
     return Scaffold(
       appBar:
@@ -148,7 +155,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -157,7 +164,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                     onPressed: () => _changeDate(false)),
                 Text(formattedDate,
                     style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
+                        fontSize: 20, fontWeight: FontWeight.bold)),
                 IconButton(
                     icon: const Icon(Icons.arrow_forward_ios),
                     onPressed: () => _changeDate(true)),
@@ -165,7 +172,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
             ),
           ),
           const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: CategoryText(text: '나의 예약 리스트'))),
@@ -173,75 +180,134 @@ class _ReservationScreenState extends State<ReservationScreen> {
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
-                    itemCount: reservations.length,
+                    itemCount: validReservations.length,
                     itemBuilder: (context, index) {
-                      var reservation = reservations[index];
+                      var reservation = validReservations[index];
                       String timeSlot = convertTimeFromIndex(
                           reservation.infoTime); // 시간 변환 함수 호출
-                      String endTimeSlot = convertEndTimeFromIndex(
+                      DateTime endTime = convertEndTimeFromIndex(
+                          reservation.infoDate,
                           reservation.infoTime); // 끝나는 시간 변환 함수 호출
+                      DateTime startTime = convertStartTimeFromIndex(
+                          reservation.infoDate, reservation.infoTime);
+
+                      // 현재 시간과 예약 시간 사이의 경과 비율 계산
+                      double elapsedRatio =
+                          now.isAfter(startTime) && now.isBefore(endTime)
+                              ? (now.difference(startTime).inMinutes /
+                                  endTime.difference(startTime).inMinutes)
+                              : now.isAfter(endTime)
+                                  ? 1.0
+                                  : 0.0;
 
                       return GestureDetector(
                         onLongPress: () => _showCancelDialog(
                             context, reservation.infoId), // context 추가
                         child: Card(
-                          margin: const EdgeInsets.all(8.0),
+                          margin: index == 0
+                              ? const EdgeInsets.all(7.0)
+                              : const EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
+                            borderRadius: BorderRadius.circular(10.0),
+                            // 강조효과 테두리 나중에 필요할시 사용
+                            // side: BorderSide(
+                            //   color: index == 0
+                            //       ? const Color.fromARGB(255, 144, 109, 225)
+                            //       : Colors.transparent,
+                            //   width: 2.0,
+                            // ),
+                          ),
                           elevation: 8.0,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  width: double.infinity,
-                                  decoration: const BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(10.0))),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(reservation.reservationName),
-                                      Text(reservation.infoName,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18)),
-                                      const SizedBox(height: 8),
-                                      // 프로필 이미지 리스트
-                                      Row(
-                                        children: reservation
-                                            .userSearchInfoDtoList
-                                            .map<Widget>((user) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: CircleAvatar(
-                                              backgroundImage: user.profileImg !=
-                                                      null
-                                                  ? NetworkImage(
-                                                      '${user.profileImg}')
-                                                  : const AssetImage(
-                                                          'assets/img/nullProfile.png')
-                                                      as ImageProvider,
-                                              radius: 20,
-                                            ),
-                                          );
-                                        }).toList(),
-                                      )
-                                    ],
-                                  )),
-                              Container(
-                                padding: const EdgeInsets.all(8.0),
+                                // padding: const EdgeInsets.all(8.0),
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.vertical(
-                                        bottom: Radius.circular(10.0))),
+                                  color: Color.fromARGB(255, 97, 177, 241),
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(10.0)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(reservation.infoName,
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18)),
+                                          Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: Color(
+                                                    int.parse(reservation
+                                                        .colorCode
+                                                        .replaceAll(
+                                                            '#', '0xff'))),
+                                                radius: 8,
+                                              ),
+                                              Text(reservation.reservationName),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // const SizedBox(height: 8),
+                                    // 프로필 이미지 리스트
+                                    Row(
+                                      children: reservation
+                                          .userSearchInfoDtoList
+                                          .map<Widget>((user) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: CircleAvatar(
+                                            backgroundImage: user.profileImg !=
+                                                    null
+                                                ? NetworkImage(
+                                                    '${user.profileImg}')
+                                                : const AssetImage(
+                                                        'assets/img/nullProfile.png')
+                                                    as ImageProvider,
+                                            radius: 20,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              AnimatedContainer(
+                                duration: const Duration(seconds: 1),
+                                padding: const EdgeInsets.all(8.0),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      const Color.fromARGB(255, 196, 211, 215)
+                                          .withOpacity(elapsedRatio),
+                                      Colors.white
+                                    ],
+                                    stops: [elapsedRatio, elapsedRatio + 0.01],
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                  ),
+                                  borderRadius: const BorderRadius.vertical(
+                                      bottom: Radius.circular(10.0)),
+                                ),
                                 child: Text(
-                                    "${reservation.infoDate} at $timeSlot ~ $endTimeSlot", // 시간 표시
-                                    style:
-                                        const TextStyle(color: Colors.black54)),
+                                  "${reservation.infoDate} at $timeSlot ~ ${DateFormat('HH:mm').format(endTime)}", // 시간 표시
+                                  style: const TextStyle(
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
                               ),
                             ],
                           ),
@@ -264,9 +330,18 @@ String convertTimeFromIndex(int index) {
 }
 
 // infoTime을 끝나는 시간으로 바꿔주는 함수
-String convertEndTimeFromIndex(int index) {
+DateTime convertEndTimeFromIndex(String date, int index) {
   int hour = 9 + (index - 1) ~/ 2; // 9시부터 시작하므로
   int minute = (index % 2 == 1) ? 30 : 0;
   hour = (minute == 0) ? hour + 1 : hour; // 30분인 경우 시간 추가
-  return "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
+  return DateTime.parse(
+      '$date ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00');
+}
+
+// infoTime을 시작 시간으로 바꿔주는 함수
+DateTime convertStartTimeFromIndex(String date, int index) {
+  int hour = 9 + (index - 1) ~/ 2;
+  int minute = (index % 2 == 1) ? 0 : 30;
+  return DateTime.parse(
+      '$date ${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}:00');
 }
