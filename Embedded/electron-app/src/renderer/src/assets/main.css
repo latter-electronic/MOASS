@@ -4,3 +4,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-checkbox {
+    @apply appearance-none border-2 border-gray-500 rounded-sm size-5 mt-1 flex-shrink-0 relative;
+  
+    &::before {
+      @apply content-['✔'] text-gray-400 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden;
+      font-size: 1.1rem;
+    }
+  
+    &:checked::before {
+      @apply block;
+    }
+  }

@@ -82,7 +82,7 @@ export default function HomeTodoListComponent() {
                             type="checkbox"
                             checked={todo.completedFlag}
                             onChange={() => toggleTodo(todo.todoId)}
-                            className="form-checkbox h-5 w-5 text-blue-600 mt-1 flex-shrink-0"
+                            className="custom-checkbox"
                         />
                         <label htmlFor={`todo-${todo.todoId}`} className="ml-2 text-white font-light cursor-pointer break-words">
                             <span className={todo.completedFlag ? 'line-through' : ''}>
