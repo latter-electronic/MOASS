@@ -482,7 +482,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               const CurrentSchedule(),
               const CategoryText(text: '할 일 목록'),
               const ToDoListWidget(),
-              const CategoryText(text: '오늘 내 예약'),
+              const CategoryText(text: '나의 예약'),
               isReservationLoading
                   ? const Center(child: CircularProgressIndicator())
                   : reservations.isNotEmpty
