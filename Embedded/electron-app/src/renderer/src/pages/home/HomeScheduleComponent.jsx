@@ -13,8 +13,9 @@ export default function HomeScheduleComponent() {
     useEffect(() => {
         const fetchSchedules = async () => {
             try {
+                const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
                 const [curriculumResponse, reservationResponse] = await Promise.all([
-                    fetchCurriculum('2024-05-13'),
+                    fetchCurriculum(today), // Use today's date
                     fetchReservationInfo()
                 ]);
 
@@ -37,11 +38,11 @@ export default function HomeScheduleComponent() {
                             id: `reservation-${index}-${subIndex}`,
                             type: '',
                             title: reservation.reservationName,
-                            time: `${info.infoDate} ${info.infoTime}`, // Adjust as needed
-                            color: 'border-pink-500', // Adjust color as needed
+                            time: `${info.infoDate} ${info.infoTime}`,
+                            color: 'border-pink-500',
                             location: info.infoName,
-                            participants: 6, // Example participant number, adjust as needed
-                            avatars: [profileImg1, profileImg2, profileImg3] // Example avatars, adjust as needed
+                            participants: 6,
+                            avatars: [profileImg1, profileImg2, profileImg3]
                         })) : []
                     );
                 }

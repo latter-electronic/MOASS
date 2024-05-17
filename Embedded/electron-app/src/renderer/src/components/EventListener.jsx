@@ -20,6 +20,7 @@ export default function EventListener({ children }) {
             });
 
             eventService.startListening(async (newData) => {
+                console.log(newData.data)
                 try {
                     const parsedData = JSON.parse(newData.data);
 
