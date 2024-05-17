@@ -1,11 +1,30 @@
 import { moassApiAxios } from './apiConfig.js';
-import AuthStore from '../stores/AuthStore.js'; 
-
-import testDoneIssues from '../pages/jira/proxyTest/testJson10001.json' 
+import AuthStore from '../stores/AuthStore.js';
 
 const axios = moassApiAxios();
 const prefix = 'api/oauth2/jira/proxy';
+const CACHE_EXPIRATION_MS = 5 * 60 * 1000; // 캐시 만료 시간: 5분
 
+const getCache = (key) => {
+    const cachedData = localStorage.getItem(key);
+    if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        if (Date.now() < parsedData.expiration) {
+            return parsedData.data;
+        } else {
+            localStorage.removeItem(key);
+        }
+    }
+    return null;
+};
+
+const setCache = (key, data) => {
+    const cacheData = {
+        data,
+        expiration: Date.now() + CACHE_EXPIRATION_MS,
+    };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+};
 
 /**
  * 현재 Jira 연결 상태 확인(프록시x)
@@ -30,7 +49,6 @@ export const checkJiraConnection = async () => {
         throw error;
     });
 };
-
 
 /**
  * 현재 로그인한 사용자의 Jira 정보 조회
@@ -59,7 +77,6 @@ export const getCurrentUser = async () => {
     });
 };
 
-
 /**
  * 현재 열려있는 스프린트의 이슈들 검색
  * 
@@ -67,6 +84,12 @@ export const getCurrentUser = async () => {
  * @returns {Promise} 이슈 데이터
  */
 export const fetchCurrentSprintIssues = async (statusId) => {
+    const cacheKey = `currentSprintIssues-${statusId}`;
+    const cachedData = getCache(cacheKey);
+    if (cachedData) {
+        return { issues: cachedData };
+    }
+
     const { accessToken } = AuthStore.getState();
     const projectData = await getProject();
     const projectKey = projectData.values[0].key;
@@ -99,6 +122,8 @@ export const fetchCurrentSprintIssues = async (statusId) => {
         }
         return issue;
     }));
+
+    setCache(cacheKey, issuesWithEpics);
 
     return { issues: issuesWithEpics };
 };
@@ -162,13 +187,19 @@ export const fetchRecentClosedSprintIssues = async () => {
  * expand: insight  통해 lastIssueUpdatedTime 키값 json 결과값에 추가하고 해당 키를 통해 desc 정렬. 마지막 결과 1개만 받아옴
  */
 export const getProject = async () => {
+    const cacheKey = 'jiraProjects';
+    const cachedData = getCache(cacheKey);
+    if (cachedData) {
+        return cachedData;
+    }
+
     const { accessToken } = AuthStore.getState();
     const data = {
         method: "get",
         url: "/rest/api/3/project/search?maxResults=1&expand=insight&orderBy=-lastIssueUpdatedTime"
     };
 
-    return axios.post(prefix, data, {
+    const projectData = await axios.post(prefix, data, {
         headers: {
             'Authorization': `Bearer ${accessToken}`,
             'Content-Type': 'application/json'
@@ -181,6 +212,9 @@ export const getProject = async () => {
         console.error('Error fetching projects:', error);
         throw error;
     });
+
+    setCache(cacheKey, projectData);
+    return projectData;
 };
 
 /**
