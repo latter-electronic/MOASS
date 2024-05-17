@@ -12,7 +12,6 @@ export default function BoardPage() {
     const [boards, setBoards] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [newBoardName, setNewBoardName] = useState('');
 
     const user = useGlobalStore(state => state.user);
 
@@ -41,8 +40,20 @@ export default function BoardPage() {
     };
 
     const handleCreateBoard = async () => {
+        // 현재 날짜와 시간을 포맷팅하여 보드 이름 생성
+        const now = new Date();
+        const formattedDate = now.toLocaleString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        });
+        const boardName = `${formattedDate}의 이음보드`;
+
         try {
-            const response = await createBoard({ boardName: newBoardName }, user.userId);
+            const response = await createBoard({ boardName }, user.userId);
             console.log("보드 생성 완료:", response.data);
             // 보드 목록을 다시 로드
             const boardsResponse = await fetchBoards();
@@ -87,16 +98,9 @@ export default function BoardPage() {
                             <div className="text-center text-2xl text-gray-500">
                                 현재 생성된 이음보드가 없어요 :&lt;
                             </div>
-                            <input
-                                type="text"
-                                value={newBoardName}
-                                onChange={(e) => setNewBoardName(e.target.value)}
-                                placeholder="보드 이름을 입력하세요"
-                                className="mt-4 p-2 border rounded"
-                            />
                             <button
                                 onClick={handleCreateBoard}
-                                className="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                             >
                                 보드 생성하기
                             </button>
