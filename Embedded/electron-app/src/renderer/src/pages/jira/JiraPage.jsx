@@ -63,8 +63,8 @@ export default function JiraPage() {
             return;
         }
 
-        const sourceColumn = issues[source.droppableId];
-        const destColumn = issues[destination.droppableId];
+        const sourceColumn = Array.from(issues[source.droppableId]);
+        const destColumn = Array.from(issues[destination.droppableId]);
         const [movedIssue] = sourceColumn.splice(source.index, 1);
         destColumn.splice(destination.index, 0, movedIssue);
 
