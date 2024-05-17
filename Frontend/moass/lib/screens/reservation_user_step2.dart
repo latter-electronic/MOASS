@@ -2,16 +2,19 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/reservation_model.dart';
 import 'package:moass/screens/home_screen.dart';
 import 'package:moass/screens/reservation_screen.dart';
+import 'package:moass/screens/signup_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
+import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/widgets/user_search_widget.dart';
 
 class ReservationUserStep2 extends StatefulWidget {
@@ -211,16 +214,29 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('시설 / 팀미팅 예약')),
+      appBar: const TopBar(
+        title: '시설 / 팀미팅 예약',
+        icon: Icons.edit_calendar_outlined,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
+            const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CategoryText(
-                    text: DateFormat('yyyy.MM.dd').format(widget.selectedDate)),
+                // CategoryText(
+                //     text: DateFormat('yyyy.MM.dd').format(widget.selectedDate)),
+                CategoryText(text: '시간 선택'),
               ],
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14.0),
+              child: const Row(
+                children: [
+                  // Text(DateFormat('yyyy.MM.dd').format(widget.selectedDate)),
+                  Text('시간을 선택해 주세요')
+                ],
+              ),
             ),
             ReservationBox(
               reservation: widget.reservation,
@@ -241,7 +257,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
                 controller: _reservationNameController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: '회의 이름',
+                  labelText: '회의 이름 : 최대 4글자',
                 ),
               ),
             ),
@@ -318,7 +334,11 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
           style: ElevatedButton.styleFrom(
             backgroundColor: isButtonActive ? Colors.blue : Colors.grey,
           ),
-          child: const Text('예약하기'),
+          child: Text('예약하기',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: isButtonActive ? Colors.white : Colors.grey)),
         ),
       ),
     );
