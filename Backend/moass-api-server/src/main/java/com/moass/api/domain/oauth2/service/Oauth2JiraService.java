@@ -206,6 +206,8 @@ public class Oauth2JiraService {
                     }
                     String fullUrl = String.format("/ex/jira/%s%s", token.getCloudId(), jiraProxyRequestDto.getUrl());
                     log.info(fullUrl);
+                    log.info(String.valueOf(jiraProxyRequestDto));
+
                     WebClient.RequestHeadersSpec<?> requestSpec;
 
                     switch (jiraProxyRequestDto.getMethod().toUpperCase()) {
