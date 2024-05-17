@@ -268,6 +268,7 @@ public class UserController {
                     log.info(String.valueOf(usersInfo));
                     return sseService.notifyUser(receiverInfo.getUserId(),
                                     new SseOrderDto("call", senderInfo.getUserName() + "," + senderProfileImg, userCallDto.getMessage()))
+                            .then(notificationService.saveAndPushNotification(receiverInfo.getUserId(),new NotificationSendDto("call","호출",userCallDto.getMessage(),senderInfo.getUserName(),senderProfileImg)))
                             .thenReturn(usersInfo)
                             .flatMap(result -> ApiResponse.ok("호출 성공", result))
                             .onErrorResume(e -> ApiResponse.error("알람 전송 실패 : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
