@@ -142,6 +142,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
                   padding: MaterialStateProperty.all<EdgeInsets>(
                       const EdgeInsets.symmetric(
                           horizontal: 32.0, vertical: 10.0)),
+                  // shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  //   RoundedRectangleBorder(
+                  //     borderRadius: BorderRadius.circular(10.0), // 모서리 둥글게 설정
+                  //   ),
+                  // ),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -150,7 +155,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                         builder: (context) => const ReservationUserStep1()),
                   );
                 },
-                child: const Text('시설/팀미팅 예약하기'),
+                child: const Text('시설/미팅 예약하기'),
               ),
             ),
           ),
@@ -200,13 +205,16 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                   ? 1.0
                                   : 0.0;
 
-                      return GestureDetector(
+                      return InkWell(
                         onLongPress: () => _showCancelDialog(
                             context, reservation.infoId), // context 추가
                         child: Card(
+                          clipBehavior: Clip.hardEdge,
                           margin: index == 0
-                              ? const EdgeInsets.all(7.0)
-                              : const EdgeInsets.all(15.0),
+                              ? const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10)
+                              : const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                             // 강조효과 테두리 나중에 필요할시 사용
@@ -225,7 +233,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                 // padding: const EdgeInsets.all(8.0),
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 97, 177, 241),
+                                  color: Color(0xFF6ECEF5),
                                   borderRadius: BorderRadius.vertical(
                                       top: Radius.circular(10.0)),
                                 ),
@@ -233,8 +241,11 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 10),
+                                      padding: const EdgeInsets.only(
+                                          top: 8,
+                                          left: 10,
+                                          right: 10,
+                                          bottom: 4),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -242,7 +253,8 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                           Text(reservation.infoName,
                                               style: const TextStyle(
                                                   color: Colors.white,
-                                                  fontSize: 18)),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 30)),
                                           Row(
                                             children: [
                                               CircleAvatar(
@@ -253,6 +265,7 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                                             '#', '0xff'))),
                                                 radius: 8,
                                               ),
+                                              const SizedBox(width: 4),
                                               Text(reservation.reservationName),
                                             ],
                                           ),
@@ -261,52 +274,93 @@ class _ReservationScreenState extends State<ReservationScreen> {
                                     ),
                                     // const SizedBox(height: 8),
                                     // 프로필 이미지 리스트
-                                    Row(
-                                      children: reservation
-                                          .userSearchInfoDtoList
-                                          .map<Widget>((user) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: CircleAvatar(
-                                            backgroundImage: user.profileImg !=
-                                                    null
-                                                ? NetworkImage(
-                                                    '${user.profileImg}')
-                                                : const AssetImage(
-                                                        'assets/img/nullProfile.png')
-                                                    as ImageProvider,
-                                            radius: 20,
-                                          ),
-                                        );
-                                      }).toList(),
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        // borderRadius: BorderRadius.vertical(
+                                        //     top: Radius.circular(10.0)),
+                                      ),
+                                      child: Row(
+                                        children: reservation
+                                            .userSearchInfoDtoList
+                                            .map<Widget>((user) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8, bottom: 6, top: 6),
+                                            child: CircleAvatar(
+                                              backgroundImage: user.profileImg !=
+                                                      null
+                                                  ? NetworkImage(
+                                                      '${user.profileImg}')
+                                                  : const AssetImage(
+                                                          'assets/img/nullProfile.png')
+                                                      as ImageProvider,
+                                              radius: 15,
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
                                     )
                                   ],
                                 ),
                               ),
-                              AnimatedContainer(
-                                duration: const Duration(seconds: 1),
-                                padding: const EdgeInsets.all(8.0),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      const Color.fromARGB(255, 196, 211, 215)
-                                          .withOpacity(elapsedRatio),
-                                      Colors.white
-                                    ],
-                                    stops: [elapsedRatio, elapsedRatio + 0.01],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
+                              Container(
+                                decoration:
+                                    const BoxDecoration(color: Colors.white),
+                                clipBehavior: Clip.hardEdge,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 4),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(seconds: 1),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 0),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: const [
+                                          Color(0xFF00C1A6),
+                                          Colors.white
+                                        ],
+                                        stops: [
+                                          elapsedRatio,
+                                          elapsedRatio + 0.01
+                                        ],
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                      ),
+                                      borderRadius: const BorderRadius.vertical(
+                                          bottom: Radius.circular(10.0),
+                                          top: Radius.circular(10.00)),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(Icons.access_time,
+                                                size: 20),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              timeSlot, // 시간 표시
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          DateFormat('HH:mm').format(endTime),
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  borderRadius: const BorderRadius.vertical(
-                                      bottom: Radius.circular(10.0)),
-                                ),
-                                child: Text(
-                                  "${reservation.infoDate} at $timeSlot ~ ${DateFormat('HH:mm').format(endTime)}", // 시간 표시
-                                  style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
                                 ),
                               ),
                             ],
