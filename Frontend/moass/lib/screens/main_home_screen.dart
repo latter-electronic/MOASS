@@ -17,6 +17,7 @@ import 'package:moass/widgets/check_box.dart';
 import 'package:moass/widgets/top_bar.dart';
 
 import '../widgets/category_text.dart';
+import '../widgets/current_schedule.dart';
 import '../widgets/schedule_box.dart';
 import '../widgets/to_do_list.dart';
 
@@ -477,17 +478,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 },
               ),
               const CategoryText(text: '다음 일정'),
-              const SizedBox(
-                height: 50,
-                child: Center(
-                  child: Column(
-                    children: [
-                      ScheduleBox(
-                          title: '[Live] 생성형 AI 특강', time: '14:00-15:00'),
-                    ],
-                  ),
-                ),
-              ),
+              const CurrentSchedule(),
               const CategoryText(text: '할 일 목록'),
               const ToDoListWidget(),
               const CategoryText(text: '오늘 내 예약'),

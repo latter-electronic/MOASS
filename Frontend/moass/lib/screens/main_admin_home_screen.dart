@@ -1,14 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
+import 'package:moass/model/reservation_model.dart';
+import 'package:moass/model/scheduleModel.dart';
 import 'package:moass/model/user_info.dart';
 import 'package:moass/screens/notification_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/device_api.dart';
 import 'package:moass/services/myinfo_api.dart';
+import 'package:moass/services/reservation_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
+import 'package:moass/widgets/meeting_table.dart';
 import 'package:moass/widgets/seat_map.dart';
 import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/widgets/user_search_for_call.dart';
@@ -27,13 +33,35 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
   bool isLoading = true;
   late MyInfoApi api;
   FocusNode textfocus = FocusNode();
+  List<ReservationDayModel> reservations = [];
+  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   @override
   void initState() {
     api = MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage());
 
-    fetchMyInfo();
     super.initState();
+    fetchMyInfo();
+    initializeDateFormatting('ko_KR').then((_) {
+      setState(() {
+        formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      });
+      fetchReservations();
+    });
+  }
+
+  Future<void> fetchReservations() async {
+    final api =
+        ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
+    final reservationData = await api.reservationinfoDay(formattedDate);
+    print('예약: $reservationData');
+    if (reservationData != null) {
+      setState(() {
+        reservations =
+            reservationData.where((res) => res.category == '1').toList();
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> fetchMyInfo() async {
@@ -182,6 +210,17 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
                       )
                     : const Center(child: CircularProgressIndicator()),
               ),
+
+              const CategoryText(text: '오늘의 예약 일정'),
+              ...reservations.expand((reservation) => reservation
+                  .reservationInfoList
+                  .where((info) => info.infoState == 1)
+                  .map((info) => MeetingTable(
+                        boxColor: reservation.colorCode,
+                        reservationName: reservation.reservationName,
+                        infoName: info.infoName,
+                        infoTime: info.infoTime,
+                      ))),
             ],
           ),
         ),

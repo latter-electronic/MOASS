@@ -35,12 +35,13 @@ class ScheduleBox extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Container(
-                decoration: const BoxDecoration(color: Color(0xFFD70000)),
+                decoration: const BoxDecoration(color: Color(0xFF6ECEF5)),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     title,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
