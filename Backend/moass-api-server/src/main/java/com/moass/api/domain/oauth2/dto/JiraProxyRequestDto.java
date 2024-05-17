@@ -13,4 +13,6 @@ public class JiraProxyRequestDto {
     private String url;
 
     private String method;
+
+    private String body;
 }

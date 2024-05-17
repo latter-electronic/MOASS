@@ -33,7 +33,7 @@ public class DeviceController {
     public Mono<ResponseEntity<ApiResponse>> login(@RequestBody ReqDeviceLoginDto reqDeviceLoginDto) {
         return deviceService.deviceLogin(reqDeviceLoginDto)
                 .flatMap(tokensAndUserInfo ->
-                        notificationService.saveAndPushNotification(tokensAndUserInfo.getUserInfo().getUserId(), new NotificationSendDto("server", "기기 로그인", "기기가 로그인되었습니다."))
+                        notificationService.saveAndPushNotification(tokensAndUserInfo.getUserInfo().getUserId(), new NotificationSendDto("server", "기기 로그인", "기기에 연결되었습니다."))
                                 .thenReturn(tokensAndUserInfo)
                 )
                 .flatMap(tokensAndUserInfo -> ApiResponse.ok("로그인 성공", tokensAndUserInfo.getTokens()))
