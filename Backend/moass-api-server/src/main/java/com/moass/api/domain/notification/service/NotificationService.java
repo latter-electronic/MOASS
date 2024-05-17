@@ -3,10 +3,13 @@ package com.moass.api.domain.notification.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.moass.api.domain.notification.dto.MmParseDto;
 import com.moass.api.domain.notification.dto.NotificationPageDto;
 import com.moass.api.domain.notification.dto.NotificationSendDto;
 import com.moass.api.domain.notification.entity.Notification;
 import com.moass.api.domain.notification.repository.NotificationRepository;
+import com.moass.api.domain.oauth2.repository.MmChannelRepository;
+import com.moass.api.domain.oauth2.repository.UserMmChannelRepository;
 import com.moass.api.domain.user.repository.ClassRepository;
 import com.moass.api.domain.user.repository.TeamRepository;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -21,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -37,6 +41,8 @@ public class NotificationService {
     private final TeamRepository teamRepository;
     private final ClassRepository classRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final UserMmChannelRepository userMmChannelRepository;
+    private final MmChannelRepository mmChannelRepository;
     private final int PageSize = 10;
 
     public Mono<NotificationPageDto> getAllNotifications(UserInfo userInfo, String lastNotificationId, LocalDateTime lastCreatedAt) {
@@ -135,5 +141,32 @@ public class NotificationService {
         String title = jsonNode.path("object_kind").asText();
         String body = "Event from GitLab: " + jsonNode.path("event_name").asText();
         return new NotificationSendDto(source, title, body);
+    }
+
+    @Transactional
+    public Mono<Void> processMattermostEvent(String payload) {
+        return Mono.fromCallable(() -> parseMattermostPayload(payload))
+                .flatMap(mmParseDto -> {
+                    String channelId = mmParseDto.getChannelId();
+                    return mmChannelRepository.findDetailByChannelId(channelId)
+                            .flatMap(mmChannelDetail -> {
+                                mmParseDto.setTitle(mmChannelDetail.getMmChannelName());
+                                mmParseDto.setIcon(mmChannelDetail.getMmTeamIcon());
+                                return userMmChannelRepository.findByMmChannelId(channelId)
+                                        .flatMap(userMmChannel -> saveAndPushNotification(userMmChannel.getUserId(), new NotificationSendDto(mmParseDto)))
+                                        .then();
+                            });
+                });
+    }
+
+    private MmParseDto parseMattermostPayload(String payload) throws JsonProcessingException {
+        JsonNode jsonNode = objectMapper.readTree(payload);
+        String source = "mattermost";
+        String channelId = jsonNode.path("channel_id").asText();
+        String body = jsonNode.path("text").asText();
+        String sender = jsonNode.path("user_name").asText();
+        log.info(String.valueOf(jsonNode));
+        MmParseDto mmParseDto = new MmParseDto(source,body,channelId,sender,"","");
+        return mmParseDto;
     }
 }

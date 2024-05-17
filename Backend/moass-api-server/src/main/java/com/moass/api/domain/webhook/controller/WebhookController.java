@@ -39,4 +39,15 @@ public class WebhookController {
                 .flatMap(gitlabToken -> ApiResponse.ok("토큰생성 성공", "api/"+gitlabToken))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("토큰생성 실패: "+e.getMessage(),e.getStatus()));
     }
+
+    @PostMapping("/mm")
+    public Mono<ResponseEntity<ApiResponse>> handleMattermostWebhook(@RequestBody String payload) {
+        log.info("Received Mattermost webhook data: {}", payload);
+        return notificationService.processMattermostEvent(payload)
+                .flatMap(notification -> ApiResponse.ok("Mattermost Webhook Data Processed Successfully"))
+                .onErrorResume(CustomException.class, e -> {
+                    log.error("Error processing Mattermost webhook: {}", e.getMessage());
+                    return ApiResponse.error("Mattermost Webhook Data Processing Failed: " + e.getMessage(), e.getStatus());
+                });
+    }
 }

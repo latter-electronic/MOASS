@@ -1,9 +1,6 @@
 package com.moass.api.global.sse.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.moass.api.domain.notification.dto.NotificationSendDto;
-import com.moass.api.domain.notification.service.NotificationService;
 import com.moass.api.domain.user.repository.SsafyUserRepository;
 import com.moass.api.domain.user.repository.UserRepository;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -18,6 +15,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +48,7 @@ public class SseService {
                         Sinks.Many<String> sink = userSinks.computeIfAbsent(userInfo.getUserId(), k -> Sinks.many().multicast().onBackpressureBuffer());
                         return sink.asFlux()
                                 .doOnSubscribe(subscription -> {
-                                    sink.tryEmitNext("개인채널 구독 완료 : "+userInfo.getUserId());
+                                    sink.tryEmitNext(createSseJsonMessage(new SseNotificationDto("server", "구독","유저채널 구독완료")));
                                 })
                                 .doFinally(signalType -> {
                                     if (sink.currentSubscriberCount() == 0) {
@@ -72,7 +72,7 @@ public class SseService {
                     return sink.asFlux()
                             .doOnSubscribe(subscription -> {
                                 log.info("Subscribing to team: " + teamCode + " by user: " + userInfo.getUserId());
-                                sink.tryEmitNext("팀채널 구독 완료 : " + teamCode);
+                                sink.tryEmitNext(createSseJsonMessage(new SseNotificationDto("server", "구독","팀채널 구독완료")));
                             })
                             .doFinally(signalType -> {
                                 log.info("Subscription ended or cancelled for team: " + teamCode + " by user: " + userInfo.getUserId());
@@ -182,5 +182,20 @@ public class SseService {
         classSinks.forEach((classCode, sink) -> {
             log.info("Class code '{}' has {} subscribers.", classCode, sink.currentSubscriberCount());
         });
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
+        MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
+
+        log.info("Heap Memory: Used={}MB, Max={}MB, Committed={}MB",
+                bytesToMB(heapMemoryUsage.getUsed()),
+                bytesToMB(heapMemoryUsage.getMax()),
+                bytesToMB(heapMemoryUsage.getCommitted()));
+        log.info("Non-Heap Memory: Used={}MB, Max={}MB, Committed={}MB",
+                bytesToMB(nonHeapMemoryUsage.getUsed()),
+                bytesToMB(nonHeapMemoryUsage.getMax()),
+                bytesToMB(nonHeapMemoryUsage.getCommitted()));
+    }
+    private long bytesToMB(long bytes) {
+        return bytes / (1024 * 1024);
     }
 }

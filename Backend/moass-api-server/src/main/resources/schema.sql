@@ -10,6 +10,11 @@ DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
 DROP TABLE IF EXISTS `Widget`;
 
+DROP TABLE IF EXISTS `UserMMChannel`;
+DROP TABLE IF EXISTS `MMChannel`;
+DROP TABLE IF EXISTS `MMTeam`;
+DROP TABLE IF EXISTS `MMToken`;
+
 DROP TABLE IF EXISTS `GitlabProject`;
 DROP TABLE IF EXISTS `GitlabHook`;
 DROP TABLE IF EXISTS `GitlabToken`;
@@ -120,6 +125,37 @@ CREATE TABLE `GitlabHook` (
                             FOREIGN KEY (`team_code`) REFERENCES `Team` (`team_code`)
 );
 
+CREATE TABLE `MMToken` (
+                           `mm_token_id`	INT	AUTO_INCREMENT  KEY,
+                           `session_token`	VARCHAR(40)	NULL,
+                           `user_id`	VARCHAR(20)	NOT NULL,
+                           updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
+                           created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
+                           FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
+);
+
+
+CREATE TABLE `MMTeam` (
+                          `mm_team_id` VARCHAR(40) NOT NULL,
+                          `mm_team_name` VARCHAR(40) NOT NULL,
+                            `mm_team_icon` VARCHAR(100) NOT NULL,
+                          CONSTRAINT `PK_MMTEAM` PRIMARY KEY (`mm_team_id`)
+);
+
+CREATE TABLE `MMChannel` (
+                             `mm_channel_id` VARCHAR(40) NOT NULL,
+                             `mm_channel_name` VARCHAR(40) NOT NULL,
+                             `mm_team_id` VARCHAR(40) NOT NULL,
+                             CONSTRAINT `PK_MMCHANNEL` PRIMARY KEY (`mm_channel_id`),
+                             CONSTRAINT `FK_MMTeam_TO_MMChannel_1` FOREIGN KEY (`mm_team_id`) REFERENCES `MMTeam` (`mm_team_id`)
+);
+
+CREATE TABLE `UserMMChannel` (
+                                 `user_id` VARCHAR(20) NOT NULL,
+                                 `mm_channel_id` VARCHAR(40) NOT NULL,
+                                 CONSTRAINT `FK_User_TO_UserMMChannel_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`),
+                                 CONSTRAINT `FK_MMChannel_TO_UserMMChannel_1` FOREIGN KEY (`mm_channel_id`) REFERENCES `MMChannel` (`mm_channel_id`)
+);
 
 
 CREATE TABLE `Widget`(
@@ -131,6 +167,7 @@ CREATE TABLE `Widget`(
                         PRIMARY KEY (`widget_id`),
                         FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
 );
+
 
 
 CREATE TABLE `Device` (

@@ -33,4 +33,12 @@ public class NotificationBase {
         this.title = title;
         this.body = body;
     }
+
+    public NotificationBase(String title, String source, String body, String sender,String icon) {
+        this.source = source;
+        this.title = title;
+        this.body = body;
+        this.sender = sender;
+        this.icon = icon;
+    }
 }
