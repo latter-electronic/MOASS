@@ -166,7 +166,10 @@ public class ReservationInfoService {
                 .flatMap(reservation -> reservationInfoRepository.findByReservationIdAndInfoDate(reservation.getReservationId(), searchDate)
                         .collectList()
                         .map(infos -> createReservationDetailDto(reservation, infos)))
-                .collectList();
+                .collectList()
+                .map(reservations -> reservations.stream()
+                        .sorted(Comparator.comparing(ReservationDetailDto::getReservationId))
+                        .collect(Collectors.toList()));
     }
 
     public Mono<String> deleteReservationInfo(UserInfo userInfo, Integer reservationInfoId) {
