@@ -74,7 +74,7 @@ class MatterMostApi {
     }
   }
 
-  // MM 계정 등록
+  // 채널 구동 및 취소 요청
   connectMMchannel(String channelId) async {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
@@ -82,7 +82,7 @@ class MatterMostApi {
         return [];
       }
       // API요청, 헤더에 토큰 넣기
-      final response = await dio.patch(
+      final response = await dio.post(
         '$baseUrl/api/oauth2/mm/channel/$channelId',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );

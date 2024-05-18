@@ -74,26 +74,6 @@ class _SettingRelatedAccountScreenState
               service: 'mattermost',
               userMattermostMail: userMattermostTeamList != null ? '연동됨' : null,
             ),
-            userMattermostTeamList != null
-                ? Column(
-                    children: [
-                      for (MattermostTeam userMattermostTeam
-                          in userMattermostTeamList!)
-                        for (MattermostChannel userMattermostChannel
-                            in userMattermostTeam.mmChannelList)
-                          Column(
-                            children: [
-                              Text(
-                                userMattermostTeam.mmTeamName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(userMattermostChannel.channelName),
-                            ],
-                          ),
-                    ],
-                  )
-                : const SizedBox(),
             SetRelatedAccount(
               service: 'gitlab',
               userGitlabMail: userGitlabMail,

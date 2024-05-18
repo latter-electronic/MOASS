@@ -7,6 +7,7 @@ import 'package:moass/services/jira_api.dart';
 import 'package:moass/services/mattermost_api.dart';
 import 'package:moass/widgets/custom_login_form.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:moass/screens/setting_mm_subscript_screen.dart';
 
 class SetRelatedAccount extends StatefulWidget {
   final String service;
@@ -109,12 +110,41 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           ),
                         )
                       else
-                        Text(
-                          widget.userMattermostMail!,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.userMattermostMail!,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            // 여기에 서버 설정버튼 추가
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.blue,
+                                backgroundColor: Colors.white,
+                                elevation: 10.0,
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 14.0,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 1, vertical: 1),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SettingMMSubscriptScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text('알림 채널 설정'),
+                            ),
+                          ],
                         )
                     else if (widget.userGitlabMail == 'null')
                       const Text(
@@ -180,7 +210,6 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           setState() {
                             isOpenedButtonWidget = false;
                           }
-                          // print('지라 url : $JiraConnectUrl');
                         },
                         style: const ButtonStyle(),
                         child: const Text('계정 연동'),
@@ -211,7 +240,6 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              // 줄바꿈은 \n
                               'MatterMost ID',
                               style: TextStyle(
                                 fontSize: 12,
@@ -227,7 +255,6 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                             ),
                             const SizedBox(height: 4.0),
                             const Text(
-                              // 줄바꿈은 \n
                               'MatterMost PW',
                               style: TextStyle(
                                 fontSize: 12,
@@ -243,42 +270,42 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                               obscureText: true,
                             ),
                             Align(
-                                alignment: Alignment.center,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: OutlinedButton(
-                                    onPressed: () async {
-                                      var response = await MatterMostApi(
-                                              dio: Dio(),
-                                              storage:
-                                                  const FlutterSecureStorage())
-                                          .connectMMAcount(
-                                              mmUserId, mmPassword);
-                                      if (response == 200) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(const SnackBar(
-                                          backgroundColor: Color(0xFF3DB887),
-                                          content: Text('MatterMost 계정 연결 성공!'),
-                                          duration: Duration(seconds: 3),
-                                        ));
-                                        setState(() {
-                                          isOpenedButtonWidget = false;
-                                        });
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          backgroundColor:
-                                              const Color(0xFFD24B4E),
-                                          content: Text(
-                                              'MatterMost 계정 연동에 실패했습니다. 에러 : ${response.toString()}'),
-                                          duration: const Duration(seconds: 1),
-                                        ));
-                                      }
-                                    },
-                                    style: const ButtonStyle(),
-                                    child: const Text('계정 연동'),
-                                  ),
-                                ))
+                              alignment: Alignment.center,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: OutlinedButton(
+                                  onPressed: () async {
+                                    var response = await MatterMostApi(
+                                            dio: Dio(),
+                                            storage:
+                                                const FlutterSecureStorage())
+                                        .connectMMAcount(mmUserId, mmPassword);
+                                    if (response == 200) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        backgroundColor: Color(0xFF3DB887),
+                                        content: Text('MatterMost 계정 연결 성공!'),
+                                        duration: Duration(seconds: 3),
+                                      ));
+                                      setState(() {
+                                        isOpenedButtonWidget = false;
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        backgroundColor:
+                                            const Color(0xFFD24B4E),
+                                        content: Text(
+                                            'MatterMost 계정 연동에 실패했습니다. 에러 : ${response.toString()}'),
+                                        duration: const Duration(seconds: 1),
+                                      ));
+                                    }
+                                  },
+                                  style: const ButtonStyle(),
+                                  child: const Text('계정 연동'),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -320,25 +347,26 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: OutlinedButton(
-                            onPressed: () async {
-                              int statusCode = await GitlabApi(
-                                      dio: Dio(),
-                                      storage: const FlutterSecureStorage())
-                                  .requestSubmitProject(textformFieldValue);
-                              if (statusCode == 200) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  backgroundColor: Color(0xFF3DB887),
-                                  content: Text('프로젝트 등록 성공!'),
-                                  duration: Duration(seconds: 3),
-                                ));
-                              }
-                              setState() {
-                                isOpenedButtonWidget = false;
-                              }
-                            },
-                            style: const ButtonStyle(),
-                            child: const Text('프로젝트 등록')),
+                          onPressed: () async {
+                            int statusCode = await GitlabApi(
+                                    dio: Dio(),
+                                    storage: const FlutterSecureStorage())
+                                .requestSubmitProject(textformFieldValue);
+                            if (statusCode == 200) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                backgroundColor: Color(0xFF3DB887),
+                                content: Text('프로젝트 등록 성공!'),
+                                duration: Duration(seconds: 3),
+                              ));
+                            }
+                            setState(() {
+                              isOpenedButtonWidget = false;
+                            });
+                          },
+                          style: const ButtonStyle(),
+                          child: const Text('프로젝트 등록'),
+                        ),
                       )
                     ],
                   ),
@@ -351,18 +379,19 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: OutlinedButton(
-                        onPressed: () async {
-                          String gitlabConnectUrl = await GitlabApi(
-                                  dio: Dio(),
-                                  storage: const FlutterSecureStorage())
-                              .requestConnectGitlab();
-                          await launchUrlString(gitlabConnectUrl);
-                          setState() {
-                            isOpenedButtonWidget = false;
-                          }
-                        },
-                        style: const ButtonStyle(),
-                        child: const Text('계정 연동')),
+                      onPressed: () async {
+                        String gitlabConnectUrl = await GitlabApi(
+                                dio: Dio(),
+                                storage: const FlutterSecureStorage())
+                            .requestConnectGitlab();
+                        await launchUrlString(gitlabConnectUrl);
+                        setState() {
+                          isOpenedButtonWidget = false;
+                        }
+                      },
+                      style: const ButtonStyle(),
+                      child: const Text('계정 연동'),
+                    ),
                   )
                 ],
               )
