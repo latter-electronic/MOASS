@@ -43,20 +43,11 @@ public class Oauth2GitlabService {
     private final GitlabProjectRepository gitlabProjectRepository;
 
 
-    public Oauth2GitlabService(WebClient.Builder webClientBuilder, GitlabTokenRepository gitlabTokenRepository,GitlabProjectRepository gitlabProjectRepository ,PropertiesConfig propertiesConfig) {
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(10))
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-        ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
-                .build();
-        this.gitlabAuthWebClient = webClientBuilder.baseUrl("https://lab.ssafy.com")
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
-        this.gitlabApiWebClient = webClientBuilder.baseUrl("https://lab.ssafy.com")
-                .exchangeStrategies(strategies)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
+    public Oauth2GitlabService(WebClient gitlabAuthWebClient, WebClient gitlabApiWebClient,
+                               GitlabTokenRepository gitlabTokenRepository, GitlabProjectRepository gitlabProjectRepository,
+                               PropertiesConfig propertiesConfig) {
+        this.gitlabAuthWebClient = gitlabAuthWebClient;
+        this.gitlabApiWebClient = gitlabApiWebClient;
         this.gitlabTokenRepository = gitlabTokenRepository;
         this.gitlabProjectRepository = gitlabProjectRepository;
         this.propertiesConfig = propertiesConfig;

@@ -56,26 +56,17 @@ public class MattermostService {
     private final S3ClientConfigurationProperties s3config;
     private final S3Service s3Service;
 
-    public MattermostService(WebClient.Builder webClientBuilder, PropertiesConfig propertiesConfig, UserMmChannelRepository userMMChannelRepository, MmTokenRepository mmTokenRepository, MmChannelRepository mmChannelRepository, MmTeamRepository mmTeamRepository, S3ClientConfigurationProperties s3config, S3Service s3Service) {
+    public MattermostService(WebClient mmApiWebClient, PropertiesConfig propertiesConfig, UserMmChannelRepository userMMChannelRepository, MmTokenRepository mmTokenRepository, MmChannelRepository mmChannelRepository, MmTeamRepository mmTeamRepository, S3ClientConfigurationProperties s3config, S3Service s3Service) {
+        this.mmApiWebClient = mmApiWebClient;
+        this.propertiesConfig = propertiesConfig;
         this.userMmChannelRepository = userMMChannelRepository;
         this.mmTokenRepository = mmTokenRepository;
         this.mmChannelRepository = mmChannelRepository;
         this.mmTeamRepository = mmTeamRepository;
         this.s3config = s3config;
         this.s3Service = s3Service;
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(10))
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-
-        ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
-                .build();
-        this.mmApiWebClient = webClientBuilder.baseUrl("https://meeting.ssafy.com")
-                .exchangeStrategies(strategies)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
-        this.propertiesConfig = propertiesConfig;
     }
+
 
     @Transactional
     public Mono<MMToken> mmConnect(UserInfo userInfo, MmLoginDto mmLoginDto) {
@@ -95,7 +86,7 @@ public class MattermostService {
     }
 
     private Mono<MMToken> saveOrUpdateToken(ClientResponse response, String userId) {
-        String token = response.headers().header("Token").get(0); // Token 헤더에서 토큰 추출
+        String token = response.headers().header("Token").get(0);
         return mmTokenRepository.findByUserId(userId)
                 .flatMap(existingToken -> {
                     existingToken.setSessionToken(token);
@@ -129,7 +120,6 @@ public class MattermostService {
                         .retrieve()
                         .bodyToFlux(JsonNode.class)
                         .collectList()
-                        .doOnNext(teams -> log.info("팀 조회 성공: {}", teams))
                         .flatMapMany(Flux::fromIterable)
                         .flatMap(team -> saveOrUpdateTeam(team, token.getSessionToken()))
                         .flatMap(savedTeam -> getChannelsForTeam(savedTeam, token.getSessionToken(), userId))
@@ -218,7 +208,6 @@ public class MattermostService {
     private Mono<MMChannelInfoDto> saveOrUpdateChannel(String teamId, JsonNode channel, String userId) {
         String channelId = channel.get("id").asText();
         String channelName = channel.get("display_name").asText();
-        log.info(String.valueOf(channel));
         return mmChannelRepository.findById(channelId)
                 .flatMap(existingChannel -> {
                     if (!existingChannel.getMmChannelName().equals(channelName)) {
@@ -236,10 +225,7 @@ public class MattermostService {
                             .flatMap(savedChannel -> userMmChannelRepository.existsByUserIdAndMmChannelId(userId, savedChannel.getMmChannelId())
                                     .map(exists -> new MMChannelInfoDto(savedChannel.getMmChannelId(), savedChannel.getMmChannelName(), savedChannel.getMmTeamId(), exists)));
                 }))
-                .map(channelInfoDto -> {
-                    log.info("채널 저장 또는 업데이트: {}", channelInfoDto);
-                    return channelInfoDto;
-                });
+                .map(channelInfoDto -> channelInfoDto);
     }
 
     @Transactional
@@ -348,20 +334,11 @@ public class MattermostService {
     @Transactional
     public Mono<String> disconnectMattermost(String userId) {
         return mmTokenRepository.findByUserId(userId)
-                .flatMap(token -> {
-                    log.info("Found token for userId {}: {}", userId, token);
-                    return userMmChannelRepository.deleteByUserId(userId)
-                            .onErrorResume(e -> {
-                                log.warn("Failed to delete UserMMChannel for userId {}: {}", userId, e.getMessage());
-                                return Mono.empty();
-                            })
-                            .then(mmTokenRepository.delete(token))
-                            .then(Mono.just(token.getUserId()));
-                })
-                .switchIfEmpty(Mono.defer(() -> {
-                    log.warn("No token found for userId {}", userId);
-                    return Mono.error(new CustomException("Mattermost 연결 정보가 없습니다.", HttpStatus.NOT_FOUND));
-                }));
+                .flatMap(token -> userMmChannelRepository.deleteByUserId(userId)
+                        .onErrorResume(e -> Mono.empty())
+                        .then(mmTokenRepository.delete(token))
+                        .then(Mono.just(token.getUserId())))
+                .switchIfEmpty(Mono.defer(() -> Mono.error(new CustomException("Mattermost 연결 정보가 없습니다.", HttpStatus.NOT_FOUND))));
     }
 
 }
