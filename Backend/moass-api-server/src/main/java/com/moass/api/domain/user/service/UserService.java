@@ -249,7 +249,6 @@ public class UserService {
     }
 
     public Mono<Object> createUser(UserInfo userInfo, UserCreateDto userCreateDto) {
-        // 문법오류 해결
         return ssafyUserRepository.findByUserId(userCreateDto.getUserId())
                 .flatMap(existingUser -> Mono.error(new CustomException("이미 존재하는 사용자입니다.", HttpStatus.CONFLICT)))
                 .switchIfEmpty(Mono.defer(() -> {

@@ -1,7 +1,6 @@
 package com.moass.api.domain.reservation.service;
 
 import com.moass.api.domain.reservation.dto.ReservationCreateDto;
-import com.moass.api.domain.reservation.dto.ReservationInfoCreateDto;
 import com.moass.api.domain.reservation.dto.ReservationPatchDto;
 import com.moass.api.domain.reservation.entity.Reservation;
 import com.moass.api.domain.reservation.entity.ReservationInfo;
