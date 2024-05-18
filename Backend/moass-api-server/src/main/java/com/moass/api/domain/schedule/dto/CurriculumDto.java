@@ -21,4 +21,8 @@ public class CurriculumDto {
         this.date = curriculum.getDate();
         this.courses = curriculum.getCourses();
     }
+
+    public CurriculumDto() {
+
+    }
 }
