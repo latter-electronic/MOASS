@@ -42,11 +42,6 @@ public class BoardService {
                 .switchIfEmpty(Mono.error(new IllegalArgumentException("Board를 찾을 수 없습니다.")));
     }
 
-    public Mono<Board> createBoard() {
-        Board board = new Board();
-        return boardRepository.save(board).then(Mono.just(board));
-    }
-
     public Mono<List<ScreenshotDetailDto>> getScreenshotList(Integer boardUserId) {
         return screenshotRepository.findByBoardUserId(boardUserId)
                 .collectList()
@@ -60,14 +55,14 @@ public class BoardService {
                 .flatMap(screenshot -> Mono.just(new ScreenshotDetailDto(screenshot)));
     }
 
-    public Mono<String> screenshotUpload(UserInfo userInfo, Integer boardId, HttpHeaders headers, Flux<ByteBuffer> file) {
+    public Mono<String> screenshotUpload(Integer boardId, String userId, HttpHeaders headers, Flux<ByteBuffer> file) {
         return s3Service.uploadHandler(headers, file)
                 .flatMap(uploadResult -> {
                     if (uploadResult.getStatus() != HttpStatus.CREATED) {
                         return Mono.error(new CustomException("Image upload failed", HttpStatus.INTERNAL_SERVER_ERROR));
                     }
                     String fileKey = uploadResult.getKeys()[0];
-                    return boardUserRepository.findByBoardIdAndUserId(boardId, userInfo.getUserId())
+                    return boardUserRepository.findByBoardIdAndUserId(boardId, userId)
                             .flatMap(boardUser -> {
                                 Screenshot screenshot = Screenshot.builder()
                                         .boardUserId(boardUser.getBoardUserId())
