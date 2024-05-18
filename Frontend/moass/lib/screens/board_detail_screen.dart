@@ -10,10 +10,15 @@ import 'package:path_provider/path_provider.dart';
 
 class BoardDetailScreen extends ConsumerWidget {
   final int boardId;
+  final String boardName;
   final int boardUserId;
 
-  const BoardDetailScreen(
-      {super.key, required this.boardId, required this.boardUserId});
+  const BoardDetailScreen({
+    super.key,
+    required this.boardId,
+    required this.boardUserId,
+    required this.boardName,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,11 +45,12 @@ class BoardDetailScreen extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    '보드 ID: $boardId',
+                    '보드 이름: $boardName',
                     style: const TextStyle(
                         fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
+                const Text('   * 왼쪽 드래그: 삭제 / 오른쪽 드래그: 저장'),
                 ...screenshots.map((screenshot) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(
@@ -103,7 +109,7 @@ class _CustomDismissibleState extends State<CustomDismissible> {
         });
       },
       onHorizontalDragEnd: (details) async {
-        if (_dragExtent <= _maxDragDistance / 2) {
+        if (_dragExtent <= -_maxDragDistance) {
           final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -131,17 +137,8 @@ class _CustomDismissibleState extends State<CustomDismissible> {
                 duration: Duration(seconds: 2),
               ),
             );
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BoardDetailScreen(
-                  boardId: widget.boardId,
-                  boardUserId: widget.boardUserId,
-                ),
-              ),
-            );
           }
-        } else if (_dragExtent >= -_maxDragDistance / 2) {
+        } else if (_dragExtent >= _maxDragDistance) {
           final confirmed = await showDialog<bool>(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -177,10 +174,13 @@ class _CustomDismissibleState extends State<CustomDismissible> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    color: Colors.grey,
                     alignment: Alignment.center,
-                    width: -_dragExtent <= _maxDragDistance / 2 ? 60 : 0,
-                    height: 60,
+                    width: -_dragExtent <= _maxDragDistance / 2 ? 90 : 0,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: const Icon(
                       Icons.download,
                       color: Colors.white,
@@ -190,10 +190,13 @@ class _CustomDismissibleState extends State<CustomDismissible> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Container(
-                    color: Colors.red,
                     alignment: Alignment.center,
-                    width: _dragExtent <= _maxDragDistance / 2 ? 60 : 0,
-                    height: 60,
+                    width: _dragExtent <= _maxDragDistance / 2 ? 90 : 0,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: const Icon(
                       Icons.delete,
                       color: Colors.white,

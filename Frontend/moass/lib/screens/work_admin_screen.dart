@@ -92,15 +92,27 @@ class _WorkAdminScreenState extends ConsumerState<WorkAdminScreen> {
           child: Text(displayDate),
         ),
         Align(
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                ...courses.map((course) => ScheduleBox(
-                      title: course.title,
-                      time: course.period,
-                    )),
-              ],
-            )),
+          alignment: Alignment.center,
+          child: Column(
+            children: courses.isEmpty
+                ? [
+                    const SizedBox(height: 20),
+                    const Text(
+                      '오늘은 일정이 없어요!',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ]
+                : courses
+                    .map((course) => ScheduleBox(
+                          title: course.title,
+                          time: course.period,
+                        ))
+                    .toList(),
+          ),
+        ),
         const SizedBox(height: 20),
         const CategoryText(text: '예약 일정'),
         Align(

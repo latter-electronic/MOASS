@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
@@ -44,6 +46,18 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
   List<Map<String, String>> selectMembers = [];
   // 선택한 시간을 받아올 리스트
   List<int> selectedTimes = [];
+  // ScrollController 추가
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _reservationNameController = TextEditingController(); // 초기에 빈 컨트롤러 생성
+    api = ReservationApi(
+        dio: Dio(), storage: const FlutterSecureStorage()); // 사용할 API파일 가져오기
+    _scrollController = ScrollController(); // ScrollController 초기화
+    fetchUserProfile().then((value) => fetchTeamMembers());
+  }
 
   // 개인 정보를 불러오는 요청 함수
   Future<void> fetchUserProfile() async {
@@ -64,7 +78,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     }
   }
 
-// 팀 맴버 API 요청
+  // 팀 맴버 API 요청
   Future<void> fetchTeamMembers() async {
     final teamInfo =
         await UserInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
@@ -117,23 +131,14 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _reservationNameController = TextEditingController(); // 초기에 빈 컨트롤러 생성
-    api = ReservationApi(
-        dio: Dio(), storage: const FlutterSecureStorage()); // 사용할 API파일 가져오기
-    fetchUserProfile().then((value) => fetchTeamMembers());
-  }
-
-// 회의 이름 입력 폼
-  @override
   void dispose() {
     // 위젯이 dispose 될 때 컨트롤러도 dispose 해줍니다.
     _reservationNameController.dispose();
+    _scrollController.dispose(); // ScrollController도 dispose
     super.dispose();
   }
 
-// 예약 완료 팝업
+  // 예약 완료 팝업
   void completeReservation(BuildContext context) {
     showDialog(
       context: context,
@@ -181,10 +186,11 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     setState(() {
       if (selectedTimes.contains(time)) {
         selectedTimes.remove(time);
-      } else {
+      } else if (selectedTimes.length < widget.reservation.timeLimit) {
         selectedTimes.add(time);
       }
       updateButtonState();
+      print(selectedTimes);
     });
   }
 
@@ -203,6 +209,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     if (!userExists) {
       setState(() {
         selectMembers.add(userData);
+        _scrollToEnd(); // 새 사용자를 추가한 후에 스크롤을 오른쪽 끝으로 이동
       });
     } else {
       // 사용자가 이미 목록에 존재하는 경우
@@ -210,7 +217,20 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
     }
   }
 
-// 예약 위젯 시작점
+  // 새 사용자를 추가한 후에 스크롤을 오른쪽 끝으로 이동하는 함수
+  void _scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  // 예약 위젯 시작점
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -286,6 +306,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
                   ),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal, // 가로 스크롤 설정
+                    controller: _scrollController, // ScrollController 추가
                     child: Wrap(
                       spacing: 4.0, // 간격
                       runSpacing: 4.0, // 줄 간격
@@ -295,15 +316,21 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
                         return Chip(
                           labelPadding: const EdgeInsets.symmetric(
                               horizontal: 0.0, vertical: 0.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 1, vertical: 0),
+                          side: const BorderSide(style: BorderStyle.none),
                           label: Text(
                               '${member['teamCode']} ${member['userName']}',
                               style: const TextStyle(fontSize: 12)),
                           deleteIcon: isMyself
-                              ? null
+                              ? const Icon(
+                                  Icons.school_rounded,
+                                  size: 14,
+                                )
                               : const Icon(Icons.close,
                                   size: 14), // 조건에 따라 deleteIcon 설정
                           onDeleted: isMyself
-                              ? null
+                              ? () {}
                               : () {
                                   // 삭제 함수도 조건에 따라 설정
                                   setState(() {
@@ -311,9 +338,9 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
                                         element['userId'] == member['userId']);
                                   });
                                 },
-                          backgroundColor: Colors.green[400],
-                          labelStyle: const TextStyle(color: Colors.white),
-                          deleteIconColor: Colors.white,
+                          backgroundColor: Colors.grey[200],
+                          labelStyle: const TextStyle(color: Colors.black),
+                          deleteIconColor: Colors.red,
                         );
                       }).toList(),
                     ),
