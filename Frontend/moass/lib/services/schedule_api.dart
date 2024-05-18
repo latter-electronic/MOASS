@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/scheduleModel.dart';
 
 class ScheduleApi {
@@ -24,6 +24,9 @@ class ScheduleApi {
       print('스케쥴 : ${response.data.toString()}');
       if (response.statusCode == 200) {
         final data = response.data['data'];
+        if (data == null) {
+          throw Exception('Schedule data is null');
+        }
         return Schedule.fromJson(data);
       } else {
         throw Exception('Failed to load schedule');

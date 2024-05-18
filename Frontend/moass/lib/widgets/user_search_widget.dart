@@ -73,7 +73,7 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return const Center(child: Text('한글자 이상 입력해 주세요!'));
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return Column(
                     children: snapshot.data!.map((userInfo) {
