@@ -93,14 +93,21 @@ class _SettingWidgetPhotoScreenState extends State<SettingProfilePhotoScreen> {
                   color: Colors.white, fontWeight: FontWeight.w800)),
           onPressed: () async {
             if (_image != null) {
-              await MyInfoApi(dio: Dio(), storage: const FlutterSecureStorage())
+              var response = await MyInfoApi(
+                      dio: Dio(), storage: const FlutterSecureStorage())
                   .postUserProfilePhoto(_image!);
-              if (context.mounted) {
+              if (response == 200 && context.mounted) {
                 Navigator.of(context).pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   backgroundColor: Color(0xFF3DB887),
                   content: Text('프로필 이미지 변경 성공!'),
                   duration: Duration(seconds: 3),
+                ));
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: const Color(0xFFD24B4E),
+                  content: Text('사진 변경에 실패했습니다. 에러 : ${response.toString()}'),
+                  duration: const Duration(seconds: 1),
                 ));
               }
             } else {

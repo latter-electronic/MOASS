@@ -45,7 +45,7 @@ class _CurrentScheduleState extends ConsumerState<CurrentSchedule> {
   }
 
   bool isCurrentTimeInPeriod(String period) {
-    final now = DateTime.now().add(const Duration(hours: 9));
+    final now = DateTime.now();
     final timeFormat = DateFormat('HH:mm');
 
     final times = period.split('~');
