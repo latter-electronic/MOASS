@@ -184,7 +184,7 @@ public class DeviceTest {
 
     @Nested
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    @DisplayName("[PATCH] 기기로그인 /device/coordinate")
+    @DisplayName("[PATCH] 기기좌표변경 /device/coordinate")
     class 기기좌표변경{
 
         @Test

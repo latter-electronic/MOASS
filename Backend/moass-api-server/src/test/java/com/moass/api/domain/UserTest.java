@@ -1,19 +1,28 @@
 package com.moass.api.domain;
 
+import com.moass.api.domain.file.dto.UploadResult;
 import com.moass.api.domain.user.dto.UserCreateDto;
 import com.moass.api.domain.user.dto.UserLoginDto;
 import com.moass.api.domain.user.dto.UserSignUpDto;
+import com.moass.api.global.service.S3Service;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.nio.ByteBuffer;
 import java.util.Map;
 
 @ExtendWith(SpringExtension.class)
@@ -26,6 +35,12 @@ import java.util.Map;
 public class UserTest {
     @Autowired
     private WebTestClient webTestClient;
+
+    @Mock
+    private S3Service s3Service;
+
+    //@MockBean
+   // private UserService userService;
 
     private UserSignUpDto userSignupDto;
     private UserLoginDto userLoginDto;
@@ -73,7 +88,7 @@ public class UserTest {
 
     @Nested
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    @DisplayName("[POST] Signup /user/signup")
+    @DisplayName("[POST] 가입 /user/signup")
     class 가입테스트 {
 
         @Test
@@ -158,6 +173,35 @@ public class UserTest {
     }
 
     @Nested
+    @DisplayName("[POST] 로그인 /user/login")
+    class 로그인테스트 {
+
+        @Test
+        @DisplayName("[200] 로그인 성공")
+        void 로그인성공() {
+            webTestClient.post().uri("/user/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new UserLoginDto("test5@com", "ssafyout!!!"))
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @DisplayName("[401] 잘못된 이메일 또는 비밀번호")
+        void 로그인실패() {
+            webTestClient.post().uri("/user/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new UserLoginDto("test5@com", "wrongpassword"))
+                    .exchange()
+                    .expectStatus().isEqualTo(401)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("401");
+        }
+    }
+
+    @Nested
     @DisplayName("[GET] 조회 /user")
     class 조회 {
 
@@ -203,7 +247,7 @@ public class UserTest {
     }
 
     @Nested
-    @DisplayName("[POST] 유저 등록")
+    @DisplayName("[POST] 유저 등록 /user/create (어드민)")
     class 유저등록 {
 
         @BeforeEach
@@ -281,4 +325,118 @@ public class UserTest {
         }
 
     }
+
+
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @DisplayName("[POST] 위젯 사진 등록 /user/widget")
+    class 위젯사진등록 {
+
+        @BeforeEach
+        void setUp() {
+            login(new UserLoginDto("z001@com", "1234"));
+        }
+
+        @Test
+        @Order(1)
+        @DisplayName("[200] 위젯 사진 등록 성공")
+        void 위젯사진등록성공() {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            byte[] dummyImageData = "dummy image data".getBytes();
+            headers.setContentLength(dummyImageData.length);
+            Flux<ByteBuffer> dummyFile = Flux.just(ByteBuffer.wrap(dummyImageData));
+
+            BDDMockito.given(s3Service.uploadHandler(headers, dummyFile))
+                    .willReturn(Mono.just(new UploadResult(HttpStatus.CREATED, new String[]{"dummy-key"})));
+
+            webTestClient.post().uri("/user/widget")
+                    .header("Authorization", accessToken)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                    .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(dummyImageData.length))
+                    .body(dummyFile, ByteBuffer.class)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+    }
+
+    @Nested
+    @Order(2)
+    @DisplayName("[GET] 위젯 사진 조회 /user/widget")
+    class 위젯사진조회 {
+
+        @BeforeEach
+        void setUp() {
+            login(new UserLoginDto("z001@com", "1234"));
+        }
+
+        @Test
+        @DisplayName("[200] 위젯 사진 조회 성공")
+        void 위젯사진조회성공() {
+
+            webTestClient.get().uri("/user/widget")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+    }
+
+    @Nested
+    @Order(3)
+    @DisplayName("[DELETE] 위젯 사진 삭제 /user/widget/{widgetId}")
+    class 위젯사진삭제 {
+
+        @BeforeEach
+        void setUp() {
+            login(new UserLoginDto("z001@com", "1234"));
+        }
+
+        @Test
+        @DisplayName("[200] 위젯 사진 삭제 성공")
+        void 위젯사진삭제성공() {
+            // 위젯 사진 등록 먼저 수행
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            byte[] dummyImageData = "dummy image data".getBytes();
+            headers.setContentLength(dummyImageData.length);
+            Flux<ByteBuffer> dummyFile = Flux.just(ByteBuffer.wrap(dummyImageData));
+
+            BDDMockito.given(s3Service.uploadHandler(headers, dummyFile))
+                    .willReturn(Mono.just(new UploadResult(HttpStatus.CREATED, new String[]{"dummy-key"})));
+
+            webTestClient.post().uri("/user/widget")
+                    .header("Authorization", accessToken)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                    .header(HttpHeaders.CONTENT_LENGTH, String.valueOf(dummyImageData.length))
+                    .body(dummyFile, ByteBuffer.class)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+
+            webTestClient.delete().uri("/user/widget/1")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @DisplayName("[404] 위젯 사진 삭제 실패(존재하지않음)")
+        void 위젯사진삭제실패() {
+
+            webTestClient.delete().uri("/user/widget/widgetId")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(404)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("404");
+        }
+    }
+
 }

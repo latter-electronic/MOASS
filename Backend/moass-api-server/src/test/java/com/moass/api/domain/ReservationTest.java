@@ -98,6 +98,7 @@ public class ReservationTest {
     }
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("[POST] 예약 생성(어드민) /reservation")
     class 예약생성하기{
         @BeforeEach
@@ -166,6 +167,7 @@ public class ReservationTest {
     }
 
     @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     @DisplayName("[PATCH] 예약 수정(어드민) /reservation")
     class 예약수정하기{
         @BeforeEach
@@ -200,6 +202,20 @@ public class ReservationTest {
                     .expectBody()
                     .jsonPath("$.status").isEqualTo("200");
         }
+
+        @Test
+        @Order(3)
+        @DisplayName("[200] 예약불가 시간 지정된 시간대를 다시 예약불가 시간 지정")
+        void 예약수정실패1(){
+            webTestClient.patch().uri("/reservation")
+                    .header("Authorization", accessToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(new ReservationPatchDto(secondTestReservationId, "board", 4,"보드2","#111111", LocalDate.now(), Arrays.asList(2, 4, 6)))
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
     }
 
     @Nested
@@ -227,7 +243,7 @@ public class ReservationTest {
 
         @Test
         @Order(2)
-        @DisplayName("[409] 예약시간 다씀")
+        @DisplayName("[409] 예약시간 만료")
         void 예약실패() {
             webTestClient.post().uri("/reservationinfo")
                     .header("Authorization", accessToken)
@@ -253,6 +269,42 @@ public class ReservationTest {
                     .expectStatus().isEqualTo(409)
                     .expectBody()
                     .jsonPath("$.status").isEqualTo("409");
+        }
+    }
+
+    @Nested
+    @DisplayName("[GET] 예약 조회")
+    class 예약조회 {
+
+        @BeforeEach
+        void setUp() {
+            login(new UserLoginDto("z001@com", "1234"));
+        }
+
+        @Test
+        @Order(1)
+        @DisplayName("[200] 오늘 예약 정보 조회 성공")
+        void 오늘예약조회성공() {
+            webTestClient.get().uri("/reservationinfo/today")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200")
+                    .jsonPath("$.data").isNotEmpty();
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[200] 일주일 예약 정보 조회 성공")
+        void 일주일예약조회성공() {
+            webTestClient.get().uri("/reservationinfo/week")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200")
+                    .jsonPath("$.data").isNotEmpty();
         }
     }
 }
