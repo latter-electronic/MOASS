@@ -4,9 +4,8 @@ import com.moass.api.domain.schedule.entity.Course;
 import com.moass.api.domain.schedule.entity.Curriculum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,6 +22,6 @@ public class CurriculumDto {
     }
 
     public CurriculumDto() {
-
+        this.courses = new ArrayList<>();
     }
 }
