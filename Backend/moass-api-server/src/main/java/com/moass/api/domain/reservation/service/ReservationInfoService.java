@@ -137,7 +137,6 @@ public class ReservationInfoService {
     public Mono<List<ReservationDetailDto>> getTodayReservationInfo(UserInfo userInfo) {
         LocalDateTime localDateTime = LocalDateTime.now().plusHours(9);
         LocalDate localDate = localDateTime.toLocalDate();
-        log.info(String.valueOf(localDate));
         return ssafyUserRepository.findClassCodeByUserId(userInfo.getUserId())
                 .switchIfEmpty(Mono.error(new CustomException("해당 사용자의 클래스 코드를 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
                 .flatMapMany(classCode -> reservationRepository.findByClassCode(classCode))

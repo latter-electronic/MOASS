@@ -36,21 +36,13 @@ public class Oauth2JiraService {
     private final JiraTokenRepository jiraTokenRepository;
     private final PropertiesConfig propertiesConfig;
 
-    public Oauth2JiraService(WebClient.Builder webClientBuilder, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(10))
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-        this.jiraAuthWebClient = webClientBuilder.baseUrl("https://auth.atlassian.com").build();
-        ExchangeStrategies strategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
-                .build();
-        this.jiraApiWebClient = webClientBuilder.baseUrl("https://api.atlassian.com")
-                .exchangeStrategies(strategies)
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
-                .build();
+    public Oauth2JiraService(WebClient jiraAuthWebClient, WebClient jiraApiWebClient, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
+        this.jiraAuthWebClient = jiraAuthWebClient;
+        this.jiraApiWebClient = jiraApiWebClient;
         this.jiraTokenRepository = jiraTokenRepository;
         this.propertiesConfig = propertiesConfig;
     }
+
 
 
     public Mono<JiraToken> exchangeCodeForToken(String code, String state) {
@@ -84,7 +76,6 @@ public class Oauth2JiraService {
                             .doOnError(throwable -> log.error("사용자 정보를 가져오는 중 오류 발생", throwable))
                             .flatMap(userInfo -> {
                                 String emailAddress = userInfo.path("emailAddress").asText();
-                                log.info("User Email: {}", emailAddress);
 
                                 return jiraTokenRepository.findByUserId(userId)
                                         .flatMap(existingToken -> {
@@ -122,17 +113,6 @@ public class Oauth2JiraService {
         return (String) resources.get(0).get("id");
     }
 
-    private Mono<JiraToken> storeToken(String userId, TokenResponseDto response) {
-        log.info(String.valueOf(response));
-        JiraToken token = JiraToken.builder()
-                .userId(userId)
-                .accessToken(response.getAccessToken())
-                .refreshToken(response.getRefreshToken())
-                .build();
-
-        return jiraTokenRepository.save(token);
-    }
-
     private Map<String, Object> prepareTokenRequest(String code) {
         Map<String, Object> formData = new HashMap<>();
         formData.put("grant_type", "authorization_code");
@@ -144,11 +124,9 @@ public class Oauth2JiraService {
     }
 
     public Mono<JiraToken> getTokenByUserId(String userId) {
-        log.info("리프레시 확인");
         return jiraTokenRepository.findByUserId(userId)
                 .flatMap(token -> {
                     if (token.getExpiresAt().isBefore(LocalDateTime.now())) {
-                        log.info("시간초과로 리프레쉬됨");
                         return refreshAccessToken(token)
                                 .flatMap(refreshedToken -> jiraTokenRepository.save(refreshedToken));
                     } else {
@@ -211,9 +189,6 @@ public class Oauth2JiraService {
                         return Mono.error(new CustomException("토큰이 없습니다.", HttpStatus.UNAUTHORIZED));
                     }
                     String fullUrl = String.format("/ex/jira/%s%s", token.getCloudId(), jiraProxyRequestDto.getUrl());
-                    log.info(fullUrl);
-                    log.info(String.valueOf(jiraProxyRequestDto));
-
                     WebClient.RequestHeadersSpec<?> requestSpec;
 
                     switch (jiraProxyRequestDto.getMethod().toUpperCase()) {

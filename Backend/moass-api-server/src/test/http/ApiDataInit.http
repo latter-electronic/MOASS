@@ -57,7 +57,7 @@ POST {{baseUrl}}/user/login
 Content-Type: application/json
 
 {
-  "userEmail": "Z001@com",
+  "userEmail": "weon1009@gmail.com",
   "password": "1234"
 }
 
@@ -75,7 +75,7 @@ POST {{baseUrl}}/user/login
 Content-Type: application/json
 
 {
-  "userEmail": "Z002@com",
+  "userEmail": "diduedidue@naver.com",
   "password": "1234"
 }
 
@@ -112,7 +112,7 @@ Authorization: Bearer {{masterAccessToken}}
 Content-Type: application/json
 
 {
-  "classCode":"Z1",
+  "classCode":"E2",
   "category":"board",
   "timeLimit":2,
   "reservationName":"플립보드1" ,
@@ -130,17 +130,25 @@ Authorization: Bearer {{masterAccessToken}}
 Content-Type: application/json
 
 {
-  "classCode":"Z1",
+  "classCode":"E2",
+  "category":"board",
+  "timeLimit":3,
+  "reservationName":"플립보드2" ,
+  "colorCode":"#123215"
+}
+
+###
+POST {{baseUrl}}/reservation
+Authorization: Bearer {{masterAccessToken}}
+Content-Type: application/json
+
+{
+  "classCode":"E2",
   "category":"meeting",
   "timeLimit":3,
   "reservationName":"팀미팅" ,
   "colorCode":"#123215"
 }
-
-<> 2024-05-07T141903-4.200.json
-<> 2024-05-07T141513.200.json
-<> 2024-05-07T141330-1.200.json
-<> 2024-05-07T140911-5.200.json
 
 ###
 POST {{baseUrl}}/reservationinfo
@@ -149,10 +157,10 @@ Content-Type: application/json
 
 {
   "reservationId":1,
-  "infoName":"가나다라",
-  "infoTimes":[1,4],
-  "infoDate": "{{today3}}" ,
-  "infoUsers":["9000001","9000002","9000003"]
+  "infoName":"피그마 회의",
+  "infoTimes":[2,3],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1052881","1053374","1055605","1057753","1058448","1058706"]
 }
 
 <> 2024-05-07T141904.200.json

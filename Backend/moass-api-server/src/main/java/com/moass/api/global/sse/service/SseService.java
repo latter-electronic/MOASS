@@ -71,13 +71,10 @@ public class SseService {
                     Sinks.Many<String> sink = teamSinks.computeIfAbsent(teamCode, k -> Sinks.many().multicast().onBackpressureBuffer());
                     return sink.asFlux()
                             .doOnSubscribe(subscription -> {
-                                log.info("Subscribing to team: " + teamCode + " by user: " + userInfo.getUserId());
                                 sink.tryEmitNext(createSseJsonMessage(new SseNotificationDto("server", "구독","팀채널 구독완료")));
                             })
                             .doFinally(signalType -> {
-                                log.info("Subscription ended or cancelled for team: " + teamCode + " by user: " + userInfo.getUserId());
                                 if (sink.currentSubscriberCount() == 0) {
-                                    log.info("Removing sink for team: " + teamCode);
                                     teamSinks.remove(teamCode);
                                 }
                             });
