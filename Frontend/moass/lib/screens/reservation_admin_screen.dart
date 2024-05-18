@@ -126,15 +126,7 @@ class _ReservationAdminScreenState extends State<ReservationAdminScreen> {
                 ),
               ),
             ),
-            // 시설 팀 미팅 제목
-            // const Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 16.0),
-            //   child: Align(
-            //     alignment: Alignment.centerLeft,
-            //     child: CategoryText(text: '시설 / 미팅 현황 및 수정'),
-            //   ),
-            // ),
-            // 날짜 설정
+
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 1),
               child: Row(
@@ -154,7 +146,7 @@ class _ReservationAdminScreenState extends State<ReservationAdminScreen> {
             ),
             const Padding(
               padding: EdgeInsets.only(left: 15),
-              child: Text('*시설 현황 및 수정'),
+              child: Text('*시설 예약 현황 및 수정'),
             ),
             // 시설 목록 현황박스
             ...reservationDayData.map((data) =>
@@ -258,49 +250,76 @@ class ReservationBox extends StatelessWidget {
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
-
                         break;
+
                       case '02':
                         bgColor = Colors.yellow;
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
-
                         break;
+
                       case '03':
                         bgColor = Colors.blue.withOpacity(0.3);
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
-
                         break;
-                      case '03':
-                        bgColor = Colors.blue.withOpacity(0.3);
-                        text = info
-                            .infoName; // Show name or any status description
-                        textStyle = const TextStyle(color: Colors.black26);
 
-                        break;
                       case '04':
                         bgColor = Colors.indigo.withOpacity(0.3);
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
-
                         break;
+
                       case '05':
                         bgColor = Colors.purple.withOpacity(0.3);
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
-
                         break;
+
+                      case '06':
+                        bgColor = Colors.pink.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+                        break;
+
+                      case '07':
+                        bgColor = Colors.lime.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+                        break;
+
+                      case '08':
+                        bgColor = Colors.brown.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+                        break;
+
+                      case '09':
+                        bgColor = Colors.teal.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+                        break;
+
+                      case '10':
+                        bgColor = Colors.cyan.withOpacity(0.3);
+                        text = info
+                            .infoName; // Show name or any status description
+                        textStyle = const TextStyle(color: Colors.black26);
+                        break;
+
                       case != '':
                         bgColor = Colors.green.withOpacity(0.3);
                         text = info
                             .infoName; // Show name or any status description
                         textStyle = const TextStyle(color: Colors.black26);
-
                         break;
                     }
                   } else if (info.infoState == 2 || info.infoState == 3) {

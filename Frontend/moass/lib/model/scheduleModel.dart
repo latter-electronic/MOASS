@@ -16,8 +16,8 @@ class Schedule {
         coursesJson.map((course) => Course.fromJson(course)).toList();
 
     return Schedule(
-      curriculumId: json['curriculumId'],
-      date: json['date'],
+      curriculumId: json['curriculumId'] ?? '', // 기본값 또는 처리
+      date: json['date'] ?? '', // 기본값 또는 처리
       courses: coursesList,
     );
   }
@@ -52,12 +52,12 @@ class Course {
   // fromJson 메서드
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
-      period: json['period'],
-      majorCategory: json['majorCategory'],
-      minorCategory: json['minorCategory'],
-      title: json['title'],
-      teacher: json['teacher'],
-      room: json['room'],
+      period: json['period'] ?? '', // 기본값 또는 처리
+      majorCategory: json['majorCategory'] ?? '', // 기본값 또는 처리
+      minorCategory: json['minorCategory'] ?? '', // 기본값 또는 처리
+      title: json['title'] ?? '', // 기본값 또는 처리
+      teacher: json['teacher'] ?? '', // 기본값 또는 처리
+      room: json['room'] ?? '', // 기본값 또는 처리
     );
   }
 

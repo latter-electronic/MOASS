@@ -71,8 +71,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
   Future<void> fetchReservations() async {
     setState(() => isReservationLoading = true);
-    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     var result = await api.myReservationinfo(); // API 호출
+    if (!mounted) return; // State 객체가 트리에 포함되어 있는지 확인
     setState(() {
       // null 체크
       reservations = result
@@ -479,7 +479,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                 },
               ),
               const CategoryText(text: '현재 일정'),
-              // const CurrentSchedule(),
+              const CurrentSchedule(),
               const CategoryText(text: '할 일 목록'),
               const ToDoListWidget(),
               const CategoryText(text: '나의 예약'),

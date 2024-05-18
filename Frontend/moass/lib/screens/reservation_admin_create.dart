@@ -157,12 +157,12 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
               child: TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: '이름',
+                  labelText: '시설 / 예약 이름',
                 ),
               ),
             ),
             ListTile(
-              title: const Text('색 변경:'),
+              title: const Text('패널 색 변경:'),
               trailing: CircleAvatar(
                 backgroundColor: _currentColor,
               ),
@@ -204,7 +204,15 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
                 },
               ),
             ),
-            const CategoryText(text: '예약만들기'),
+            const CategoryText(
+              text: '예약 불가 시간 설정',
+              padding: EdgeInsets.only(
+                  top: 20.0, bottom: 5, left: 10.0, right: 10.0),
+            ),
+            const Text('      * 예약을 금지할 시간을 선택해 주세요.',
+                style: TextStyle(
+                  fontSize: 12,
+                )),
             ReservationBox(
               onUpdateSelectedTimes: updateSelectedTimes, // 콜백 함수 전달
               currentColor: _currentColor, // 현재 색상을 전달

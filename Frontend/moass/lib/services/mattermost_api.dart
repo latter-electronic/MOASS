@@ -73,4 +73,30 @@ class MatterMostApi {
       return null;
     }
   }
+
+  // 채널 구동 및 취소 요청
+  connectMMchannel(String channelId) async {
+    try {
+      String? accessToken = await storage.read(key: 'accessToken');
+      if (accessToken == null) {
+        return [];
+      }
+      // API요청, 헤더에 토큰 넣기
+      final response = await dio.post(
+        '$baseUrl/api/oauth2/mm/channel/$channelId',
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
+      );
+
+      if (response.statusCode == 200) {
+        print('채널 연동 변경 성공!');
+        return response.statusCode;
+      } else {
+        print('채널 연동 변경 실패');
+        return response.statusCode;
+      }
+    } on DioException catch (e) {
+      print('Error fetching user status: ${e.message}');
+      return null;
+    }
+  }
 }
