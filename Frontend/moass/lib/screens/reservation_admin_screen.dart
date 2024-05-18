@@ -78,50 +78,65 @@ class _ReservationAdminScreenState extends State<ReservationAdminScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // 지역,반정보 확인
-            CategoryText(
+            Center(
+              child: CategoryText(
                 text:
-                    '${userProfile?.locationName} / ${userProfile?.classCode} 시설/미팅'),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                // 시설 생성 버튼
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF6ECEF5)),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
-                    textStyle: MaterialStateProperty.all<TextStyle>(
-                      const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 10.0),
-                    ),
+                    '${userProfile?.locationName} / ${userProfile?.classCode}반 시설/미팅',
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(bottom: 10),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey, // 구분선 색상
+                    width: 1.0, // 구분선 두께
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ReservationAdminCreate()),
-                    );
-                  },
-                  child: const Text('시설/팀미팅 생성하기'),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Center(
+                  // 시설 생성 버튼
+                  child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF6ECEF5)),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.black),
+                      textStyle: MaterialStateProperty.all<TextStyle>(
+                        const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                        const EdgeInsets.symmetric(
+                            horizontal: 32.0, vertical: 10.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const ReservationAdminCreate()),
+                      );
+                    },
+                    child: const Text('시설/팀미팅 생성하기'),
+                  ),
                 ),
               ),
             ),
             // 시설 팀 미팅 제목
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: CategoryText(text: '시설 / 팀미팅'),
-              ),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 16.0),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: CategoryText(text: '시설 / 미팅 현황 및 수정'),
+            //   ),
+            // ),
             // 날짜 설정
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 1),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -136,6 +151,10 @@ class _ReservationAdminScreenState extends State<ReservationAdminScreen> {
                       onPressed: () => _changeDate(true)),
                 ],
               ),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text('*시설 현황 및 수정'),
             ),
             // 시설 목록 현황박스
             ...reservationDayData.map((data) =>
@@ -174,7 +193,7 @@ class ReservationBox extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
