@@ -55,45 +55,39 @@ class BoardScreen extends ConsumerWidget {
                     final screenshots = screenshotSnapshot.data ?? [];
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 3.0, horizontal: 10.0),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF6ECEF5),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        child: ListTile(
-                          title: Text(board.boardName),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Images count: ${screenshots.length}"),
-                              const SizedBox(
-                                width: 10,
-                                height: 10,
-                              ),
-                              _buildScreenshotImages(screenshots),
-                            ],
+                          vertical: 10.0, horizontal: 20.0),
+                      child: ClipPath(
+                        clipper: ReversedFolderClipper(), // 변경된 클리퍼 사용
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.yellow,
                           ),
-                          // 이미지의 오른쪽에 띄울 수 있는 메인 이미지
-                          //
-                          // trailing: (screenshots.isNotEmpty)
-                          //     ? Image.network(
-                          //         screenshots[0].screenshotUrl,
-                          //         width: 150,
-                          //         height: 70,
-                          //       )
-                          //     : const SizedBox(width: 50, height: 50),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BoardDetailScreen(
-                                  boardId: board.boardId,
-                                  boardUserId: board.boardUserId,
+                          child: ListTile(
+                            title: Text(board.boardName),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("이미지 갯수: ${screenshots.length}"),
+                                const SizedBox(
+                                  width: 10,
+                                  height: 10,
                                 ),
-                              ),
-                            );
-                          },
+                                _buildScreenshotImages(screenshots),
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BoardDetailScreen(
+                                    boardId: board.boardId,
+                                    boardUserId: board.boardUserId,
+                                    boardName: board.boardName,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
                     );
@@ -126,4 +120,26 @@ class BoardScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class ReversedFolderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    double tabHeight = size.height * 0.2;
+    double tabWidth = size.width * 0.6;
+
+    path.moveTo(0, 0);
+    path.lineTo(size.width - tabWidth - 10, 0);
+    path.lineTo(size.width - tabWidth, tabHeight);
+    path.lineTo(size.width, tabHeight);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(ReversedFolderClipper oldClipper) => false;
 }

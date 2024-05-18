@@ -77,13 +77,20 @@ class _UserSearchWidgetState extends State<UserSearchWidget> {
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   return Column(
                     children: snapshot.data!.map((userInfo) {
-                      return GestureDetector(
-                        onTap: () => openButtonWidget(userInfo),
-                        child: UserBox(
+                      return Material(
+                        color: Colors.transparent, // 기본 배경색을 투명으로 설정
+                        child: InkWell(
+                          onTap: () => openButtonWidget(userInfo),
+                          highlightColor: Colors.blue.withOpacity(0.3), // 강조 색상
+                          splashColor: Colors.blue.withOpacity(0.2), // 물결 효과 색상
+                          borderRadius: BorderRadius.circular(10), // 경계면 둥글게 처리
+                          child: UserBox(
                             username: userInfo.userName,
                             team: userInfo.teamCode,
                             role: userInfo.positionName,
-                            userstatus: userInfo.statusId),
+                            userstatus: userInfo.statusId,
+                          ),
+                        ),
                       );
                     }).toList(),
                   );

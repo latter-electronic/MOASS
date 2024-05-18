@@ -14,7 +14,7 @@ class MeetingTable extends StatelessWidget {
     required this.infoTime,
   });
 
-// 현재시간과 인덱스 시간
+  // 현재 시간과 인덱스 시간
   String formatTimeSlot(int infoTime) {
     DateTime baseTime = DateTime(
         DateTime.now().year, DateTime.now().month, DateTime.now().day, 9, 0);
@@ -26,69 +26,94 @@ class MeetingTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color backgroundColor = Color(int.parse(boxColor.replaceAll('#', '0xff')));
-    Color labelColor = Colors.green;
-
     String timeSlot = formatTimeSlot(infoTime);
     DateTime now = DateTime.now();
-    DateTime slotEndTime = DateTime(now.year, now.month, now.day,
-        infoTime * 30 ~/ 60 + 9, (infoTime * 30) % 60);
+    DateTime baseTime = DateTime(now.year, now.month, now.day, 9, 0);
+    DateTime startTime = baseTime.add(Duration(minutes: 30 * (infoTime - 1)));
+    DateTime endTime = startTime.add(const Duration(minutes: 30));
 
-    if (now.isAfter(slotEndTime)) {
+    if (now.isAfter(endTime)) {
       return Container(); // 시간이 지난 슬롯은 표시하지 않음
     }
 
+    double elapsedRatio = (now.isAfter(startTime) && now.isBefore(endTime))
+        ? (now.difference(startTime).inMinutes /
+            endTime.difference(startTime).inMinutes)
+        : (now.isAfter(endTime) ? 1.0 : 0.0);
+
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 194, 222, 245),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: backgroundColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            height: 72,
             decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)),
+              color: const Color.fromARGB(255, 255, 255, 255),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(color: backgroundColor),
             ),
-            child: Text(
-              reservationName,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+          ),
+          Positioned.fill(
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: elapsedRatio,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: backgroundColor.withOpacity(0.5),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomLeft: Radius.circular(10)),
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: backgroundColor,
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      bottomRight: Radius.circular(10)),
+                  border: Border.all(color: backgroundColor),
+                ),
                 child: Text(
-                  '팀 코드 : $infoName',
+                  reservationName,
                   style: const TextStyle(
-                    fontSize: 14,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 30.0, bottom: 3.0),
-                child: Text(
-                  timeSlot,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, bottom: 10.0),
+                    child: Text(
+                      '팀 코드 : $infoName',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30.0, bottom: 3.0),
+                    child: Text(
+                      timeSlot,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
