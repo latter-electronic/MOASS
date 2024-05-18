@@ -19,7 +19,7 @@ export default function TagNFC() {
 
   const navigate = useNavigate()
 
-  const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login')
+  // const ipcLoginHandle = () => window.electron.ipcRenderer.send('login-success', 'login')
 
   const handleSuccessfulLogin = useCallback((accessToken, refreshToken, deviceId, cardSerialId) => {
     login(accessToken, refreshToken, deviceId, cardSerialId)
@@ -32,7 +32,7 @@ export default function TagNFC() {
     setTimeout(() => {
       navigate('/');
     }, 2000);
-    ipcLoginHandle();
+    // ipcLoginHandle();
   }, [login, navigate]);
 
   const handleLogin = useCallback(async () => {
