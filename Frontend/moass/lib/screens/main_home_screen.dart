@@ -70,8 +70,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
 
   Future<void> fetchReservations() async {
     setState(() => isReservationLoading = true);
-    // var api = ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     var result = await api.myReservationinfo(); // API 호출
+    if (!mounted) return; // State 객체가 트리에 포함되어 있는지 확인
     setState(() {
       // null 체크
       reservations = result

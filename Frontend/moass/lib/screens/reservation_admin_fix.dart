@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/reservation_model.dart';
@@ -109,6 +110,34 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
     }
   }
 
+  // 삭제 여부를 묻는 함수
+  void showDeleteConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('예약 삭제'),
+          content: const Text('정말 삭제하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('취소'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 대화 상자를 닫습니다.
+              },
+            ),
+            TextButton(
+              child: const Text('삭제하기'),
+              onPressed: () {
+                Navigator.of(context).pop(); // 대화 상자를 닫습니다.
+                sendReservationDelete(); // 삭제 함수 호출
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // 예약 완료 팝업
   void completeReservation(BuildContext context, String text) {
     showDialog(
@@ -168,12 +197,12 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
               child: TextField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: '이름',
+                  labelText: '시설 / 예약 이름',
                 ),
               ),
             ),
             ListTile(
-              title: const Text('색 변경:'),
+              title: const Text('패널 색 변경:'),
               trailing: CircleAvatar(
                 backgroundColor: _currentColor,
               ),
@@ -204,7 +233,15 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
                 },
               ),
             ),
-            CategoryText(text: widget.selectedDate),
+            CategoryText(
+              text: widget.selectedDate,
+              padding: const EdgeInsets.only(
+                  top: 20.0, bottom: 5, left: 10.0, right: 10.0),
+            ),
+            const Text('      * 예약을 막을 시간을 선택해 주세요.',
+                style: TextStyle(
+                  fontSize: 12,
+                )),
             ReservationBox(
               reservation: widget.reservation,
               selectedDate: widget.selectedDate,
@@ -219,14 +256,23 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
                 children: [
                   ElevatedButton(
                     onPressed: sendReservationFix,
-                    child: const Text('수정하기'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    child: const Text(
+                      '수정하기',
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                   ElevatedButton(
-                    onPressed: sendReservationDelete,
+                    onPressed: () => showDeleteConfirmationDialog(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.shade200, // 버튼 색상 설정
+                      backgroundColor: Colors.red.shade400, // 버튼 색상 설정
                     ),
-                    child: const Text('삭제하기'),
+                    child: const Text(
+                      '삭제하기',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
@@ -392,14 +438,18 @@ class _ReservationBoxState extends State<ReservationBox> {
                       info.infoName.substring(info.infoName.length - 2);
                   switch (suffix) {
                     case '01':
-                      bgColor = isSelected ? Colors.red : Colors.orange;
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.orange.withOpacity(0.3);
                       text =
                           info.infoName; // Show name or any status description
                       textStyle = const TextStyle(color: Colors.black26);
 
                       break;
                     case '02':
-                      bgColor = isSelected ? Colors.red : Colors.yellow;
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.yellow.withOpacity(0.3);
                       text =
                           info.infoName; // Show name or any status description
                       textStyle = const TextStyle(color: Colors.black26);
@@ -427,6 +477,51 @@ class _ReservationBoxState extends State<ReservationBox> {
                       bgColor = isSelected
                           ? Colors.red
                           : Colors.purple.withOpacity(0.3);
+                      text =
+                          info.infoName; // Show name or any status description
+                      textStyle = const TextStyle(color: Colors.black26);
+
+                      break;
+                    case '06':
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.pink.withOpacity(0.3);
+                      text =
+                          info.infoName; // Show name or any status description
+                      textStyle = const TextStyle(color: Colors.black26);
+                      break;
+                    case '07':
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.lime.withOpacity(0.3);
+                      text =
+                          info.infoName; // Show name or any status description
+                      textStyle = const TextStyle(color: Colors.black26);
+
+                    case '08':
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.brown.withOpacity(0.3);
+                      text =
+                          info.infoName; // Show name or any status description
+                      textStyle = const TextStyle(color: Colors.black26);
+
+                      break;
+
+                    case '09':
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.teal.withOpacity(0.3);
+                      text =
+                          info.infoName; // Show name or any status description
+                      textStyle = const TextStyle(color: Colors.black26);
+
+                      break;
+
+                    case '10':
+                      bgColor = isSelected
+                          ? Colors.red
+                          : Colors.cyan.withOpacity(0.3);
                       text =
                           info.infoName; // Show name or any status description
                       textStyle = const TextStyle(color: Colors.black26);
