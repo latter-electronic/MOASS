@@ -80,7 +80,8 @@ public class ScheduleService {
 
     public Mono<CurriculumDto> getCurriculum(String date) {
         return curriculumRepository.findByDate(date)
-                .switchIfEmpty(Mono.error(new IllegalArgumentException("Curriculum을 찾을 수 없습니다.")))
-                .flatMap(curriculum -> Mono.just(new CurriculumDto(curriculum)));
+                //.switchIfEmpty(Mono.error(new IllegalArgumentException("Curriculum을 찾을 수 없습니다.")))
+                .flatMap(curriculum -> Mono.just(new CurriculumDto(curriculum)))
+                .switchIfEmpty(Mono.just(new CurriculumDto()));
     }
 }

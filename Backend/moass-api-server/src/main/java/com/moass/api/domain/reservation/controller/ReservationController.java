@@ -38,7 +38,7 @@ public class ReservationController {
     @PatchMapping()
     public Mono<ResponseEntity<ApiResponse>> patchReservation(@Login UserInfo userInfo, @RequestBody ReservationPatchDto reservationPatchDto){
         return reservationService.patchReservation(userInfo, reservationPatchDto)
-                .flatMap(reservationId -> ApiResponse.ok("예약 생성 성공", reservationId))
+                .flatMap(reservationId -> ApiResponse.ok("예약 수정 성공", reservationId))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
     }
 

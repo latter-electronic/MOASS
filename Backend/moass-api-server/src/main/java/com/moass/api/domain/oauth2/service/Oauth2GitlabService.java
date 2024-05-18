@@ -11,14 +11,18 @@ import com.moass.api.domain.oauth2.repository.GitlabTokenRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.PropertiesConfig;
 import com.moass.api.global.exception.CustomException;
+import io.netty.channel.ChannelOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -40,12 +44,18 @@ public class Oauth2GitlabService {
 
 
     public Oauth2GitlabService(WebClient.Builder webClientBuilder, GitlabTokenRepository gitlabTokenRepository,GitlabProjectRepository gitlabProjectRepository ,PropertiesConfig propertiesConfig) {
-        this.gitlabAuthWebClient = webClientBuilder.baseUrl("https://lab.ssafy.com").build();
+        HttpClient httpClient = HttpClient.create()
+                .responseTimeout(Duration.ofSeconds(10))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
                 .build();
+        this.gitlabAuthWebClient = webClientBuilder.baseUrl("https://lab.ssafy.com")
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
+                .build();
         this.gitlabApiWebClient = webClientBuilder.baseUrl("https://lab.ssafy.com")
                 .exchangeStrategies(strategies)
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
         this.gitlabTokenRepository = gitlabTokenRepository;
         this.gitlabProjectRepository = gitlabProjectRepository;
@@ -191,6 +201,8 @@ public class Oauth2GitlabService {
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
+                .timeout(Duration.ofSeconds(10))
+                .doOnError(throwable -> log.error("사용자 정보를 가져오는 중 오류 발생", throwable))
                 .doOnError(error -> log.error("Error fetching projects: {}", error.getMessage()));
     }
 
@@ -273,6 +285,8 @@ public class Oauth2GitlabService {
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToFlux(JsonNode.class)
+                .timeout(Duration.ofSeconds(10))
+                .doOnError(throwable -> log.error("이슈 가져오는 중 에러발생 ", throwable))
                 .collectList();
     }
 
@@ -284,6 +298,8 @@ public class Oauth2GitlabService {
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToFlux(JsonNode.class)
+                .timeout(Duration.ofSeconds(10))
+                .doOnError(throwable -> log.error("머지리퀘스트 가져오는중 에러발생", throwable))
                 .collectList();
     }
 

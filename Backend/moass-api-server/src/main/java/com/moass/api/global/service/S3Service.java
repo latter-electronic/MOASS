@@ -4,6 +4,7 @@ import com.moass.api.domain.file.controller.DownloadFailedException;
 import com.moass.api.domain.file.controller.UploadFailedException;
 import com.moass.api.domain.file.dto.UploadResult;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
+import com.moass.api.global.config.UUIDConfig;
 import com.moass.api.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import software.amazon.awssdk.core.SdkResponse;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.http.SdkHttpResponse;
@@ -26,7 +28,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -47,30 +48,35 @@ public class S3Service {
             throw new CustomException("파일 크기가 최대 허용 범위(5MB)를 초과합니다.", HttpStatus.BAD_REQUEST);
         }
 
-        Map<String, String> metadata = new HashMap<String, String>();
-        MediaType mediaType = headers.getContentType();
+        return Mono.fromCallable(UUIDConfig::generateUUID)
+                .subscribeOn(Schedulers.boundedElastic())
+                .flatMap(uuid -> {
+                    MediaType mediaType = headers.getContentType();
 
-        if (mediaType == null) {
-            mediaType = MediaType.APPLICATION_OCTET_STREAM;
-        }
+                    if (mediaType == null) {
+                        mediaType = MediaType.APPLICATION_OCTET_STREAM;
+                    }
 
-        String fileKey = UUID.randomUUID().toString() + "." + mediaType.getSubtype();
+                    final String fileKey = uuid + "." + mediaType.getSubtype();
+                    Map<String, String> metadata = new HashMap<>();
 
-        log.info("[I95] uploadHandler: mediaType{}, length={}", mediaType, length);
-        CompletableFuture<PutObjectResponse> future = s3client
-                .putObject(PutObjectRequest.builder()
-                                .bucket(s3config.getBucket())
-                                .contentLength(length)
-                                .key(fileKey)
-                                .contentType(mediaType.toString())
-                                .metadata(metadata)
-                                .build(),
-                        AsyncRequestBody.fromPublisher(body));
+                    log.info("Uploading file with media type: {}, length: {}", mediaType, length);
 
-        return Mono.fromFuture(future)
-                .map((response) -> {
-                    checkUploadResult(response);
-                    return new UploadResult(HttpStatus.CREATED, new String[] {fileKey});
+                    CompletableFuture<PutObjectResponse> future = s3client.putObject(
+                            PutObjectRequest.builder()
+                                    .bucket(s3config.getBucket())
+                                    .contentLength(length)
+                                    .key(fileKey)
+                                    .contentType(mediaType.toString())
+                                    .metadata(metadata)
+                                    .build(),
+                            AsyncRequestBody.fromPublisher(body));
+
+                    return Mono.fromFuture(future)
+                            .map(response -> {
+                                checkUploadResult(response);
+                                return new UploadResult(HttpStatus.CREATED, new String[]{fileKey});
+                            });
                 });
     }
 

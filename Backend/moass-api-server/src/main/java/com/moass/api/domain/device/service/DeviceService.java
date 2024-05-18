@@ -49,13 +49,7 @@ public class DeviceService {
                                     .map(tokens -> new TokensAndUserInfo(userInfo, tokens));
                         }));
     }
-
-    /**
-     * Todo
-     * 추후, 연결된 기기(본인이라도)에 로그아웃 하라는 SSE메세지 적용 필요
-     * @param
-     * @return
-     */
+    
     @Transactional
     public Mono<String> deviceLogout(UserInfo userInfo) {
         return updateUserConnectionFlag(userInfo.getUserEmail(), 0) // 로그아웃 전 connectFlag 업데이트

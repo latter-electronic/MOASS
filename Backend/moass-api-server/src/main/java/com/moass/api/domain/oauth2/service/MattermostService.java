@@ -17,10 +17,12 @@ import com.moass.api.global.config.PropertiesConfig;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.service.S3Service;
+import io.netty.channel.ChannelOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ClientResponse;
@@ -29,8 +31,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
 import java.nio.ByteBuffer;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -59,11 +63,16 @@ public class MattermostService {
         this.mmTeamRepository = mmTeamRepository;
         this.s3config = s3config;
         this.s3Service = s3Service;
+        HttpClient httpClient = HttpClient.create()
+                .responseTimeout(Duration.ofSeconds(10))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
+
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
                 .build();
         this.mmApiWebClient = webClientBuilder.baseUrl("https://meeting.ssafy.com")
                 .exchangeStrategies(strategies)
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
         this.propertiesConfig = propertiesConfig;
     }
