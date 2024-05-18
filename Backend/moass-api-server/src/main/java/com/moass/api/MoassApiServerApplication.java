@@ -21,7 +21,7 @@ public class MoassApiServerApplication {
 
     public static void main(String[] args) {
         Hooks.onOperatorDebug();
-        BlockHound.install(new BlockHoundCustomConfiguration());
+        //BlockHound.install(new BlockHoundCustomConfiguration());
         SpringApplication.run(MoassApiServerApplication.class, args);
     }
 
