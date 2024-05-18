@@ -53,6 +53,15 @@ function createWindow() {
     createSecondWindow(externalDisplays[0])
   }
 
+  ipcMain.on('user-updated', (event, user) => {
+    if (mainWindow) {
+      mainWindow.webContents.send('user-updated', user);
+    }
+    if (secondWindow) {
+      secondWindow.webContents.send('user-updated', user);
+    }
+  });
+
   setupPythonProcess(mainWindow)
 }
 
@@ -66,6 +75,7 @@ function createSecondWindow(display) {
     x: display.bounds.x,
     y: display.bounds.y,
     show: false,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,

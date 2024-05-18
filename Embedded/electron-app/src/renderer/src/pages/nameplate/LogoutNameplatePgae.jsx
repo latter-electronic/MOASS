@@ -18,7 +18,6 @@ export default function LogoutNameplatePage() {
     console.log('isAuthenticated:', isAuthenticated);
     if (isAuthenticated) {
       navigate('/nameplate', { replace: true });
-      window.location.reload();
     }
   }, [isAuthenticated, navigate]);
 

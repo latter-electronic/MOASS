@@ -7,10 +7,11 @@ import useGlobalStore from '../../stores/useGlobalStore.js';
 import AuthStore from '../../stores/AuthStore.js';
 
 export default function NameplatePage() {
-  const { user, fetchUserInfo, isLoadingUser } = useGlobalStore((state) => ({
+  const { user, fetchUserInfo, isLoadingUser, setUser } = useGlobalStore((state) => ({
     user: state.user,
     fetchUserInfo: state.fetchUserInfo,
     isLoadingUser: state.isLoadingUser,
+    setUser: state.setUser,
   }));
 
   const { isAuthenticated, isCheckingAuth, checkStoredAuth, accessToken } = AuthStore((state) => ({
@@ -31,14 +32,12 @@ export default function NameplatePage() {
     console.log(accessToken);
     if (!accessToken) {  
       navigate('/logoutnameplate');
-      window.location.reload(); 
     }
   }, [accessToken, navigate]);
 
   useEffect(() => {
     if (user?.statusId) {
       console.log('statusId changed:', user.statusId);
-      window.location.reload();
     }
   }, [user?.statusId]);
 
@@ -47,6 +46,17 @@ export default function NameplatePage() {
       fetchUserInfo();
     }
   }, [isAuthenticated, fetchUserInfo]);
+
+  // IPC를 통해 상태 업데이트를 처리합니다.
+  useEffect(() => {
+    window.electron.ipcRenderer.on('user-updated', (event, newUser) => {
+      setUser(newUser);
+    });
+
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners('user-updated');
+    };
+  }, [setUser]);
 
 
   if (isCheckingAuth || isLoadingUser) {
