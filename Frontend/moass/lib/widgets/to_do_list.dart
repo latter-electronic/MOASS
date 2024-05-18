@@ -54,6 +54,7 @@ class _ToDoListState extends State<ToDoListWidget> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
+                clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     border:

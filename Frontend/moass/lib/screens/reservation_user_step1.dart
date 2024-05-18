@@ -8,6 +8,7 @@ import 'package:moass/screens/reservation_user_step2.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
+import 'package:moass/widgets/top_bar.dart';
 
 class ReservationUserStep1 extends StatefulWidget {
   const ReservationUserStep1({super.key});
@@ -68,8 +69,9 @@ class _ReservationUserStep1State extends State<ReservationUserStep1> {
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('시설 / 팀미팅 예약'),
+      appBar: const TopBar(
+        title: '시설 / 팀미팅 예약',
+        icon: Icons.edit_calendar_outlined,
       ),
       body: SingleChildScrollView(
         child: Column(

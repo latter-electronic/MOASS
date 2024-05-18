@@ -75,7 +75,6 @@ class _WorkAdminScreenState extends ConsumerState<WorkAdminScreen> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : Padding(
-                // Add Padding to ensure finite size
                 padding: const EdgeInsets.all(16.0),
                 child: buildContent(displayDate),
               ),
