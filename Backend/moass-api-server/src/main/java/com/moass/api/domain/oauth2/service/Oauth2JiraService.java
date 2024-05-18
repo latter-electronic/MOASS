@@ -8,14 +8,17 @@ import com.moass.api.domain.oauth2.repository.JiraTokenRepository;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.PropertiesConfig;
 import com.moass.api.global.exception.CustomException;
+import io.netty.channel.ChannelOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -34,15 +37,16 @@ public class Oauth2JiraService {
     private final PropertiesConfig propertiesConfig;
 
     public Oauth2JiraService(WebClient.Builder webClientBuilder, JiraTokenRepository jiraTokenRepository, PropertiesConfig propertiesConfig) {
-        log.info("Oauth2JiraService 초기화");
+        HttpClient httpClient = HttpClient.create()
+                .responseTimeout(Duration.ofSeconds(10))
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
         this.jiraAuthWebClient = webClientBuilder.baseUrl("https://auth.atlassian.com").build();
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
                 .build();
         this.jiraApiWebClient = webClientBuilder.baseUrl("https://api.atlassian.com")
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 16MB로 설정
-                        .build())
+                .exchangeStrategies(strategies)
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
         this.jiraTokenRepository = jiraTokenRepository;
         this.propertiesConfig = propertiesConfig;
@@ -76,7 +80,7 @@ public class Oauth2JiraService {
                             .header("Authorization", "Bearer " + response.getAccessToken())
                             .retrieve()
                             .bodyToMono(JsonNode.class)
-                            .timeout(Duration.ofSeconds(10)) // 타임아웃 설정
+                            .timeout(Duration.ofSeconds(10))
                             .doOnError(throwable -> log.error("사용자 정보를 가져오는 중 오류 발생", throwable))
                             .flatMap(userInfo -> {
                                 String emailAddress = userInfo.path("emailAddress").asText();
@@ -106,6 +110,8 @@ public class Oauth2JiraService {
                             });
                 })
                 .subscribeOn(Schedulers.boundedElastic())
+                .timeout(Duration.ofSeconds(10))
+                .doOnError(error -> log.error("jira 연결 에러: {}", error.getMessage()))
                 .doOnTerminate(() -> log.info("jira 연결 완료"));
     }
 
@@ -236,6 +242,8 @@ public class Oauth2JiraService {
                                             HttpStatus.INTERNAL_SERVER_ERROR
                                     ))))
                             .bodyToMono(JsonNode.class)
+                            .timeout(Duration.ofSeconds(10))
+                            .doOnError(throwable -> log.error("지라 프록시중 에러발생", throwable))
                             .switchIfEmpty(Mono.empty());
                 });
     }
