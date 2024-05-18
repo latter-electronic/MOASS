@@ -8,6 +8,7 @@ import BoardHistory from './pages/board/BoardHistoryPage.jsx';
 import Jira from "./pages/jira/JiraPage.jsx";
 import Alert from "./pages/noti/NotiPage.jsx";
 import CallAlert from "./pages/common/CallAlertPage.jsx";
+import LogoutNameplate from "./pages/nameplate/LogoutNameplatePgae.jsx";
 import Nameplate from "./pages/nameplate/NameplatePage.jsx";
 import TagNFC from "./pages/common/TagNFCPage.jsx";
 import TagSuccess from "./pages/common/TagSuccessPage.jsx";
@@ -29,6 +30,7 @@ export default function App() {
                             <Route path="jira" element={<Jira />} />
                             <Route path="alert" element={<Alert />} />
                         </Route>
+                        <Route path="/logoutnameplate" element={<LogoutNameplate/>}/>
                         <Route path="/nameplate" element={<Nameplate />} />
                         <Route path="/callalert" element={<CallAlert />} />
                         <Route path="/login" element={<TagNFC />} />

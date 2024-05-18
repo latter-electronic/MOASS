@@ -13,10 +13,11 @@ export default function NameplatePage() {
     isLoadingUser: state.isLoadingUser,
   }));
 
-  const { isAuthenticated, isCheckingAuth, checkStoredAuth } = AuthStore((state) => ({
+  const { isAuthenticated, isCheckingAuth, checkStoredAuth, accessToken } = AuthStore((state) => ({
     isAuthenticated: state.isAuthenticated,
     isCheckingAuth: state.isCheckingAuth,
     checkStoredAuth: state.checkStoredAuth,
+    accessToken: state.accessToken,
   }));
 
   const navigate = useNavigate();
@@ -27,11 +28,26 @@ export default function NameplatePage() {
   }, [checkStoredAuth]);
 
   useEffect(() => {
+    console.log(accessToken);
+    if (!accessToken) {  
+      navigate('/logoutnameplate');
+      window.location.reload(); 
+    }
+  }, [accessToken, navigate]);
+
+  useEffect(() => {
+    if (user?.statusId) {
+      console.log('statusId changed:', user.statusId);
+      window.location.reload();
+    }
+  }, [user?.statusId]);
+
+  useEffect(() => {
     if (isAuthenticated) {
       fetchUserInfo();
-    } else if (!isCheckingAuth) {
     }
-  }, [isAuthenticated, isCheckingAuth, fetchUserInfo, navigate]);
+  }, [isAuthenticated, fetchUserInfo]);
+
 
   if (isCheckingAuth || isLoadingUser) {
     return <div className="5xl">로딩 중...</div>; // 인증 상태 확인 또는 사용자 정보 로딩 중

@@ -65,6 +65,7 @@ function createSecondWindow(display) {
     fullscreen: process.platform === 'linux', // 전체 화면 모드
     x: display.bounds.x,
     y: display.bounds.y,
+    show: false,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
@@ -73,9 +74,9 @@ function createSecondWindow(display) {
     }
   });
 
-  console.log('xxxxxx: ', display.bounds.x)
-  console.log('yyyyyy: ', display.bounds.y)
-  console.log(join(__dirname, '../renderer/secondary.html'));
+  secondWindow.on('ready-to-show', () => {
+    secondWindow.show();
+  });
 
   const secondWindowURL = is.dev ? `${process.env['ELECTRON_RENDERER_URL']}#/nameplate` : `file://${join(__dirname, '../renderer/index.html')}#/nameplate`;
   secondWindow.loadURL(secondWindowURL);
