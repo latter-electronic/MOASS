@@ -2,6 +2,7 @@ package com.moass.api.domain.schedule.controller;
 
 import com.moass.api.domain.schedule.dto.TodoCreateDto;
 import com.moass.api.domain.schedule.dto.TodoUpdateDto;
+import com.moass.api.domain.schedule.service.CurriculumService;
 import com.moass.api.domain.schedule.service.ScheduleService;
 import com.moass.api.global.annotaion.Login;
 import com.moass.api.global.auth.dto.UserInfo;
@@ -12,6 +13,7 @@ import com.moass.api.global.sse.service.SseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -24,6 +26,7 @@ public class ScheduleController {
 
     final ScheduleService scheduleService;
     final SseService sseService;
+    final CurriculumService curriculumService;
     /**
      * Todo
      * SSE 보내기
@@ -73,5 +76,13 @@ public class ScheduleController {
         return scheduleService.getCurriculum(date)
                 .flatMap(curriculum -> ApiResponse.ok("Curriculum 조회 완료", curriculum))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/crawl")
+    public Mono<ResponseEntity<ApiResponse>> crawlingCurriculum(){
+        return Mono.fromRunnable(() -> curriculumService.crawlingCurriculum())
+                .then(ApiResponse.ok("Curriculum crawling started"))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("크롤링 실패 : " + e.getMessage(), e.getStatus()));
     }
 }

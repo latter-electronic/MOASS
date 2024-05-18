@@ -1,5 +1,5 @@
-//@baseUrl = http://localhost:8080/api
-@baseUrl = https://k10e203.p.ssafy.io/api
+@baseUrl = http://localhost:8080/api
+//@baseUrl = https://k10e203.p.ssafy.io/api
 
 @baseday = {{ $uuid.timestamp("yyyy-MM-dd") }}
 
@@ -43,32 +43,6 @@ Content-Type: application/json
     client.global.set("addDaysToDate", addDaysToDate);
 %}
 
-<> 2024-05-07T141902.200.json
-<> 2024-05-07T141512.200.json
-<> 2024-05-07T141329.200.json
-<> 2024-05-07T141224.200.json
-<> 2024-05-07T141204.200.json
-<> 2024-05-07T141057.200.json
-<> 2024-05-07T141033.200.json
-<> 2024-05-07T140931.200.json
-
-###
-POST {{baseUrl}}/user/login
-Content-Type: application/json
-
-{
-  "userEmail": "weon1009@gmail.com",
-  "password": "1234"
-}
-
-> {%
-    client.global.set("accessToken1", response.body.data.accessToken);
-    client.log(client.global.get("accessToken1"))
-%}
-
-<> 2024-05-07T141903.200.json
-<> 2024-05-07T141512-1.200.json
-<> 2024-05-07T141329-1.200.json
 
 ###
 POST {{baseUrl}}/user/login
@@ -80,13 +54,25 @@ Content-Type: application/json
 }
 
 > {%
+    client.global.set("accessToken1", response.body.data.accessToken);
+    client.log(client.global.get("accessToken1"))
+%}
+
+
+###
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+  "userEmail": "weon1009@gmail.com",
+  "password": "1234"
+}
+
+> {%
     client.global.set("accessToken2", response.body.data.accessToken);
     client.log(client.global.get("accessToken2"))
 %}
 
-<> 2024-05-07T141903-1.200.json
-<> 2024-05-07T141512-2.200.json
-<> 2024-05-07T141329-2.200.json
 
 ###
 POST {{baseUrl}}/user/login
@@ -102,9 +88,6 @@ Content-Type: application/json
     client.log(client.global.get("accessToken11"))
 %}
 
-<> 2024-05-07T141903-2.200.json
-<> 2024-05-07T141512-3.200.json
-<> 2024-05-07T141329-3.200.json
 
 ###
 POST {{baseUrl}}/reservation
@@ -116,13 +99,10 @@ Content-Type: application/json
   "category":"board",
   "timeLimit":2,
   "reservationName":"플립보드1" ,
-  "colorCode":"#110101"
+  "colorCode":"#15c900",
+  "infoTimes":[9,10]
 }
 
-<> 2024-05-07T141903-3.200.json
-<> 2024-05-07T141512-4.200.json
-<> 2024-05-07T141330.200.json
-<> 2024-05-07T140911-4.200.json
 
 ###
 POST {{baseUrl}}/reservation
@@ -134,7 +114,8 @@ Content-Type: application/json
   "category":"board",
   "timeLimit":3,
   "reservationName":"플립보드2" ,
-  "colorCode":"#123215"
+  "colorCode":"#15c900",
+  "infoTimes":[9,10]
 }
 
 ###
@@ -147,7 +128,22 @@ Content-Type: application/json
   "category":"meeting",
   "timeLimit":3,
   "reservationName":"팀미팅" ,
-  "colorCode":"#123215"
+  "colorCode":"#2196f3",
+  "infoTimes":[8,9,10,11]
+}
+
+###
+POST {{baseUrl}}/reservation
+Authorization: Bearer {{masterAccessToken}}
+Content-Type: application/json
+
+{
+  "classCode":"E2",
+  "category":"meeting",
+  "timeLimit":1,
+  "reservationName":"개인상담" ,
+  "colorCode":"#aa3333",
+  "infoTimes":[1,9,10,18]
 }
 
 ###
@@ -169,106 +165,3 @@ Content-Type: application/json
 <> 2024-05-07T141245.200.json
 <> 2024-05-07T140911.400.json
 
-###
-POST {{baseUrl}}/reservationinfo
-Authorization: Bearer {{accessToken1}}
-Content-Type: application/json
-
-{
-  "reservationId":1,
-  "infoName":"가나다라",
-  "infoTimes":[3,4],
-  "infoDate":"{{today}}",
-  "infoUsers":["9000001","9000003"]
-}
-
-<> 2024-05-07T141904-1.200.json
-<> 2024-05-07T141513-2.200.json
-<> 2024-05-07T141330.400.json
-<> 2024-05-07T141241.400.json
-<> 2024-05-07T140912.400.json
-
-###
-POST {{baseUrl}}/reservationinfo
-Authorization: Bearer {{accessToken1}}
-Content-Type: application/json
-
-{
-  "reservationId":1,
-  "infoName":"가나다라",
-  "infoTimes":[7,8],
-  "infoDate":"{{today5}}",
-  "infoUsers":["9000001","9000002","9000003","9000004","9000005"]
-}
-
-<> 2024-05-07T141905.200.json
-<> 2024-05-07T141513-3.200.json
-<> 2024-05-07T141410.200.json
-<> 2024-05-07T141330.500.json
-<> 2024-05-07T140912-1.400.json
-
-###
-POST {{baseUrl}}/reservationinfo
-Authorization: Bearer {{accessToken2}}
-Content-Type: application/json
-
-{
-  "reservationId":1,
-  "infoName":"가나다라",
-  "infoTimes":[7,8],
-  "infoDate":"{{today4}}",
-  "infoUsers":["9000001","9000002","9000003","9000004","9000005"]
-}
-
-<> 2024-05-07T141905-1.200.json
-<> 2024-05-07T141513-4.200.json
-<> 2024-05-07T141330-1.400.json
-<> 2024-05-07T140912-2.400.json
-
-###
-POST {{baseUrl}}/reservationinfo
-Authorization: Bearer {{accessToken11}}
-Content-Type: application/json
-
-{
-  "reservationId":1,
-  "infoName":"가나다라",
-  "infoTimes":[13,15],
-  "infoDate":"{{today}}",
-  "infoUsers":["9000011","9000012"]
-}
-
-<> 2024-05-07T141906.200.json
-<> 2024-05-07T141513-5.200.json
-<> 2024-05-07T141330.401.json
-<> 2024-05-07T140912.401.json
-
-###
-POST {{baseUrl}}/reservationinfo
-Authorization: Bearer {{accessToken11}}
-Content-Type: application/json
-
-{
-  "reservationId":2,
-  "infoName":"가나다라",
-  "infoTimes":[13,14],
-  "infoDate":"{{today}}",
-  "infoUsers":["9000011","9000012"]
-}
-
-<> 2024-05-07T141906-1.200.json
-
-###
-POST {{baseUrl}}/reservationinfo
-Authorization: Bearer {{accessToken2}}
-Content-Type: application/json
-
-{
-  "reservationId":2,
-  "infoName":"가나라",
-  "infoTimes":[1,3],
-  "infoDate":"{{today2}}",
-  "infoUsers":["9000001","9000003","9000004","9000005"]
-}
-
-<> 2024-05-07T141906-2.200.json
