@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface RoomDao extends MongoRepository<Room, String> {
-    Optional<Room> findByBoardId(Integer boardId);
+public interface RoomDao extends MongoRepository<Room, Integer> {
 }

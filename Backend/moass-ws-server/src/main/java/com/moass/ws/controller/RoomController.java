@@ -5,8 +5,7 @@ import com.moass.ws.model.Drawing;
 import com.moass.ws.model.Room;
 import com.moass.ws.service.BoardService;
 import com.moass.ws.service.RoomService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -21,38 +20,34 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/v1/rooms")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RoomController {
 
     private final RoomService roomService;
     private final BoardService boardService;
-
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     @PostMapping
     public ResponseEntity<Room> createRoom(@RequestBody Room room) {
         Board board = boardService.createBoard(new Board(room));
-        room.setBoardId(board.getBoardId());
-        System.out.println(board.getBoardId());
+        room.setId(board.getBoardId());
         roomService.save(room);
         return ResponseEntity.ok(room);
     }
 
-    @PostMapping("/{roomId}/save-drawing")
-    public ResponseEntity<String> saveDrawing(@PathVariable String roomId, @RequestBody Drawing drawing) {
+    @PostMapping("/{boardId}/save-drawing")
+    public ResponseEntity<String> saveDrawing(@PathVariable Integer boardId, @RequestBody Drawing drawing) {
         Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(roomId));
+        query.addCriteria(Criteria.where("id").is(boardId));
         Update updateQuery = new Update();
         updateQuery.push("drawings", drawing);
         mongoTemplate.updateFirst(query, updateQuery, Room.class);
-//        updateQuery.pull("drawings", drawing);
         return ResponseEntity.ok("Drawing saved successfully!");
     }
 
-    @GetMapping("/{roomId}/get-drawings")
-    public ResponseEntity<List<Drawing>> getDrawings(@PathVariable String roomId) {
-        List<Drawing> drawings = mongoTemplate.findById(roomId, Room.class).getDrawings();
+    @GetMapping("/{boardId}/get-drawings")
+    public ResponseEntity<List<Drawing>> getDrawings(@PathVariable Integer boardId) {
+        List<Drawing> drawings = mongoTemplate.findById(boardId, Room.class).getDrawings();
         return ResponseEntity.ok(drawings);
     }
 

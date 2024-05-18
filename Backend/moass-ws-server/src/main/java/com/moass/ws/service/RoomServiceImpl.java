@@ -26,12 +26,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void deleteRoom(String roomId) {
-        roomDao.deleteById(roomId);
+        roomDao.deleteById(Integer.valueOf(roomId));
     }
 
     @Override
     public Optional<Room> getRoom(Integer boardId) {
-        return roomDao.findByBoardId(boardId);
+        return roomDao.findById(boardId);
     }
 
     @Override
