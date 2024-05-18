@@ -30,13 +30,6 @@ public class BoardController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
-    @GetMapping("/create")
-    public Mono<ResponseEntity<ApiResponse>> createBoard(){
-        return boardService.createBoard()
-                .flatMap(board -> ApiResponse.ok("Board 생성 완료", board))
-                .onErrorResume(CustomException.class, e -> ApiResponse.error("생성 실패 : " + e.getMessage(), e.getStatus()));
-    }
-
     @GetMapping("/{boardUserId}")
     public Mono<ResponseEntity<ApiResponse>> getScreenshotList(@PathVariable Integer boardUserId){
         return boardService.getScreenshotList(boardUserId)
@@ -51,9 +44,9 @@ public class BoardController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
-    @PostMapping("/screenshot/{boardId}")
-    public Mono<ResponseEntity<ApiResponse>> createScreenshot(@Login UserInfo userInfo, @PathVariable Integer boardId, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
-        return boardService.screenshotUpload(userInfo,boardId,headers,file)
+    @PostMapping("/screenshot/{boardId}/{userId}")
+    public Mono<ResponseEntity<ApiResponse>> createScreenshot(@PathVariable Integer boardId, @PathVariable String userId, @RequestHeader HttpHeaders headers, @RequestBody Flux<ByteBuffer> file){
+        return boardService.screenshotUpload(boardId, userId, headers,file)
                 .flatMap(fileName -> ApiResponse.ok("캡쳐 완료",fileName))
                 .onErrorResume(CustomException.class,e -> ApiResponse.error("캡쳐 실패 : "+e.getMessage(), e.getStatus()));
     }

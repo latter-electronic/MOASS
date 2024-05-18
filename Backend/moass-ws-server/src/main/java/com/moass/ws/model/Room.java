@@ -11,11 +11,9 @@ import java.util.List;
 @Data
 @Document
 public class Room {
-    @Id
-    private String id;
 
-    @Field
-    private Integer boardId;
+    @Id
+    private Integer id;
 
     @Field
     private String name;
@@ -23,6 +21,9 @@ public class Room {
     @Field
     private String description;
 
+    @Field
     List<String> participants;
+
+    @Field
     List<Drawing> drawings;
 }
