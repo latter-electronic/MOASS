@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/services/jira_api.dart';
+import 'package:moass/services/mattermost_api.dart';
+import 'package:moass/widgets/custom_login_form.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SetRelatedAccount extends StatefulWidget {
@@ -25,6 +27,8 @@ class SetRelatedAccount extends StatefulWidget {
 class _SetRelatedAccountState extends State<SetRelatedAccount> {
   bool isOpenedButtonWidget = false;
   late String textformFieldValue;
+  String mmUserId = '';
+  String mmPassword = '';
 
   openButtonWidget() {
     setState(() {
@@ -187,16 +191,82 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OutlinedButton(
-                      onPressed: () {
-                        () {};
-                      },
-                      style: const ButtonStyle(),
-                      child: const Text('계정 연동'),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 70.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          // 줄바꿈은 \n
+                          'MatterMost ID',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+                        CustomLoginFormField(
+                          hintText: 'MatterMost 계정',
+                          onChanged: (String value) {
+                            mmUserId = value;
+                          },
+                        ),
+                        const SizedBox(height: 4.0),
+                        const Text(
+                          // 줄바꿈은 \n
+                          'MatterMost PW',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black,
+                          ),
+                        ),
+                        CustomLoginFormField(
+                          hintText: 'MatterMost Password',
+                          onChanged: (String value) {
+                            mmPassword = value;
+                          },
+                          obscureText: true,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: OutlinedButton(
+                              onPressed: () async {
+                                var response = await MatterMostApi(
+                                        dio: Dio(),
+                                        storage: const FlutterSecureStorage())
+                                    .connectMMAcount(mmUserId, mmPassword);
+                                if (response == 200) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                    backgroundColor: Color(0xFF3DB887),
+                                    content: Text('MatterMost 계정 연결 성공!'),
+                                    duration: Duration(seconds: 3),
+                                  ));
+                                  setState(() {
+                                    isOpenedButtonWidget = false;
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    backgroundColor: const Color(0xFFD24B4E),
+                                    content: Text(
+                                        'MatterMost 계정 연동에 실패했습니다. 에러 : ${response.toString()}'),
+                                    duration: const Duration(seconds: 1),
+                                  ));
+                                }
+                              },
+                              style: const ButtonStyle(),
+                              child: const Text('계정 연동'),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
+                  )),
                 ],
               )
             else if (widget.userGitlabMail != null)

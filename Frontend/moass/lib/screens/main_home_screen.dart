@@ -18,6 +18,7 @@ import 'package:moass/widgets/top_bar.dart';
 
 import '../widgets/category_text.dart';
 import '../widgets/current_schedule.dart';
+import '../widgets/next_reservation.dart';
 import '../widgets/schedule_box.dart';
 import '../widgets/to_do_list.dart';
 
@@ -477,59 +478,17 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                   }
                 },
               ),
-              const CategoryText(text: '다음 일정'),
-              const CurrentSchedule(),
+              const CategoryText(text: '현재 일정'),
+              // const CurrentSchedule(),
               const CategoryText(text: '할 일 목록'),
               const ToDoListWidget(),
-              const CategoryText(text: '오늘 내 예약'),
+              const CategoryText(text: '나의 예약'),
               isReservationLoading
                   ? const Center(child: CircularProgressIndicator())
                   : reservations.isNotEmpty
-                      ? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: reservations.length,
-                          itemBuilder: (context, index) {
-                            var reservation = reservations[index];
-                            String timeSlot = convertTimeFromIndex(
-                                reservation.infoTime); // 시간 변환 함수 호출
-
-                            return Card(
-                              margin: const EdgeInsets.all(8.0),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              elevation: 8.0,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      padding: const EdgeInsets.all(8.0),
-                                      width: double.infinity,
-                                      decoration: const BoxDecoration(
-                                          color: Colors.blue,
-                                          borderRadius: BorderRadius.vertical(
-                                              top: Radius.circular(10.0))),
-                                      child: Text(reservation.infoName,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18))),
-                                  Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    width: double.infinity,
-                                    decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.vertical(
-                                            bottom: Radius.circular(10.0))),
-                                    child: Text(timeSlot, // 시간 표시
-                                        style: const TextStyle(
-                                            color: Colors.black54)),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        )
+                      ? const NextReservation()
                       : const SizedBox(
-                          height: 200,
+                          height: 60,
                           child: Center(child: Text('오늘 예약 내역이 없습니다'))),
             ],
           ),
