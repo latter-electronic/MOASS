@@ -47,7 +47,7 @@ class _SettingMMSubscriptScreenState extends State<SettingMMSubscriptScreen> {
         content: Text('채널 연동 변경 성공!'),
         duration: Duration(seconds: 3),
       ));
-      await fetchTeams(); // To refresh the list after subscription status changes
+      await fetchTeams();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         backgroundColor: Color(0xFFD24B4E),

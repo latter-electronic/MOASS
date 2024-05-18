@@ -120,7 +120,8 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            // 여기에 서버 설정버튼 추가
+                            // 여기에 서버 설정버튼 추가해보기
+                            // 채널 구독 이동버튼
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.blue,
