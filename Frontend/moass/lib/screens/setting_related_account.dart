@@ -70,7 +70,10 @@ class _SettingRelatedAccountScreenState
         body: SingleChildScrollView(
           child: Column(children: [
             SetRelatedAccount(service: 'jira', userJiraMail: userJiraMail),
-            const SetRelatedAccount(service: 'mattermost'),
+            SetRelatedAccount(
+              service: 'mattermost',
+              userMattermostMail: userMattermostTeamList != null ? '연동됨' : null,
+            ),
             userMattermostTeamList != null
                 ? Column(
                     children: [
