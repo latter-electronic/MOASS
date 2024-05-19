@@ -12,7 +12,7 @@ const useGlobalStore = create((set) => ({
     userEmail: "",
     userName: "",
     positionName: null,
-    statusId: 0,
+    statusId: 1,
     profileImg: null,
     backgroundImg: null,
     jobCode: 0,
