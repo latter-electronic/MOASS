@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import AuthStore from '../../stores/AuthStore.js'
 import { deviceLogin } from '../../services/deviceService.js'
 import LeftArrow from '../../assets/left_arrow.png'
-import MozzyLogin from '../../assets/mozzy_login.png'
+// import MozzyLogin from '../../assets/mozzy_login.png'
+import MozzyHandshake from '../../assets/mozzy_handshake.gif';
 
 export default function TagNFC() {
   const [deviceId, setDeviceId] = useState('')
@@ -155,9 +156,9 @@ export default function TagNFC() {
           </form>
         ) : (
           <img
-            src={MozzyLogin}
+            src={MozzyHandshake}
             alt="Mozzy Login"
-            className="cursor-pointer mt-14"
+            className="cursor-pointer mt-20"
             onClick={handleImageClick}
           />
         )}
