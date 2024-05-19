@@ -36,6 +36,7 @@ import reactor.netty.http.client.HttpClient;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,8 +129,8 @@ public class MattermostService {
                                 .sorted((a, b) -> a.getMmTeamName().compareToIgnoreCase(b.getMmTeamName()))
                                 .collect(Collectors.toList()))
                 )
-                .switchIfEmpty(Mono.error(new CustomException("연동된 MM이 없습니다..", HttpStatus.UNAUTHORIZED)));
-
+                .defaultIfEmpty(Collections.emptyList())
+                .onErrorResume(e -> Mono.just(Collections.emptyList()));
     }
 
     private Mono<MMTeam> saveOrUpdateTeam(JsonNode team, String token) {
@@ -328,7 +329,7 @@ public class MattermostService {
 
     public Mono<MMToken> isConnected(String userId) {
         return mmTokenRepository.findByUserId(userId)
-                .switchIfEmpty(Mono.error(new CustomException("Mattermost 토큰이 없습니다.", HttpStatus.UNAUTHORIZED)));
+                .switchIfEmpty(Mono.error(new CustomException("Mattermost 토큰이 없습니다.", HttpStatus.FORBIDDEN)));
     }
 
     @Transactional
