@@ -9,10 +9,13 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class CurriculumService {
     @Value("${edussafy.pwd}")
     private String userPwd;
 
-    @Scheduled(cron = "0 0 8 ? * 1")
+//    @Scheduled(cron = "0 0 8 ? * 1")
     public void crawlingCurriculum() {
         System.setProperty("webdriver.chrome.driver", "driver/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
@@ -39,6 +42,10 @@ public class CurriculumService {
         driver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/form/div/div[2]/div[3]/a")).sendKeys(Keys.ENTER);
 
         driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[1]/section[2]/div/div[1]/div/a")).sendKeys(Keys.ENTER);
+
+//        driver.manage().window().fullscreen();
+//
+//        driver.findElement(By.xpath("/html/body/div[1]/div[1]/div[2]/div/div/div[3]/div/div[2]/div[2]/button[2]")).sendKeys(Keys.ENTER);
 
         WebElement totalCurriculum = driver.findElement(By.className("course"));
         List<WebElement> curriculumLinks = totalCurriculum.findElements(By.tagName("li"));
