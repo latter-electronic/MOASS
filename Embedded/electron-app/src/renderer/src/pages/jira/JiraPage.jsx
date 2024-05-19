@@ -101,7 +101,7 @@ export default function JiraPage() {
                 // 상태 업데이트가 성공적으로 완료되었음을 표시
                 console.log('Issue status updated successfully');
             } catch (error) {
-                console.error('Error changing issue status:', error);
+                // console.error('Error changing issue status:', error);
                 // 원래 상태로 되돌리기
                 // setIssues(prev => ({
                 //     ...prev,

@@ -148,7 +148,6 @@ export const getIssueDetails = async (issueIdOrKey) => {
             'Content-Type': 'application/json'
         }
     }).then(response => {
-        console.log(response.data.data)
         return response.data.data
     })
       .catch(error => {
@@ -250,7 +249,7 @@ export const changeIssueStatus = async (issueIdOrKey, transitionId) => {
         return response;
     })
     .catch(error => {
-        console.error(`Error updating status for issue ${issueIdOrKey}:`, error.response || error.message);
+        // console.error(`Error updating status for issue ${issueIdOrKey}:`, error.response || error.message);
         throw error;
     });
 };
