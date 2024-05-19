@@ -26,7 +26,7 @@ class ApiService {
         final newRefreshToken = response.data['data']['refreshToken'];
         await storage.write(key: 'accessToken', value: newAccessToken);
         await storage.write(key: 'refreshToken', value: newRefreshToken);
-        // print('엑세토큰: $newAccessToken');
+        print('엑세토큰: $newAccessToken');
       } else {
         throw Exception('Failed to register reservation');
       }

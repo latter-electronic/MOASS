@@ -2,17 +2,17 @@
 class BoardModel {
   final int boardUserId;
   final int boardId;
-  final String boardName;
+  final String? boardName; // nullable 변경
   final String boardUrl;
-  final bool isActive;
+  final bool? isActive; // nullable 변경
   final DateTime? completedAt;
 
   BoardModel({
     required this.boardUserId,
     required this.boardId,
-    required this.boardName,
+    this.boardName,
     required this.boardUrl,
-    required this.isActive,
+    this.isActive,
     this.completedAt,
   });
 
