@@ -10,7 +10,7 @@ class ScheduleApi {
 
   ScheduleApi({required this.dio, required this.storage});
 
-  // 모음보드 방 목록 들어오는 함수
+  // 스케쥴 API
   Future<Schedule> fetchSchedule(String date) async {
     print('날짜 $date');
     try {
