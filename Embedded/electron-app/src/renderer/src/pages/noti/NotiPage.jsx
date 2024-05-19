@@ -78,7 +78,12 @@ export default function NotiPage() {
                 );
               }
               return (
-                <></>
+                <SwipeableListItem
+                  key={key}
+                  trailingActions={trailingActions(notice.notificationId)}
+                >
+                  <NotiSsafy notice={notice} />
+                </SwipeableListItem>
               );
             })}
           </SwipeableList>
