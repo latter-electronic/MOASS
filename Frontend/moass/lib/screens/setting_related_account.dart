@@ -49,6 +49,10 @@ class _SettingRelatedAccountScreenState
         userGitlabMail = gitlabResult?.gitlabEmail;
         userGitlabProjects = gitlabResult?.gitlabProjects;
         mattermostConnectionStatus = mmConnectionResult;
+        // print('지라 : $userJiraMail');
+        // print('깃랩 : $userGitlabProjects');
+        // print('깃랩 메일 : $userGitlabMail');
+        // print('메타모스트 : $mattermostConnectionStatus');
 
         isLoading = false;
       });
@@ -56,6 +60,11 @@ class _SettingRelatedAccountScreenState
       // 오류 처리
       setState(() {
         isLoading = false;
+        // print('실패');
+        // print('지라 : $userJiraMail');
+        // print('깃랩 : $userGitlabProjects');
+        // print('깃랩 메일 : $userGitlabMail');
+        // print('메타모스트 : $mattermostConnectionStatus');
       });
     }
   }
@@ -76,9 +85,8 @@ class _SettingRelatedAccountScreenState
                       service: 'jira', userJiraMail: userJiraMail),
                   SetRelatedAccount(
                     service: 'mattermost',
-                    userMattermostMail: mattermostConnectionStatus != null
-                        ? mattermostConnectionStatus!.data?.userId
-                        : 'null',
+                    userMattermostMail:
+                        mattermostConnectionStatus?.data?.userId,
                   ),
                   SetRelatedAccount(
                     service: 'gitlab',

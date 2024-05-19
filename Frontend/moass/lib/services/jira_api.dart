@@ -29,9 +29,9 @@ class JiraApi {
         return null;
       }
     } on DioException catch (e) {
-      throw Exception('fetchJiraAccount failed with error: $e');
+      // throw Exception('fetchJiraAccount failed with error: $e');
 
-      // return null;
+      return null;
     }
   }
 

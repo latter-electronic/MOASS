@@ -36,9 +36,9 @@ class MyInfoApi {
         return null;
       }
     } on DioException catch (e) {
-      throw Exception('fetchUserProfile failed with error: $e');
+      // throw Exception('fetchUserProfile failed with error: $e');
 
-      // return null;
+      return null;
     }
   }
 

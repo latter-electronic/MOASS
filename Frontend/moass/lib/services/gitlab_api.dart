@@ -77,9 +77,9 @@ class GitlabApi {
         return message;
       }
     } on DioException catch (e) {
-      throw Exception('requestSubmitProject failed with error: $e');
+      // throw Exception('requestSubmitProject failed with error: $e');
 
-      // return null;
+      return null;
     }
   }
 
@@ -102,8 +102,8 @@ class GitlabApi {
         return null;
       }
     } on DioException catch (e) {
-      throw Exception('fetchGitlabProjectInfo failed with error: $e');
-      // return null;
+      // throw Exception('fetchGitlabProjectInfo failed with error: $e');
+      return null;
     }
     return null;
   }

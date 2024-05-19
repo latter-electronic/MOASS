@@ -112,9 +112,9 @@ class MatterMostApi {
         return MattermostConnectionStatus.fromJson(response.data);
       }
     } on DioException catch (e) {
-      throw Exception('checkMattermostConnection failed with error: $e');
+      // throw Exception('checkMattermostConnection failed with error: $e');
 
-      // return null;
+      return null;
     }
   }
 }
