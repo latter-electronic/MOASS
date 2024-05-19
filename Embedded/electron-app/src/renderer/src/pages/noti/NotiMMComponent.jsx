@@ -4,6 +4,13 @@ import mattermostIcon from './testImg/mattermost-icon.svg';
 export default function NotiMMComponent({ notice }) {
   const { icon, title, body, sender, createdAt } = notice;
 
+  const truncateBody = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  };
+
   return (
     <div className="flex h-24 items-center p-3 bg-mmBlue/60 rounded-2xl overflow-hidden shadow-md mb-2 relative w-full">
       {/* 팀 아이콘 */}
@@ -19,7 +26,7 @@ export default function NotiMMComponent({ notice }) {
         </div>
         <div className="text-white text-lg overflow-hidden" style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           <span className="font-medium">@{sender}: </span>
-          <span className="font-light">{body}</span>
+          <span className="font-light">{truncateBody(body, 8)}</span>
         </div>
       </div>
 
