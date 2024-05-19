@@ -2,7 +2,10 @@ package com.moass.ws.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.moass.ws.entity.BoardUser;
+import com.moass.ws.entity.Screenshot;
 import com.moass.ws.repository.BoardUserRepository;
+import com.moass.ws.repository.ScreenshotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ public class UploadService {
 
     private final AmazonS3Client amazonS3Client;
     private final BoardUserRepository boardUserRepository;
+    private final ScreenshotRepository screenshotRepository;
 
     @Value("${aws.s3.bucket}")
     private String bucketName;
@@ -33,7 +37,12 @@ public class UploadService {
 
         amazonS3Client.putObject(bucketDir, fileName, file.getInputStream(), getObjectMetadata(file));
 
-
+        BoardUser boardUser = boardUserRepository.findBoardUserByBoardIdAndUserId(boardId, userId);
+        Screenshot screenshot = Screenshot.builder()
+                .screenshotUrl(dirUrl + fileName)
+                .boardUserId(boardUser.getBoardUserId())
+                .build();
+        screenshotRepository.save(screenshot);
 
         return dirUrl + fileName;
 

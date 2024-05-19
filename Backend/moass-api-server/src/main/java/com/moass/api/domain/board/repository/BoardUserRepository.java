@@ -14,4 +14,6 @@ public interface BoardUserRepository extends ReactiveCrudRepository<BoardUser, I
     Flux<BoardDetail> findAllBoardDetailByUserId(String userId);
 
     Mono<BoardUser> findByBoardIdAndUserId(Integer boardId, String userId);
+
+    Flux<BoardUser> findByUserId(String userId);
 }
