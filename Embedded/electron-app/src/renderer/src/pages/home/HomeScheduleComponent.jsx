@@ -2,10 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { fetchCurriculum } from '../../services/todoService.js';
 import { fetchReservationInfo } from '../../services/reservationService.js';
 
-import profileImg1 from './test/profileImg1.png';
-import profileImg2 from './test/profileImg2.png';
-import profileImg3 from './test/profileImg3.png';
-
 export default function HomeScheduleComponent() {
     const [schedules, setSchedules] = useState([]);
     const [error, setError] = useState(null);
@@ -20,7 +16,7 @@ export default function HomeScheduleComponent() {
         const fetchSchedules = async () => {
             try {
                 // 하드코딩된 날짜 리스트
-                const dates = ['2024-05-16', '2024-05-17'];
+                const dates = ['2024-05-20', '2024-05-21', '2024-05-22'];
 
                 let formattedCurriculumSchedules = [];
                 let formattedReservationSchedules = [];
@@ -52,19 +48,17 @@ export default function HomeScheduleComponent() {
 
                 const reservationResponse = await fetchReservationInfo();
                 if (reservationResponse.data) {
-                    formattedReservationSchedules = reservationResponse.data.flatMap((reservation, index) =>
-                        reservation.reservationInfoList ? reservation.reservationInfoList.map((info, subIndex) => ({
-                            id: `reservation-${index}-${subIndex}`,
-                            date: info.infoDate, // 날짜 추가
-                            type: '',
-                            title: reservation.reservationName,
-                            time: `${info.infoDate} ${info.infoTime}`,
-                            color: 'border-pink-500',
-                            location: info.infoName,
-                            participants: 6,
-                            avatars: [profileImg1, profileImg2, profileImg3]
-                        })) : []
-                    );
+                    formattedReservationSchedules = reservationResponse.data.map((reservation, index) => ({
+                        id: `reservation-${index}`,
+                        date: reservation.infoDate, // 날짜 추가
+                        type: '',
+                        title: reservation.reservationName,
+                        time: `${reservation.infoDate} ${reservation.infoTime}`,
+                        color: 'border-pink-500',
+                        location: reservation.infoName,
+                        participants: reservation.userSearchInfoDtoList.length,
+                        avatars: reservation.userSearchInfoDtoList.map(user => user.profileImg)
+                    }));
                 }
 
                 setSchedules([...formattedCurriculumSchedules, ...formattedReservationSchedules]);
@@ -108,11 +102,11 @@ export default function HomeScheduleComponent() {
                                     <p className="text-gray-600 text-xl">{schedule.location}</p>
                                     {schedule.avatars && (
                                         <div className="flex -space-x-2 ml-4">
-                                            {schedule.avatars.map((avatar, index) => (
+                                            {schedule.avatars.slice(0, 3).map((avatar, index) => (
                                                 <img key={index} src={avatar} alt={`participant ${index + 1}`} className="size-8 rounded-full border-2 border-white shadow-sm" />
                                             ))}
-                                            {schedule.participants > schedule.avatars.length && (
-                                                <span className="size-8 rounded-full text-sm text-black bg-gray-200 flex items-center justify-center border-2 border-white shadow-sm">+{schedule.participants - schedule.avatars.length}</span>
+                                            {schedule.participants > 3 && (
+                                                <span className="size-8 rounded-full text-sm text-black bg-gray-200 flex items-center justify-center border-2 border-white shadow-sm">+{schedule.participants - 3}</span>
                                             )}
                                         </div>
                                     )}
