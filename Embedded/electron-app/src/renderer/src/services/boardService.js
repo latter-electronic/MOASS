@@ -99,7 +99,7 @@ export const deleteScreenshotById = (screenshotId) => {
  */
 export const createBoard = (userId) => {
     const { accessToken } = AuthStore.getState();
-    const url = `/v1/rooms/create/${userId}`;
+    const url = `/v1/board/create/${userId}`;
 
     return axios.get(url, {
         headers: {

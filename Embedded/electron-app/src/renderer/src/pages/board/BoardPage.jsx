@@ -65,7 +65,9 @@ export default function BoardPage() {
             const boardsResponse = await fetchBoards();
             setBoards(boardsResponse.data.data);
             // 생성된 보드 URL을 저장
-            setBoardUrl(response.data.boardUrl);
+            const boardUrl = response.data; 
+            console.log("Setting board URL:", boardUrl);
+            setBoardUrl(boardUrl);
             navigate(`/board/test`);
         } catch (err) {
             console.error("보드 생성 실패:", err.message);
@@ -97,21 +99,16 @@ export default function BoardPage() {
             <div className="grid grid-cols-[3fr,1fr] h-11/12">
                 <div className="relative flex flex-col items-center">
                     {boards.length > 0 ? (
-                        <div className="absolute inset-0 flex flex-col justify-center items-center">
-                            <div className="mb-4 text-center text-2xl text-green-500">
-                                현재 진행중인 이음보드가 있어요!
+                        <div className="absolute inset-0 flex flex-col justify-center items-center gap-3">
+                            <div className="text-center text-2xl text-gray-500">
+                                현재 생성된 이음보드가 없어요 :&lt;
                             </div>
-
-                            <div className="w-full flex flex-col items-center">
-                                {boards.map((board) => (
-                                    <div key={board.boardId} className="mb-2 p-4 w-1/2 h-1/3 bg-white shadow rounded-lg">
-                                        <h2 className="text-xl font-semibold">{board.boardName}</h2>
-                                        <p>참여자: {board.participants?.join(', ')}</p>
-                                        <p>생성일: {new Date(board.createdAt).toLocaleString('ko-KR')}</p>
-                                        <img src={board.boardUrl} alt={board.boardName} className="mt-2 size-24" />
-                                    </div>
-                                ))}
-                            </div>
+                            <button
+                                onClick={handleCreateBoard}
+                                className="mt-4 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-2xl px-5 py-2.5 text-center me-2 mb-2"
+                            >
+                                이음보드 시작하기
+                            </button>
                         </div>
                     ) : (
                         <div className="absolute inset-0 flex flex-col justify-center items-center gap-3">
