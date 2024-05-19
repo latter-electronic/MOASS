@@ -1,11 +1,13 @@
 package com.moass.ws.model;
 
 
+import com.moass.ws.entity.User;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,11 +21,14 @@ public class Room {
     private String name;
 
     @Field
-    private String description;
+    private String boardUrl;
 
     @Field
-    List<String> participants;
+    private Boolean isActive;
 
     @Field
-    List<Drawing> drawings;
+    List<User> participants;
+
+    @Field
+    LocalDateTime completedAt;
 }
