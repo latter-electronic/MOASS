@@ -14,12 +14,22 @@ export default function LogoutNameplatePage() {
     checkStoredAuth();
   }, [checkStoredAuth]);
 
+  // useEffect(() => {
+  //   console.log('isAuthenticated:', isAuthenticated);
+  //   if (isAuthenticated) {
+  //     navigate('/nameplate', { replace: true });
+  //   }
+  // }, [isAuthenticated, navigate]);
+
   useEffect(() => {
-    console.log('isAuthenticated:', isAuthenticated);
-    if (isAuthenticated) {
-      navigate('/nameplate', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
+    window.electron.ipcRenderer.on('login-success', (event, data) => {
+        navigate('/nameplate', { replace: true });
+    });
+
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners('login-success');
+    };
+  }, [navigate]);
 
   return (
     <div></div>
