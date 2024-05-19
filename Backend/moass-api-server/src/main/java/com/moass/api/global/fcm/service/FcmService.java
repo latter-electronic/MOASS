@@ -103,10 +103,10 @@ public class FcmService {
     }
 
     public Mono<Integer> sendMessageToUser(String userId, FcmNotificationDto fcmNotificationDto) {
-        return fcmRepository.findAllByUserId(userId) // 모든 토큰을 조회합니다.
+        return fcmRepository.findAllByUserId(userId)
                 .flatMap(fcmToken -> sendMessageTo(fcmToken.getToken(), fcmNotificationDto))
                 .collectList()
-                .map(resultList -> (int) resultList.stream().filter(result -> result == 1).count()); // 성공한 메시지의 수를 계산합니다.
+                .map(resultList -> (int) resultList.stream().filter(result -> result == 1).count());
     }
 
     public Mono<Integer> sendMessageToTeam(String teamCode,  FcmNotificationDto fcmNotificationDto) {
