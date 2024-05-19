@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/v1/board")
 @RequiredArgsConstructor
 public class RoomController {
 
