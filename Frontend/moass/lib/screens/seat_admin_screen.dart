@@ -137,7 +137,6 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                                   selectedCampusCode = campusCode[value - 1];
                                   // 캠퍼스 코드도 설정
                                   selectedClassCode = selectedCampusCode;
-                                  // print('선택한 캠퍼스 : $selectedCampusCode');
                                   selectedCampusClasses.clear();
                                   selectedClass = null;
                                 });
@@ -153,7 +152,6 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                                         '${classes.toString().split('').last}반');
                                   }
                                 });
-                                print(campusInfo?.classes);
                               }),
                           if (selectedCampusIndex != null && campusInfo != null)
                             DropdownButton(
@@ -171,12 +169,10 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                                 var tempSelectedClass =
                                     selectedCampusCode + value!.split("").first;
                                 setState(() {
-                                  print('임시코드: $tempSelectedClass');
                                   selectedClass = value;
                                   selectedClassCode = tempSelectedClass;
                                 });
                                 tempSelectedClass = "";
-                                // print(value);
                               },
                             ),
                           IconButton(
@@ -228,7 +224,6 @@ class _SeatScreenState extends State<SeatAdminScreen> {
                     backgroundColor: const Color(0xFF3DB887),
                     foregroundColor: Colors.white,
                     onPressed: () {
-                      // print('부를 유저 아이디 : $callUserId');
                       DeviceApi(
                               dio: Dio(), storage: const FlutterSecureStorage())
                           .callUser(callUserId, "");

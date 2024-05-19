@@ -7,6 +7,7 @@ import 'package:moass/screens/reservation_user_step1.dart';
 import 'package:moass/services/reservation_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
+import 'package:lottie/lottie.dart'; // 로티 임포트
 
 class ReservationScreen extends StatefulWidget {
   const ReservationScreen({super.key});
@@ -184,191 +185,206 @@ class _ReservationScreenState extends State<ReservationScreen> {
           Expanded(
             child: isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : ListView.builder(
-                    itemCount: validReservations.length,
-                    itemBuilder: (context, index) {
-                      var reservation = validReservations[index];
-                      String timeSlot = convertTimeFromIndex(
-                          reservation.infoTime); // 시간 변환 함수 호출
-                      DateTime endTime = convertEndTimeFromIndex(
-                          reservation.infoDate,
-                          reservation.infoTime); // 끝나는 시간 변환 함수 호출
-                      DateTime startTime = convertStartTimeFromIndex(
-                          reservation.infoDate, reservation.infoTime);
+                : validReservations.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('이 날은 일정이 없어요!'),
+                          Lottie.asset('assets/img/noDataCat.json',
+                              repeat: true, animate: true),
+                        ],
+                      )
+                    : ListView.builder(
+                        itemCount: validReservations.length,
+                        itemBuilder: (context, index) {
+                          var reservation = validReservations[index];
+                          String timeSlot = convertTimeFromIndex(
+                              reservation.infoTime); // 시간 변환 함수 호출
+                          DateTime endTime = convertEndTimeFromIndex(
+                              reservation.infoDate,
+                              reservation.infoTime); // 끝나는 시간 변환 함수 호출
+                          DateTime startTime = convertStartTimeFromIndex(
+                              reservation.infoDate, reservation.infoTime);
 
-                      // 현재 시간과 예약 시간 사이의 경과 비율 계산
-                      double elapsedRatio =
-                          now.isAfter(startTime) && now.isBefore(endTime)
-                              ? (now.difference(startTime).inMinutes /
-                                  endTime.difference(startTime).inMinutes)
-                              : now.isAfter(endTime)
-                                  ? 1.0
-                                  : 0.0;
+                          // 현재 시간과 예약 시간 사이의 경과 비율 계산
+                          double elapsedRatio =
+                              now.isAfter(startTime) && now.isBefore(endTime)
+                                  ? (now.difference(startTime).inMinutes /
+                                      endTime.difference(startTime).inMinutes)
+                                  : now.isAfter(endTime)
+                                      ? 1.0
+                                      : 0.0;
 
-                      return InkWell(
-                        onLongPress: () => _showCancelDialog(
-                            context, reservation.infoId), // context 추가
-                        child: Card(
-                          clipBehavior: Clip.hardEdge,
-                          margin: index == 0
-                              ? const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 10)
-                              : const EdgeInsets.symmetric(
-                                  horizontal: 40, vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            // 강조효과 테두리 나중에 필요할시 사용
-                            // side: BorderSide(
-                            //   color: index == 0
-                            //       ? const Color.fromARGB(255, 144, 109, 225)
-                            //       : Colors.transparent,
-                            //   width: 2.0,
-                            // ),
-                          ),
-                          elevation: 8.0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                // padding: const EdgeInsets.all(8.0),
-                                width: double.infinity,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFF6ECEF5),
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(10.0)),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.only(
-                                          top: 8,
-                                          left: 10,
-                                          right: 10,
-                                          bottom: 4),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(reservation.infoName,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 30)),
-                                          Row(
+                          return InkWell(
+                            onLongPress: () => _showCancelDialog(
+                                context, reservation.infoId), // context 추가
+                            child: Card(
+                              clipBehavior: Clip.hardEdge,
+                              margin: index == 0
+                                  ? const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10)
+                                  : const EdgeInsets.symmetric(
+                                      horizontal: 40, vertical: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                // 강조효과 테두리 나중에 필요할시 사용
+                                // side: BorderSide(
+                                //   color: index == 0
+                                //       ? const Color.fromARGB(255, 144, 109, 225)
+                                //       : Colors.transparent,
+                                //   width: 2.0,
+                                // ),
+                              ),
+                              elevation: 8.0,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    // padding: const EdgeInsets.all(8.0),
+                                    width: double.infinity,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF6ECEF5),
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(10.0)),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              top: 8,
+                                              left: 10,
+                                              right: 10,
+                                              bottom: 4),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              CircleAvatar(
-                                                backgroundColor: Color(
-                                                    int.parse(reservation
-                                                        .colorCode
-                                                        .replaceAll(
-                                                            '#', '0xff'))),
-                                                radius: 8,
+                                              Text(reservation.infoName,
+                                                  style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 30)),
+                                              Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor: Color(
+                                                        int.parse(reservation
+                                                            .colorCode
+                                                            .replaceAll(
+                                                                '#', '0xff'))),
+                                                    radius: 8,
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  Text(reservation
+                                                      .reservationName),
+                                                ],
                                               ),
-                                              const SizedBox(width: 4),
-                                              Text(reservation.reservationName),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    // const SizedBox(height: 8),
-                                    // 프로필 이미지 리스트
-                                    Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        // borderRadius: BorderRadius.vertical(
-                                        //     top: Radius.circular(10.0)),
-                                      ),
-                                      child: Row(
-                                        children: reservation
-                                            .userSearchInfoDtoList
-                                            .map<Widget>((user) {
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8, bottom: 6, top: 6),
-                                            child: CircleAvatar(
-                                              backgroundImage: user.profileImg !=
-                                                      null
-                                                  ? NetworkImage(
-                                                      '${user.profileImg}')
-                                                  : const AssetImage(
-                                                          'assets/img/nullProfile.png')
-                                                      as ImageProvider,
-                                              radius: 15,
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                decoration:
-                                    const BoxDecoration(color: Colors.white),
-                                clipBehavior: Clip.hardEdge,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 4),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(seconds: 1),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 0),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: const [
-                                          Color(0xFF00C1A6),
-                                          Colors.white
-                                        ],
-                                        stops: [
-                                          elapsedRatio,
-                                          elapsedRatio + 0.01
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
-                                      borderRadius: const BorderRadius.vertical(
-                                          bottom: Radius.circular(10.0),
-                                          top: Radius.circular(10.00)),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Icon(Icons.access_time,
-                                                size: 20),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              timeSlot, // 시간 표시
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 18),
-                                            ),
-                                          ],
                                         ),
-                                        Text(
-                                          DateFormat('HH:mm').format(endTime),
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 18),
+                                        // const SizedBox(height: 8),
+                                        // 프로필 이미지 리스트
+                                        Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            // borderRadius: BorderRadius.vertical(
+                                            //     top: Radius.circular(10.0)),
+                                          ),
+                                          child: Row(
+                                            children: reservation
+                                                .userSearchInfoDtoList
+                                                .map<Widget>((user) {
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8, bottom: 6, top: 6),
+                                                child: CircleAvatar(
+                                                  backgroundImage: user.profileImg !=
+                                                          null
+                                                      ? NetworkImage(
+                                                          '${user.profileImg}')
+                                                      : const AssetImage(
+                                                              'assets/img/nullProfile.png')
+                                                          as ImageProvider,
+                                                  radius: 15,
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
                                         )
                                       ],
                                     ),
                                   ),
-                                ),
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.white),
+                                    clipBehavior: Clip.hardEdge,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      child: AnimatedContainer(
+                                        duration: const Duration(seconds: 1),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 0),
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: const [
+                                              Color(0xFF00C1A6),
+                                              Colors.white
+                                            ],
+                                            stops: [
+                                              elapsedRatio,
+                                              elapsedRatio + 0.01
+                                            ],
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                          ),
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                  bottom: Radius.circular(10.0),
+                                                  top: Radius.circular(10.00)),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.access_time,
+                                                    size: 20),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  timeSlot, // 시간 표시
+                                                  style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              DateFormat('HH:mm')
+                                                  .format(endTime),
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                            ),
+                          );
+                        },
+                      ),
           ),
         ],
       ),

@@ -12,7 +12,6 @@ class ScheduleApi {
 
   // 스케쥴 API
   Future<Schedule> fetchSchedule(String date) async {
-    print('날짜 $date');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
@@ -21,7 +20,6 @@ class ScheduleApi {
 
       final response = await dio.get('$baseUrl/schedule/curriculum/$date',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
-      print('스케쥴 : ${response.data.toString()}');
       if (response.statusCode == 200) {
         final data = response.data['data'];
         if (data == null) {

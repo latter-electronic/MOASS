@@ -19,18 +19,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     api = NotiApi(dio: Dio(), storage: const FlutterSecureStorage());
     getNotiList();
-    // print('알림 리스트 : $notiLists');
   }
 
   Future<void> getNotiList() async {
     var result = await api.fetchNotification();
     setState(() {
       notiLists = result;
-      print('알림 리스트 : $notiLists');
     });
   }
 

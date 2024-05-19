@@ -47,3 +47,55 @@ class MattermostChannel {
     );
   }
 }
+
+// MM 연동상태확인 요청
+class MattermostConnectionStatus {
+  final MattermostConnectionData? data;
+  final String message;
+  final String timestamp;
+  final int status;
+
+  MattermostConnectionStatus({
+    required this.data,
+    required this.message,
+    required this.timestamp,
+    required this.status,
+  });
+
+  factory MattermostConnectionStatus.fromJson(Map<String, dynamic> json) {
+    return MattermostConnectionStatus(
+      data: json['data'] != null
+          ? MattermostConnectionData.fromJson(json['data'])
+          : null,
+      message: json['message'],
+      timestamp: json['timestamp'],
+      status: json['status'],
+    );
+  }
+}
+
+class MattermostConnectionData {
+  final String createdAt;
+  final String updatedAt;
+  final int mmTokenId;
+  final String sessionToken;
+  final String userId;
+
+  MattermostConnectionData({
+    required this.createdAt,
+    required this.updatedAt,
+    required this.mmTokenId,
+    required this.sessionToken,
+    required this.userId,
+  });
+
+  factory MattermostConnectionData.fromJson(Map<String, dynamic> json) {
+    return MattermostConnectionData(
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      mmTokenId: json['mmTokenId'],
+      sessionToken: json['sessionToken'],
+      userId: json['userId'],
+    );
+  }
+}

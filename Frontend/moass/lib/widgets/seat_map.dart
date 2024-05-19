@@ -70,8 +70,6 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
     setState(() {
       // null 체크
       deviceInfos = result;
-      print('디바이스 정보 : $deviceInfos');
-
       isLoading = false;
     });
   }
@@ -102,7 +100,9 @@ class _SeatMapWidgetState extends State<SeatMapWidget> {
             size: const Size(942, 1495),
           ),
           for (final device in deviceInfos)
-            if (device.userSearchDetail != null)
+            if (device.userSearchDetail != null &&
+                device.xcoord != null &&
+                device.ycoord != null)
               Positioned(
                 left: device.xcoord!.toDouble() - 3,
                 top: device.ycoord!.toDouble(),

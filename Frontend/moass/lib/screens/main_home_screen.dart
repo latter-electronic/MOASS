@@ -1,9 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
@@ -12,14 +9,9 @@ import 'package:moass/screens/notification_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/reservation_api.dart';
-import 'package:moass/services/sse_listener_api.dart';
-import 'package:moass/widgets/check_box.dart';
-import 'package:moass/widgets/top_bar.dart';
-
 import '../widgets/category_text.dart';
 import '../widgets/current_schedule.dart';
 import '../widgets/next_reservation.dart';
-import '../widgets/schedule_box.dart';
 import '../widgets/to_do_list.dart';
 
 class MainHomeScreen extends StatefulWidget {

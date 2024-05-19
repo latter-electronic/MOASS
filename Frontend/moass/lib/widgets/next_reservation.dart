@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
@@ -45,7 +44,7 @@ class _NextReservationState extends State<NextReservation> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('yyyy. MM. dd').format(selectedDate);
+    // String formattedDate = DateFormat('yyyy. MM. dd').format(selectedDate);
 
     DateTime now = DateTime.now();
 

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/user_info.dart';
 
 class UserInfoApi {
@@ -22,11 +21,8 @@ class UserInfoApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
-      // print(accessToken);
-      print('검색어: $username');
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/user?username=$username',
@@ -34,22 +30,18 @@ class UserInfoApi {
       );
 
       if (response.statusCode == 200) {
-        print('검색 성공!');
         final List<dynamic> userInfos = response.data['data'];
-        // print(userInfos);
         for (var userInfo in userInfos) {
-          print('API 안임 - 유저 정보 : $userInfo');
           userProfileInstances.add(UserInfo.fromJson(userInfo));
         }
-        // print(userProfileInstances);
         return userProfileInstances;
       } else {
-        print('Failed to load user profile');
         return [];
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return [];
+      throw Exception('Error fetchUserProfile: ${e.message}');
+
+      // return [];
     }
   }
 
@@ -57,17 +49,13 @@ class UserInfoApi {
   Future<CampusInfo?> getCampusClasses(String? locationCode) async {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-      }
-      // print(accessToken);
+      if (accessToken == null) {}
 
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/user/locationinfo',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
-      // print('리턴 코드 : ${response.statusCode}');
 
       if (response.statusCode == 200) {
         // CampusInfo campusA = response.data['data']['A'];
@@ -82,12 +70,10 @@ class UserInfoApi {
         // campusClassesListInstance = response.data['classes'];
 
         return campusInfoInstance;
-      } else {
-        print('Failed to load user profile');
-      }
+      } else {}
     } on DioException catch (e) {
-      print(' 캠퍼스 정보 조회 실패 ${e.message}');
-      return null;
+      throw Exception('Error getCampusClasses: ${e.message}');
+      // return null;
     }
     return null;
   }
@@ -99,31 +85,25 @@ class UserInfoApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
-      print('요청 코드 : $locationCode');
 
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/user/search?locationcode=$locationCode',
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
-      print('리턴 코드 : ${response.statusCode}');
 
       if (response.statusCode == 200) {
-        print(response.data);
-
         // campusClassesListInstance = response.data['classes'];
 
         return campusClassesListInstance;
       } else {
-        print('Failed to load user profile');
         return [];
       }
     } on DioException catch (e) {
-      print(' 캠퍼스 정보 조회 실패 ${e.message}');
-      return [];
+      throw Exception('Error fetchCampusInfo: ${e.message}');
+      // return [];
     }
   }
 
@@ -134,7 +114,6 @@ class UserInfoApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
 
@@ -145,28 +124,22 @@ class UserInfoApi {
       );
 
       if (response.statusCode == 200) {
-        print('조회 성공!');
         final List<dynamic> teamInfos = response.data['data']['teams'];
-        // print(userInfos);
         for (var teamInfo in teamInfos) {
           for (var userInfo in teamInfo['users']) {
-            // print('API 안임 - 유저 정보 : $userInfo');
             teamInstances.add(UserInfo.fromJson(userInfo));
           }
           myClassInstances.add(teamInstances);
           teamInstances = [];
-          // print('API 안임 - 팀 정보 : ${teamInfo['users']}');
           // userProfileInstances.add(UserInfo.fromJson(teamInfo));
         }
-        // print(userProfileInstances);
         return myClassInstances;
       } else {
-        print('Failed to load user profile');
         return [];
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return [];
+      throw Exception('Error fetchMyClass: ${e.message}');
+      // return [];
     }
   }
 
@@ -175,10 +148,8 @@ class UserInfoApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
-      print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/user/team',
@@ -188,12 +159,11 @@ class UserInfoApi {
       if (response.statusCode == 200) {
         return MyTeam.fromJson(response.data['data']);
       } else {
-        print('팀 정보를 받아오는데 실패했습니다.');
         return null;
       }
     } on DioException catch (e) {
-      print('팀 정보를 받아오는데 문제가 생겼습니다.: ${e.message}');
-      return null;
+      throw Exception('Error getMyTeam: ${e.message}');
+      // return null;
     }
   }
 
@@ -205,25 +175,21 @@ class UserInfoApi {
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
-      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.patch('$baseUrl/api/user/$userId/status',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
           data: body);
 
       if (response.statusCode == 200) {
-        print('유저 상태변경 성공!');
         return response.statusCode;
       } else {
-        print('유저 상태변경 실패');
         return response.statusCode;
       }
     } on DioException catch (e) {
-      print('Error fetching user status: ${e.message}');
-      return null;
+      throw Exception('Error patchUserStatus: ${e.message}');
+      // return null;
     }
   }
 }

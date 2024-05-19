@@ -10,7 +10,6 @@ import 'package:moass/screens/setting_related_account.dart';
 import 'package:moass/screens/setting_user_info.dart';
 import 'package:moass/screens/setting_widget_photo.dart';
 import 'package:moass/services/device_api.dart';
-import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/top_bar.dart';
 import 'package:moass/services/account_api.dart';
@@ -51,7 +50,6 @@ class SettingScreen extends ConsumerWidget {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (snapshot.hasData) {
               var userProfile = snapshot.data;
-              // print('유저 프로필 : ${userProfile?.backgroundImg}');
               return Column(
                 children: [
                   Container(

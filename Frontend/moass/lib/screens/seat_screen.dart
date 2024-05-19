@@ -150,7 +150,6 @@ class _SeatScreenState extends State<SeatScreen> {
                     backgroundColor: const Color(0xFF3DB887),
                     foregroundColor: Colors.white,
                     onPressed: () {
-                      // print('부를 유저 아이디 : $callUserId');
                       DeviceApi(
                               dio: Dio(), storage: const FlutterSecureStorage())
                           .callUser(callUserId, "");

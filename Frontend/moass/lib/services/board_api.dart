@@ -14,9 +14,7 @@ class BoardApi {
   Future<List<BoardModel>> fetchBoards() async {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-      }
+      if (accessToken == null) {}
 
       final response = await dio.get('$baseUrl/board',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
@@ -33,12 +31,9 @@ class BoardApi {
 
   // 보드 사진 리스트
   Future<List<ScreenshotModel>> boardScreenshotList(int boardUserId) async {
-    print('리스트에 들어간 값: $boardUserId');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-      }
+      if (accessToken == null) {}
       final response = await dio.get('$baseUrl/board/$boardUserId',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
       if (response.statusCode == 200) {
@@ -56,12 +51,9 @@ class BoardApi {
 
   // 보드 사진 상세
   Future<ScreenshotModel> boardScreenshotDetail(int screenshotId) async {
-    print('스크린샷 아이디에 들어간 값: $screenshotId');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-      }
+      if (accessToken == null) {}
 
       final response = await dio.get('$baseUrl/board/screenshot/$screenshotId',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
@@ -77,12 +69,9 @@ class BoardApi {
 
   // 보드 사진 삭제
   Future<ScreenshotModel> boardScreenshotDelete(int screenshotId) async {
-    print('삭제할 스크린샷 아이디: $screenshotId');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
-      if (accessToken == null) {
-        print('No access token available');
-      }
+      if (accessToken == null) {}
 
       final response = await dio.delete(
           '$baseUrl/board/screenshot/$screenshotId',

@@ -15,7 +15,6 @@ class GitlabApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       final response = await dio.get(
@@ -28,8 +27,9 @@ class GitlabApi {
         return gitlabAuthURL;
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return null;
+      throw Exception('requestConnectGitlab failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -37,7 +37,6 @@ class GitlabApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       // print(accessToken);
@@ -48,14 +47,13 @@ class GitlabApi {
       );
 
       if (response.statusCode == 200) {
-        print('깃랩 정보 가져오기 성공!');
         return RelatedGitlabAccount.fromJson(response.data['data']);
       } else {
-        print('깃랩 정보를 가져오지 못했습니다');
         return null;
       }
     } on DioException catch (e) {
-      print('깃렙 정보 에러 ${e.message}');
+      // throw Exception('fetchGitlabAccount failed with error: $e');
+
       return null;
     }
   }
@@ -64,7 +62,6 @@ class GitlabApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       final response = await dio.post(
@@ -80,8 +77,9 @@ class GitlabApi {
         return message;
       }
     } on DioException catch (e) {
-      print('Gitlab 프로젝트 연동 실패: ${e.message}');
-      return null;
+      throw Exception('requestSubmitProject failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -90,7 +88,6 @@ class GitlabApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       // print(accessToken);
@@ -101,17 +98,12 @@ class GitlabApi {
       );
 
       if (response.statusCode == 200) {
-        print('깃랩 정보 가져오기 성공!');
-        print(
-            '깃랩 데이터 : ${response.data['data'][projectName].first.toString()}');
-        return ProjectModel.fromJson(response.data['data'][projectName].first);
       } else {
-        print('깃랩 정보를 가져오지 못했습니다');
         return null;
       }
     } on DioException catch (e) {
-      print('깃렙 정보 에러 ${e.message}');
-      return null;
+      throw Exception('fetchGitlabProjectInfo failed with error: $e');
+      // return null;
     }
     return null;
   }

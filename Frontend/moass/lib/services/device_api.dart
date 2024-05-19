@@ -15,11 +15,9 @@ class DeviceApi {
   // 우리반 기기 조회
   Future<List<DeviceInfo>> fetchClassDevices(String? classcode) async {
     List<DeviceInfo> deviceInstances = [];
-    print('검색 클래스 코드 : $classcode');
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
 
@@ -30,9 +28,6 @@ class DeviceApi {
       );
 
       if (response.statusCode == 200) {
-        // print('기기 정보 조회 성공!');
-        print('기기정보리스트:${response.data['data']}');
-
         final List<dynamic> deviceInfos = response.data['data'];
         for (var deviceInfo in deviceInfos) {
           deviceInstances.add(DeviceInfo.fromJson(deviceInfo));
@@ -40,12 +35,11 @@ class DeviceApi {
         // print(userProfileInstances);
         return deviceInstances;
       } else {
-        print('Failed to load device info');
         return [];
       }
     } on DioException catch (e) {
-      print('Error fetching device info: ${e.message}');
-      return [];
+      throw Exception('clssView failed with error: $e');
+      // return [];
     }
   }
 
@@ -56,7 +50,6 @@ class DeviceApi {
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
       // print(accessToken);
@@ -66,15 +59,13 @@ class DeviceApi {
           data: body);
 
       if (response.statusCode == 200) {
-        print('유저 호출 성공!');
         return response;
       } else {
-        print('유저 호출 실패');
         return [];
       }
     } on DioException catch (e) {
-      print('호출 에러: ${e.message}');
-      return null;
+      throw Exception('Failed to fetch callUser: $e');
+      // return null;
     }
   }
 
@@ -89,12 +80,10 @@ class DeviceApi {
       );
 
       if (response.statusCode == 200) {
-        print('로그아웃 성공!');
-        print('response.data["message"]');
         return response.data["message"];
       }
     } on DioException catch (e) {
-      print('로그아웃 실패');
+      throw Exception('Login failed with error: $e');
     }
   }
 }

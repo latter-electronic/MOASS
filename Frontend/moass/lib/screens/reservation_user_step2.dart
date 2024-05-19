@@ -1,17 +1,10 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/reservation_model.dart';
 import 'package:moass/screens/home_screen.dart';
-import 'package:moass/screens/reservation_screen.dart';
-import 'package:moass/screens/signup_screen.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/services/reservation_api.dart';
@@ -118,13 +111,10 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
             )
             .toList()
       };
-      print(requestData);
       await api.reservationRequest(requestData);
-      print('예약 성공!');
       completeReservation(context);
       // 성공 다이얼로그 표시
     } catch (e) {
-      print('예약 실패: $e');
       // 실패 다이얼로그 표시
       showErrorDialog();
     }
@@ -190,7 +180,6 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
         selectedTimes.add(time);
       }
       updateButtonState();
-      print(selectedTimes);
     });
   }
 
@@ -211,10 +200,7 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
         selectMembers.add(userData);
         _scrollToEnd(); // 새 사용자를 추가한 후에 스크롤을 오른쪽 끝으로 이동
       });
-    } else {
-      // 사용자가 이미 목록에 존재하는 경우
-      print("User with userId ${userData['userId']} already exists.");
-    }
+    } else {}
   }
 
   // 새 사용자를 추가한 후에 스크롤을 오른쪽 끝으로 이동하는 함수
@@ -251,10 +237,11 @@ class _ReservationUserStep2State extends State<ReservationUserStep2> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14.0),
-              child: const Row(
+              child: Row(
                 children: [
                   // Text(DateFormat('yyyy.MM.dd').format(widget.selectedDate)),
-                  Text('시간을 선택해 주세요')
+                  Text(
+                      '시간을 선택해 주세요. (최대 ${widget.reservation.timeLimit * 30} 분)')
                 ],
               ),
             ),

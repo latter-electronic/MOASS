@@ -50,7 +50,6 @@ class _ToDoListState extends State<ToDoListWidget> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             var userToDoList = snapshot.data;
-            // print('유저투두리스트 : $userToDoList');
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -106,7 +105,6 @@ class _ToDoListState extends State<ToDoListWidget> {
                                       setState(() {
                                         _textFormFieldValue = value!;
                                       });
-                                      // print('텍스트 인풋 : $_textFormFieldValue');
                                       await ToDoListApi(
                                               dio: Dio(),
                                               storage:

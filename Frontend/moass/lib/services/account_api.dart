@@ -31,8 +31,9 @@ class AccountApi {
         throw Exception(response.data['message'] ?? "로그인 실패");
       }
     } on DioException catch (e) {
-      print('Login failed with error: ${e.response?.statusCode}');
-      return false;
+      throw Exception('Login failed with error: $e');
+      // print('Login failed with error: ${e.response?.statusCode}');
+      // return false;
     }
   }
   // 수정전
@@ -54,7 +55,6 @@ class AccountApi {
 
       return true; // 로그아웃 성공
     } catch (e) {
-      print('Logout failed: $e');
       return false; // 로그아웃 실패
     }
   }
@@ -75,8 +75,9 @@ class AccountApi {
       }
       return false;
     } on DioException catch (e) {
-      print('Sign Up failed with error: ${e.response?.statusCode}');
-      return false;
+      throw Exception('signUp failed with error: $e');
+      // print('signUp failed with error: ${e.response?.statusCode}');
+      // return false;
     }
   }
 
@@ -86,7 +87,6 @@ class AccountApi {
     String? accessToken = await storage.read(key: 'accessToken');
     const androidIdPlugin = AndroidId();
     final String? androidId = await androidIdPlugin.getId();
-    print('안드로이드 ID : $androidId');
 
     try {
       final response = await dio.post('$baseUrl/api/user/fcmtoken',
@@ -96,12 +96,10 @@ class AccountApi {
             "fcmToken": fcmToken,
           });
       if (response.statusCode == 200) {
-        print('FCM토큰 저장 완료');
-      } else {
-        print('FCM토큰 저장 실패');
-      }
+      } else {}
     } on DioException catch (e) {
-      print(e.message);
+      throw Exception('postFCMToken failed with error: $e');
+      // print('postFCMToken failed with error: ${e.response?.statusCode}');
     }
   }
 }
