@@ -34,7 +34,7 @@ logged_in = False
 logged_in_lock = threading.Lock()
 
 NO_MOTION_TIMEOUT = 5  # 5 seconds
-LONG_SIT_TIMEOUT = 15  # 15 seconds
+LONG_SIT_TIMEOUT = 90  # 15 seconds
 
 print("Waiting for NFC card...", file=sys.stderr)
 
