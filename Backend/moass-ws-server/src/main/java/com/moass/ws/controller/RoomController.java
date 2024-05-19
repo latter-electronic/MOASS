@@ -38,7 +38,7 @@ public class RoomController {
         return ResponseEntity.ok(room);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/create/{userId}")
     public ResponseEntity<String> createBoard(@PathVariable String userId) {
         Room room = new Room();
         Board board = boardService.createBoard(new Board(room));
