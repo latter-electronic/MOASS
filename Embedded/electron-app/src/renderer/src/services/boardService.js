@@ -97,13 +97,12 @@ export const deleteScreenshotById = (screenshotId) => {
  * @param {number} userId 사용자 ID
  * @returns {Promise} 보드 생성 결과
  */
-export const createBoard = (boardData, userId) => {
+export const createBoard = (userId) => {
     const { accessToken } = AuthStore.getState();
-    const url = `/room?userId=${userId}`;
+    const url = `/v1/rooms/create/${userId}`;
 
-    return axios.post(url, boardData, {
+    return axios.get(url, {
         headers: {
-            'Authorization': `Bearer ${accessToken}`, 
             'Content-Type': 'application/json'
         }
     });

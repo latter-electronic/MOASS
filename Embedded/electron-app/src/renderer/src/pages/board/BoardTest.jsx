@@ -1,5 +1,10 @@
+import React from 'react';
+import useGlobalStore from '../../stores/useGlobalStore';
+
 export default function BoardTest() {
-    // 뒤로 가기 버튼 핸들러
+    const boardUrl = useGlobalStore(state => state.boardUrl);
+    console.log(boardUrl);
+
     function goBack() {
         window.history.back();
     }
@@ -7,7 +12,7 @@ export default function BoardTest() {
     return (
         <div className="w-screen h-screen bg-white">
             <iframe
-                src="http://k10e203.p.ssafy.io:5001/boards/J-VR-Dvm0K7Fmr7pG9IHauWLXDG-5EImxUqbI5EUV3Y-"
+                src="https://k10e203.p.ssafy.io/room/48?userId=1058706"
                 title="Embedded Board"
                 className="w-full h-full bg-white"
                 allowFullScreen

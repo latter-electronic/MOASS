@@ -1,4 +1,3 @@
-// BoardPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchBoards, createBoard } from '../../services/boardService';
@@ -16,6 +15,7 @@ export default function BoardPage() {
     const [error, setError] = useState(null);
 
     const user = useGlobalStore(state => state.user);
+    const setBoardUrl = useGlobalStore(state => state.setBoardUrl);
 
     useEffect(() => {
         const loadBoards = async () => {
@@ -47,7 +47,6 @@ export default function BoardPage() {
     };
 
     const handleCreateBoard = async () => {
-        // 현재 날짜와 시간을 포맷팅하여 보드 이름 생성
         const now = new Date();
         const formattedDate = now.toLocaleString('ko-KR', {
             year: 'numeric',
@@ -60,11 +59,14 @@ export default function BoardPage() {
         const boardName = `${formattedDate}의 이음보드`;
 
         try {
-            const response = await createBoard({ boardName }, user.userId);
+            const response = await createBoard(user.userId);
             console.log("보드 생성 완료:", response.data);
             // 보드 목록을 다시 로드
             const boardsResponse = await fetchBoards();
             setBoards(boardsResponse.data.data);
+            // 생성된 보드 URL을 저장
+            setBoardUrl(response.data.boardUrl);
+            navigate(`/board/test`);
         } catch (err) {
             console.error("보드 생성 실패:", err.message);
         }
@@ -104,7 +106,7 @@ export default function BoardPage() {
                                 {boards.map((board) => (
                                     <div key={board.boardId} className="mb-2 p-4 w-1/2 h-1/3 bg-white shadow rounded-lg">
                                         <h2 className="text-xl font-semibold">{board.boardName}</h2>
-                                        <p>참여자: {board.participants.join(', ')}</p>
+                                        <p>참여자: {board.participants?.join(', ')}</p>
                                         <p>생성일: {new Date(board.createdAt).toLocaleString('ko-KR')}</p>
                                         <img src={board.boardUrl} alt={board.boardName} className="mt-2 size-24" />
                                     </div>
