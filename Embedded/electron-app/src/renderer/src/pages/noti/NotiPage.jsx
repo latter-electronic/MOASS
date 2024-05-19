@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SwipeableList, SwipeableListItem, TrailingActions, SwipeAction } from 'react-swipeable-list';
 import 'react-swipeable-list/dist/styles.css';
 
 import { readAllNotifications, getRecentNotifications } from '../../services/notiService';
 import useNotiStore from '../../stores/notiStore';
 import NotiMM from './NotiMMComponent.jsx';
+import NotiDetailComponent from './NotiDetailComponent.jsx'; // 상세 페이지 컴포넌트 임포트
 import NotiSsafy from './NotiSsafyComponent.jsx';
 
 import checkIcon from './testImg/check-icon.svg';
@@ -14,6 +15,7 @@ export default function NotiPage() {
   const notices = useNotiStore(state => state.notifications);
   const clearNotifications = useNotiStore(state => state.clearNotifications);
   const addNotifications = useNotiStore(state => state.addNotifications);
+  const [selectedNotice, setSelectedNotice] = useState(null); // 선택된 알림 상태
 
   useEffect(() => {
     loadRecentNotifications();
@@ -72,6 +74,7 @@ export default function NotiPage() {
                   <SwipeableListItem
                     key={key}
                     trailingActions={trailingActions(notice.notificationId)}
+                    onClick={() => setSelectedNotice(notice)} // 클릭 시 선택된 알림 설정
                   >
                     <NotiMM notice={notice} />
                   </SwipeableListItem>
@@ -90,10 +93,14 @@ export default function NotiPage() {
         </div>
       </div>
       <div className="flex flex-col w-2/3 bg-gray-800/50 justify-center text-center items-center">
-        <div className="mb-4">
-          <img src={mozzySleep} alt="모찌잠" className="ml-16 size-80 opacity-50" />
-          <span className="text-2xl text-primary/60">현재는 고정된 알림이 없어요</span>
-        </div>
+        {selectedNotice ? (
+          <NotiDetailComponent notice={selectedNotice} onClose={() => setSelectedNotice(null)} /> // 선택된 알림의 상세 페이지 표시
+        ) : (
+          <div className="mb-4">
+            <img src={mozzySleep} alt="모찌잠" className="ml-16 size-80 opacity-50" />
+            <span className="text-2xl text-primary/60">현재는 고정된 알림이 없어요</span>
+          </div>
+        )}
       </div>
     </div>
   );
