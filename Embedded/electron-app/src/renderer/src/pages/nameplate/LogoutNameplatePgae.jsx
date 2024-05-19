@@ -21,6 +21,16 @@ export default function LogoutNameplatePage() {
     }
   }, [isAuthenticated, navigate]);
 
+  useEffect(() => {
+    window.electron.ipcRenderer.on('login-success', (event, data) => {
+        navigate('/nameplate', { replace: true });
+    });
+
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners('login-success');
+    };
+  }, [navigate]);
+
   return (
     <div></div>
   )

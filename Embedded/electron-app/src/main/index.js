@@ -62,7 +62,7 @@ function createWindow() {
     }
   });
 
-  setupPythonProcess(mainWindow)
+  setupPythonProcess(mainWindow, secondWindow)
 }
 
 function createSecondWindow(display) {
@@ -93,7 +93,7 @@ function createSecondWindow(display) {
 }
 
 // python script 실행
-function setupPythonProcess(mainWindow) {
+function setupPythonProcess(mainWindow, secondWindow) {
   // 'linux' 플랫폼에서만 Python 스크립트 실행
   if (process.platform === 'linux') {
     const pythonPath = '/home/pi/myenv/bin/python'
@@ -151,6 +151,9 @@ function setupPythonProcess(mainWindow) {
     
 
     ipcMain.on('login-success', (event, data) => {
+      if (secondWindow) {
+        secondWindow.webContents.send('login-success', data);
+      }
       console.log('Login success data received:', data);
       if (pythonProcess && pythonProcess.stdin && pythonProcess.stdin.writable) {
         console.log('Writing to Python process stdin:', JSON.stringify({ action: data }));
