@@ -83,8 +83,7 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
                             setState(() {
                               isChecked = value!;
                             });
-                            // print('투두아이디 : ${widget.todoId}');
-                            // print('항목 체크 여부 : $isChecked');
+
                             ToDoListApi(
                                     dio: Dio(),
                                     storage: const FlutterSecureStorage())
@@ -105,7 +104,6 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
                       child: isPressed
                           ? IconButton(
                               onPressed: () async {
-                                // print('텍스트 인풋 : $_textFormFieldValue');
                                 await ToDoListApi(
                                         dio: Dio(),
                                         storage: const FlutterSecureStorage())

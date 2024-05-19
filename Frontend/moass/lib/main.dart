@@ -14,9 +14,7 @@ import 'package:moass/services/api_service.dart';
 
 // 백그라운드 메시지 설정
 @pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
-}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 final FlutterLocalNotificationsPlugin _local =
     FlutterLocalNotificationsPlugin();
@@ -44,7 +42,6 @@ Future<void> initializeFirebaseAndNotifications(
   // FCM 토큰 설정
   String? fcmToken = await FirebaseMessaging.instance.getToken();
   await storage.write(key: 'fcmToken', value: fcmToken);
-  print('FCM Token: $fcmToken');
 
   // 권한 요청
   FirebaseMessaging.instance.requestPermission(
@@ -62,11 +59,7 @@ Future<void> initializeFirebaseAndNotifications(
   FirebaseMessaging.onMessage.listen((RemoteMessage? message) {
     RemoteNotification? notification = message?.notification;
     if (message != null) {
-      if (message.notification != null) {
-        print(message.notification!.title);
-        print(message.notification!.body);
-        print(message.data["click_action"]);
-      }
+      if (message.notification != null) {}
     }
 
     if (notification != null) {
@@ -96,21 +89,13 @@ Future<void> initializeFirebaseAndNotifications(
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage? message) {
     if (message != null) {
-      if (message.notification != null) {
-        print(message.notification!.title);
-        print(message.notification!.body);
-        print(message.data["click_action"]);
-      }
+      if (message.notification != null) {}
     }
   });
 
   FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
     if (message != null) {
-      if (message.notification != null) {
-        print(message.notification!.title);
-        print(message.notification!.body);
-        print(message.data["click_action"]);
-      }
+      if (message.notification != null) {}
     }
   });
 }
@@ -118,7 +103,6 @@ Future<void> initializeFirebaseAndNotifications(
 // 로그인 상태 확인
 Future<bool> checkLoginStatus(FlutterSecureStorage storage) async {
   final isLoggedIn = await storage.read(key: 'isLoggedIn');
-  print("isLoggedIn: $isLoggedIn"); // 로그 출력
   return isLoggedIn == 'true';
 }
 
@@ -157,7 +141,6 @@ class _MyAppState extends State<MyApp> {
     try {
       await apiService.manualRefresh();
     } catch (e) {
-      print('Failed to refresh token: $e');
       // 로그인이 필요하면 로그인 화면으로 이동
       // Navigator.pushReplacementNamed(context, '/loginScreen');
     }

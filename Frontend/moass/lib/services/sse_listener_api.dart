@@ -1,8 +1,4 @@
-import 'package:dio/dio.dart';
-import 'package:eventflux/client.dart';
-import 'package:eventflux/enum.dart';
 import 'package:eventflux/eventflux.dart';
-import 'package:eventflux/models/data.dart';
 import 'package:eventflux/models/reconnect.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -26,7 +22,6 @@ class SSEListener {
 
     String? accessToken = await storage.read(key: 'accessToken');
     if (accessToken == null) {
-      // print('No access token available');
       return;
     }
     userEvent.connect(EventFluxConnectionType.get, '$baseUrl/api/stream/user',
@@ -34,7 +29,6 @@ class SSEListener {
         onSuccessCallback: (EventFluxResponse? data) {
       data?.stream?.listen((data) {
         testCount++;
-        print('유저 이벤트 데이터 : ${data.data.toString()}');
         userEventdata = data.data.toString();
 
         storage.write(
@@ -43,7 +37,6 @@ class SSEListener {
         // Your 1st Stream's data is being fetched!
       });
     }, onError: (oops) {
-      print('유저 이벤트 연결 실패!');
       // userEvent.disconnect();
       // Oops! Time to handle those little hiccups.
       // You can also choose to disconnect here
@@ -70,7 +63,6 @@ class SSEListener {
 
     String? accessToken = await storage.read(key: 'accessToken');
     if (accessToken == null) {
-      // print('No access token available');
       return;
     }
     teamEvent.connect(
@@ -80,7 +72,6 @@ class SSEListener {
       onSuccessCallback: (EventFluxResponse? data) {
         data?.stream?.listen((data) {
           testCount++;
-          print('팀 이벤트 데이터 : ${data.data.toString()}');
           teamEventdata = data.data.toString();
           storage.write(
               key: 'testteamEventresult',
@@ -89,7 +80,6 @@ class SSEListener {
         });
       },
       onError: (oops) {
-        print('팀 이벤트 연결 실패!');
         // teamEvent.disconnect();
         // Oops! Time to handle those little hiccups.
         // You can also choose to disconnect here
@@ -117,7 +107,6 @@ class SSEListener {
 
     String? accessToken = await storage.read(key: 'accessToken');
     if (accessToken == null) {
-      // print('No access token available');
       return;
     }
     classEvent.connect(

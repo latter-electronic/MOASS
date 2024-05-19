@@ -6,7 +6,6 @@ import 'package:moass/model/boardModel.dart';
 import 'package:moass/screens/board_screenshot_detail_screen.dart';
 import 'package:moass/services/board_api.dart';
 import 'package:moass/widgets/top_bar.dart';
-import 'package:path_provider/path_provider.dart';
 
 class BoardDetailScreen extends ConsumerWidget {
   final int boardId;

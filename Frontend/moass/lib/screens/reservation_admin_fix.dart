@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/reservation_model.dart';
@@ -48,7 +47,6 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
     if (!validLimits.contains(_currentLimit)) {
       _currentLimit = validLimits[widget.reservation.timeLimit - 1]; // 기본값으로 설정
     }
-    print('전달받은 데이터 확인 : ${widget.reservation.toString()}');
   }
 
   @override
@@ -73,7 +71,6 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
 
   // // 예약 수정 요청 API 호출
   Future<void> sendReservationFix() async {
-    saveSettings;
     try {
       Map<String, dynamic> fixData = {
         "reservationId": widget.reservation.reservationId,
@@ -85,13 +82,10 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
         "infoDate": widget.selectedDate,
         "infoTimes": _selectedTimes
       };
-      print(fixData);
       await api.reservationFix(fixData);
-      print('예약 수정 성공!');
       completeReservation(context, '예약 수정');
       // 성공 다이얼로그 표시
     } catch (e) {
-      print('예약 수정 실패: $e');
       // 실패 다이얼로그 표시
       showErrorDialog('예약 수정');
     }
@@ -101,11 +95,8 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
   Future<void> sendReservationDelete() async {
     try {
       await api.reservationDelete(widget.reservation.reservationId);
-      print(widget.reservation.reservationId);
-      print('예약 삭제 성공!');
       completeReservation(context, '예약 삭제');
     } catch (e) {
-      print('예약 삭제 실패: $e');
       showErrorDialog('예약 삭제');
     }
   }
@@ -315,21 +306,6 @@ class _ReservationAdminFixState extends State<ReservationAdminFix> {
         );
       },
     );
-  }
-
-  void saveSettings() {
-    // 저장 로직 구현
-    // String colorStr =
-    //     '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}';
-    print('reservationId: ${widget.reservation.reservationId}');
-    print('category: 아무거나 넣기 보드 미팅 이런거');
-    print(
-        '최대 예약 시간: ${_currentLimit ~/ 30}번 옵션'); // `_currentLimit / 30`의 결과를 int로 변환
-    print('지정한 이름: ${_nameController.text}');
-    print(
-        '지정한 색상: #${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}'); // #이후로 잘라야함
-    print('선택된 날짜: ${widget.selectedDate}');
-    print('선택된 시간: $_selectedTimes');
   }
 }
 
@@ -553,7 +529,6 @@ class _ReservationBoxState extends State<ReservationBox> {
                       } else if (info.infoState != 3) {
                         selectedTimes.add(index);
                       }
-                      print("Selected times: $selectedTimes");
                       widget.onUpdateSelectedTimes(selectedTimes);
                     });
                   },
@@ -568,8 +543,7 @@ class _ReservationBoxState extends State<ReservationBox> {
                       color: bgColor,
                     ),
                     child: FittedBox(
-                      fit: BoxFit
-                          .scaleDown, // Ensures the text does not overflow and scales down
+                      fit: BoxFit.scaleDown,
                       child: Text(text, style: textStyle),
                     ),
                   ),

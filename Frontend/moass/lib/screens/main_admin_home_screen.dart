@@ -5,19 +5,15 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:moass/model/myprofile.dart';
 import 'package:moass/model/reservation_model.dart';
-import 'package:moass/model/scheduleModel.dart';
 import 'package:moass/model/user_info.dart';
 import 'package:moass/screens/notification_screen.dart';
 import 'package:moass/screens/setting_screen.dart';
-import 'package:moass/services/device_api.dart';
 import 'package:moass/services/myinfo_api.dart';
 import 'package:moass/services/reservation_api.dart';
 import 'package:moass/services/user_info_api.dart';
 import 'package:moass/widgets/category_text.dart';
 import 'package:moass/widgets/meeting_table.dart';
 import 'package:moass/widgets/seat_map.dart';
-import 'package:moass/widgets/top_bar.dart';
-import 'package:moass/widgets/user_search_for_call.dart';
 
 class MainAdminScreen extends StatefulWidget {
   const MainAdminScreen({
@@ -54,7 +50,6 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
     final api =
         ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     final reservationData = await api.reservationinfoDay(formattedDate);
-    print('예약: $reservationData');
     if (reservationData != null) {
       setState(() {
         reservations =

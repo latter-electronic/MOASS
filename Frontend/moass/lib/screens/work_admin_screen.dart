@@ -42,7 +42,6 @@ class _WorkAdminScreenState extends ConsumerState<WorkAdminScreen> {
     final api =
         ReservationApi(dio: Dio(), storage: const FlutterSecureStorage());
     final reservationData = await api.reservationinfoDay(formattedDate);
-    print('예약: $reservationData');
     if (reservationData != null) {
       setState(() {
         reservations =

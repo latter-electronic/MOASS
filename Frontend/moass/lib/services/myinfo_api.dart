@@ -22,10 +22,8 @@ class MyInfoApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
-      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.get(
         '$baseUrl/api/user',
@@ -33,15 +31,14 @@ class MyInfoApi {
       );
 
       if (response.statusCode == 200) {
-        print('유저 데이터 : ${response.data['data']}');
         return MyProfile.fromJson(response.data['data']);
       } else {
-        print('Failed to load user profile');
         return null;
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return null;
+      throw Exception('fetchUserProfile failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -52,55 +49,47 @@ class MyInfoApi {
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
-      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.patch('$baseUrl/api/user/status',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
           data: body);
 
       if (response.statusCode == 200) {
-        print('유저 상태변경 성공!');
         return response;
       } else {
-        print('유저 상태변경 실패');
         return [];
       }
     } on DioException catch (e) {
-      print('Error fetching user status: ${e.message}');
-      return null;
+      throw Exception('patchUserStatus failed with error: $e');
+
+      // return null;
     }
   }
 
   patchUserTeamName(String teamName, String? positionName) async {
     try {
       Map data = {'teamName': teamName, 'positionName': positionName};
-      print('수정 데이터 : $data');
       var body = json.encode(data);
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
-      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.patch('$baseUrl/api/user/status',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
           data: body);
 
       if (response.statusCode == 200) {
-        print('유저 정보 변경 성공!');
         return response;
       } else {
-        print('유저 정보 변경 실패');
         return [];
       }
     } on DioException catch (e) {
-      print(e.message);
-      print('Error fetching user status: ${e.message}');
-      return null;
+      throw Exception('patchUserTeamName failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -111,16 +100,11 @@ class MyInfoApi {
       final mimeType = lookupMimeType(image.path);
       Uint8List convertedImage = File(image.path).readAsBytesSync();
       var len = convertedImage.length;
-      var type = ContentType(image.toString(), image.toString());
-
-      // print('길이 : $len, 타입: $mimeType');
 
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
-      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.post('$baseUrl/api/user/profileimg',
           options: Options(headers: {
@@ -131,14 +115,11 @@ class MyInfoApi {
           data: Stream.fromIterable(convertedImage.map((e) => [e])));
 
       if (response.statusCode == 200) {
-        print('유저 프로필 이미지 변경 성공!');
         return response.statusCode;
       } else {
-        print('유저 프로필 이미지 변경 실패');
         return response.statusCode;
       }
     } on DioException catch (e) {
-      print('프로필 이미지 에러: ${e.message}');
       return e.message;
     }
   }
@@ -150,16 +131,12 @@ class MyInfoApi {
       final mimeType = lookupMimeType(image.path);
       Uint8List convertedImage = File(image.path).readAsBytesSync();
       var len = convertedImage.length;
-      var type = ContentType(image.toString(), image.toString());
-
-      // print('길이 : $len, 타입: $mimeType');
+      // var type = ContentType(image.toString(), image.toString());
 
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
-      // print(accessToken);
       // API요청, 헤더에 토큰 넣기
       final response = await dio.post('$baseUrl/api/user/backgroundimg',
           options: Options(headers: {
@@ -170,15 +147,14 @@ class MyInfoApi {
           data: Stream.fromIterable(convertedImage.map((e) => [e])));
 
       if (response.statusCode == 200) {
-        print('유저 배경 이미지 변경 성공!');
         return response.statusCode;
       } else {
-        print('유저 배경 이미지 변경 실패');
         return response.statusCode;
       }
     } on DioException catch (e) {
-      print('배경 이미지 에러: ${e.message}');
-      return null;
+      throw Exception('postUserbgPhoto failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -189,13 +165,10 @@ class MyInfoApi {
       final mimeType = lookupMimeType(image.path);
       Uint8List convertedImage = File(image.path).readAsBytesSync();
       var len = convertedImage.length;
-      var type = ContentType(image.toString(), image.toString());
-
-      print('길이 : $len, 타입: $mimeType');
+      // var type = ContentType(image.toString(), image.toString());
 
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        // print('No access token available');
         return [];
       }
       // print(accessToken);
@@ -210,15 +183,14 @@ class MyInfoApi {
           data: Stream.fromIterable(convertedImage.map((e) => [e])));
 
       if (response.statusCode == 200) {
-        print('유저 프로필 이미지 변경 성공!');
         return response;
       } else {
-        print('유저 프로필 이미지 변경 실패');
         return [];
       }
     } on DioException catch (e) {
-      print('프로필 이미지 에러: ${e.message}');
-      return null;
+      throw Exception('postUserWidgetPhoto failed with error: $e');
+
+      // return null;
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart'; // Lottie 임포트
 import 'package:moass/model/boardModel.dart';
 import 'package:moass/screens/board_detail_screen.dart';
 import 'package:moass/services/board_api.dart';
@@ -15,7 +16,7 @@ class BoardScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: const TopBar(
-        title: '모음 보드',
+        title: '이음 보드',
         icon: Icons.dashboard_outlined,
       ),
       body: FutureBuilder<List<BoardModel>>(
@@ -28,7 +29,16 @@ class BoardScreen extends ConsumerWidget {
             return Center(child: Text("Error: ${snapshot.error}"));
           }
           if (snapshot.hasData && snapshot.data!.isEmpty) {
-            return const Center(child: Text("데이터가 없습니다"));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('어라, 아직 저장한 이음보드가 없어요!'),
+                  Lottie.asset('assets/img/noDataCat.json',
+                      repeat: true, animate: true),
+                ],
+              ),
+            );
           }
           final boards = snapshot.data!;
           return ListView(
@@ -36,7 +46,7 @@ class BoardScreen extends ConsumerWidget {
               const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Text(
-                  '보드 모음',
+                  '이음 모음',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),

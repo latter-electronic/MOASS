@@ -66,8 +66,6 @@ class _ReservationUserStep1State extends State<ReservationUserStep1> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-
     return Scaffold(
       appBar: const TopBar(
         title: '시설 / 팀미팅 예약',

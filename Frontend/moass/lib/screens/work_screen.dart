@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -9,11 +10,9 @@ import 'package:intl/intl.dart';
 import 'package:moass/model/scheduleModel.dart';
 import 'package:moass/services/schedule_api.dart';
 import 'package:moass/widgets/category_text.dart';
-import 'package:moass/widgets/gitlab_issue_card.dart';
-import 'package:moass/widgets/gitlab_mr_card.dart';
 import 'package:moass/widgets/schedule_box.dart';
 import 'package:moass/widgets/top_bar.dart';
-
+import 'package:lottie/lottie.dart'; // 로티임포트
 import '../widgets/my_gitlab_issue.dart';
 
 class WorkScreen extends ConsumerStatefulWidget {
@@ -64,7 +63,6 @@ class _WorkScreenState extends ConsumerState<WorkScreen> {
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : Padding(
-                // Add Padding to ensure finite size
                 padding: const EdgeInsets.all(16.0),
                 child: buildContent(displayDate),
               ),
@@ -81,18 +79,33 @@ class _WorkScreenState extends ConsumerState<WorkScreen> {
           alignment: Alignment.topRight,
           child: Text(displayDate),
         ),
-        Align(
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        if (courses.isEmpty) ...[
+          //📲 json 확장자 명까지 써주어야 합니다
+          //📲 repeat > 반복 옵션
+          //📲 animate > 움직이는 옵션
+          //📲 그외에도 많은 옵션들이 있으니 테스트 해보시면 됩니다
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ...courses.map((course) => ScheduleBox(
-                    title: course.title,
-                    time: course.period,
-                  )),
+              const Text('오늘은 일정이 없어요!'),
+              Lottie.asset('assets/img/noDataCat.json',
+                  repeat: true, animate: true),
             ],
           ),
-        ),
+        ] else ...[
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ...courses.map((course) => ScheduleBox(
+                      title: course.title,
+                      time: course.period,
+                    )),
+              ],
+            ),
+          ),
+        ],
         const SizedBox(height: 20),
 
         // 나의 지라

@@ -15,7 +15,6 @@ class NotiApi {
       List<Noti>? notiListsInstance = [];
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
 
@@ -26,8 +25,6 @@ class NotiApi {
       );
 
       if (response.statusCode == 200) {
-        print('알림 리스트 조회 성공!');
-        // print(response.data.toString());
         final List<dynamic> notiLists = response.data['data']['notifications'];
         for (var notiInfo in notiLists) {
           notiListsInstance.add(Noti.fromJson(notiInfo));
@@ -36,8 +33,9 @@ class NotiApi {
         return notiListsInstance;
       }
     } on DioException catch (e) {
-      print('Error: ${e.message}');
-      return [];
+      throw Exception('Error fetchNotification: ${e.message}');
+
+      // return [];
     }
     return null;
   }
@@ -46,7 +44,6 @@ class NotiApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
 
@@ -57,11 +54,10 @@ class NotiApi {
       );
 
       if (response.statusCode == 200) {
-        print('알림 삭제 완료!');
         return;
       }
     } on DioException catch (e) {
-      print('Error: 삭제 실패! ${e.message}');
+      throw Exception('Error deleteNoti: ${e.message}');
     }
   }
 }

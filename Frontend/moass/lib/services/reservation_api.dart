@@ -19,7 +19,6 @@ class ReservationApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
       final response = await dio.get(
@@ -31,11 +30,9 @@ class ReservationApi {
         reservations = responseData
             .map((data) => MyReservationModel.fromJson(data))
             .toList();
-      } else {
-        print('Failed to fetch reservation information');
-      }
+      } else {}
     } on DioException catch (e) {
-      print('Error fetching reservation information: ${e.message}');
+      throw Exception('Error myReservationinfo: ${e.message}');
     }
     return reservations;
   }
@@ -44,7 +41,6 @@ class ReservationApi {
   Future<List<ReservationDayModel>?> reservationinfoDay(String date) async {
     String? accessToken = await storage.read(key: 'accessToken');
     if (accessToken == null) {
-      print('No access token available');
       return null;
     }
     try {
@@ -56,12 +52,12 @@ class ReservationApi {
         List<dynamic> data = response.data['data'];
         return data.map((item) => ReservationDayModel.fromJson(item)).toList();
       } else {
-        print('해당 날짜 예약 정보 불러오기 실패');
         return null;
       }
     } on DioException catch (e) {
-      print('Error fetching reservation data: ${e.message}');
-      return null;
+      throw Exception('Error reservationinfoDay: ${e.message}');
+
+      // return null;
     }
   }
 
@@ -87,7 +83,6 @@ class ReservationApi {
               ? 'Unauthorized cancellation attempt'
               : 'Reservation cancellation failed');
     }
-    print('해당 예약을 취소하였습니다!');
   }
 
   // 예약하기
@@ -103,13 +98,10 @@ class ReservationApi {
           data: body);
 
       if (response.statusCode == 200) {
-        print('예약 등록 성공!');
       } else {
-        print('예약 등록 실패');
         throw Exception('Failed to register reservation');
       }
     } on DioException catch (e) {
-      print('예약 등록 에러: ${e.message}');
       throw Exception('Error making reservation request: ${e.message}');
     }
   }
@@ -127,13 +119,10 @@ class ReservationApi {
           data: body);
 
       if (response.statusCode == 200) {
-        print('예약 생성 성공!');
       } else {
-        print('예약 생성 실패');
         throw Exception('Failed to register reservation');
       }
     } on DioException catch (e) {
-      print('예약 생성 에러: ${e.message}');
       throw Exception('Error making reservation request: ${e.message}');
     }
   }
@@ -151,13 +140,10 @@ class ReservationApi {
           data: body);
 
       if (response.statusCode == 200) {
-        print('예약 수정 성공!');
       } else {
-        print('예약 수정 실패');
         throw Exception('Failed to register reservation');
       }
     } on DioException catch (e) {
-      print('예약 수정 에러: ${e.message}');
       throw Exception('Error making reservation request: ${e.message}');
     }
   }
@@ -165,10 +151,8 @@ class ReservationApi {
   // 예약 삭제
   Future reservationDelete(reservationId) async {
     try {
-      print('리저베이션아이디 : $reservationId');
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return [];
       }
       final response = await dio.delete(
@@ -176,12 +160,9 @@ class ReservationApi {
         options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
       );
       if (response.statusCode == 200) {
-        print('삭제 완료');
-      } else {
-        print('Failed to fetch reservation information');
-      }
+      } else {}
     } on DioException catch (e) {
-      print('Error fetching reservation information: ${e.message}');
+      throw Exception('Error reservationDelete: ${e.message}');
     }
   }
 }

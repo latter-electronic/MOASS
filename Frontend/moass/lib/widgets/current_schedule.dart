@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -57,9 +56,6 @@ class _CurrentScheduleState extends ConsumerState<CurrentSchedule> {
     final endTime = timeFormat.parse(times[1]);
 
     final currentTime = timeFormat.parse('${now.hour}:${now.minute}');
-    print(
-        '시작 시간 : ${startTime.toString()}, 현재 시간 : ${currentTime.toString()}, 끝시간 : ${endTime.toString()}');
-
     return currentTime.isAfter(startTime) && currentTime.isBefore(endTime);
   }
 
@@ -79,11 +75,9 @@ class _CurrentScheduleState extends ConsumerState<CurrentSchedule> {
   }
 
   Widget buildContent(String displayDate) {
-    // print('코스 : ${courses.toString()}');
     final filteredCourses = courses
         .where((course) => isCurrentTimeInPeriod(course.period))
         .toList();
-    // print('필터링된 코스 : ${filteredCourses.toString()}');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

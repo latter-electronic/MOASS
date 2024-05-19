@@ -15,13 +15,15 @@ class SetRelatedAccount extends StatefulWidget {
   final String? userGitlabMail;
   final List? userGitlabProject;
   final String? userMattermostMail;
-  const SetRelatedAccount(
-      {super.key,
-      required this.service,
-      this.userJiraMail,
-      this.userGitlabMail,
-      this.userGitlabProject,
-      this.userMattermostMail});
+
+  const SetRelatedAccount({
+    super.key,
+    required this.service,
+    this.userJiraMail,
+    this.userGitlabMail,
+    this.userGitlabProject,
+    this.userMattermostMail,
+  });
 
   @override
   State<SetRelatedAccount> createState() => _SetRelatedAccountState();
@@ -33,7 +35,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
   String mmUserId = '';
   String mmPassword = '';
 
-  openButtonWidget() {
+  void openButtonWidget() {
     setState(() {
       isOpenedButtonWidget = !isOpenedButtonWidget;
     });
@@ -44,8 +46,8 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-          border:
-              Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.5)))),
+        border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.5))),
+      ),
       child: Column(
         children: [
           GestureDetector(
@@ -62,29 +64,31 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                            offset: const Offset(1, 1),
-                            blurRadius: 1,
-                            color: Colors.black.withOpacity(0.5),
-                            spreadRadius: 1)
+                          offset: const Offset(1, 1),
+                          blurRadius: 1,
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 1,
+                        )
                       ],
                     ),
                     child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: widget.service == 'mattermost'
-                            ? const Color(0xFF28427b)
-                            : Colors.white,
-                        child: Image.asset(
-                          'assets/img/logo_${widget.service}.png',
-                          width: 35,
-                          height: 35,
-                        )),
+                      radius: 30,
+                      backgroundColor: widget.service == 'mattermost'
+                          ? const Color(0xFF28427b)
+                          : Colors.white,
+                      child: Image.asset(
+                        'assets/img/logo_${widget.service}.png',
+                        width: 35,
+                        height: 35,
+                      ),
+                    ),
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (widget.service == 'jira')
-                      if (widget.userJiraMail == 'null')
+                      if (widget.userJiraMail == null)
                         const Text(
                           '연결된 계정이 없습니다',
                           style: TextStyle(
@@ -101,7 +105,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           ),
                         )
                     else if (widget.service == 'mattermost')
-                      if (widget.userMattermostMail == 'null')
+                      if (widget.userMattermostMail == null)
                         const Text(
                           '연결된 계정이 없습니다',
                           style: TextStyle(
@@ -147,7 +151,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                             ),
                           ],
                         )
-                    else if (widget.userGitlabMail == 'null')
+                    else if (widget.userGitlabMail == null)
                       const Text(
                         '연결된 계정이 없습니다',
                         style: TextStyle(
@@ -155,9 +159,9 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           fontWeight: FontWeight.w600,
                         ),
                       )
-                    else if (widget.userGitlabMail != 'null')
+                    else
                       Text(
-                        widget.userGitlabMail ?? '연결된 계정이 없습니다',
+                        widget.userGitlabMail!,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -174,31 +178,33 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                             for (var project in widget.userGitlabProject!)
                               Container(
                                 decoration: const BoxDecoration(
-                                    color: Color(0xFFF66A26),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(3))),
+                                  color: Color(0xFFF66A26),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(3)),
+                                ),
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(
                                   project.gitlabProjectName.toString(),
                                   style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               )
                           ],
-                        )
+                        ),
                   ],
                 ),
               ],
             ),
           ),
-          if (isOpenedButtonWidget == true)
+          if (isOpenedButtonWidget)
             if (widget.service == 'jira')
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (widget.userJiraMail == 'null')
+                  if (widget.userJiraMail == null)
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: OutlinedButton(
@@ -208,9 +214,9 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                                   storage: const FlutterSecureStorage())
                               .requestConnectJira();
                           await launchUrlString(JiraConnectUrl);
-                          setState() {
+                          setState(() {
                             isOpenedButtonWidget = false;
-                          }
+                          });
                         },
                         style: const ButtonStyle(),
                         child: const Text('계정 연동'),
@@ -221,19 +227,19 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                       padding: const EdgeInsets.all(8.0),
                       child: OutlinedButton(
                         onPressed: () {
-                          () {};
+                          // 계정 연동 해제 로직 추가
                         },
                         style: const ButtonStyle(),
                         child: const Text('계정 연동 해제'),
                       ),
-                    )
+                    ),
                 ],
               )
             else if (widget.service == 'mattermost')
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (widget.userMattermostMail == 'null')
+                  if (widget.userMattermostMail == null)
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 70.0),
@@ -316,7 +322,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                       padding: const EdgeInsets.all(8.0),
                       child: OutlinedButton(
                         onPressed: () {
-                          () {};
+                          // 계정 연동 해제 로직 추가
                         },
                         style: const ButtonStyle(),
                         child: const Text('계정 연동 해제'),
@@ -332,10 +338,12 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                         vertical: 8.0, horizontal: 20),
                     child: TextField(
                       decoration: InputDecoration(
-                          label: Text(
-                        '등록할 레포지토리 이름을 입력하세요',
-                        style: TextStyle(color: Colors.black.withOpacity(0.5)),
-                      )),
+                        label: Text(
+                          '등록할 레포지토리 이름을 입력하세요',
+                          style:
+                              TextStyle(color: Colors.black.withOpacity(0.5)),
+                        ),
+                      ),
                       controller: TextEditingController(),
                       onChanged: (value) {
                         textformFieldValue = value;
@@ -368,7 +376,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                           style: const ButtonStyle(),
                           child: const Text('프로젝트 등록'),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -386,9 +394,9 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                                 storage: const FlutterSecureStorage())
                             .requestConnectGitlab();
                         await launchUrlString(gitlabConnectUrl);
-                        setState() {
+                        setState(() {
                           isOpenedButtonWidget = false;
-                        }
+                        });
                       },
                       style: const ButtonStyle(),
                       child: const Text('계정 연동'),
@@ -397,7 +405,7 @@ class _SetRelatedAccountState extends State<SetRelatedAccount> {
                 ],
               )
           else
-            const Row()
+            const Row(),
         ],
       ),
     );

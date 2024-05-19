@@ -14,7 +14,6 @@ class JiraApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       // print(accessToken);
@@ -27,12 +26,12 @@ class JiraApi {
       if (response.statusCode == 200) {
         return RelatedAccount.fromJson(response.data);
       } else {
-        print('Failed to load user profile');
         return null;
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return null;
+      throw Exception('fetchJiraAccount failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -41,7 +40,6 @@ class JiraApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       // print(accessToken);
@@ -54,12 +52,12 @@ class JiraApi {
       if (response.statusCode == 200) {
         return response.statusCode;
       } else {
-        print('Failed to load user profile');
         return null;
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return null;
+      throw Exception('disconnectJiraAccount failed with error: $e');
+
+      // return null;
     }
   }
 
@@ -68,7 +66,6 @@ class JiraApi {
     try {
       String? accessToken = await storage.read(key: 'accessToken');
       if (accessToken == null) {
-        print('No access token available');
         return null;
       }
       final response = await dio.get(
@@ -81,8 +78,9 @@ class JiraApi {
         return jiraAuthURL;
       }
     } on DioException catch (e) {
-      print('Error fetching user profile: ${e.message}');
-      return null;
+      throw Exception('requestConnectJira failed with error: $e');
+
+      // return null;
     }
   }
 }

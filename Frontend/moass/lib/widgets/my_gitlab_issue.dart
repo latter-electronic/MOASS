@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moass/model/related_gitlab_account.dart';
-import 'package:moass/screens/work_screen.dart';
 import 'package:moass/services/gitlab_api.dart';
 import 'package:moass/widgets/gitlab_issue_card.dart';
 import 'package:moass/widgets/gitlab_mr_card.dart';
@@ -39,8 +38,6 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
     var gitlabResult =
         await GitlabApi(dio: Dio(), storage: const FlutterSecureStorage())
             .fetchGitlabAccount();
-    // print('깃랩 메일 : ${gitlabResult?.gitlabEmail}');
-    // print('깃랩 프로젝트 : ${gitlabResult?.gitlabProjects}');
     setState(() {
       // null 체크
       userGitlabMail = gitlabResult?.gitlabEmail;
@@ -82,9 +79,7 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
                       .fetchGitlabProjectInfo(selectedProject!);
                   setState(() {
                     currentProject = tempProject;
-                    print(currentProject.toString());
                   });
-                  // print(value);
                 },
               ),
             )

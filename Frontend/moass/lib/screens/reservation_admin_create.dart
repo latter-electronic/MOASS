@@ -74,8 +74,6 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
   // // 예약 수정 요청 API 호출
   // // 예약하기 API 호출
   Future<void> sendReservationCreate() async {
-    print(
-        '${userProfile?.classCode} / ${_currentLimit ~/ 30} / ${_nameController.text} / ${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)} / $_selectedTimes');
     try {
       Map<String, dynamic> createData = {
         "classCode": userProfile?.classCode,
@@ -86,13 +84,10 @@ class _ReservationAdminCreateState extends State<ReservationAdminCreate> {
             '#${_currentColor.value.toRadixString(16).padLeft(8, '0').substring(2)}',
         "infoTimes": _selectedTimes
       };
-      print(createData);
       await api.reservationCreate(createData);
-      print('예약 수정 성공!');
       completeCreate(context);
       // 성공 다이얼로그 표시
     } catch (e) {
-      print('예약 수정 실패: $e');
       // 실패 다이얼로그 표시
       showErrorDialog();
     }
@@ -356,7 +351,6 @@ class _ReservationBoxState extends State<ReservationBox> {
                       } else {
                         selectedTimes.add(index);
                       }
-                      print("Selected times: $selectedTimes");
                       widget.onUpdateSelectedTimes(selectedTimes);
                     });
                   },
@@ -371,8 +365,7 @@ class _ReservationBoxState extends State<ReservationBox> {
                       color: bgColor,
                     ),
                     child: FittedBox(
-                      fit: BoxFit
-                          .scaleDown, // Ensures the text does not overflow and scales down
+                      fit: BoxFit.scaleDown,
                       child: Text(text, style: textStyle),
                     ),
                   ),
