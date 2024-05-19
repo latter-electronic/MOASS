@@ -7,16 +7,18 @@ import useGlobalStore from '../../stores/useGlobalStore.js';
 import AuthStore from '../../stores/AuthStore.js';
 
 export default function NameplatePage() {
-  const { user, fetchUserInfo, isLoadingUser } = useGlobalStore((state) => ({
+  const { user, fetchUserInfo, isLoadingUser, setUser } = useGlobalStore((state) => ({
     user: state.user,
     fetchUserInfo: state.fetchUserInfo,
     isLoadingUser: state.isLoadingUser,
+    setUser: state.setUser,
   }));
 
-  const { isAuthenticated, isCheckingAuth, checkStoredAuth } = AuthStore((state) => ({
+  const { isAuthenticated, isCheckingAuth, checkStoredAuth, accessToken } = AuthStore((state) => ({
     isAuthenticated: state.isAuthenticated,
     isCheckingAuth: state.isCheckingAuth,
     checkStoredAuth: state.checkStoredAuth,
+    accessToken: state.accessToken,
   }));
 
   const navigate = useNavigate();
@@ -27,11 +29,35 @@ export default function NameplatePage() {
   }, [checkStoredAuth]);
 
   useEffect(() => {
+    console.log(accessToken);
+    if (!accessToken) {  
+      navigate('/logoutnameplate');
+    }
+  }, [accessToken, navigate]);
+
+  useEffect(() => {
+    if (user?.statusId) {
+      console.log('statusId changed:', user.statusId);
+    }
+  }, [user?.statusId]);
+
+  useEffect(() => {
     if (isAuthenticated) {
       fetchUserInfo();
-    } else if (!isCheckingAuth) {
     }
-  }, [isAuthenticated, isCheckingAuth, fetchUserInfo, navigate]);
+  }, [isAuthenticated, fetchUserInfo]);
+
+  // IPC를 통해 상태 업데이트를 처리합니다.
+  useEffect(() => {
+    window.electron.ipcRenderer.on('user-updated', (event, newUser) => {
+      setUser(newUser);
+    });
+
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners('user-updated');
+    };
+  }, [setUser]);
+
 
   if (isCheckingAuth || isLoadingUser) {
     return <div className="5xl">로딩 중...</div>; // 인증 상태 확인 또는 사용자 정보 로딩 중

@@ -25,7 +25,10 @@ const useGlobalStore = create((set) => ({
     "ycoord": null
   },
   isLoadingUser: false,
-  setUser: (user) => set({ user }),
+  setUser: (user) => {
+    set({ user });
+    window.electron.ipcRenderer.send('user-updated', user); // 상태 변경을 IPC로 전달
+  },
   fetchUserInfo: async () => {
     set({ isLoadingUser: true });
     try {

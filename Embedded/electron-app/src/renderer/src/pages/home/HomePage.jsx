@@ -7,6 +7,8 @@ import TodoList from './HomeTodoListComponent.jsx'
 import Schedule from './HomeScheduleComponent.jsx'
 import MozzyModal from '../mozzy/MozzyMainPage..jsx'
 import LongSitModal from '../mozzy/MozzyLongSitPage.jsx'
+import { updateUserStatus } from '../../services/userService.js'
+import useGlobalStore from '../../stores/useGlobalStore.js'
 
 import testImg1 from './test/swiper-slide-test-img-1.png'
 import testImg2 from './test/swiper-slide-test-img-2.jpg'
@@ -29,6 +31,11 @@ export default function HomePage() {
         checkStoredAuth: state.checkStoredAuth,
         isAuthenticated: state.isAuthenticated
     }))
+
+    const { user, setUser } = useGlobalStore((state) => ({
+        user: state.user,
+        setUser: state.setUser,
+    }));
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -58,18 +65,34 @@ export default function HomePage() {
     
     useEffect(() => {
         // Electron에서 'motion-detected' 메시지를 수신
-        window.electron.ipcRenderer.on('motion-detected', (event, data) => {
-            console.log('status data: ', data.status)
+        const handleMotionDetected = (event, data) => {
             if (data.status === 'LONG_SIT') {
+                console.log("Long Sit");
                 openLongSitModal();
+            } else if (data.status === 'AWAY' || data.status === 'STAY') {
+                const newStatus = data.status === 'AWAY' ? '0' : '1';
+                console.log("New status: ", newStatus);
+
+                if (newStatus !== user.statusId.toString()) {
+                    updateUserStatus({ statusId: newStatus })
+                        .then(() => {
+                            console.log(`User status updated to ${data.status}`);
+                            setUser({ ...user, statusId: parseInt(newStatus) });
+                        })
+                        .catch(error => {
+                            console.error('Error updating user status:', error);
+                        });
+                }
             }
-        });
+        };
+
+        window.electron.ipcRenderer.on('motion-detected', handleMotionDetected);
 
         // 컴포넌트 언마운트 시 이벤트 리스너 제거
         return () => {
-            window.electron.ipcRenderer.removeAllListeners('motion-detected');
+            window.electron.ipcRenderer.removeAllListeners('motion-detected', handleMotionDetected);
         };
-    }, []);
+    }, [user, setUser]);
 
     useEffect(() => {
         const { accessToken, refreshToken } = AuthStore.getState()
@@ -77,6 +100,8 @@ export default function HomePage() {
         console.log('RefreshToken:', refreshToken)
         if (!accessToken) {
             navigate('/login')
+        } else {
+            window.electron.ipcRenderer.send('login-success', 'login');
         }
     }, [])
 

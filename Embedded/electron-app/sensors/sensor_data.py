@@ -22,9 +22,10 @@ i2c = busio.I2C(board.SCL, board.SDA)
 pn532 = PN532_I2C(i2c, debug=False)
 pn532.SAM_configuration()
 
-motion_sensor_pin = 17
+# IR sensor pin configuration
+ir_sensor_pin = 17  # Change this to the GPIO pin number you are using
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(motion_sensor_pin, GPIO.IN)
+GPIO.setup(ir_sensor_pin, GPIO.IN)
 
 last_motion_time = time.time()
 motion_state = 'AWAY'
@@ -32,8 +33,8 @@ stay_start_time = None
 logged_in = False
 logged_in_lock = threading.Lock()
 
-NO_MOTION_TIMEOUT = 30  # 30 seconds
-LONG_SIT_TIMEOUT = 60  # 2 minutes
+NO_MOTION_TIMEOUT = 10  # 10 seconds
+LONG_SIT_TIMEOUT = 30  # 30 seconds
 
 print("Waiting for NFC card...", file=sys.stderr)
 
@@ -54,7 +55,7 @@ def listen_for_commands():
                     elif data.get("action") == "logout":
                         logged_in = False
                         print(f"Logout signal received: {data}", file=sys.stderr)
-                        check_aod_and_set_display_power()  
+                        check_aod_and_set_display_power()
         except json.JSONDecodeError as e:
             print("JSON Decode Error:", str(e), file=sys.stderr)
         except Exception as e:
@@ -94,15 +95,15 @@ def handle_logged_in_state():
     global last_motion_time, motion_state, stay_start_time
     try:
         current_time = time.time()
-        if GPIO.input(motion_sensor_pin):
-            if motion_state == 'AWAY' or motion_state == 'LONG_SIT':
+        if not GPIO.input(ir_sensor_pin):
+            if motion_state != 'STAY':
                 motion_state = 'STAY'
                 stay_start_time = current_time
                 send_motion_status("STAY")
             last_motion_time = current_time
             # Check for LONG_SIT
             if stay_start_time and (current_time - stay_start_time) >= LONG_SIT_TIMEOUT:
-                if motion_state != 'LONG_SIT':
+                if motion_state == 'STAY':
                     motion_state = 'LONG_SIT'
                     send_motion_status("LONG_SIT")
         else:
@@ -121,7 +122,7 @@ def handle_logged_out_state():
     global last_motion_time, motion_state
     try:
         current_time = time.time()
-        if GPIO.input(motion_sensor_pin):
+        if GPIO.input(ir_sensor_pin):
             if motion_state != 'LOGOUT_STAY':
                 motion_state = 'LOGOUT_STAY'
                 print(motion_state, file=sys.stderr)

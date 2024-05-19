@@ -34,12 +34,12 @@ function MozzyMain({ isOpen, onClose }) {
         switch (page) {
             case 'lunch':
                 return <LunchMenu />
+            case 'quiz':
+                return <QuizToday />
             case 'news':
                 return <DailyNews />
             case 'scrum':
                 return <DailyScrum />
-            case 'quiz':
-                return <QuizToday />
             default:
                 return (
                     <div className='flex flex-col'>
@@ -52,14 +52,14 @@ function MozzyMain({ isOpen, onClose }) {
                                 className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
                                 onClick={() => setPage('lunch')}>점심 메뉴</button>
                             <button 
-                            className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => setPage('news')}>오늘의 뉴스</button>
+                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => setPage('quiz')}>오늘의 퀴즈</button>
                             <button 
-                            className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => setPage('scrum')}>데일리 스크럼 정리</button>
+                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => setPage('news')}>오늘의 뉴스</button>
                             <button 
-                            className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
-                            onClick={() => setPage('quiz')}>오늘의 퀴즈</button>
+                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => setPage('scrum')}>데일리 스크럼</button>
                         </div>
                     </div>
                 )

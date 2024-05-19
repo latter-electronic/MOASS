@@ -21,7 +21,7 @@ export default function EventListener({ children }) {
 
     // const handleUserStatusData = useCallback((event, data) => {
     //     const status = data.status === 'AWAY' ? '0' : data.status === 'STAY' ? '1' : null;
-    //     console.log(status)
+    //     console.log("status: ", status)
     //     updateUserStatus({ statusId: status }).then(() => {
     //         console.log(`User status updated to ${data.status}`);
     //     }).catch(error => {
