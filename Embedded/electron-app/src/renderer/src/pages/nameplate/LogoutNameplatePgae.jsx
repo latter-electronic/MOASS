@@ -14,12 +14,12 @@ export default function LogoutNameplatePage() {
     checkStoredAuth();
   }, [checkStoredAuth]);
 
-  // useEffect(() => {
-  //   console.log('isAuthenticated:', isAuthenticated);
-  //   if (isAuthenticated) {
-  //     navigate('/nameplate', { replace: true });
-  //   }
-  // }, [isAuthenticated, navigate]);
+  useEffect(() => {
+    console.log('isAuthenticated:', isAuthenticated);
+    if (isAuthenticated) {
+      navigate('/nameplate', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('login-success', (event, data) => {
