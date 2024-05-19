@@ -3,9 +3,11 @@ package com.moass.api.domain.notification.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class NotificationSendDto extends NotificationBase{
 

@@ -55,7 +55,7 @@ public class NotificationTest {
 
     @Nested
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-    @DisplayName("[POST] 알람전송")
+    @DisplayName("[POST] 알람전송 /notification/send")
     class 알람전송{
 
             @Test

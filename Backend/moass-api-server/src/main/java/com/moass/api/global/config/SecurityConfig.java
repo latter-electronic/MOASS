@@ -79,12 +79,9 @@ public class SecurityConfig {
         jwtFilter.setRequiresAuthenticationMatcher(pathsToInclude);
         return http
                 .authorizeExchange(auth ->
-                        auth.pathMatchers("/user/login").permitAll()
-                                .pathMatchers("/device/login", "/device/islogin").permitAll()
-                                .pathMatchers("/user/refresh").permitAll()
-                                .pathMatchers("/user/signup").permitAll()
+                        auth.pathMatchers("/device/login", "/device/islogin").permitAll()
+                                .pathMatchers("/user/signup","/user/insertuser","/user/refresh","user/login","user/profileimg").permitAll()
                                 .pathMatchers("/stream/**").permitAll()
-                                .pathMatchers("/user/profileImg").permitAll()
                                 .pathMatchers("/upload/**").permitAll()
                                 .pathMatchers("/oauth2/jira/callback").permitAll()
                                 .pathMatchers("/oauth2/gitlab/callback").permitAll()

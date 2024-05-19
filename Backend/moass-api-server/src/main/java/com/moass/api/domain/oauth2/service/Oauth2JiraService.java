@@ -229,11 +229,10 @@ public class Oauth2JiraService {
                     if (token.getJiraEmail() != null) {
                         return Mono.just(token.getJiraEmail());
                     } else {
-                        return Mono.just("null");
+                        return Mono.error(new CustomException("Jira 이메일이 없습니다.", HttpStatus.FORBIDDEN));
                     }
                 })
-                .switchIfEmpty(Mono.just("null"));
+                .switchIfEmpty(Mono.error(new CustomException("Jira 토큰이 없습니다.", HttpStatus.FORBIDDEN)));
     }
-
 
 }

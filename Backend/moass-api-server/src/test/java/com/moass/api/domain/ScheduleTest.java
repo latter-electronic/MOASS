@@ -224,4 +224,79 @@ public class ScheduleTest {
                     .jsonPath("$.status").isEqualTo("400");
         }
     }
+
+    @Nested
+    @DisplayName("[GET] Todo 조회")
+    class Todo조회 {
+
+        @Test
+        @Order(1)
+        @DisplayName("[200] Todo 목록 조회 성공")
+        void Todo조회성공() {
+            // Todo를 생성합니다.
+            TodoCreateDto todoCreateDto1 = new TodoCreateDto();
+            todoCreateDto1.setContent("Todo테스트1");
+            todoCreate(todoCreateDto1);
+
+            TodoCreateDto todoCreateDto2 = new TodoCreateDto();
+            todoCreateDto2.setContent("Todo테스트2");
+            todoCreate(todoCreateDto2);
+
+            webTestClient.get().uri("/schedule/todo")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo(200)
+                    .jsonPath("$.data").isArray()
+                    .jsonPath("$.data.length()").isEqualTo(2);
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[200] Todo 목록 조회 성공 (데이터가 없는 경우)")
+        void Todo조회성공_데이터없음() {
+            login(new UserLoginDto("test04@com", "ssafyout4"));
+            webTestClient.get().uri("/schedule/todo")
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo(200)
+                    .jsonPath("$.data").isArray()
+                    .jsonPath("$.data.length()").isEqualTo(0);
+        }
+    }
+
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @DisplayName("[GET] 커리큘럼 조회")
+    class 커리큘럼조회 {
+
+        @Test
+        @Order(1)
+        @DisplayName("[200] 정상 조회")
+        void 커리큘럼조회성공() {
+            String date = "2023-01-01";
+            webTestClient.get().uri("/schedule/curriculum/" + date)
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("[200] 없는 커리큘럼 조회")
+        void 커리큘럼조회실패() {
+            String date = "2099-01-01";
+            webTestClient.get().uri("/schedule/curriculum/" + date)
+                    .header("Authorization", accessToken)
+                    .exchange()
+                    .expectStatus().isEqualTo(200)
+                    .expectBody()
+                    .jsonPath("$.status").isEqualTo("200");
+        }
+    }
 }

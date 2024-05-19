@@ -1,5 +1,5 @@
-@baseUrl = http://localhost:8080/api
-//@baseUrl = https://k10e203.p.ssafy.io/api
+//@baseUrl = http://localhost:8080/api
+@baseUrl = https://k10e203.p.ssafy.io/api
 
 @baseday = {{ $uuid.timestamp("yyyy-MM-dd") }}
 
@@ -42,7 +42,6 @@ Content-Type: application/json
     client.log("Today + 2 days: " + client.global.get("today2"));
     client.global.set("addDaysToDate", addDaysToDate);
 %}
-
 
 ###
 POST {{baseUrl}}/user/login
@@ -158,10 +157,4 @@ Content-Type: application/json
   "infoDate": "{{today}}" ,
   "infoUsers":["1052881","1053374","1055605","1057753","1058448","1058706"]
 }
-
-<> 2024-05-07T141904.200.json
-<> 2024-05-07T141513-1.200.json
-<> 2024-05-07T141330-2.200.json
-<> 2024-05-07T141245.200.json
-<> 2024-05-07T140911.400.json
 
