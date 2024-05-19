@@ -44,7 +44,7 @@ public class RoomController {
         Board board = boardService.createBoard(new Board(room));
         room.setId(board.getBoardId());
         roomService.save(room);
-        return ResponseEntity.ok("https://k10e203.p.ssafy.io/room" + board.getBoardId() + "?" + userId);
+        return ResponseEntity.ok("https://k10e203.p.ssafy.io/room/" + board.getBoardId() + "?" + userId);
     }
 
     @PostMapping("/{boardId}/save-drawing")
