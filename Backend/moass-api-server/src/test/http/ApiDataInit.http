@@ -72,13 +72,22 @@ Content-Type: application/json
     client.log(client.global.get("accessToken2"))
 %}
 
+###
+POST {{baseUrl}}/user/signup
+Content-Type: application/json
+
+{
+    "userEmail":"EEEE65@.com",
+    "userId":"1050065",
+    "password":"1234"
+}
 
 ###
 POST {{baseUrl}}/user/login
 Content-Type: application/json
 
 {
-  "userEmail": "Z011@com",
+  "userEmail": "EEEE74@.com",
   "password": "1234"
 }
 
@@ -96,7 +105,7 @@ Content-Type: application/json
 {
   "classCode":"E2",
   "category":"board",
-  "timeLimit":2,
+  "timeLimit":10,
   "reservationName":"플립보드1" ,
   "colorCode":"#15c900",
   "infoTimes":[9,10]
@@ -111,25 +120,12 @@ Content-Type: application/json
 {
   "classCode":"E2",
   "category":"board",
-  "timeLimit":3,
+  "timeLimit":10,
   "reservationName":"플립보드2" ,
   "colorCode":"#15c900",
   "infoTimes":[9,10]
 }
 
-###
-POST {{baseUrl}}/reservation
-Authorization: Bearer {{masterAccessToken}}
-Content-Type: application/json
-
-{
-  "classCode":"E2",
-  "category":"meeting",
-  "timeLimit":3,
-  "reservationName":"팀미팅" ,
-  "colorCode":"#2196f3",
-  "infoTimes":[8,9,10,11]
-}
 
 ###
 POST {{baseUrl}}/reservation
@@ -153,8 +149,46 @@ Content-Type: application/json
 {
   "reservationId":1,
   "infoName":"피그마 회의",
-  "infoTimes":[2,3],
+  "infoTimes":[1,2,3,4,5,6,7,8,11,12],
   "infoDate": "{{today}}" ,
   "infoUsers":["1052881","1053374","1055605","1057753","1058448","1058706"]
 }
 
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken1}}
+Content-Type: application/json
+
+{
+  "reservationId":2,
+  "infoName":"피그마 회의2",
+  "infoTimes":[1,2,3,4,5,6,7,8,11,12],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1052881","1053374","1055605","1057753","1058448","1058706"]
+}
+
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken11}}
+Content-Type: application/json
+
+{
+  "reservationId":1,
+  "infoName":"피그마 회의",
+  "infoTimes":[13,14,15,16,17,18],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1055555"]
+}
+
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken11}}
+Content-Type: application/json
+
+{
+  "reservationId":2,
+  "infoName":"피그마 회의2",
+  "infoTimes":[13,14,15,16,17,18],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1055555"]
+}
