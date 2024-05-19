@@ -46,20 +46,20 @@ export default function HomeScheduleComponent() {
                     }
                 }
 
-                const reservationResponse = await fetchReservationInfo();
-                if (reservationResponse.data) {
-                    formattedReservationSchedules = reservationResponse.data.map((reservation, index) => ({
-                        id: `reservation-${index}`,
-                        date: reservation.infoDate, // 날짜 추가
-                        type: '',
-                        title: reservation.reservationName,
-                        time: `${reservation.infoDate} ${reservation.infoTime}`,
-                        color: 'border-pink-500',
-                        location: reservation.infoName,
-                        participants: reservation.userSearchInfoDtoList.length,
-                        avatars: reservation.userSearchInfoDtoList.map(user => user.profileImg)
-                    }));
-                }
+                // const reservationResponse = await fetchReservationInfo();
+                // if (reservationResponse.data) {
+                //     formattedReservationSchedules = reservationResponse.data.map((reservation, index) => ({
+                //         id: `reservation-${index}`,
+                //         date: reservation.infoDate, // 날짜 추가
+                //         type: '',
+                //         title: reservation.reservationName,
+                //         time: `${reservation.infoDate} ${reservation.infoTime}`,
+                //         color: 'border-pink-500',
+                //         location: reservation.infoName,
+                //         participants: reservation.userSearchInfoDtoList.length,
+                //         avatars: reservation.userSearchInfoDtoList.map(user => user.profileImg)
+                //     }));
+                // }
 
                 setSchedules([...formattedCurriculumSchedules, ...formattedReservationSchedules]);
             } catch (err) {
