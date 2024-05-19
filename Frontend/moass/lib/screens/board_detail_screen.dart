@@ -25,7 +25,7 @@ class BoardDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: const TopBar(
-        title: '모음 보드 세부 정보',
+        title: '이음 보드 세부 정보',
         icon: Icons.dashboard_outlined,
       ),
       body: FutureBuilder<List<ScreenshotModel>>(

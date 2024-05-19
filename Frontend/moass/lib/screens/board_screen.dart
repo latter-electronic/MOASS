@@ -46,7 +46,7 @@ class BoardScreen extends ConsumerWidget {
               const Padding(
                 padding: EdgeInsets.all(16.0),
                 child: Text(
-                  '이음 모음',
+                  '이음 보드',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -73,7 +73,8 @@ class BoardScreen extends ConsumerWidget {
                             color: Colors.yellow,
                           ),
                           child: ListTile(
-                            title: Text(board.boardName),
+                            title: Text(board.boardName ??
+                                'Unnamed Board'), // 대체 텍스트 추가
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -92,7 +93,8 @@ class BoardScreen extends ConsumerWidget {
                                   builder: (context) => BoardDetailScreen(
                                     boardId: board.boardId,
                                     boardUserId: board.boardUserId,
-                                    boardName: board.boardName,
+                                    boardName: board.boardName ??
+                                        'Unnamed Board', // 대체 텍스트 추가
                                   ),
                                 ),
                               );
