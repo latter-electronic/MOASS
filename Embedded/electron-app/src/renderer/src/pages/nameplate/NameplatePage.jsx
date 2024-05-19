@@ -50,14 +50,13 @@ export default function NameplatePage() {
   // IPC를 통해 상태 업데이트를 처리합니다.
   useEffect(() => {
     window.electron.ipcRenderer.on('user-updated', (event, newUser) => {
-      setUser(newUser);
+      fetchUserInfo();
     });
 
     return () => {
       window.electron.ipcRenderer.removeAllListeners('user-updated');
     };
-  }, [setUser]);
-
+  }, [fetchUserInfo]);
 
   if (isCheckingAuth || isLoadingUser) {
     return <div className="5xl">로딩 중...</div>; // 인증 상태 확인 또는 사용자 정보 로딩 중
