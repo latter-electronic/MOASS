@@ -209,7 +209,7 @@ public class Oauth2GitlabService {
     private Mono<GitlabProject> saveProject(String userId, JsonNode project) {
         String projectId = project.get("id").asText();
         return gitlabTokenRepository.findByUserId(userId)
-                .flatMap(gitlabToken -> gitlabProjectRepository.existsByGitlabProjectId(projectId)
+                .flatMap(gitlabToken -> gitlabProjectRepository.existsByGitlabProjectIdAndGitlabTokenId(projectId,gitlabToken.getGitlabTokenId())
                         .flatMap(exists -> {
                             if (exists) {
                                 return Mono.error(new CustomException("이미 등록된 프로젝트입니다.", HttpStatus.CONFLICT));

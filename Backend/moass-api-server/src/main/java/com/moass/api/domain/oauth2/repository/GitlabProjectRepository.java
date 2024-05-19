@@ -19,4 +19,7 @@ public interface GitlabProjectRepository extends ReactiveCrudRepository<GitlabPr
 
     @Query("SELECT * FROM GitlabProject WHERE gitlab_token_id = :gitlabTokenId AND gitlab_project_name = :projectName")
     Mono<GitlabProject> findByGitlabTokenIdAndProjectName(Integer gitlabTokenId, String projectName);
+
+    @Query("SELECT EXISTS(SELECT 1 FROM GitlabProject WHERE gitlab_project_id = :projectId AND gitlab_token_id = :gitlabTokenId)")
+    Mono<Boolean> existsByGitlabProjectIdAndGitlabTokenId(String projectId, Integer gitlabTokenId);
 }
