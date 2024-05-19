@@ -1,6 +1,7 @@
 // 장현욱
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,12 +85,24 @@ class _WorkScreenState extends ConsumerState<WorkScreen> {
           //📲 repeat > 반복 옵션
           //📲 animate > 움직이는 옵션
           //📲 그외에도 많은 옵션들이 있으니 테스트 해보시면 됩니다
-          Column(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('오늘은 일정이 없어요!'),
-              Lottie.asset('assets/img/noDataCat.json',
-                  repeat: true, animate: true),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('오늘은 일정이 없어요!'),
+                  SizedBox(
+                    width: 200, // 원하는 너비
+                    height: 200, // 원하는 높이
+                    child: Lottie.asset(
+                      'assets/img/noDataCat.json',
+                      repeat: true,
+                      animate: true,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ] else ...[

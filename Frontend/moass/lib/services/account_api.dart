@@ -96,6 +96,7 @@ class AccountApi {
             "fcmToken": fcmToken,
           });
       if (response.statusCode == 200) {
+        print('FCM저장 완료');
       } else {}
     } on DioException catch (e) {
       throw Exception('postFCMToken failed with error: $e');

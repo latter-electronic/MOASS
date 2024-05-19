@@ -27,9 +27,9 @@ class GitlabApi {
         return gitlabAuthURL;
       }
     } on DioException catch (e) {
-      throw Exception('requestConnectGitlab failed with error: $e');
+      // throw Exception('requestConnectGitlab failed with error: $e');
 
-      // return null;
+      return null;
     }
   }
 
@@ -98,6 +98,7 @@ class GitlabApi {
       );
 
       if (response.statusCode == 200) {
+        return ProjectModel.fromJson(response.data['data'][projectName].first);
       } else {
         return null;
       }
@@ -105,6 +106,6 @@ class GitlabApi {
       // throw Exception('fetchGitlabProjectInfo failed with error: $e');
       return null;
     }
-    return null;
+    // return null;
   }
 }

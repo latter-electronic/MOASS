@@ -47,6 +47,9 @@ class _MyGitlabIssueState extends State<MyGitlabIssue> {
           .toList();
 
       // isLoading = false;
+      print(userGitlabMail);
+      print(userGitlabProjects);
+      print(userGitlabProjectsName);
     });
   }
 
