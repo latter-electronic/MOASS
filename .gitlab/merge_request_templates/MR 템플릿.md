@@ -1,4 +1,4 @@
-## 👨🏻‍👩🏻‍👧🏻Part
+## 📌 Part
 
 - [ ] <span style="background-color:#FFE6E6"> FE </span>
 
