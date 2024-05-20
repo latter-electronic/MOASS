@@ -1,0 +1,194 @@
+//@baseUrl = http://localhost:8080/api
+@baseUrl = https://k10e203.p.ssafy.io/api
+
+@baseday = {{ $uuid.timestamp("yyyy-MM-dd") }}
+
+
+###
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+  "userEmail": "master@com",
+  "password": "1234"
+}
+
+> {%
+    client.global.set("masterAccessToken", response.body.data.accessToken);
+    client.log(client.global.get("masterAccessToken"))
+
+    // 날짜 포맷 및 날짜 계산을 위한 보조 함수
+    function pad(n) { return n < 10 ? '0' + n : n; }
+
+    // 주어진 일수를 오늘 날짜에 더하는 함수
+    function addDaysToDate(days) {
+        var today = new Date(); // 오늘 날짜를 기준으로 설정
+        today.setDate(today.getDate() + days); // 일수를 더함
+
+        var year = today.getFullYear();
+        var month = pad(today.getMonth() + 1); // 월은 0에서 시작하므로 1을 더해줍니다.
+        var day = pad(today.getDate());
+
+        return year + '-' + month + '-' + day; // yyyy-MM-dd 형식으로 반환
+    }
+    client.global.set("today", addDaysToDate(0)); // 오늘 날짜
+    client.global.set("today2", addDaysToDate(2)); // 2일 후
+    client.global.set("today3", addDaysToDate(3)); // 3일 후
+    client.global.set("today4", addDaysToDate(4)); // 4일 후
+    client.global.set("today5", addDaysToDate(5)); // 5일 후
+    client.global.set("today6", addDaysToDate(6)); // 6일 후
+    client.global.set("today7", addDaysToDate(7)); // 7일 후
+
+    client.log("Today + 2 days: " + client.global.get("today2"));
+    client.global.set("addDaysToDate", addDaysToDate);
+%}
+
+###
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+  "userEmail": "diduedidue@naver.com",
+  "password": "1234"
+}
+
+> {%
+    client.global.set("accessToken1", response.body.data.accessToken);
+    client.log(client.global.get("accessToken1"))
+%}
+
+
+###
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+  "userEmail": "weon1009@gmail.com",
+  "password": "1234"
+}
+
+> {%
+    client.global.set("accessToken2", response.body.data.accessToken);
+    client.log(client.global.get("accessToken2"))
+%}
+
+###
+POST {{baseUrl}}/user/signup
+Content-Type: application/json
+
+{
+    "userEmail":"EEEE65@.com",
+    "userId":"1050065",
+    "password":"1234"
+}
+
+###
+POST {{baseUrl}}/user/login
+Content-Type: application/json
+
+{
+  "userEmail": "EEEE74@.com",
+  "password": "1234"
+}
+
+> {%
+    client.global.set("accessToken11", response.body.data.accessToken);
+    client.log(client.global.get("accessToken11"))
+%}
+
+
+###
+POST {{baseUrl}}/reservation
+Authorization: Bearer {{masterAccessToken}}
+Content-Type: application/json
+
+{
+  "classCode":"E2",
+  "category":"board",
+  "timeLimit":10,
+  "reservationName":"플립보드1" ,
+  "colorCode":"#15c900",
+  "infoTimes":[9,10]
+}
+
+
+###
+POST {{baseUrl}}/reservation
+Authorization: Bearer {{masterAccessToken}}
+Content-Type: application/json
+
+{
+  "classCode":"E2",
+  "category":"board",
+  "timeLimit":10,
+  "reservationName":"플립보드2" ,
+  "colorCode":"#15c900",
+  "infoTimes":[9,10]
+}
+
+
+###
+POST {{baseUrl}}/reservation
+Authorization: Bearer {{masterAccessToken}}
+Content-Type: application/json
+
+{
+  "classCode":"E2",
+  "category":"meeting",
+  "timeLimit":1,
+  "reservationName":"개인상담" ,
+  "colorCode":"#aa3333",
+  "infoTimes":[1,9,10,18]
+}
+
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken1}}
+Content-Type: application/json
+
+{
+  "reservationId":1,
+  "infoName":"피그마 회의",
+  "infoTimes":[1,2,3,4,5,6,7,8,11,12],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1052881","1053374","1055605","1057753","1058448","1058706"]
+}
+
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken1}}
+Content-Type: application/json
+
+{
+  "reservationId":2,
+  "infoName":"피그마 회의2",
+  "infoTimes":[1,2,3,4,5,6,7,8,11,12],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1052881","1053374","1055605","1057753","1058448","1058706"]
+}
+
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken11}}
+Content-Type: application/json
+
+{
+  "reservationId":1,
+  "infoName":"피그마 회의",
+  "infoTimes":[13,14,15,16,17,18],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1055555"]
+}
+
+###
+POST {{baseUrl}}/reservationinfo
+Authorization: Bearer {{accessToken11}}
+Content-Type: application/json
+
+{
+  "reservationId":2,
+  "infoName":"피그마 회의2",
+  "infoTimes":[13,14,15,16,17,18],
+  "infoDate": "{{today}}" ,
+  "infoUsers":["1055555"]
+}
