@@ -1,0 +1,43 @@
+{
+    "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+    "id": "860681",
+    "self": "https://ssafy.atlassian.net/rest/api/3/issue/860681",
+    "key": "S10P31E203-395",
+    "fields": {
+        "summary": "개발 산출물 정리",
+        "creator": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=6237d3b2761efb0069cc1009",
+            "accountId": "6237d3b2761efb0069cc1009",
+            "avatarUrls": {
+                "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/48",
+                "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/24",
+                "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/16",
+                "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/32"
+            },
+            "displayName": "원종",
+            "active": true,
+            "timeZone": "Asia/Seoul",
+            "accountType": "atlassian"
+        },
+        "priority": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+            "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+            "name": "Low",
+            "id": "4"
+        },
+        "status": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+            "description": "",
+            "iconUrl": "https://ssafy.atlassian.net/",
+            "name": "완료",
+            "id": "10001",
+            "statusCategory": {
+                "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+                "id": 3,
+                "key": "done",
+                "colorName": "green",
+                "name": "완료"
+            }
+        }
+    }
+}

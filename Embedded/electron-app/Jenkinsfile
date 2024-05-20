@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    environment {
+      dockerHubRegistry = 'dongho416/embedded'
+      DOCKERHUB_CREDENTIALS = credentials('DockerHub') 
+    }
+
+    stages {
+        stage('Embedded Build') {
+	        steps {
+				dir('Embedded/electron-app') {
+                    sh "docker build . -t ${dockerHubRegistry}:${currentBuild.number}"
+                    sh "docker build . -t ${dockerHubRegistry}:latest"
+                }
+            }
+        }
+        stage('login') {
+          steps {
+            sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+          }
+        }
+        stage('Docker Image Push') {
+          steps {
+            sh "docker push ${dockerHubRegistry}:${currentBuild.number}"
+          sh "docker push ${dockerHubRegistry}:latest"
+          }
+        }
+    }
+}

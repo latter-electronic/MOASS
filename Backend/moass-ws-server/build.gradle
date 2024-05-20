@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.moass'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.174'
+    implementation 'org.webjars:sockjs-client:1.0.2'
+    implementation 'org.webjars:stomp-websocket:2.3.3'
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+configurations.all {
+    exclude group: 'commons-logging', module: 'commons-logging'
+}

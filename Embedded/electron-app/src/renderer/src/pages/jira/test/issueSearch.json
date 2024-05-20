@@ -1,0 +1,568 @@
+{
+  "expand": "schema,names",
+  "startAt": 0,
+  "maxResults": 10,
+  "total": 476,
+  "issues": [
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861270",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861270",
+      "key": "S10P31E203-404",
+      "fields": {
+        "summary": "좌석 탭 UI 개발 - 1",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861267",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861267",
+      "key": "S10P31E203-403",
+      "fields": {
+        "summary": "메인 페이지 UI 개발 - 3",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861261",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861261",
+      "key": "S10P31E203-402",
+      "fields": {
+        "summary": "메인 페이지 UI 개발 - 2",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861256",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861256",
+      "key": "S10P31E203-401",
+      "fields": {
+        "summary": "메인 페이지 UI 개발 - 1",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861238",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861238",
+      "key": "S10P31E203-400",
+      "fields": {
+        "summary": "UI 개발 - 3",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861230",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861230",
+      "key": "S10P31E203-399",
+      "fields": {
+        "summary": "플러터 강좌 듣기",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861172",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861172",
+      "key": "S10P31E203-398",
+      "fields": {
+        "summary": "UI 개발 - 2",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "861157",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/861157",
+      "key": "S10P31E203-397",
+      "fields": {
+        "summary": "UI 개발 - 1",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020%3A3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "accountId": "712020:3c05f318-e770-4105-a469-9e9ceacd9e9a",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:3c05f318-e770-4105-a469-9e9ceacd9e9a/0c438b35-d4c6-4ebf-8a60-a6fb1e418fa7/32"
+          },
+          "displayName": "손종민",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "860687",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/860687",
+      "key": "S10P31E203-396",
+      "fields": {
+        "summary": "1차 개발 산출물 체크",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=6237d3b2761efb0069cc1009",
+          "accountId": "6237d3b2761efb0069cc1009",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/32"
+          },
+          "displayName": "원종",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    },
+    {
+      "expand": "operations,versionedRepresentations,editmeta,changelog,customfield_10010.requestTypePractice,renderedFields",
+      "id": "860681",
+      "self": "https://ssafy.atlassian.net/rest/api/3/issue/860681",
+      "key": "S10P31E203-395",
+      "fields": {
+        "summary": "개발 산출물 정리",
+        "creator": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=6237d3b2761efb0069cc1009",
+          "accountId": "6237d3b2761efb0069cc1009",
+          "avatarUrls": {
+            "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/48",
+            "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/24",
+            "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/16",
+            "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/6237d3b2761efb0069cc1009/be2968d8-b68a-4332-8cc0-63d75bc01904/32"
+          },
+          "displayName": "원종",
+          "active": true,
+          "timeZone": "Asia/Seoul",
+          "accountType": "atlassian"
+        },
+        "customfield_10020": [
+          {
+            "id": 18691,
+            "name": "<E203> 3주차",
+            "state": "closed",
+            "boardId": 5609,
+            "goal": "개발 화이팅",
+            "startDate": "2024-04-22T00:32:58.000Z",
+            "endDate": "2024-04-26T09:30:00.000Z",
+            "completeDate": "2024-04-27T03:00:36.413Z"
+          }
+        ],
+        "customfield_10010": null,
+        "priority": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/priority/4",
+          "iconUrl": "https://ssafy.atlassian.net/images/icons/priorities/low.svg",
+          "name": "Low",
+          "id": "4"
+        },
+        "status": {
+          "self": "https://ssafy.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://ssafy.atlassian.net/",
+          "name": "완료",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://ssafy.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "완료"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+    "self": "https://ssafy.atlassian.net/rest/api/3/project/search?expand=insight&maxResults=1&orderBy=-lastIssueUpdatedTime&startAt=0",
+    "nextPage": "https://ssafy.atlassian.net/rest/api/3/project/search?expand=insight&maxResults=1&orderBy=-lastIssueUpdatedTime&startAt=1",
+    "maxResults": 1,
+    "startAt": 0,
+    "total": 5,
+    "isLast": false,
+    "values": [
+        {
+            "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14697",
+            "id": "14697",
+            "key": "S10P31E203",
+            "name": "S10P31E203",
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=medium"
+            },
+            "projectTypeKey": "software",
+            "simplified": false,
+            "style": "classic",
+            "isPrivate": false,
+            "properties": {},
+            "insight": {
+                "totalIssueCount": 619,
+                "lastIssueUpdateTime": "2024-05-11T19:37:20.584+0900"
+            }
+        }
+    ]
+}

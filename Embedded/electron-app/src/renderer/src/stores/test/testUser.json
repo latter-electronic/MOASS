@@ -1,0 +1,17 @@
+{
+    "data": {
+        "userId": "1058448",
+        "userEmail": "weon1009@gmail.com",
+        "statusId": 1,
+        "profileImg": null,
+        "backgroundImg": null,
+        "rayout": 1,
+        "connectFlag": 0,
+        "jobCode": 1,
+        "teamCode": "E203",
+        "userName": "원종현"
+    },
+    "message": "조회완료",
+    "timestamp": 1713945642996,
+    "status": 200
+}

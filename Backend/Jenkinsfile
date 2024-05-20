@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Backend Build') {
+            steps {
+                dir('Backend/moass-api-server') {
+                    sh 'docker stop backend && docker rm backend'
+                    sh 'docker build --no-cache -t backend .'
+                    sh '''
+                        docker rmi -f $(docker images -f "dangling=true" -q)
+                    '''
+                    sh 'docker run -d -p 8080:8080 --name backend backend'
+                }
+            }
+        }
+        stage('WebSocket Build') {
+            steps {
+                dir('Backend/moass-ws-server') {
+                    sh 'docker stop backend-ws && docker rm backend-ws'
+                    sh 'docker build --no-cache -t backend-ws .'
+                    sh '''
+                        docker rmi -f $(docker images -f "dangling=true" -q)
+                    '''
+                    sh 'docker run -d -p 9090:9090 --name backend-ws backend-ws'
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            // 성공적으로 빌드 및 테스트 완료 시 수행할 작업
+            echo 'Build and tests passed successfully!'
+        }
+        failure {
+            // 빌드 또는 테스트 실패 시 수행할 작업
+            echo 'Build or tests failed!'
+        }
+    }
+}
