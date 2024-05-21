@@ -1,27 +1,75 @@
-// src/store/useAuthStore.js
+// AuthStore.js
+import { create } from 'zustand';
+import useGlobalStore from './useGlobalStore.js';
 
-/* 인증 관련 상태를 관리
-로그인, 로그아웃, 사용자 인증 상태 확인 등 인증과 관련된 상태 관리*/
-import { create } from 'zustand'
+const AuthStore = create((set) => ({
+  isAuthenticated: false,
+  accessToken: '',
+  refreshToken: '',
+  deviceId: '',
+  cardSerialId: '',
+  isCheckingAuth: true,
 
-const useAuthStore = create(set => ({
-  isAuthenticated: false,  // 로그인 상태
-  accessToken: null,  // 액세스 토큰
-  refreshToken: null, // 리프레시 토큰
+  login: (accessToken, refreshToken, deviceId, cardSerialId) => {
+    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('deviceId', deviceId);
+    localStorage.setItem('cardSerialId', cardSerialId);
 
-  // 로그인 상태 설정
-  login: (accessToken, refreshToken) => set({
-    isAuthenticated: true,
-    accessToken,
-    refreshToken
-  }),
+    set({
+      isAuthenticated: true,
+      accessToken,
+      refreshToken,
+      deviceId,
+      cardSerialId,
+      isCheckingAuth: false,
+    });
+    useGlobalStore.getState().fetchUserInfo();
+  },
 
-  // 로그아웃 상태 설정
-  logout: () => set({
-    isAuthenticated: false,
-    accessToken: null,
-    refreshToken: null
-  })
+  logout: () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('deviceId');
+    localStorage.removeItem('cardSerialId');
+
+    set({
+      isAuthenticated: false,
+      accessToken: null,
+      refreshToken: null,
+      deviceId: null,
+      cardSerialId: null,
+      isCheckingAuth: false,
+    });
+  },
+
+  checkStoredAuth: async () => {
+    const { fetchUserInfo } = useGlobalStore.getState();
+    set({ isCheckingAuth: true });
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    const deviceId = localStorage.getItem('deviceId');
+    const cardSerialId = localStorage.getItem('cardSerialId');
+
+    if (accessToken && refreshToken && deviceId && cardSerialId) {
+      set({
+        isAuthenticated: true,
+        accessToken,
+        refreshToken,
+        deviceId,
+        cardSerialId,
+      });
+      await fetchUserInfo();
+    } else {
+      set({ isAuthenticated: false });
+    }
+    set({ isCheckingAuth: false });
+  },
+
+  updateAccessToken: (newAccessToken) => {
+    localStorage.setItem('accessToken', newAccessToken);
+    set({ accessToken: newAccessToken });
+  },
 }));
 
-export default useAuthStore;
+export default AuthStore;

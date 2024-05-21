@@ -1,6 +1,6 @@
 const statusStyles = {
-    0: { message: '착석중', bgColor: 'bg-emerald-500' },
-    1: { message: '자리비움', bgColor: 'bg-amber-300' },
+    0: { message: '자리비움', bgColor: 'bg-amber-300' },
+    1: { message: '착석중', bgColor: 'bg-emerald-500' },
     2: { message: '공가', bgColor: 'bg-rose-600' },
     3: { message: '방해금지', bgColor: 'bg-stone-400' },
   };

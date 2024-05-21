@@ -1,25 +1,68 @@
-# DamaskRose
-
-#  - NFC 기기 로그인 기능
-#    : NFC 태깅 후 Token 전달
-
-#  - 인체 감지 센서 기능
-#    1. 로그인 상태
-#        1-1. 5분 이상 자리 비움
-#        1-2. 2시간 이상 자리에 앉아 있는 경우
-#    2. 로그아웃 상태
-#        2-1. 사람 인식 후 AOD 화면 출력
-
+# -*- coding: utf-8 -*-
 import os
-from dotenv import load_dotenv
 import board
 import busio
 import time
 import json
 import sys
-import requests
+import io
+import traceback
+import threading
+import RPi.GPIO as GPIO
+from dotenv import load_dotenv
 from adafruit_pn532.i2c import PN532_I2C
-from gpiozero import MotionSensor
+import subprocess
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+load_dotenv()
+
+server_url = os.getenv('SERVER_URL')
+
+i2c = busio.I2C(board.SCL, board.SDA)
+pn532 = PN532_I2C(i2c, debug=False)
+pn532.SAM_configuration()
+
+# IR sensor pin configuration
+ir_sensor_pin = 17  # Change this to the GPIO pin number you are using
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(ir_sensor_pin, GPIO.IN)
+
+last_motion_time = time.time()
+motion_state = 'AWAY'
+stay_start_time = None
+logged_in = False
+logged_in_lock = threading.Lock()
+
+NO_MOTION_TIMEOUT = 5  # 5 seconds
+LONG_SIT_TIMEOUT = 90  # 15 seconds
+
+print("Waiting for NFC card...", file=sys.stderr)
+
+# -----------------------------------------------------------------
+
+def listen_for_commands():
+    global logged_in
+    while True:
+        try:
+            line = sys.stdin.readline()
+            print(f"Received command: {line}", file=sys.stderr)
+            if line:
+                data = json.loads(line)
+                with logged_in_lock:
+                    if data.get("action") == "login":
+                        logged_in = True
+                        print(f"Login signal received: {data}", file=sys.stderr)
+                    elif data.get("action") == "logout":
+                        logged_in = False
+                        print(f"Logout signal received: {data}", file=sys.stderr)
+                        check_aod_and_set_display_power()
+        except json.JSONDecodeError as e:
+            print("JSON Decode Error:", str(e), file=sys.stderr)
+        except Exception as e:
+            print("An error occurred:", traceback.format_exc(), file=sys.stderr)
+        except KeyboardInterrupt:
+            print("Thread interrupted", file=sys.stderr)
+            break
 
 def get_serial_number():
     with open('/proc/cpuinfo', 'r') as f:
@@ -28,90 +71,126 @@ def get_serial_number():
                 return line.split(':')[1].strip()
     return None
 
-load_dotenv() # .env 파일 로드
-server_url = os.getenv('SERVER_URL')
+def read_uid():
+    uid = pn532.read_passive_target(timeout=0.5)
+    if uid is not None:
+        return ''.join(["{0:x}".format(i).zfill(2) for i in uid])
+    return None
 
-i2c = busio.I2C(board.SCL, board.SDA) # I2C 연결 설정
-pn532 = PN532_I2C(i2c, debug=False) # PN532 모듈 초기화
-pn532.SAM_configuration() # SAM 구성
+def handle_login_response(device_id, card_serial_id):
+    if device_id and card_serial_id:
+        login_data = {
+            'type': 'NFC_DATA',
+            'data': {
+                'deviceId': device_id,
+                'cardSerialId': card_serial_id
+            }
+        }
+        nfc_data = json.dumps(login_data, ensure_ascii=False)
+        sys.stdout.write(nfc_data + '\n')
+        sys.stdout.flush()
+        print(nfc_data, file=sys.stderr)
 
-
-pir = MotionSensor(17)  # GPIO 17번 핀에 연결된 PIR 센서 HC-SR501
-motion_detected_time = time.time()
-
-logged_in = False
-print("Waiting for NFC card...", file=sys.stderr)
-
-# 설정된 시간 정의
-NO_MOTION_TIMEOUT = 300  # 5분
-LONG_SIT_TIMEOUT = 7200  # 2시간
-last_motion_time = time.time()
-
-while True:
-    if not  logged_in:  # 로그아웃 상태
-        # 카드의 UID 읽기
-        uid = pn532.read_passive_target(timeout=0.5)
-        if uid is not None:
-            # 카드 UID를 헥사 문자열로 변환
-            card_serial_id = ''.join(["{0:x}".format(i).zfill(2) for i in uid])
-            # print("card UID:", card_serial_id)
-            
-            # 라즈베리파이 시리얼 넘버
-            device_id = get_serial_number()
-            
-            # POST 요청 보내기
-            url = f'{server_url}/api/device/login'
-            payload = {'deviceId': device_id, 'cardSerialId': card_serial_id}
-            headers = {'Content-Type': 'application/json'}
-
-            try:
-                response = requests.post(url, json=payload, headers=headers)
-                response.raise_for_status()
-                response_data = response.json()
-                # print("Server response:", response_data)
-
-                if response_data.get('message') == '로그인 성공':
-                    print(json.dumps(response_data))  # 로그인 데이터 출력
-                    logged_in = True
-                    motion_detected_time = time.time()  # 움직임 감지 시간 초기화
-                else:
-                    print("Login failed:", response_data.get('message'))
-                    
-            except requests.exceptions.HTTPError as e:
-                print(f"HTTP error occurred: {e}")  # HTTP 에러 출력
-            except requests.exceptions.RequestException as e:
-                print(f"Request error: {e}")  # 요청 에러 출력
-            except Exception as e:
-                print(f"An error occurred: {e}")  # 기타 예외 처리
-
-        elif pir.motion_detected:
-            # 로그아웃 상태에서 감지 시 AOD 화면 출력
-            print("Motion detected in logged out state.")
-            sys.stdout.write(json.dumps({"type": "AOD"}))
-            sys.stdout.flush()
-
-    elif logged_in: # 로그인 상태
-        if pir.motion_detected: # 움직임 감지
-            motion_detected_time = time.time()
-            last_motion_time = time.time()
-            print("Motion detected.")
-
+def handle_logged_in_state():
+    global last_motion_time, motion_state, stay_start_time
+    try:
         current_time = time.time()
-        if current_time - motion_detected_time > NO_MOTION_TIMEOUT:
-            # 자리 비움 상태 전달
-            print("No motion detected for 5 minutes, sending away status.")
-            sys.stdout.write(json.dumps({"type": "AWAY"}))
-            sys.stdout.flush()
-            motion_detected_time = current_time  # 타이머 리셋
+        if not GPIO.input(ir_sensor_pin):
+            if motion_state != 'STAY':
+                motion_state = 'STAY'
+                stay_start_time = current_time
+                send_motion_status("STAY")
+            last_motion_time = current_time
+            # Check for LONG_SIT
+            if stay_start_time and (current_time - stay_start_time) >= LONG_SIT_TIMEOUT:
+                if motion_state == 'STAY':
+                    motion_state = 'LONG_SIT'
+                    send_motion_status("LONG_SIT")
+        else:
+            # Check for AWAY
+            if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
+                if motion_state != 'AWAY':
+                    motion_state = 'AWAY'
+                    stay_start_time = None  # Reset the stay start time
+                    send_motion_status("AWAY")
 
-        if current_time - last_motion_time > LONG_SIT_TIMEOUT:
-            # 오래 앉아 있음 상태 전달
-            print("Continuous motion detected for 2 hours, sending long sit status.")
-            sys.stdout.write(json.dumps({"type": "LONG_SIT"}))
-            sys.stdout.flush()
-            last_motion_time = current_time  # 타이머 리셋
-    
-    # 로그아웃 기능 추가!!!!!!
-    
-    time.sleep(1)  # 검사 간격 조정
-       
+    except Exception as e:
+        print(f"An error occurred during motion detection: {e}", file=sys.stderr)
+        traceback.print_exc()
+
+def handle_logged_out_state():
+    global last_motion_time, motion_state
+    try:
+        current_time = time.time()
+        if GPIO.input(ir_sensor_pin):
+            if motion_state != 'LOGOUT_STAY':
+                motion_state = 'LOGOUT_STAY'
+                print(motion_state, file=sys.stderr)
+                set_display_power(True)
+            last_motion_time = current_time
+        else:
+            if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
+                if motion_state != 'LOGOUT_AWAY':
+                    motion_state = 'LOGOUT_AWAY'
+                    print(motion_state, file=sys.stderr)
+                    set_display_power(False)
+    except Exception as e:
+        print(f"An error occurred during motion detection: {e}", file=sys.stderr)
+        traceback.print_exc()
+
+def send_motion_status(status):
+    motion_data = json.dumps({
+        "type": "MOTION_DETECTED",
+        "data": {
+            "status": status
+        }
+    })
+    sys.stdout.write(motion_data + '\n')
+    sys.stdout.flush()
+
+def set_display_power(on):
+    if on:
+        subprocess.run(['vcgencmd', 'display_power', '1'])
+    else:
+        subprocess.run(['vcgencmd', 'display_power', '0'])
+
+def check_aod_and_set_display_power():
+    global motion_state
+    if motion_state != 'AOD':
+        set_display_power(False)
+    else:
+        set_display_power(True)
+
+# -----------------------------------------------------------------
+
+if __name__ == '__main__':
+    device_id = get_serial_number()
+
+    command_thread = threading.Thread(target=listen_for_commands)
+    command_thread.start()
+
+    while True:
+        try:
+            with logged_in_lock:
+                current_logged_in_status = logged_in
+
+            if current_logged_in_status:
+                handle_logged_in_state()
+            else:
+                card_serial_id = read_uid()
+                if card_serial_id:
+                    print(card_serial_id, file=sys.stderr)
+                    handle_login_response(device_id, card_serial_id)
+                else:
+                    handle_logged_out_state()
+
+        except json.JSONDecodeError as e:
+            print("JSON Decode Error:", str(e), file=sys.stderr)
+        except Exception as e:
+            print("An error occurred:", traceback.format_exc(), file=sys.stderr)
+        except KeyboardInterrupt:
+            print("Program stopped by User", file=sys.stderr)
+            GPIO.cleanup()
+            break
+
+        time.sleep(1)

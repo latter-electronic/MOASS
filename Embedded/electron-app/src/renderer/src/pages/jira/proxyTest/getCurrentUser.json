@@ -1,0 +1,25 @@
+{
+    "self": "https://ssafy.atlassian.net/rest/api/3/user?accountId=712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+    "accountId": "712020:a311b13c-7f80-4151-8110-c4c300a6e89f",
+    "accountType": "atlassian",
+    "emailAddress": "diduedidue@naver.com",
+    "avatarUrls": {
+        "48x48": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/48",
+        "24x24": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/24",
+        "16x16": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/16",
+        "32x32": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/712020:a311b13c-7f80-4151-8110-c4c300a6e89f/c1ed56a5-92ce-4013-a3ca-0a35337fd912/32"
+    },
+    "displayName": "Bada",
+    "active": true,
+    "timeZone": "Asia/Seoul",
+    "locale": "ko_KR",
+    "groups": {
+        "size": 2,
+        "items": []
+    },
+    "applicationRoles": {
+        "size": 1,
+        "items": []
+    },
+    "expand": "groups,applicationRoles"
+}

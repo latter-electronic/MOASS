@@ -1,49 +1,45 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { fetchTodos } from '../../services/todoService.js'
+import React, { useState, useEffect } from 'react';
+import { fetchTodos, updateTodo } from '../../services/todoService.js';
+import useTodoStore from '../../stores/todoStore.js';
 
 export default function HomeTodoListComponent() {
-    const [todos, setTodos] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const todos = useTodoStore(state => state.todos);
+    const setTodos = useTodoStore(state => state.setTodos);
+    const lastFetched = useTodoStore(state => state.lastFetched);
+    const setLastFetched = useTodoStore(state => state.setLastFetched);
 
     useEffect(() => {
         const loadTodos = async () => {
+            // 캐시된 데이터 확인
+            if (lastFetched && (Date.now() - lastFetched < 60000)) { // 1분 이내에 불러온 데이터가 있으면 캐시 사용
+                return;
+            }
+
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetchTodos();  // Todo 가져오기
-                setTodos(response.data.data.map(todo => ({
+                const response = await fetchTodos();
+                const sortedTodos = response.data.data.map(todo => ({
                     todoId: todo.todoId,
                     content: todo.content,
                     completedFlag: todo.completedFlag,
                     createdAt: todo.createdAt,
                     updatedAt: todo.updatedAt,
                     completedAt: todo.completedAt,
-                })));
+                })).sort((a, b) => a.completedFlag - b.completedFlag);
+                setTodos(sortedTodos);
+                setLastFetched(Date.now()); // 데이터 불러온 시간 저장
             } catch (err) {
-                setError(err.message);  // 에러
-                setTodos([
-                    { todoId: 1, userId: "1058448", content: 'BRENA 투어', completedFlag: false, createdAt: "2024-04-27T16:22:41.575", updatedAt: "2024-04-27T16:22:41.575", completedAt: null },
-                    { todoId: 2, userId: "1058448", content: '2주차 KPT 회고', completedFlag: false, createdAt: "2024-04-27T16:22:43.876", updatedAt: "2024-04-27T16:22:43.876", completedAt: null },
-                    { todoId: 3, userId: "1058448", content: '코치님한테 여쭤볼거', completedFlag: false, createdAt: "2024-04-27T16:22:46.746", updatedAt: "2024-04-27T16:22:46.746", completedAt: null },
-                    { todoId: 4, userId: "1058448", content: '노트북 챙기기', completedFlag: false, createdAt: "2024-04-27T16:23:46.746", updatedAt: "2024-04-27T16:24:46.746", completedAt: null },
-                ]);
+                setError(err.message);
             } finally {
-                setIsLoading(false);  // 로딩 상태 해제
+                setIsLoading(false);
             }
         };
 
         loadTodos();
-    }, []);
-
-    // const toggleTodo = (todoId) => {     // 보여주기용 todo
-    //     setTodos(
-    //         todos.map((todo) =>
-    //             todo.todoId === todoId ? { ...todo, isCompleted: !todo.isCompleted } : todo
-    //         )
-    //     );
-    // };
+    }, [setTodos, setLastFetched, lastFetched]);
 
     const toggleTodo = async (todoId) => {
         const todo = todos.find(t => t.todoId === todoId);
@@ -58,35 +54,35 @@ export default function HomeTodoListComponent() {
                 completedFlag: updatedTodo.completedFlag
             });
             if (response.data && response.status === 200) {
-                setTodos(
-                    todos.map(t => t.todoId === todoId ? updatedTodo : t)
-                );
+                const updatedTodos = todos.map(t => t.todoId === todoId ? updatedTodo : t);
+                updatedTodos.sort((a, b) => a.completedFlag - b.completedFlag);
+                setTodos(updatedTodos);
             } else {
                 throw new Error("Server responded with no error but no data or unexpected status");
             }
         } catch (err) {
-            setError("Todo 상태를 업데이트하는데 실패했습니다: " + err.message);
+            setError("Failed to update Todo status: " + err.message);
         }
     };
 
-    if (isLoading) return <div>로딩중...</div>;
-    // if (error) return <div>To do List를 가져오는데 실패했어요😥{error}</div>;  // 개발 완료후 바꾸기
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Failed to load To-Do list: {error}</div>;
 
     return (
-        <div className="bg-white/5 p-6 rounded-lg w-72 mt-5 h-60 scrollbar-hide overflow-y-auto">
-            <h1 className="text-white text-2xl font-bold mb-4">To do List ✨</h1>
+        <div className="bg-white/5 p-6 rounded-lg w-72 mt-5 h-60 overflow-y-auto scrollbar-hide">
+            <h1 className="text-white text-2xl font-bold mb-4">To-Do List ✨</h1>
             <ul>
                 {todos.map((todo) => (
-                    <li key={todo.todoId} className="flex items-center mb-2 text-xl">
+                    <li key={todo.todoId} className="flex items-start mb-2 text-xl">
                         <input
                             id={`todo-${todo.todoId}`}
                             type="checkbox"
                             checked={todo.completedFlag}
                             onChange={() => toggleTodo(todo.todoId)}
-                            className="form-checkbox h-5 w-5 text-blue-600"
+                            className="custom-checkbox"
                         />
-                        <label htmlFor={`todo-${todo.todoId}`} className="ml-2 text-white font-light cursor-pointer">
-                            <span className={todo.isCompleted ? 'line-through' : ''}>
+                        <label htmlFor={`todo-${todo.todoId}`} className="ml-2 text-white font-light cursor-pointer break-words">
+                            <span className={todo.completedFlag ? 'line-through' : ''}>
                                 {todo.content}
                             </span>
                         </label>

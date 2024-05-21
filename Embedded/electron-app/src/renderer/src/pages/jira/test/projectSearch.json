@@ -1,0 +1,99 @@
+{
+    "self": "https://ssafy.atlassian.net/rest/api/3/project/search?maxResults=50&startAt=0",
+    "maxResults": 50,
+    "startAt": 0,
+    "total": 5,
+    "isLast": true,
+    "values": [
+        {
+            "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14044",
+            "id": "14044",
+            "key": "S10P11E203",
+            "name": "S10P11E203",
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10400",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10400?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10400?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10400?size=medium"
+            },
+            "projectTypeKey": "software",
+            "simplified": false,
+            "style": "classic",
+            "isPrivate": false,
+            "properties": {}
+        },
+        {
+            "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14157",
+            "id": "14157",
+            "key": "S10P12E203",
+            "name": "S10P12E203",
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10417",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10417?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10417?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10417?size=medium"
+            },
+            "projectTypeKey": "software",
+            "simplified": false,
+            "style": "classic",
+            "isPrivate": false,
+            "properties": {}
+        },
+        {
+            "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14443",
+            "id": "14443",
+            "key": "S10P21E207",
+            "name": "S10P21E207",
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10416",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10416?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10416?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10416?size=medium"
+            },
+            "projectTypeKey": "software",
+            "simplified": false,
+            "style": "classic",
+            "isPrivate": false,
+            "properties": {}
+        },
+        {
+            "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14582",
+            "id": "14582",
+            "key": "S10P22E207",
+            "name": "S10P22E207",
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=medium"
+            },
+            "projectTypeKey": "software",
+            "simplified": false,
+            "style": "classic",
+            "isPrivate": false,
+            "properties": {}
+        },
+        {
+            "expand": "description,lead,issueTypes,url,projectKeys,permissions,insight",
+            "self": "https://ssafy.atlassian.net/rest/api/3/project/14697",
+            "id": "14697",
+            "key": "S10P31E203",
+            "name": "S10P31E203",
+            "avatarUrls": {
+                "48x48": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405",
+                "24x24": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=small",
+                "16x16": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=xsmall",
+                "32x32": "https://ssafy.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/10405?size=medium"
+            },
+            "projectTypeKey": "software",
+            "simplified": false,
+            "style": "classic",
+            "isPrivate": false,
+            "properties": {}
+        }
+    ]
+}
