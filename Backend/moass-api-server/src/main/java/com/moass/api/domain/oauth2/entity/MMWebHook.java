@@ -1,7 +1,5 @@
 package com.moass.api.domain.oauth2.entity;
 
-
-import com.moass.api.global.entity.Auditable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,26 +8,20 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("MMToken")
+@Table("MMWebHook")
 @Data
-public class MMToken extends Auditable {
+public class MMWebHook {
 
     @Id
-    @Column("mm_token_id")
-    private Integer mmTokenId;
+    @Column("mm_hook_id")
+    private String mmHookId;
 
-    @Column("session_token")
-    private String sessionToken;
+    @Column("mm_channel_id")
+    private String mmChannelId;
 
     @Column("user_id")
     private String userId;
-
-    @Column("expires_at")
-    private LocalDateTime expiresAt;
-
 }

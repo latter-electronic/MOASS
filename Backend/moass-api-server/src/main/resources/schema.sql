@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `Position`;
 DROP TABLE IF EXISTS `Device`;
 DROP TABLE IF EXISTS `Seat`;
 DROP TABLE IF EXISTS `Widget`;
-
+DROP TABLE IF EXISTS `MMWebhook`;
 DROP TABLE IF EXISTS `UserMMChannel`;
 DROP TABLE IF EXISTS `MMChannel`;
 DROP TABLE IF EXISTS `MMTeam`;
@@ -129,6 +129,7 @@ CREATE TABLE `MMToken` (
                            `mm_token_id`	INT	AUTO_INCREMENT  KEY,
                            `session_token`	VARCHAR(40)	NULL,
                            `user_id`	VARCHAR(20)	NOT NULL,
+                           `expires_at` TIMESTAMP NOT NULL DEFAULT (UTC_TIMESTAMP() + INTERVAL 25 DAY),
                            updated_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP,
                            created_at TIMESTAMP NOT NULL DEFAULT UTC_TIMESTAMP(),
                            FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`)
@@ -156,6 +157,16 @@ CREATE TABLE `UserMMChannel` (
                                  CONSTRAINT `FK_User_TO_UserMMChannel_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`),
                                  CONSTRAINT `FK_MMChannel_TO_UserMMChannel_1` FOREIGN KEY (`mm_channel_id`) REFERENCES `MMChannel` (`mm_channel_id`)
 );
+
+CREATE TABLE `MMWebhook` (
+                             `mm_hook_id`	VARCHAR(40) NOT NULL,
+                             `mm_channel_id`	VARCHAR(40)	NOT NULL,
+                             `user_id`   VARCHAR(20) NOT NULL,
+                             CONSTRAINT `MMWebhook` PRIMARY KEY (`mm_hook_id`),
+                             FOREIGN KEY (`mm_channel_id`) REFERENCES `MMChannel` (`mm_channel_id`),
+                            FOREIGN KEY  (`user_id`) REFERENCES `SsafyUser` (`user_id`)
+);
+
 
 
 CREATE TABLE `Widget`(

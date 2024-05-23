@@ -25,14 +25,14 @@ public class MattermostController {
     public Mono<ResponseEntity<ApiResponse>> mmConnect(@Login UserInfo userInfo, @RequestBody MmLoginDto mmLoginDto){
         return mattermostService.mmConnect(userInfo,mmLoginDto)
                 .flatMap(mmToken -> ApiResponse.ok("MM 로그인 성공", mmToken))
-                .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("MM 로그인 실패 : " + e.getMessage(), e.getStatus()));
     }
 
     @DeleteMapping("/connect")
     public Mono<ResponseEntity<ApiResponse>> disconnectMattermost(@Login UserInfo userInfo) {
         return mattermostService.disconnectMattermost(userInfo.getUserId())
                 .then(ApiResponse.ok("Mattermost 연결 정보가 삭제되었습니다."))
-                .onErrorResume(CustomException.class, e -> ApiResponse.error("예약 실패 : " + e.getMessage(), e.getStatus()));
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("MM 토큰삭제 실패 : " + e.getMessage(), e.getStatus()));
     }
 
     @GetMapping("/channels")
@@ -44,14 +44,14 @@ public class MattermostController {
 
     @PostMapping("/channel/{channelId}")
     public Mono<ResponseEntity<ApiResponse>> toggleChannelSubscription(@Login UserInfo userInfo, @PathVariable String channelId) {
-        return mattermostService.toggleChannelSubscription(userInfo.getUserId(), channelId)
+        return mattermostService.toggleChannelSubscription(userInfo, channelId)
                 .flatMap(result -> ApiResponse.ok(result ? "구독 추가됨" : "구독 취소됨"))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("구독 토글 실패 : " + e.getMessage(), e.getStatus()));
     }
 
     @PostMapping("/channel/webhookadd/{teamId}/{channelId}")
     public Mono<ResponseEntity<ApiResponse>> addWebhook(@Login UserInfo userInfo, @PathVariable String teamId, @PathVariable String channelId) {
-        return mattermostService.addWebhook(userInfo.getUserId(), teamId, channelId)
+        return mattermostService.addWebhook(userInfo, teamId, channelId)
                 .flatMap(result -> ApiResponse.ok(result ? "웹훅 추가됨" : "웹훅 추가 실패"))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("웹훅 추가 실패 : " + e.getMessage(), e.getStatus()));
     }
@@ -59,7 +59,7 @@ public class MattermostController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/channel/webhookadd/all")
     public Mono<ResponseEntity<ApiResponse>> addWebhookAll(@Login UserInfo userInfo) {
-        return mattermostService.addWebhookAll()
+        return mattermostService.addWebhookAll(userInfo)
                 .flatMap(result -> ApiResponse.ok(result ? "웹훅 추가됨" : "웹훅 추가 실패"))
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("웹훅 추가 실패 : " + e.getMessage(), e.getStatus()));
     }

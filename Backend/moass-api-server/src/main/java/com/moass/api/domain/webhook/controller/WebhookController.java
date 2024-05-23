@@ -40,7 +40,7 @@ public class WebhookController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("토큰생성 실패: "+e.getMessage(),e.getStatus()));
     }
 
-    @PostMapping("/mm")
+    @PostMapping("/mm/v2")
     public Mono<ResponseEntity<ApiResponse>> handleMattermostWebhook(@RequestBody String payload) {
         log.info("Received Mattermost webhook data: {}", payload);
         return notificationService.processMattermostEvent(payload)
