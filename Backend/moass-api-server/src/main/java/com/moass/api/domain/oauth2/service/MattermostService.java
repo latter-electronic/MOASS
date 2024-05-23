@@ -4,34 +4,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.moass.api.domain.oauth2.dto.MMChannelInfoDto;
 import com.moass.api.domain.oauth2.dto.MmChannelSearchDto;
 import com.moass.api.domain.oauth2.dto.MmLoginDto;
-import com.moass.api.domain.oauth2.entity.MMChannel;
-import com.moass.api.domain.oauth2.entity.MMTeam;
-import com.moass.api.domain.oauth2.entity.MMToken;
-import com.moass.api.domain.oauth2.entity.UserMMChannel;
-import com.moass.api.domain.oauth2.repository.MmChannelRepository;
-import com.moass.api.domain.oauth2.repository.MmTeamRepository;
-import com.moass.api.domain.oauth2.repository.MmTokenRepository;
-import com.moass.api.domain.oauth2.repository.UserMmChannelRepository;
+import com.moass.api.domain.oauth2.entity.*;
+import com.moass.api.domain.oauth2.repository.*;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.PropertiesConfig;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
 import com.moass.api.global.exception.CustomException;
 import com.moass.api.global.service.S3Service;
-import io.netty.channel.ChannelOption;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
@@ -54,16 +45,22 @@ public class MattermostService {
     private final MmChannelRepository mmChannelRepository;
     private final MmTeamRepository mmTeamRepository;
 
+    private final MMWebHookRepository mmWebHookRepository;
+
+    private final TokenService tokenService;
     private final S3ClientConfigurationProperties s3config;
     private final S3Service s3Service;
 
-    public MattermostService(WebClient mmApiWebClient, PropertiesConfig propertiesConfig, UserMmChannelRepository userMMChannelRepository, MmTokenRepository mmTokenRepository, MmChannelRepository mmChannelRepository, MmTeamRepository mmTeamRepository, S3ClientConfigurationProperties s3config, S3Service s3Service) {
+    public MattermostService(WebClient mmApiWebClient, PropertiesConfig propertiesConfig, UserMmChannelRepository userMMChannelRepository, MmTokenRepository mmTokenRepository, MmChannelRepository mmChannelRepository, MmTeamRepository mmTeamRepository, MMWebHookRepository mmWebHookRepository, TokenService tokenService, S3ClientConfigurationProperties s3config, S3Service s3Service) {
         this.mmApiWebClient = mmApiWebClient;
         this.propertiesConfig = propertiesConfig;
         this.userMmChannelRepository = userMMChannelRepository;
         this.mmTokenRepository = mmTokenRepository;
+
         this.mmChannelRepository = mmChannelRepository;
         this.mmTeamRepository = mmTeamRepository;
+        this.mmWebHookRepository = mmWebHookRepository;
+        this.tokenService = tokenService;
         this.s3config = s3config;
         this.s3Service = s3Service;
     }
@@ -97,6 +94,7 @@ public class MattermostService {
                     MMToken newToken = new MMToken();
                     newToken.setUserId(userId);
                     newToken.setSessionToken(token);
+                    newToken.setExpiresAt(LocalDateTime.now().plus(Duration.ofDays(25)));
                     newToken.setUpdatedAt(LocalDateTime.now());
                     newToken.setCreatedAt(LocalDateTime.now());
                     return mmTokenRepository.save(newToken);
@@ -114,7 +112,7 @@ public class MattermostService {
 
     @Transactional
     public Mono<List<MmChannelSearchDto>> getMyChannels(String userId) {
-        return mmTokenRepository.findByUserId(userId)
+        return tokenService.findAndExpireMMToken(userId)
                 .flatMap(token -> mmApiWebClient.get()
                         .uri("/api/v4/users/me/teams")
                         .header("Authorization", "Bearer " + token.getSessionToken())
@@ -130,7 +128,10 @@ public class MattermostService {
                                 .collect(Collectors.toList()))
                 )
                 .defaultIfEmpty(Collections.emptyList())
-                .onErrorResume(e -> Mono.just(Collections.emptyList()));
+                .onErrorResume(e -> {
+                    log.error("채널 조회 중 오류 발생: {}", e.getMessage());
+                    return Mono.error(new CustomException("채널 조회 중 오류 발생"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR));
+                });
     }
 
     private Mono<MMTeam> saveOrUpdateTeam(JsonNode team, String token) {
@@ -230,19 +231,20 @@ public class MattermostService {
     }
 
     @Transactional
-    public Mono<Boolean> toggleChannelSubscription(String userId, String channelId) {
-        return userMmChannelRepository.existsByUserIdAndMmChannelId(userId, channelId)
+    public Mono<Boolean> toggleChannelSubscription(UserInfo userInfo, String channelId) {
+        return userMmChannelRepository.existsByUserIdAndMmChannelId(userInfo.getUserId(), channelId)
                 .flatMap(exists -> {
                     if (exists) {
-                        return userMmChannelRepository.deleteByUserIdAndMmChannelId(userId, channelId)
+                        return userMmChannelRepository.deleteByUserIdAndMmChannelId(userInfo.getUserId(), channelId)
                                 .thenReturn(false);
                     } else {
                         return mmChannelRepository.findById(channelId)
                                 .switchIfEmpty(Mono.error(new CustomException("채널을 찾을 수 없습니다.", HttpStatus.NOT_FOUND)))
-                                .flatMap(channel -> mmTokenRepository.findByUserId(userId)
+                                .flatMap(channel -> tokenService.findAndExpireMMToken(userInfo.getUserId())
                                         .switchIfEmpty(Mono.error(new CustomException("Mattermost 토큰이 없습니다.", HttpStatus.UNAUTHORIZED)))
-                                        .flatMap(token -> createOrUpdateOutgoingWebhook(channel.getMmTeamId(), channelId, token.getSessionToken()))
-                                        .then(userMmChannelRepository.save(new UserMMChannel(userId, channelId)))
+                                        .onErrorResume(e -> Mono.error(new CustomException(e.getMessage(), HttpStatus.UNAUTHORIZED)))
+                                        .flatMap(token -> createOrUpdateOutgoingWebhook(channel.getMmTeamId(), channelId, token.getSessionToken(),userInfo))
+                                        .then(userMmChannelRepository.save(new UserMMChannel(userInfo.getUserId(), channelId)))
                                         .thenReturn(true));
                     }
                 })
@@ -250,17 +252,17 @@ public class MattermostService {
     }
 
     @Transactional
-    public Mono<Boolean> addWebhook(String userId, String teamId, String channelId) {
-        return mmTokenRepository.findByUserId(userId)
-                .flatMap(token -> createOrUpdateOutgoingWebhook(teamId, channelId, token.getSessionToken()))
+    public Mono<Boolean> addWebhook(UserInfo userInfo, String teamId, String channelId) {
+        return tokenService.findAndExpireMMToken(userInfo.getUserId())
+                .flatMap(token -> createOrUpdateOutgoingWebhook(teamId, channelId, token.getSessionToken(),userInfo))
                 .switchIfEmpty(Mono.error(new CustomException("Mattermost 토큰이 없습니다.", HttpStatus.UNAUTHORIZED)));
     }
 
     @Transactional
-    public Mono<Boolean> addWebhookAll() {
+    public Mono<Boolean> addWebhookAll(UserInfo userInfo) {
         return mmTokenRepository.findAll()
                 .flatMap(token -> mmChannelRepository.findAll()
-                        .flatMap(channel -> createOrUpdateOutgoingWebhook(channel.getMmTeamId(), channel.getMmChannelId(), token.getSessionToken()))
+                        .flatMap(channel -> createOrUpdateOutgoingWebhook(channel.getMmTeamId(), channel.getMmChannelId(), token.getSessionToken(),userInfo))
                         .collectList()
                 )
                 .then(Mono.just(true))
@@ -269,36 +271,54 @@ public class MattermostService {
                     return Mono.just(false);
                 });
     }
-    public Mono<Boolean> createOrUpdateOutgoingWebhook(String teamId, String channelId, String token) {
+    private Mono<Boolean> saveWebhookInfo(String webhookId, String channelId, String userId) {
+        log.info("저장중");
+        return mmWebHookRepository.findByMmChannelId(channelId)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        MMWebHook mmWebHook = new MMWebHook();
+                        mmWebHook.setMmHookId(webhookId);
+                        mmWebHook.setMmChannelId(channelId);
+                        mmWebHook.setUserId(userId);
+                        return mmWebHookRepository.saveForce(mmWebHook)
+                                .then(Mono.just(true))
+                                .onErrorResume(e -> {
+                                    log.error("웹훅 정보를 저장하는 중 오류 발생", e);
+                                    return Mono.just(false);
+                                });
+                    } else {
+                        return Mono.just(false);
+                    }
+                });
+    }
+
+
+    public Mono<Boolean> createOrUpdateOutgoingWebhook(String teamId, String channelId, String token,UserInfo userInfo) {
         String callbackUri1 = propertiesConfig.getMmWebhookUri1();
         String callbackUri2 = propertiesConfig.getMmWebhookUri2();
         String[] callbackUris = new String[]{callbackUri1, callbackUri2};
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString("/api/v4/hooks/outgoing")
                 .queryParam("channel_id", channelId);
-        log.info("웹훅 연동중 팀 : {} , 채널: {}. uri : {}", teamId, channelId,builder.toUriString());
-        return mmApiWebClient.get()
-                .uri(builder.toUriString())
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToFlux(JsonNode.class)
-                .collectList()
-                .flatMap(webhooks -> {
-                    if (!webhooks.isEmpty()) {
-                        String webhookId = webhooks.get(0).get("id").asText();
-                        return deleteOutgoingWebhook(webhookId, token)
-                                .then(createOutgoingWebhook(teamId, channelId, callbackUris, token));
+        log.info("웹훅 연동중 팀 : {} , 채널: {}. uri : {}", teamId, channelId, builder.toUriString());
+
+        return mmWebHookRepository.findByMmChannelId(channelId)
+                .flatMap(existingHook -> {
+                    if (existingHook) {
+                        log.info("이미있음");
+                        return Mono.just(true); // 이미 존재하는 웹훅이 있는 경우
                     } else {
-                        return createOutgoingWebhook(teamId, channelId, callbackUris, token);
+                        return createOutgoingWebhook(teamId, channelId, callbackUris, token)
+                                .flatMap(webhookId -> saveWebhookInfo(webhookId, channelId, userInfo.getUserId()));
                     }
                 })
-                .then(Mono.just(true))
                 .onErrorResume(e -> {
                     log.error("웹훅 업데이트중 에러발생", e);
                     return Mono.just(false);
                 });
     }
 
-    private Mono<Void> createOutgoingWebhook(String teamId, String channelId, String[] callbackUris, String token) {
+
+    private Mono<String> createOutgoingWebhook(String teamId, String channelId, String[] callbackUris, String token) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("team_id", teamId);
         requestBody.put("channel_id", channelId);
@@ -307,13 +327,14 @@ public class MattermostService {
         requestBody.put("callback_urls", callbackUris);
         requestBody.put("trigger_words", new String[]{});
         requestBody.put("trigger_when", 0);
-
+        log.info("웹훅생성중");
         return mmApiWebClient.post()
                 .uri("/api/v4/hooks/outgoing")
                 .header("Authorization", "Bearer " + token)
                 .bodyValue(requestBody)
                 .retrieve()
-                .bodyToMono(Void.class)
+                .bodyToMono(JsonNode.class)
+                .map(response -> response.get("id").asText())
                 .doOnError(error -> log.error("웹훅 생성중 에러", error,requestBody));
     }
 
@@ -328,13 +349,13 @@ public class MattermostService {
     }
 
     public Mono<MMToken> isConnected(String userId) {
-        return mmTokenRepository.findByUserId(userId)
+        return tokenService.findAndExpireMMToken(userId)
                 .switchIfEmpty(Mono.error(new CustomException("Mattermost 토큰이 없습니다.", HttpStatus.FORBIDDEN)));
     }
 
     @Transactional
     public Mono<String> disconnectMattermost(String userId) {
-        return mmTokenRepository.findByUserId(userId)
+        return tokenService.findAndExpireMMToken(userId)
                 .flatMap(token -> userMmChannelRepository.deleteByUserId(userId)
                         .onErrorResume(e -> Mono.empty())
                         .then(mmTokenRepository.delete(token))
