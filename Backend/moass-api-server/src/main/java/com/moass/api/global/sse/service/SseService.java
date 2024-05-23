@@ -161,7 +161,7 @@ public class SseService {
         }
     }
 
-    @Scheduled(fixedRate = 30000)  // 10 seconds
+    @Scheduled(fixedRate = 60000)  // 10 seconds
     public void sendTestMessages() {
         log.info("userSinks size: {}", userSinks.size());
         log.info("teamSinks size: {}", teamSinks.size());
