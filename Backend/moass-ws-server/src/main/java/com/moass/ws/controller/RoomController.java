@@ -61,10 +61,8 @@ public class RoomController {
     }
 
     @PostMapping("/screenshot")
-    public ResponseEntity<String> saveScreenshot(@RequestPart(value = "file") MultipartFile file) throws Exception {
-//        String url = uploadService.uploadFile(boardId, userId, file);
-//        return ResponseEntity.ok(url);
-        System.out.println(file.getOriginalFilename());
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<String> saveScreenshot(@RequestPart(value = "boardId") Integer boardId, @RequestPart(value = "userId") String userId, @RequestPart(value = "file") MultipartFile file) throws Exception {
+        String url = uploadService.uploadFile(boardId, userId, file);
+        return ResponseEntity.ok(url);
     }
 }

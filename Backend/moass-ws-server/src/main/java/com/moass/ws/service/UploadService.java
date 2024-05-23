@@ -28,7 +28,7 @@ public class UploadService {
 
     private String defaultUrl = "https://moassbucket.s3.ap-northeast-2.amazonaws.com";
 
-    @Transactional
+//    @Transactional
     public String uploadFile(Integer boardId, String userId, MultipartFile file) throws IOException {
 
         String bucketDir = bucketName;
