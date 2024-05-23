@@ -55,6 +55,7 @@
 
   - MM, GItLab(공지, 코드 리뷰) 알림
   ![image info](docs/images/2.MM 알림 확인.gif)
+  - MM, 기기 로그인 모바일 알림<br/>
   ![image info](docs/images/모바일 알림페이지.png){: width="200" height="400"}
   
   - 원하는 GitLab 확인
