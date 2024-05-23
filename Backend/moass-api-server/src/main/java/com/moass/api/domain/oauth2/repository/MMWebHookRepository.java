@@ -7,11 +7,11 @@ import reactor.core.publisher.Mono;
 
 public interface MMWebHookRepository extends ReactiveCrudRepository<MMWebHook, String> {
 
-    @Query("INSERT INTO MMWebHook (mm_hook_id, mm_channel_id, user_id) " +
+    @Query("INSERT INTO mmwebhook (mm_hook_id, mm_channel_id, user_id) " +
             "VALUES (:#{#mmWebHook.mmHookId}, :#{#mmWebHook.mmChannelId}, :#{#mmWebHook.userId} )")
     Mono<MMWebHook> saveForce(MMWebHook mmWebHook);
 
-    @Query("SELECT EXISTS(SELECT * FROM MMWebHook WHERE mm_channel_id = :mmChannelId)")
+    @Query("SELECT EXISTS(SELECT * FROM mmwebhook WHERE mm_channel_id = :mmChannelId)")
     Mono<Boolean> findByMmChannelId(String mmChannelId);
 
 }
