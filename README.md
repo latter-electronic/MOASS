@@ -55,9 +55,10 @@
 
   - MM, GItLab(공지, 코드 리뷰) 알림
   ![image info](docs/images/2.MM 알림 확인.gif)
-  ![image info](docs/images/모바일 알림페이지.png)
+  ![image info](docs/images/모바일 알림페이지.png){: width="100" height="400"}
   
   - 원하는 GitLab 확인
+<br/>
   ![image info](docs/images/모바일GitLab_확인.gif)
 <br/>
 
@@ -68,7 +69,6 @@
 
 ### 3️⃣ 이음 보드.<br/>
   - 동시 편집 화이트 보드
-  (기기 사진 GIF 및 모바일 저장 화면)
   ![image info](docs/images/이음보드 기기시연.gif)
   ![image info](docs/images/4.이음보드_그리기.gif)
   ![image info](docs/images/5.이음보드_저장하기.gif)
@@ -78,12 +78,13 @@
 
 ### 4️⃣ 예약 보드 현황 및 예약.<br/>
   - 예역 현황 체크 및 예약 기능
+<br/>
   ![image info](docs/images/모바일예약_하기.gif)
 <br/>
 
 ## 관리자 기능
 ### 1️⃣ 실시간 좌석도 및 현황.<br/>
-  - 교육생의 좌석 및 현황 확인
+<br/>
   ![image info](docs/images/좌석도 확인.gif)
 <br/>
 
@@ -95,7 +96,7 @@
 ### 3️⃣ 호출.<br/>
   - 교육생 호출
   ![image info](docs/images/호출 시연.gif)
-  ![image info](docs/images/8.호출(앞 있).gif)
+  ![image info](docs/images/호출.gif)
 <br/>
 
 ### 4️⃣ 예약 보드 현황 및 생성.<br/>
@@ -105,18 +106,18 @@
 
 # :clipboard: 기술 소개
   - NFC 센서 : 기기 고유 넘버와 카드의 고유 UID를 이용해 로그인
-  ![image info](docs/images/NFC기술설명.png)
+  ![image info](docs/images/NFC기술설명.png){: width="600" height="400"}
 
   - 비콘 : 비콘을 이용해 RSSI값을 받아와 위치 특정
-  ![image info](docs/images/비콘 기술성명.png)
+  ![image info](docs/images/비콘 기술성명.png){: width="600" height="400"}
 
   - 웹소켓 : 웹소켓을 이용해 실시간 통신으로 이음보드 구현
-  ![image info](docs/images/웹소켓 기술설명.png)
+  ![image info](docs/images/웹소켓 기술설명.png){: width="600" height="400"}
 
   - 리액티브 & 웹플럭스 : 비동기 및 논블로킹 I/O를 사용하여 요청을 처리 하여 서버 자원을 효율적으로 사용하고 높은 동시성을 유지
-  ![image info](docs/images/리엑티브웹플럭스 기술설명.png)
+  ![image info](docs/images/리엑티브웹플럭스 기술설명.png){: width="600" height="400"}
 
   - SSE : 실시간 페이지 갱신 및, 알람기능 구현
-  ![image info](docs/images/SSE기술 설명.png)
+  ![image info](docs/images/SSE기술 설명.png){: width="600" height="400"}
 
 <br/>
