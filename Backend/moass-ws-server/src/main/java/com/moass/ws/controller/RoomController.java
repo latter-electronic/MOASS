@@ -1,5 +1,6 @@
 package com.moass.ws.controller;
 
+import com.moass.ws.dto.BoardRequestDto;
 import com.moass.ws.entity.Board;
 import com.moass.ws.entity.BoardUser;
 import com.moass.ws.entity.User;
@@ -61,8 +62,8 @@ public class RoomController {
     }
 
     @PostMapping("/screenshot")
-    public ResponseEntity<String> saveScreenshot(@RequestPart(value = "boardId") Integer boardId, @RequestPart(value = "userId") String userId, @RequestPart(value = "file") MultipartFile file) throws Exception {
-        String url = uploadService.uploadFile(boardId, userId, file);
+    public ResponseEntity<String> saveScreenshot(@RequestPart(value = "request")BoardRequestDto dto, @RequestPart(value = "file") MultipartFile file) throws Exception {
+        String url = uploadService.uploadFile(dto.getBoardId(), dto.getUserId(), file);
         return ResponseEntity.ok(url);
     }
 }
