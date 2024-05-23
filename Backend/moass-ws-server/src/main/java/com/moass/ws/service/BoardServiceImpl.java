@@ -52,6 +52,8 @@ public class BoardServiceImpl implements BoardService {
         updateQuery.push("participants", user);
         mongoTemplate.updateFirst(query, updateQuery, Room.class);
 
+        boardUserRepository.save(new BoardUser(boardId, userId));
+
         return roomRepository.findById(boardId).orElseThrow().getBoardUrl();
     }
 
