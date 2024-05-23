@@ -55,7 +55,7 @@
 
   - MM, GItLab(공지, 코드 리뷰) 알림
   ![image info](docs/images/2.MM 알림 확인.gif)
-  ![image info](docs/images/모바일 알림페이지.png){: width="100" height="400"}
+  ![image info](docs/images/모바일 알림페이지.png){: width="200" height="400"}
   
   - 원하는 GitLab 확인
 <br/>
@@ -69,6 +69,7 @@
 
 ### 3️⃣ 이음 보드.<br/>
   - 동시 편집 화이트 보드
+  <br/>
   ![image info](docs/images/이음보드 기기시연.gif)
   ![image info](docs/images/4.이음보드_그리기.gif)
   ![image info](docs/images/5.이음보드_저장하기.gif)
