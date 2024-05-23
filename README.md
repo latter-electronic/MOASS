@@ -1,6 +1,6 @@
 # **스마트 기기 기반 사무 통합 관리 시스템** "MOASS"
 
-![image info](docs/images/main_image.png)
+![image info](docs/images/Desktop.png)
 
 # :clipboard: 소개
 ### 사용자 맞춤형 업무 보조를 제공하는 서비스, MOASS.<br/>
