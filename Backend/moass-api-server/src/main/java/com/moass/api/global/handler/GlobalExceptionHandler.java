@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
@@ -91,6 +92,15 @@ public class GlobalExceptionHandler {
 		return ApiResponse.error("인증에 실패했습니다.",HttpStatus.UNAUTHORIZED);
 	}
 
+	@ExceptionHandler(ResponseStatusException.class)
+	public Mono<ResponseEntity<ApiResponse>> handleNotFoundException(ResponseStatusException e, ServerWebExchange exchange) {
+		if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+
+			log.warn("잘못된 접근 발생: {}", exchange.getRequest().getURI());
+			return ApiResponse.error("요청하신 페이지가 없거나 데이터가 없습니다.", HttpStatus.NOT_FOUND);
+		}
+		return handleException(e);
+	}
 
 	// 기타 예외처리
 	@ExceptionHandler(Exception.class)
