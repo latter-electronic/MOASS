@@ -37,6 +37,7 @@ public class UploadService {
 
         amazonS3Client.putObject(bucketDir, fileName, file.getInputStream(), getObjectMetadata(file));
 
+        System.out.println(boardId + " " + userId);
         BoardUser boardUser = boardUserRepository.findBoardUserByBoardIdAndUserId(boardId, userId);
         Screenshot screenshot = Screenshot.builder()
                 .screenshotUrl(dirUrl + fileName)
