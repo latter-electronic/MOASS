@@ -11,7 +11,7 @@ public interface MMWebHookRepository extends ReactiveCrudRepository<MMWebHook, S
             "VALUES (:#{#mmWebHook.mmHookId}, :#{#mmWebHook.mmChannelId}, :#{#mmWebHook.userId} )")
     Mono<MMWebHook> saveForce(MMWebHook mmWebHook);
 
-    @Query("SELECT EXISTS(SELECT * FROM mmWebHook WHERE mm_channel_id = :mmChannelId)")
+    @Query("SELECT EXISTS(SELECT * FROM MMWebHook WHERE mm_channel_id = :mmChannelId)")
     Mono<Boolean> findByMmChannelId(String mmChannelId);
 
 }
