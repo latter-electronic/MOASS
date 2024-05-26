@@ -34,6 +34,14 @@ public class BoardService {
 
     @Transactional
     public Mono<List<BoardDetailDto>> getBoardList(UserInfo userInfo) {
+        return boardUserRepository.findAllBoardDetailByUserIdAndIsActive(userInfo.getUserId())
+                .collectList()
+                .map(boards -> boards.stream().map(BoardDetailDto::new).toList())
+                .switchIfEmpty(Mono.error(new IllegalArgumentException("Board를 찾을 수 없습니다.")));
+    }
+
+    @Transactional
+    public Mono<List<BoardDetailDto>> getBoardListAll(UserInfo userInfo) {
         return boardUserRepository.findAllBoardDetailByUserId(userInfo.getUserId())
                 .collectList()
                 .map(boards -> boards.stream().map(BoardDetailDto::new).toList())
