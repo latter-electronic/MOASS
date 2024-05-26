@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 const OPEN_WEATHER_API_KEY = import.meta.env.VITE_OPEN_WEATHER_API;
-const CITY_NAME = 'Busan';
+const CITY_NAME = 'Seoul';
 
 export default function HomeClockComponent() {
     const [currentTime, setCurrentTime] = useState(new Date());
