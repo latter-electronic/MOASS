@@ -30,7 +30,7 @@ export default function HomePage() {
     const { checkStoredAuth, isAuthenticated } = AuthStore((state) => ({
         checkStoredAuth: state.checkStoredAuth,
         isAuthenticated: state.isAuthenticated
-    }))
+    }));
 
     const { user, setUser } = useGlobalStore((state) => ({
         user: state.user,
@@ -58,13 +58,12 @@ export default function HomePage() {
     };
 
     useEffect(() => {
-        console.log('홈에서 확인중')
-        checkStoredAuth()
-        getCurrentUser()
-      }, [])
-    
+        console.log('홈에서 확인중');
+        checkStoredAuth();
+        getCurrentUser();
+    }, []);
+
     useEffect(() => {
-        // Electron에서 'motion-detected' 메시지를 수신
         const handleMotionDetected = (event, data) => {
             if (data.status === 'LONG_SIT') {
                 console.log("Long Sit");
@@ -86,40 +85,42 @@ export default function HomePage() {
             }
         };
 
-        window.electron.ipcRenderer.on('motion-detected', handleMotionDetected);
+        if (window.electron && window.electron.ipcRenderer) {
+            window.electron.ipcRenderer.on('motion-detected', handleMotionDetected);
+        } else {
+            console.error("ipcRenderer is not available");
+        }
 
-        // 컴포넌트 언마운트 시 이벤트 리스너 제거
         return () => {
-            window.electron.ipcRenderer.removeAllListeners('motion-detected', handleMotionDetected);
+            if (window.electron && window.electron.ipcRenderer) {
+                window.electron.ipcRenderer.removeListener('motion-detected', handleMotionDetected);
+            }
         };
     }, [user, setUser]);
 
     useEffect(() => {
-        const { accessToken, refreshToken } = AuthStore.getState()
-        console.log('AccessToken:', accessToken)
-        console.log('RefreshToken:', refreshToken)
+        const { accessToken, refreshToken } = AuthStore.getState();
+        console.log('AccessToken:', accessToken);
+        console.log('RefreshToken:', refreshToken);
         if (!accessToken) {
-            navigate('/login')
-        } else {
+            navigate('/login');
+        } else if (window.electron && window.electron.ipcRenderer) {
             window.electron.ipcRenderer.send('login-success', 'login');
         }
-    }, [])
-
+    }, [navigate]);
 
     return (
-        <div className=" mx-auto p-4 h-screen">
-            {/* 전체 레이아웃을 3열로 분할하고, 각 열을 화면 높이와 동일하게 설정 */}
+        <div className="mx-auto p-4 h-screen">
             <div className="grid grid-cols-[0.5fr,2.5fr,1fr] gap-8 h-full">
-                {/* 1열: 시계, 달력 위아래로 배치 */}
                 <div className="ml-1 flex flex-col space-y-8 gap-8">
                     <div onClick={() => callAlertFunction()}>
                         <Clock />
                     </div>
-                    <div className="flex h-80 w-56 justify-center ml-3" >
+                    <div className="flex h-80 w-56 justify-center ml-3">
                         <Swiper
                             style={{
-                                "--swiper-theme-color": "#6ECEF5", /* 선택된 동그란 바의 색상 */
-                                "--swiper-pagination-bullet-inactive-color": "#FFFFFF", /* 선택되지 않은 동그란 바의 색상 */
+                                "--swiper-theme-color": "#6ECEF5",
+                                "--swiper-pagination-bullet-inactive-color": "#FFFFFF",
                                 "--swiper-pagination-bullet-width": "12px",
                                 "--swiper-pagination-bullet-height": "12px",
                                 display: 'flex',
@@ -137,18 +138,16 @@ export default function HomePage() {
                         </Swiper>
                     </div>
                 </div>
-                {/* 2열: 스케줄러만 중앙에 */}
                 <div className="flex flex-col justify-center">
                     <Schedule />
                 </div>
-                {/* 3열: 할 일 목록, 모찌 위아래로 배치 */}
                 <div className="flex flex-col justify-between items-end mr-8 h-full">
                     <div className="mt-4">
-                    <TodoList />
+                        <TodoList />
                     </div>
                     <div className="mt-6">
                         <img src={Mozzy} alt="Mozzy" className="size-60" onClick={openModal} />
-                        <MozzyModal isOpen={modalIsOpen} onClose={closeModal}/>
+                        <MozzyModal isOpen={modalIsOpen} onClose={closeModal} />
                         <LongSitModal isOpen={longSitModalIsOpen} onClose={closeLongSitModal} />
                     </div>
                 </div>
