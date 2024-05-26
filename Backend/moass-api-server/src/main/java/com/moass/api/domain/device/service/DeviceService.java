@@ -49,8 +49,8 @@ public class DeviceService {
                                     .map(tokens -> new TokensAndUserInfo(userInfo, tokens));
                         }));
     }
-    
-    @Transactional
+
+
     public Mono<String> deviceLogout(UserInfo userInfo) {
         return updateUserConnectionFlag(userInfo.getUserEmail(), 0) // 로그아웃 전 connectFlag 업데이트
                 .then(deviceRepository.findByUserId(userInfo.getUserId()))
@@ -85,9 +85,9 @@ public class DeviceService {
                 .flatMap(user -> {
                     if(flag==1&&user.getConnectFlag()==1){
                         return Mono.error(new CustomException("이미 연결된 사용자입니다.", HttpStatus.BAD_REQUEST));
-                    }else if(flag==0 && user.getConnectFlag()==0){
-                        return Mono.error(new CustomException("이미 연결해제된 사용자입니다.", HttpStatus.BAD_REQUEST));
-                    }
+                    }//else if(flag==0 && user.getConnectFlag()==0){
+                        // return Mono.error(new CustomException("이미 연결해제된 사용자입니다.", HttpStatus.BAD_REQUEST));
+                    //}
                     user.setConnectFlag(flag);
                     return userRepository.save(user).then();
                 });
