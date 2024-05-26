@@ -77,6 +77,7 @@ export default function BoardPage() {
             const boardUrl = response.data.boardUrl;  // Assuming the created board URL is in response.data.boardUrl
             console.log("Setting board URL:", boardUrl);
             setBoardUrl(boardUrl);
+            localStorage.setItem('boardId', response.data.boardId);
             navigate(`/board/detail`);
         } catch (err) {
             console.error("보드 생성 실패:", err.message);

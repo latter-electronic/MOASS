@@ -9,10 +9,10 @@ export default function BoardDetailPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const goBack = async() => {
-        //가져온 보드 URL 안에서 id와 유저 ID를 나가기 API에 요청
-        // localStorage에서 userId 가져오기
+        // 가져온 보드 URL 안에서 id와 유저 ID를 나가기 API에 요청
+        // localStorage에서 userId와 boardId 가져오기
         const userId = localStorage.getItem('userId');
-        const boardId = boardUrl.boardId
+        const boardId = localStorage.getItem('boardId');
         try {
             await exitBoard(userId, boardId);
             console.log("보드 나가기 완료:");
