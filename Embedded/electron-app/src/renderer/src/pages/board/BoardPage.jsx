@@ -38,7 +38,7 @@ export default function BoardPage() {
     }, []);
 
     const callTestFunction = () => {
-        navigate(`/board/test`);
+        navigate(`/board/detail`);
     };
 
     const goToHistory = () => {

@@ -3,7 +3,7 @@ import Layout from "./components/Layout.jsx";
 
 import Home from "./pages/home/HomePage.jsx";
 import Board from "./pages/board/BoardPage.jsx";
-import BoardTest from "./pages/board/BoardTest.jsx";
+import BoardDetail from "./pages/board/BoardDetailPage.jsx";
 import BoardHistory from './pages/board/BoardHistoryPage.jsx';
 import Jira from "./pages/jira/JiraPage.jsx";
 import Alert from "./pages/noti/NotiPage.jsx";
@@ -25,7 +25,7 @@ export default function App() {
                         <Route path="/" element={<Layout />}>
                             <Route index element={<Home />} />
                             <Route path="board" element={<Board />} />
-                            <Route path="board/test" element={<BoardTest />} />
+                            <Route path="board/detail" element={<BoardDetail />} />
                             <Route path="board/history" element={<BoardHistory />} />
                             <Route path="jira" element={<Jira />} />
                             <Route path="alert" element={<Alert />} />
