@@ -33,7 +33,7 @@ public class CurriculumService {
 
 //    @Scheduled(cron = "0 0 8 ? * 1")
     public void crawlingCurriculum() {
-        System.setProperty("webdriver.chrome.driver", "driver/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
         WebDriver driver = new ChromeDriver();
         driver.get("https://edu.ssafy.com/comm/login/SecurityLoginForm.do");
 
