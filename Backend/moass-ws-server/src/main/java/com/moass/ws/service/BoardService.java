@@ -13,5 +13,7 @@ public interface BoardService {
     Board createBoard(Board board);
     List<Room> getBoards(String userId);
     String joinBoard(Integer boardId, String userId);
+    Board getBoard(Integer boardId);
+    void quitBoard(Board board);
     BoardUser createBoardUser(BoardUser boardUser);
 }

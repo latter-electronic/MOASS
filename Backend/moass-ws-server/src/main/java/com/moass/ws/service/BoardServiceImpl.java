@@ -38,7 +38,8 @@ public class BoardServiceImpl implements BoardService {
         List<Room> roomList = new ArrayList<>();
 
         for (BoardUser boardUser : boardUserList) {
-            roomList.add(roomRepository.findById(boardUser.getBoardId()).orElseThrow());
+            Room room = roomRepository.findById(boardUser.getBoardId()).orElseThrow();
+            if (room.getIsActive()) roomList.add(room);
         }
 
         return roomList;
@@ -55,6 +56,14 @@ public class BoardServiceImpl implements BoardService {
         boardUserRepository.save(new BoardUser(boardId, userId));
 
         return roomRepository.findById(boardId).orElseThrow().getBoardUrl();
+    }
+
+    public Board getBoard(Integer boardId) {
+        return boardRepository.findById(boardId).orElseThrow();
+    }
+
+    public void quitBoard(Board board) {
+        boardRepository.save(board);
     }
 
     public BoardUser createBoardUser(BoardUser boardUser) { return boardUserRepository.save(boardUser); }
