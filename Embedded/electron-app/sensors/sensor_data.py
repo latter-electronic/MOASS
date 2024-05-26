@@ -34,14 +34,15 @@ logged_in = False
 logged_in_lock = threading.Lock()
 
 NO_MOTION_TIMEOUT = 5  # 5 seconds
-LONG_SIT_TIMEOUT = 90  # 15 seconds
+LONG_SIT_TIMEOUT = 30  # 30 seconds
+CHANGE_STATE_TIMEOUT = 5  # 5 seconds
 
 print("Waiting for NFC card...", file=sys.stderr)
 
 # -----------------------------------------------------------------
 
 def listen_for_commands():
-    global logged_in
+    global logged_in, motion_state
     while True:
         try:
             line = sys.stdin.readline()
@@ -51,6 +52,9 @@ def listen_for_commands():
                 with logged_in_lock:
                     if data.get("action") == "login":
                         logged_in = True
+                        with motion_state_lock:
+                            motion_state = 'STAY'  # Update motion state to STAY
+                            send_motion_status("STAY")  # Send motion status
                         print(f"Login signal received: {data}", file=sys.stderr)
                     elif data.get("action") == "logout":
                         logged_in = False
@@ -95,24 +99,25 @@ def handle_logged_in_state():
     global last_motion_time, motion_state, stay_start_time
     try:
         current_time = time.time()
-        if not GPIO.input(ir_sensor_pin):
-            if motion_state != 'STAY':
-                motion_state = 'STAY'
-                stay_start_time = current_time
-                send_motion_status("STAY")
-            last_motion_time = current_time
-            # Check for LONG_SIT
-            if stay_start_time and (current_time - stay_start_time) >= LONG_SIT_TIMEOUT:
-                if motion_state == 'STAY':
-                    motion_state = 'LONG_SIT'
-                    send_motion_status("LONG_SIT")
-        else:
-            # Check for AWAY
-            if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
-                if motion_state != 'AWAY':
+        if GPIO.input(ir_sensor_pin):  # Sensor detects motion
+            with motion_state_lock:
+                if motion_state == 'AWAY' and (current_time - last_motion_time) >= CHANGE_STATE_TIMEOUT:
+                    motion_state = 'STAY'
+                    stay_start_time = current_time
+                    send_motion_status("STAY")
+                last_motion_time = current_time
+        else:  # Sensor does not detect motion
+            with motion_state_lock:
+                if motion_state == 'STAY' and (current_time - last_motion_time) >= CHANGE_STATE_TIMEOUT:
                     motion_state = 'AWAY'
                     stay_start_time = None  # Reset the stay start time
                     send_motion_status("AWAY")
+
+        with motion_state_lock:
+            if motion_state == 'STAY':
+                if stay_start_time and (current_time - stay_start_time) >= LONG_SIT_TIMEOUT:
+                    send_motion_status("LONG_SIT")
+                    stay_start_time = current_time  # Reset the stay start time to send LONG_SIT periodically
 
     except Exception as e:
         print(f"An error occurred during motion detection: {e}", file=sys.stderr)
@@ -122,18 +127,20 @@ def handle_logged_out_state():
     global last_motion_time, motion_state
     try:
         current_time = time.time()
-        if GPIO.input(ir_sensor_pin):
-            if motion_state != 'LOGOUT_STAY':
-                motion_state = 'LOGOUT_STAY'
-                print(motion_state, file=sys.stderr)
-                set_display_power(True)
-            last_motion_time = current_time
-        else:
-            if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
-                if motion_state != 'LOGOUT_AWAY':
-                    motion_state = 'LOGOUT_AWAY'
+        if GPIO.input(ir_sensor_pin):  # Sensor detects motion
+            with motion_state_lock:
+                if motion_state != 'LOGOUT_STAY':
+                    motion_state = 'LOGOUT_STAY'
                     print(motion_state, file=sys.stderr)
-                    set_display_power(False)
+                    set_display_power(True)
+                last_motion_time = current_time
+        else:  # Sensor does not detect motion
+            with motion_state_lock:
+                if (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
+                    if motion_state != 'LOGOUT_AWAY':
+                        motion_state = 'LOGOUT_AWAY'
+                        print(motion_state, file=sys.stderr)
+                        set_display_power(False)
     except Exception as e:
         print(f"An error occurred during motion detection: {e}", file=sys.stderr)
         traceback.print_exc()
@@ -156,15 +163,17 @@ def set_display_power(on):
 
 def check_aod_and_set_display_power():
     global motion_state
-    if motion_state != 'AOD':
-        set_display_power(False)
-    else:
-        set_display_power(True)
+    with motion_state_lock:
+        if motion_state != 'AOD':
+            set_display_power(False)
+        else:
+            set_display_power(True)
 
 # -----------------------------------------------------------------
 
 if __name__ == '__main__':
     device_id = get_serial_number()
+    motion_state_lock = threading.Lock()
 
     command_thread = threading.Thread(target=listen_for_commands)
     command_thread.start()
