@@ -171,6 +171,9 @@ function setupPythonProcess(mainWindow, secondWindow) {
     });
 
     ipcMain.on('logout-success', (event, data) => {
+      if (secondWindow) {
+        secondWindow.webContents.send('logout-success', data);
+      }
       console.log('Logout success data received:', data);
       if (pythonProcess && pythonProcess.stdin && pythonProcess.stdin.writable) {
         console.log('Writing to Python process stdin:', JSON.stringify({ action: data }));

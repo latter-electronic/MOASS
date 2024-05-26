@@ -42,6 +42,11 @@
         cardSerialId: null,
         isCheckingAuth: false,
       });
+
+      if (window.electron && window.electron.ipcRenderer) {
+        window.electron.ipcRenderer.send('logout-success', 'logout');
+        console.log('로그아웃 신호 스토어에서 전송')
+      }
     },
 
     checkStoredAuth: async () => {

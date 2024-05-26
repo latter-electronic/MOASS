@@ -166,7 +166,7 @@ export default function Navbar() {
     navigate(`/login`)
   }
 
-  const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success', 'logout')
+  // const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success', 'logout')
 
   const handleLogout = async () => {
     try {
@@ -176,10 +176,10 @@ export default function Navbar() {
       }
       await deviceLogout(logoutData)
       logout()  // store 상태 변경
-      ipcLogoutHandle() // python에 ipc로 전달
+      
       alert('로그아웃 성공!')
-
       navigate('/login')
+      // ipcLogoutHandle()
     } catch (error) {
       console.error('로그아웃 실패:', error)
       alert('로그아웃 중 에러 발생')
@@ -343,7 +343,7 @@ export default function Navbar() {
                 </div>
               ))}
               <hr className="mt-2 mb-2 bg-gray-200 h-1 border-none" />
-              <div className="my-4 text-center font-noto-sans ">
+              <div className="my-5 text-center font-noto-sans ">
                 <div className="text-gray-400 font-normal text-base">
                   {user?.teamCode} {user?.teamName}
                 </div>
@@ -356,6 +356,12 @@ export default function Navbar() {
                   </button>
                 </div>
               </div>
+              <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 w-full"
+                  onClick={handleLogout}
+                >
+                  로그아웃
+                </button>
               {/* <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
               <span className="text-indigo-950 font-bold ml-3">개발용</span>
               <div className="flex flex-col justify-around mt-2">
