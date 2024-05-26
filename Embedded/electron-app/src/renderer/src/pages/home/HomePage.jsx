@@ -1,18 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-import Clock from './HomeClockComponent.jsx'
-import Calendar from './CalendarWidget.jsx'
-import TodoList from './HomeTodoListComponent.jsx'
-import Schedule from './HomeScheduleComponent.jsx'
-import MozzyModal from '../mozzy/MozzyMainPage..jsx'
-import LongSitModal from '../mozzy/MozzyLongSitPage.jsx'
-import { updateUserStatus } from '../../services/userService.js'
-import useGlobalStore from '../../stores/useGlobalStore.js'
+import Clock from './HomeClockComponent.jsx';
+import Calendar from './CalendarWidget.jsx';
+import TodoList from './HomeTodoListComponent.jsx';
+import Schedule from './HomeScheduleComponent.jsx';
+import MozzyModal from '../mozzy/MozzyMainPage..jsx';
+import LongSitModal from '../mozzy/MozzyLongSitPage.jsx';
+import useGlobalStore from '../../stores/useGlobalStore.js';
 
-import testImg1 from './test/swiper-slide-test-img-1.png'
-import testImg2 from './test/swiper-slide-test-img-2.jpg'
-import Mozzy from '../../assets/Mozzy.svg'
+import testImg1 from './test/swiper-slide-test-img-1.png';
+import testImg2 from './test/swiper-slide-test-img-2.jpg';
+import Mozzy from '../../assets/Mozzy.svg';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // Import Swiper styles
@@ -21,7 +20,7 @@ import 'swiper/css/pagination';
 
 import { Pagination } from 'swiper/modules';
 import AuthStore from '../../stores/AuthStore.js';
-import { getCurrentUser } from '../../services/jiraService.js'
+import { getCurrentUser } from '../../services/jiraService.js';
 
 export default function HomePage() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -68,20 +67,6 @@ export default function HomePage() {
             if (data.status === 'LONG_SIT') {
                 console.log("Long Sit");
                 openLongSitModal();
-            } else if (data.status === 'AWAY' || data.status === 'STAY') {
-                const newStatus = data.status === 'AWAY' ? '0' : '1';
-                console.log("New status: ", newStatus);
-
-                if (newStatus !== user.statusId.toString()) {
-                    updateUserStatus({ statusId: newStatus })
-                        .then(() => {
-                            console.log(`User status updated to ${data.status}`);
-                            setUser({ ...user, statusId: parseInt(newStatus) });
-                        })
-                        .catch(error => {
-                            console.error('Error updating user status:', error);
-                        });
-                }
             }
         };
 
@@ -96,7 +81,7 @@ export default function HomePage() {
                 window.electron.ipcRenderer.removeListener('motion-detected', handleMotionDetected);
             }
         };
-    }, [user, setUser]);
+    }, []);
 
     useEffect(() => {
         const { accessToken, refreshToken } = AuthStore.getState();

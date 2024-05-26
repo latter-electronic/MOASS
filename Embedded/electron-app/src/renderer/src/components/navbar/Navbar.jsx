@@ -33,9 +33,10 @@ export default function Navbar() {
   const statusOptions = [ '자리비움', '착석중', '공가', '방해금지']
   const { accessToken, refreshToken } = AuthStore.getState()
 
-  const { user, setUser } = useGlobalStore(state => ({
+  const { user, setUser, fetchUserInfo } = useGlobalStore(state => ({
     user: state.user,
-    setUser: state.setUser
+    setUser: state.setUser,
+    fetchUserInfo: state.fetchUserInfo
   }))
 
   const backgroundColors = {
@@ -175,6 +176,19 @@ export default function Navbar() {
       alert('로그아웃 중 에러 발생')
     }
   }
+
+  // IPC를 통해 상태 업데이트를 처리합니다.
+  useEffect(() => {
+    window.electron.ipcRenderer.on('user-updated', (event, newUser) => {
+      if (newUser.statusId !== undefined) {
+        setSelectedIndex(newUser.statusId);
+      }
+    });
+
+    return () => {
+      window.electron.ipcRenderer.removeAllListeners('user-updated');
+    };
+  }, [setUser]);
 
   const callTestLogin = () => {
     navigate(`/tagsuccess`)
