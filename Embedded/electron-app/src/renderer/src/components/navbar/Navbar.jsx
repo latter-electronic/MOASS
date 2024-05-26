@@ -30,7 +30,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
-  const statusOptions = [ '자리비움', '착석중', '공가', '방해금지']
+  const statusOptions = [ '자리비움', '착석중' ]
   const { accessToken, refreshToken } = AuthStore.getState()
 
   const { user, setUser, fetchUserInfo } = useGlobalStore(state => ({
@@ -315,7 +315,7 @@ export default function Navbar() {
                     }
                   })}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className="font-noto-sans font-test" style={{ display: 'flex', alignItems: 'center' }}>
                     {' '}
                     {/* 상태 원과 텍스트를 함께 묶어 정렬 */}
                     <span // 상태 색상을 나타내는 원
@@ -333,7 +333,7 @@ export default function Navbar() {
                   </span>
                 </div>
               ))}
-              <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
+              {/* <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
               <span className="text-indigo-950 font-bold ml-3">개발용</span>
               <div className="flex flex-col justify-around mt-2">
                 <button
@@ -366,7 +366,7 @@ export default function Navbar() {
                 >
                   명패
                 </button>
-              </div>
+              </div> */}
             </div>
           </FloatingFocusManager>
         </FloatingPortal>
