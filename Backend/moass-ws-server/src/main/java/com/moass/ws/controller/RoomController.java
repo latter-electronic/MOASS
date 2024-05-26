@@ -60,6 +60,29 @@ public class RoomController {
         return ResponseEntity.ok(boardService.joinBoard(boardId, userId));
     }
 
+    @GetMapping("/quit/{boardId}/{userId}")
+    public void quitBoard(@PathVariable Integer boardId, @PathVariable String userId) {
+        Room room = roomService.getRoom(boardId).orElseThrow();
+
+        for (User user : room.getParticipants()) {
+            if (user.getUserId().equals(userId)) {
+                List<User> userList = room.getParticipants();
+                userList.remove(user);
+                room.setParticipants(userList);
+
+                if (room.getParticipants().isEmpty()) {
+                    room.setIsActive(false);
+                    Board board = boardService.getBoard(boardId);
+                    board.setIsActive(false);
+                    boardService.quitBoard(board);
+                }
+
+                roomService.update(room);
+                break;
+            }
+        }
+    }
+
     @GetMapping("/all/{userId}")
     public List<Room> getAllRooms(@PathVariable String userId) {
         return boardService.getBoards(userId);
