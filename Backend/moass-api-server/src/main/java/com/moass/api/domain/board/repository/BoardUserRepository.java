@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public interface BoardUserRepository extends ReactiveCrudRepository<BoardUser, Integer> {
     @Query("SELECT bu.board_user_id, b.board_id, b.board_name, b.board_url, b.is_active " +
             "FROM BoardUser bu JOIN Board b ON bu.board_id = b.board_id " +
-            "WHERE bu.user_id = :userId")
+            "WHERE bu.user_id = :userId AND b.is_active = true")
     Flux<BoardDetail> findAllBoardDetailByUserId(String userId);
 
     Mono<BoardUser> findByBoardIdAndUserId(Integer boardId, String userId);
