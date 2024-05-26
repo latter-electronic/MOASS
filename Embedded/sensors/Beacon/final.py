@@ -123,9 +123,9 @@ while True:
         'MOASS_1': 'c3:00:00:1c:6e:e3',
         'MOASS_2': 'c3:00:00:1c:6e:ce', 
         'MOASS_3': 'c3:00:00:1c:6e:ed',
-        'MOASS_4': 'c3:00:00:1c:6e:fa',  
-        'MOASS_5': 'c3:00:00:1c:6e:fb',
-        'MOASS_6': 'c3:00:00:1c:6e:fc'
+        'MOASS_4': 'c3:00:00:1c:6e:4c',  
+        'MOASS_5': 'c3:00:00:1c:6e:55',
+        'MOASS_6': 'c3:00:00:1c:6e:51'
     }
     tx_power = -59  # 실제 측정된 tx_power 사용
 
