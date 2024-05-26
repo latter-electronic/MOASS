@@ -30,6 +30,13 @@ public class BoardController {
                 .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
     }
 
+    @GetMapping("/all")
+    public Mono<ResponseEntity<ApiResponse>> getBoardListAll(@Login UserInfo userInfo){
+        return boardService.getBoardListAll(userInfo)
+                .flatMap(boards -> ApiResponse.ok("Board 목록 조회 완료", boards))
+                .onErrorResume(CustomException.class, e -> ApiResponse.error("조회 실패 : " + e.getMessage(), e.getStatus()));
+    }
+
     @GetMapping("/{boardUserId}")
     public Mono<ResponseEntity<ApiResponse>> getScreenshotList(@PathVariable Integer boardUserId){
         return boardService.getScreenshotList(boardUserId)
