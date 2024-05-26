@@ -33,12 +33,16 @@ public class RoomController {
         String url = "https://k10e203.p.ssafy.io/wbo/boards/" + UUID.randomUUID();
 
         Board board = new Board();
+        board.setBoardName("Team Board");
         board.setBoardUrl(url);
+        board.setIsActive(true);
         Board received = boardService.createBoard(board);
+
         Room room = new Room();
         room.setId(received.getBoardId());
+        room.setName(received.getBoardName());
         room.setBoardUrl(received.getBoardUrl());
-        room.setIsActive(true);
+        room.setIsActive(received.getIsActive());
         room.setCompletedAt(received.getCompletedAt());
 
         boardService.createBoardUser(new BoardUser(board.getBoardId(), userId));
