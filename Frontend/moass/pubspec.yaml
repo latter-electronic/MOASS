@@ -56,7 +56,8 @@ dependencies:
     path_provider: ^2.1.3
     # 움직이는 이미지를 위한 라이브러리
     lottie: ^3.1.2
-
+    # svg파일을 받아오기 위한 라이브러리
+    # flutter_svg: ^2.0.10+1
 
     # 파일 타입 확인을 위한 라이브러리
     mime: ^1.0.5

@@ -19,6 +19,8 @@ class BoardApi {
       final response = await dio.get('$baseUrl/board',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
       if (response.statusCode == 200) {
+        print('버드사진리스트');
+        print(response.data);
         List<dynamic> boardsJson = response.data['data'];
         return boardsJson.map((json) => BoardModel.fromJson(json)).toList();
       } else {
@@ -37,6 +39,8 @@ class BoardApi {
       final response = await dio.get('$baseUrl/board/$boardUserId',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
       if (response.statusCode == 200) {
+        print('버드사진리스트');
+        print(response.data);
         List<dynamic> boardsJson = response.data['data'];
         return boardsJson
             .map((json) => ScreenshotModel.fromJson(json))

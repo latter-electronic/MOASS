@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart'; // Lottie 임포트
+import 'package:lottie/lottie.dart';
 import 'package:moass/model/boardModel.dart';
 import 'package:moass/screens/board_detail_screen.dart';
 import 'package:moass/services/board_api.dart';
@@ -67,22 +67,36 @@ class BoardScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10.0, horizontal: 20.0),
                       child: ClipPath(
-                        clipper: ReversedFolderClipper(), // 변경된 클리퍼 사용
+                        clipper: ReversedFolderClipper(),
                         child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.yellow,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Colors.yellow, Colors.orange],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: ListTile(
-                            title: Text(board.boardName ??
-                                'Unnamed Board'), // 대체 텍스트 추가
+                            // contentPadding: const EdgeInsets.all(16.0),
+                            title: Text(board.boardName ?? 'Unnamed Board'),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text("이미지 갯수: ${screenshots.length}"),
-                                const SizedBox(
-                                  width: 10,
-                                  height: 10,
-                                ),
+                                const SizedBox(height: 10),
                                 _buildScreenshotImages(screenshots),
                               ],
                             ),
@@ -93,8 +107,8 @@ class BoardScreen extends ConsumerWidget {
                                   builder: (context) => BoardDetailScreen(
                                     boardId: board.boardId,
                                     boardUserId: board.boardUserId,
-                                    boardName: board.boardName ??
-                                        'Unnamed Board', // 대체 텍스트 추가
+                                    boardName:
+                                        board.boardName ?? 'Unnamed Board',
                                   ),
                                 ),
                               );
@@ -126,6 +140,7 @@ class BoardScreen extends ConsumerWidget {
               screenshots[index].screenshotUrl,
               width: 100,
               height: 70,
+              fit: BoxFit.cover,
             ),
           );
         },
