@@ -7,8 +7,6 @@ import com.moass.api.domain.board.entity.Screenshot;
 import com.moass.api.domain.board.repository.BoardRepository;
 import com.moass.api.domain.board.repository.BoardUserRepository;
 import com.moass.api.domain.board.repository.ScreenshotRepository;
-import com.moass.api.domain.reservation.entity.Reservation;
-import com.moass.api.domain.user.dto.UserSearchInfoDto;
 import com.moass.api.global.auth.dto.UserInfo;
 import com.moass.api.global.config.S3ClientConfigurationProperties;
 import com.moass.api.global.exception.CustomException;
