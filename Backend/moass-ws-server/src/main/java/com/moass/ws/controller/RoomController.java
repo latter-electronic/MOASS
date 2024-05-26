@@ -52,7 +52,7 @@ public class RoomController {
         room.setParticipants(userList);
         roomService.save(room);
 
-        return ResponseEntity.ok(board);
+        return ResponseEntity.ok(received);
     }
 
     @GetMapping("/{boardId}/{userId}")
