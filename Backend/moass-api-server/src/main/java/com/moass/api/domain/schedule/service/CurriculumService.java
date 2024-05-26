@@ -9,13 +9,10 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class CurriculumService {
     @Value("${edussafy.pwd}")
     private String userPwd;
 
-//    @Scheduled(cron = "0 0 8 ? * 1")
+    @Scheduled(cron = "0 0 8 ? * 1")
     public void crawlingCurriculum() {
         System.setProperty("webdriver.chrome.driver", "driver/chromedriver");
         WebDriver driver = new ChromeDriver();
