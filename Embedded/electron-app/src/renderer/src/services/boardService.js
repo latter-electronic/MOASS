@@ -107,3 +107,24 @@ export const createBoard = (userId) => {
         }
     });
 };
+
+/**
+ * 보드 나가기
+ * 
+ * @param {number} boardId 보드 정보
+ * @param {number} userId 사용자 ID
+ */
+export const exitBoard = (userId, boardId) => {
+    const { accessToken } = AuthStore.getState();
+    const url = `/v1/board/quit/${boardId}/${userId}`;
+    console.log('나가기 요청 보드아이디 , 유저 아이디')
+    console.log(boardId)
+    console.log(userId)
+    console.log(url)
+
+    return axios.get(url, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+};
