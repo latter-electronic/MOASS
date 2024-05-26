@@ -49,16 +49,16 @@ function MozzyMain({ isOpen, onClose }) {
                         </div>
                         <div className='flex flex-row justify-center gap-6 mb-2 mx-3'>
                             <button
-                                className="bg-cyan-500 text-white text-xl font-bold py-2 px-5 rounded-3xl"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('lunch')}>점심 메뉴</button>
                             <button 
-                                className="bg-cyan-500 text-white text-xl font-bold py-2 px-5 rounded-3xl"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('quiz')}>오늘의 퀴즈</button>
                             <button 
-                                className="bg-cyan-500 text-white text-xl font-bold py-2 px-5 rounded-3xl"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('news')}>오늘의 뉴스</button>
                             <button 
-                                className="bg-cyan-500 text-white text-xl font-bold py-2 px-5 rounded-3xl"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('scrum')}>데일리 스크럼</button>
                         </div>
                     </div>
