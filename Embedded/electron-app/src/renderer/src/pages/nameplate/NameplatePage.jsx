@@ -14,11 +14,12 @@ export default function NameplatePage() {
     setUser: state.setUser,
   }));
 
-  const { isAuthenticated, isCheckingAuth, checkStoredAuth, accessToken } = AuthStore((state) => ({
+  const { isAuthenticated, isCheckingAuth, checkStoredAuth, accessToken, logout } = AuthStore((state) => ({
     isAuthenticated: state.isAuthenticated,
     isCheckingAuth: state.isCheckingAuth,
     checkStoredAuth: state.checkStoredAuth,
     accessToken: state.accessToken,
+    logout: state.logout
   }));
 
   const navigate = useNavigate();
@@ -29,9 +30,8 @@ export default function NameplatePage() {
   }, [checkStoredAuth]);
 
   useEffect(() => {
-    console.log(accessToken);
     if (!accessToken) {  
-      navigate('/logoutnameplate');
+      navigate('/logoutnameplate', { replace: true });
     }
   }, [accessToken, navigate]);
 
@@ -46,6 +46,20 @@ export default function NameplatePage() {
       fetchUserInfo();
     }
   }, [isAuthenticated, fetchUserInfo]);
+
+  useEffect(() => {
+    const handleLogoutSuccess = () => {
+      console.log('로그아웃 신호 명패에서 받음')
+      logout();
+      navigate('/logoutnameplate', { replace: true });
+    };
+
+    window.electron.ipcRenderer.on('logout-success', handleLogoutSuccess);
+
+    return () => {
+      window.electron.ipcRenderer.removeListener('logout-success', handleLogoutSuccess);
+    };
+  }, [navigate]);
 
   // IPC를 통해 상태 업데이트를 처리합니다.
   useEffect(() => {

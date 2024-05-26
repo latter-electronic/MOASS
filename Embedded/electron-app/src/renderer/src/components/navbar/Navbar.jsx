@@ -157,7 +157,7 @@ export default function Navbar() {
     navigate(`/login`)
   }
 
-  const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success', 'logout')
+  // const ipcLogoutHandle = () => window.electron.ipcRenderer.send('logout-success', 'logout')
 
   const handleLogout = async () => {
     try {
@@ -167,10 +167,10 @@ export default function Navbar() {
       }
       await deviceLogout(logoutData)
       logout()  // store 상태 변경
-      ipcLogoutHandle() // python에 ipc로 전달
+      
       alert('로그아웃 성공!')
-
       navigate('/login')
+      // ipcLogoutHandle()
     } catch (error) {
       console.error('로그아웃 실패:', error)
       alert('로그아웃 중 에러 발생')
