@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useGlobalStore from '../../stores/useGlobalStore';
 
-export default function BoardTest() {
+export default function BoardDetailPage() {
     const boardUrl = useGlobalStore(state => state.boardUrl);
     console.log(boardUrl);
 

@@ -25,11 +25,11 @@ export default function App() {
                         <Route path="/" element={<Layout />}>
                             <Route index element={<Home />} />
                             <Route path="board" element={<Board />} />
-                            <Route path="board/detail" element={<BoardDetail />} />
                             <Route path="board/history" element={<BoardHistory />} />
                             <Route path="jira" element={<Jira />} />
                             <Route path="alert" element={<Alert />} />
                         </Route>
+                        <Route path="/board/detail" element={<BoardDetail />} />
                         <Route path="/logoutnameplate" element={<LogoutNameplate/>}/>
                         <Route path="/nameplate" element={<Nameplate />} />
                         <Route path="/callalert" element={<CallAlert />} />
