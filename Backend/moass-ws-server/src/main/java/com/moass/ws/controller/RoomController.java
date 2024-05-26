@@ -29,7 +29,7 @@ public class RoomController {
     private final UserRepository userRepository;
 
     @GetMapping("/create/{userId}")
-    public ResponseEntity<String> createBoard(@PathVariable String userId) {
+    public ResponseEntity<Board> createBoard(@PathVariable String userId) {
         String url = "https://k10e203.p.ssafy.io/wbo/boards/" + UUID.randomUUID();
 
         Board board = new Board();
@@ -52,7 +52,7 @@ public class RoomController {
         room.setParticipants(userList);
         roomService.save(room);
 
-        return ResponseEntity.ok(url);
+        return ResponseEntity.ok(board);
     }
 
     @GetMapping("/{boardId}/{userId}")

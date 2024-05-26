@@ -30,5 +30,5 @@ public class Room {
     List<User> participants;
 
     @Field
-    LocalDateTime completedAt;
+    private LocalDateTime completedAt;
 }
