@@ -23,6 +23,9 @@ const useGlobalStore = create((set) => ({
   isLoadingUser: false,
   setUser: (user) => {
     set({ user });
+    if (user && user.userId) {
+      localStorage.setItem('userId', user.userId);
+    }
     if (window.electron) {
       window.electron.ipcRenderer.send('user-updated', user); // 상태 변경을 IPC로 전달
     }
@@ -31,7 +34,11 @@ const useGlobalStore = create((set) => ({
     set({ isLoadingUser: true });
     try {
       const response = await fetchUserInfo();
-      set({ user: response.data.data });
+      const user = response.data.data;
+      set({ user });
+      if (user && user.userId) {
+        localStorage.setItem('userId', user.userId);
+      }
       console.log('try');
     } catch (error) {
       console.error('사용자 정보를 불러오는데 실패했습니다:', error);

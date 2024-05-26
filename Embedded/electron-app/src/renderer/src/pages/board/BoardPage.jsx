@@ -21,6 +21,7 @@ export default function BoardPage() {
         const loadBoards = async () => {
             try {
                 const response = await fetchBoards();
+                console.log(response.data);
                 if (response.data.data.length === 0) {
                     // setBoards(testData.data);
                 } else {
@@ -38,7 +39,7 @@ export default function BoardPage() {
     }, []);
 
     const callTestFunction = () => {
-        navigate(`/board/test`);
+        navigate(`/board/detail`);
     };
 
     const goToHistory = () => {
@@ -58,8 +59,16 @@ export default function BoardPage() {
         });
         const boardName = `${formattedDate}의 이음보드`;
 
+        // localStorage에서 userId 가져오기
+        const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+            console.error("User ID is undefined. Cannot create board.");
+            return;
+        }
+
         try {
-            const response = await createBoard(user.userId);
+            const response = await createBoard(userId);
             console.log("보드 생성 완료:", response.data);
             // 보드 목록을 다시 로드
             const boardsResponse = await fetchBoards();
@@ -68,7 +77,7 @@ export default function BoardPage() {
             const boardUrl = response.data; 
             console.log("Setting board URL:", boardUrl);
             setBoardUrl(boardUrl);
-            navigate(`/board/test`);
+            navigate(`/board/detail`);
         } catch (err) {
             console.error("보드 생성 실패:", err.message);
         }
@@ -98,7 +107,7 @@ export default function BoardPage() {
             </div>
             <div className="grid grid-cols-[3fr,1fr] h-11/12">
                 <div className="relative flex flex-col items-center">
-                    {boards.length > 0 ? (
+                    {boards.length === 0 ? (
                         <div className="absolute inset-0 flex flex-col justify-center items-center gap-3">
                             <div className="text-center text-2xl text-gray-500">
                                 현재 생성된 이음보드가 없어요 :&lt;
@@ -111,16 +120,22 @@ export default function BoardPage() {
                             </button>
                         </div>
                     ) : (
-                        <div className="absolute inset-0 flex flex-col justify-center items-center gap-3">
-                            <div className="text-center text-2xl text-gray-500">
-                                현재 생성된 이음보드가 없어요 :&lt;
-                            </div>
-                            <button
-                                onClick={handleCreateBoard}
-                                className="mt-4 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-2xl px-5 py-2.5 text-center me-2 mb-2"
-                            >
-                                이음보드 시작하기
-                            </button>
+                        <div className="absolute inset-0 flex flex-col items-center gap-3">
+                            {boards.map((board, index) => (
+                                <div key={index} className="text-center text-2xl text-gray-500 mb-4">
+                                    <p>보드 이름: {board.boardName || '이름 없음'}</p>
+                                    <p>보드 URL: <a href={board.boardUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">{board.boardUrl}</a></p>
+                                    <button
+                                        onClick={() => {
+                                            setBoardUrl(board.boardUrl);
+                                            navigate(`/board/detail`);
+                                        }}
+                                        className="mt-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-2xl px-5 py-2.5 text-center"
+                                    >
+                                        보드 입장하기
+                                    </button>
+                                </div>
+                            ))}
                         </div>
                     )}
                     <img
