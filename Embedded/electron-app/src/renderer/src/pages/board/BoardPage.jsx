@@ -74,7 +74,7 @@ export default function BoardPage() {
             const boardsResponse = await fetchBoards();
             setBoards(boardsResponse.data.data);
             // 생성된 보드 URL을 저장
-            const boardUrl = response.data; 
+            const boardUrl = response.data.boardUrl;  // Assuming the created board URL is in response.data.boardUrl
             console.log("Setting board URL:", boardUrl);
             setBoardUrl(boardUrl);
             navigate(`/board/detail`);
@@ -130,9 +130,9 @@ export default function BoardPage() {
                                             setBoardUrl(board.boardUrl);
                                             navigate(`/board/detail`);
                                         }}
-                                        className="mt-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-2xl px-5 py-2.5 text-center"
+                                        className="mt-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-xl px-4 py-2.5 text-center me-2 mb-2"
                                     >
-                                        보드 입장하기
+                                        보드 열기
                                     </button>
                                 </div>
                             ))}

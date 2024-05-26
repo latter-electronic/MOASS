@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { deviceLogout } from '../../services/deviceService'
 import { fetchUserInfo, updateUserStatus } from '../../services/userService.js'
 import useUIStore from '../../stores/UIStore.js'
-import AuthStore from '../../stores/AuthStore.js'; 
+import AuthStore from '../../stores/AuthStore.js';
 import useGlobalStore from '../../stores/useGlobalStore.js'
 import { useFloating, useClick, useDismiss, useRole, useListNavigation, useInteractions, FloatingFocusManager, useTypeahead, offset, flip, size, autoUpdate, FloatingPortal } from '@floating-ui/react';
 
@@ -30,7 +30,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeIndex, setActiveIndex] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
-  const statusOptions = [ '자리비움', '착석중', '공가', '방해금지']
+  const statusOptions = ['자리비움', '착석중']
   const { accessToken, refreshToken } = AuthStore.getState()
 
   const { user, setUser, fetchUserInfo } = useGlobalStore(state => ({
@@ -45,6 +45,15 @@ export default function Navbar() {
     공가: 'bg-rose-600',
     방해금지: 'bg-stone-400'
   }
+
+  const positionColors = {
+    FE: 'bg-rose-800',
+    BE: 'bg-indigo-800',
+    EM: 'bg-emerald-800',
+    FULL: 'bg-yellow-800',
+  };
+
+  const positionBackground = user?.positionName ? positionColors[user.positionName] : 'bg-stone-400';
 
   const backgroundColor =
     selectedIndex !== null ? backgroundColors[statusOptions[selectedIndex]] : 'bg-emerald-500' // 초기 초록색으로 시작하게해놓음. 나중에 수정
@@ -108,7 +117,7 @@ export default function Navbar() {
       activeIndex,
       selectedIndex,
       onMatch: isOpen ? setActiveIndex : setSelectedIndex,
-      onTypingChange: (isTyping) => {}
+      onTypingChange: (isTyping) => { }
     }),
     useClick(context, { event: 'mousedown' })
   ])
@@ -138,13 +147,13 @@ export default function Navbar() {
       try {
         if (!accessToken) {
           setUsers(null)
-        } else{
-        const userData = await fetchUserInfo();
-        setUsers(userData.data.data); // API 호출 결과를 상태에 저장
-        if (userData.data.data.statusId !== undefined) {
-          setSelectedIndex(userData.data.data.statusId); // Set selectedIndex based on statusId
+        } else {
+          const userData = await fetchUserInfo();
+          setUsers(userData.data.data); // API 호출 결과를 상태에 저장
+          if (userData.data.data.statusId !== undefined) {
+            setSelectedIndex(userData.data.data.statusId); // Set selectedIndex based on statusId
+          }
         }
-      }
       } catch (error) {
         console.error('사용자 데이터를 불러오는 중 오류가 발생했습니다:', error);
       }
@@ -315,7 +324,7 @@ export default function Navbar() {
                     }
                   })}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center' }}>
+                  <span className="font-noto-sans font-test" style={{ display: 'flex', alignItems: 'center' }}>
                     {' '}
                     {/* 상태 원과 텍스트를 함께 묶어 정렬 */}
                     <span // 상태 색상을 나타내는 원
@@ -333,7 +342,21 @@ export default function Navbar() {
                   </span>
                 </div>
               ))}
-              <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
+              <hr className="mt-2 mb-2 bg-gray-200 h-1 border-none" />
+              <div className="my-4 text-center font-noto-sans ">
+                <div className="text-gray-400 font-normal text-base">
+                  {user?.teamCode} {user?.teamName}
+                </div>
+                <div className="flex flex-row justify-center align-middle gap-1 mt-1">
+                  <div className="font-extrabold text-xl text-gray-600">{user?.userName}</div>
+                  <button
+                    className={`${positionBackground} text-white font-medium text-base tracking-wider py-1 px-2 rounded-full`}
+                  >
+                    {user?.positionName || 'Null'}
+                  </button>
+                </div>
+              </div>
+              {/* <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
               <span className="text-indigo-950 font-bold ml-3">개발용</span>
               <div className="flex flex-col justify-around mt-2">
                 <button
@@ -366,7 +389,7 @@ export default function Navbar() {
                 >
                   명패
                 </button>
-              </div>
+              </div> */}
             </div>
           </FloatingFocusManager>
         </FloatingPortal>

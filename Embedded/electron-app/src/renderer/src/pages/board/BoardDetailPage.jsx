@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
+import { exitBoard } from '../../services/boardService';
 import useGlobalStore from '../../stores/useGlobalStore';
 
-export default function BoardTest() {
+export default function BoardDetailPage() {
     const boardUrl = useGlobalStore(state => state.boardUrl);
     console.log(boardUrl);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    function goBack() {
-        window.history.back();
+    const goBack = async() => {
+        //가져온 보드 URL 안에서 id와 유저 ID를 나가기 API에 요청
+        // localStorage에서 userId 가져오기
+        const userId = localStorage.getItem('userId');
+        const boardId = boardUrl.boardId
+        try {
+            await exitBoard(userId, boardId);
+            console.log("보드 나가기 완료:");
+            window.history.back();
+        } catch (err) {
+            console.error("보드 나가기 실패:", err.message);
+        }
     }
 
     function handleSaveImage() {
