@@ -3,7 +3,6 @@ package com.moass.api.global.fcm.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.moass.api.global.config.JsonConfig;
 import com.moass.api.global.fcm.dto.FcmMessageDto;
@@ -65,7 +64,7 @@ public class FcmService {
                         .bodyValue(createMessage(fcmToken,fcmNotificationDto))
                         .retrieve()
                         .bodyToMono(String.class)
-                        .doOnError(error -> log.error("FCM 메세지 전송 실패: {}", error.getMessage(), error))
+                        //.doOnError(error -> log.error("FCM 메세지 전송 실패: {}", error.getMessage(), error))
                         .map(response -> 1)
                         .onErrorReturn(0));
     }
