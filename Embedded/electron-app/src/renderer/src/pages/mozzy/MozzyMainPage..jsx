@@ -42,23 +42,23 @@ function MozzyMain({ isOpen, onClose }) {
                 return <DailyScrum />
             default:
                 return (
-                    <div className='flex flex-col'>
-                        <div className='flex flex-col justify-center items-center text-2xl my-5'>
+                    <div className='flex flex-col font-noto-sans text-gray-700'>
+                        <div className='flex flex-col justify-center items-center text-xl my-5'>
                             <p>안녕하세요, {user?.userName} 님!</p>
                             <p>제가 도와드릴 일이 있을까요?</p>
                         </div>
-                        <div className='flex flex-row justify-between my-3 mx-3'>
+                        <div className='flex flex-row justify-center gap-6 mb-2 mx-3'>
                             <button
-                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('lunch')}>점심 메뉴</button>
                             <button 
-                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('quiz')}>오늘의 퀴즈</button>
                             <button 
-                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('news')}>오늘의 뉴스</button>
                             <button 
-                                className="bg-cyan-500 text-white font-bold py-2 px-4 rounded"
+                                className="bg-cyan-500 text-white text-xl font-semibold py-2 px-5 rounded-3xl"
                                 onClick={() => setPage('scrum')}>데일리 스크럼</button>
                         </div>
                     </div>
