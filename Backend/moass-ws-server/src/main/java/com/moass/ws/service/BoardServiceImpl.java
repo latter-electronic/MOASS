@@ -1,8 +1,5 @@
 package com.moass.ws.service;
 
-import com.moass.ws.dto.BoardEnterDto;
-import com.moass.ws.dto.MessageDto;
-import com.moass.ws.dto.UserDto;
 import com.moass.ws.entity.Board;
 import com.moass.ws.entity.BoardUser;
 import com.moass.ws.entity.SsafyUser;
@@ -14,7 +11,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,13 +20,29 @@ import java.util.*;
 public class BoardServiceImpl implements BoardService {
 
     private final UserRepository userRepository;
+    private final SsafyUserRepository ssafyUserRepository;
     private final BoardRepository boardRepository;
     private final BoardUserRepository boardUserRepository;
     private final RoomRepository roomRepository;
     private final MongoTemplate mongoTemplate;
 
-    public Board createBoard(Board board) {
-        return boardRepository.save(board);
+    public Board createBoard(String userId) {
+        String url = "https://k10e203.p.ssafy.io/wbo/boards/" + UUID.randomUUID();
+
+        Board board = new Board();
+        board.setBoardName("Team Board");
+        board.setBoardUrl(url);
+        board.setIsActive(true);
+        Board received = boardRepository.save(board);
+
+        String teamCode = ssafyUserRepository.findById(userId).orElseThrow().getTeamCode();
+        List<SsafyUser> ssafyUsers = ssafyUserRepository.findAllByTeamCode(teamCode);
+
+        for (SsafyUser ssafyUser: ssafyUsers) {
+            boardUserRepository.save(new BoardUser(received.getBoardId(), ssafyUser.getUserId()));
+        }
+
+        return received;
     }
 
     public List<Room> getBoards(String userId) {
@@ -53,8 +65,6 @@ public class BoardServiceImpl implements BoardService {
         updateQuery.push("participants", user);
         mongoTemplate.updateFirst(query, updateQuery, Room.class);
 
-        boardUserRepository.save(new BoardUser(boardId, userId));
-
         return roomRepository.findById(boardId).orElseThrow().getBoardUrl();
     }
 
@@ -65,6 +75,4 @@ public class BoardServiceImpl implements BoardService {
     public void quitBoard(Board board) {
         boardRepository.save(board);
     }
-
-    public BoardUser createBoardUser(BoardUser boardUser) { return boardUserRepository.save(boardUser); }
 }

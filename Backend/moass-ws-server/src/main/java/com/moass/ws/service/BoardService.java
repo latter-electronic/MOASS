@@ -10,10 +10,9 @@ import java.util.List;
 
 public interface BoardService {
 
-    Board createBoard(Board board);
+    Board createBoard(String userId);
     List<Room> getBoards(String userId);
     String joinBoard(Integer boardId, String userId);
     Board getBoard(Integer boardId);
     void quitBoard(Board board);
-    BoardUser createBoardUser(BoardUser boardUser);
 }
