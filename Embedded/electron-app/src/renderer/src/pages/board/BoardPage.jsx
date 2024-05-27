@@ -129,6 +129,7 @@ export default function BoardPage() {
                                     <button
                                         onClick={() => {
                                             accessRoom(board.boardId, localStorage.getItem('userId'))
+                                            localStorage.setItem('boardId', board.boardId)
                                             setBoardUrl(board.boardUrl);
                                             navigate(`/board/detail`);
                                         }}
