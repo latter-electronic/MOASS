@@ -73,7 +73,7 @@ export default function BoardDetailPage() {
       >
         뒤로 가기
       </button>
-      <button 
+      {/* <button 
         onClick={handleSaveImage} 
         className="absolute bottom-5 left-5 z-10 text-white font-medium py-2 px-4 rounded"
       >
@@ -85,7 +85,7 @@ export default function BoardDetailPage() {
             이미지가 저장되었어요!
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
