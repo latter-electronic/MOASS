@@ -30,13 +30,7 @@ public class RoomController {
 
     @GetMapping("/create/{userId}")
     public ResponseEntity<Board> createBoard(@PathVariable String userId) {
-        String url = "https://k10e203.p.ssafy.io/wbo/boards/" + UUID.randomUUID();
-
-        Board board = new Board();
-        board.setBoardName("Team Board");
-        board.setBoardUrl(url);
-        board.setIsActive(true);
-        Board received = boardService.createBoard(board);
+        Board received = boardService.createBoard(userId);
 
         Room room = new Room();
         room.setId(received.getBoardId());
@@ -44,8 +38,6 @@ public class RoomController {
         room.setBoardUrl(received.getBoardUrl());
         room.setIsActive(received.getIsActive());
         room.setCompletedAt(received.getCompletedAt());
-
-        boardService.createBoardUser(new BoardUser(board.getBoardId(), userId));
 
         List<User> userList = new ArrayList<>();
         userList.add(userRepository.findById(userId).orElseThrow());
