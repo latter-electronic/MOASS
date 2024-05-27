@@ -74,7 +74,7 @@ export default function BoardPage() {
             const boardsResponse = await fetchBoards();
             setBoards(boardsResponse.data.data);
             // 생성된 보드 URL을 저장
-            const boardUrl = response.data.boardUrl;  // Assuming the created board URL is in response.data.boardUrl
+            const boardUrl = response.data.boardUrl+"?date="+new Date().getDate();  // Assuming the created board URL is in response.data.boardUrl
             console.log("Setting board URL:", boardUrl);
             setBoardUrl(boardUrl);
             localStorage.setItem('boardId', response.data.boardId);
