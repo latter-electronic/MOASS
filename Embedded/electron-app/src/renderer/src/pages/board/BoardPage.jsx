@@ -126,7 +126,7 @@ export default function BoardPage() {
                                 <div key={index} className="text-center text-gray-500 mb-4">
                                     {/* <p>보드 이름: {board.boardName || '이름 없음'}</p>
                                     <p>보드 URL: <a href={board.boardUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">{board.boardUrl}</a></p> */}
-                                    <p className='text-5xl mb-10'>{user.teamCode} 팀</p>
+                                    <p className='text-5xl mb-10'>E203 팀</p>
                                     <p className='text-5xl mb-10'>이음보드 회의 중</p>
                                     <button
                                         onClick={() => {

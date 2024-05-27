@@ -33,7 +33,7 @@ stay_start_time = None
 logged_in = False
 logged_in_lock = threading.Lock()
 
-NO_MOTION_TIMEOUT = 5  # 5 seconds
+NO_MOTION_TIMEOUT = 7  # 7 seconds
 LONG_SIT_TIMEOUT = 90  # 90 seconds
 CHANGE_STATE_TIMEOUT = 5  # 5 seconds
 
@@ -105,10 +105,11 @@ def handle_logged_in_state():
                     motion_state = 'STAY'
                     stay_start_time = current_time
                     send_motion_status("STAY")
-                last_motion_time = current_time
+                elif motion_state == 'STAY':
+                    last_motion_time = current_time  # Reset the timer when motion is detected
         else:  # Sensor does not detect motion
             with motion_state_lock:
-                if motion_state == 'STAY' and (current_time - last_motion_time) >= CHANGE_STATE_TIMEOUT:
+                if motion_state == 'STAY' and (current_time - last_motion_time) >= NO_MOTION_TIMEOUT:
                     motion_state = 'AWAY'
                     stay_start_time = None  # Reset the stay start time
                     send_motion_status("AWAY")
