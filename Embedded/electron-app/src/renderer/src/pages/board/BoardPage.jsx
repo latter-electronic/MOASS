@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchBoards, createBoard } from '../../services/boardService';
+import { fetchBoards, createBoard, accessRoom } from '../../services/boardService';
 import useGlobalStore from '../../stores/useGlobalStore';
 
 import headerIcon from '../../assets/images/board/board-header-icon.svg';
@@ -128,6 +128,7 @@ export default function BoardPage() {
                                     <p>보드 URL: <a href={board.boardUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">{board.boardUrl}</a></p>
                                     <button
                                         onClick={() => {
+                                            accessRoom(board.boardId, localStorage.getItem('userId'))
                                             setBoardUrl(board.boardUrl);
                                             navigate(`/board/detail`);
                                         }}
