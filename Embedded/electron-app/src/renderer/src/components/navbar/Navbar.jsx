@@ -17,6 +17,8 @@ import alertIcon from './navbar_icon_alert.svg'
 import alertIcon_w from './navbar_icon_alert_white.svg'
 import testProfileImg from './profileImageTest.jpg'
 
+import LogoutConfirmModal from '../modals/LogoutConfirmModal.jsx'
+
 export default function Navbar() {
   const navigate = useNavigate()
 
@@ -31,6 +33,8 @@ export default function Navbar() {
   const [activeIndex, setActiveIndex] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
   const statusOptions = ['자리비움', '착석중']
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
   const { accessToken, refreshToken } = AuthStore.getState()
 
   const { user, setUser, fetchUserInfo } = useGlobalStore(state => ({
@@ -176,7 +180,7 @@ export default function Navbar() {
       }
       await deviceLogout(logoutData)
       logout()  // store 상태 변경
-      
+
       alert('로그아웃 성공!')
       navigate('/login')
       // ipcLogoutHandle()
@@ -357,11 +361,11 @@ export default function Navbar() {
                 </div>
               </div>
               <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 w-full"
-                  onClick={handleLogout}
-                >
-                  로그아웃
-                </button>
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 w-full"
+                onClick={() => setShowLogoutModal(true)} // 모달 표시
+              >
+                로그아웃
+              </button>
               {/* <hr className="mt-4 mb-2 bg-gray-300 h-1 border-none" />
               <span className="text-indigo-950 font-bold ml-3">개발용</span>
               <div className="flex flex-col justify-around mt-2">
@@ -399,6 +403,15 @@ export default function Navbar() {
             </div>
           </FloatingFocusManager>
         </FloatingPortal>
+      )}
+      {showLogoutModal && (
+        <LogoutConfirmModal
+          onConfirm={() => {
+            handleLogout();
+            setShowLogoutModal(false);
+          }}
+          onCancel={() => setShowLogoutModal(false)}
+        />
       )}
     </nav>
   )
