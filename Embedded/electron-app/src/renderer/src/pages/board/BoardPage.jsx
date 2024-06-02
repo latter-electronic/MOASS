@@ -89,7 +89,14 @@ export default function BoardPage() {
     }
 
     if (error) {
-        return <div>이음보드 페이지 로딩 실패😖: {error}</div>;
+        return <div className="flex flex-col p-6 h-screen"><div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-2">
+                <h1 className="text-4xl font-medium">이음보드</h1>
+                <img src={headerIcon} alt="Board Header Icon" className="w-8 h-8 mt-1" />
+            </div>
+        </div>
+        <div className="text-2xl text-center align-middle mt-20">이음보드 페이지 로딩 실패😖: {error}</div>
+        </div>;
     }
 
     return (
