@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { SwipeableList, SwipeableListItem, TrailingActions, SwipeAction } from 'react-swipeable-list';
 import 'react-swipeable-list/dist/styles.css';
 
-import { readAllNotifications, getRecentNotifications } from '../../services/notiService';
+import { readAllNotifications, getRecentNotifications, getNextNotifications } from '../../services/notiService';
 import useNotiStore from '../../stores/notiStore';
 import NotiMM from './NotiMMComponent.jsx';
 import NotiDetailComponent from './NotiDetailComponent.jsx'; // 상세 페이지 컴포넌트 임포트
@@ -16,6 +16,11 @@ export default function NotiPage() {
   const clearNotifications = useNotiStore(state => state.clearNotifications);
   const addNotifications = useNotiStore(state => state.addNotifications);
   const [selectedNotice, setSelectedNotice] = useState(null); // 선택된 알림 상태
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const [hasMore, setHasMore] = useState(true); // 추가 알림이 있는지 여부
+  const [lastNotificationId, setLastNotificationId] = useState(null); // 마지막 알림 ID
+  const [lastCreatedAt, setLastCreatedAt] = useState(null); // 마지막 알림 생성일시
+  const observer = useRef(); // IntersectionObserver 참조
 
   useEffect(() => {
     loadRecentNotifications();
@@ -35,8 +40,34 @@ export default function NotiPage() {
       const response = await getRecentNotifications();
       const sortedNotifications = response.data.notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
       addNotifications(sortedNotifications);
+      if (sortedNotifications.length > 0) {
+        const lastNoti = sortedNotifications[sortedNotifications.length - 1];
+        setLastNotificationId(lastNoti.notificationId);
+        setLastCreatedAt(lastNoti.date);
+      }
     } catch (error) {
       console.error('Failed to load recent notifications:', error);
+    }
+  };
+
+  const loadNextNotifications = async () => {
+    if (isLoading || !hasMore) return; // 이미 로딩 중이거나 더 이상 로드할 알림이 없으면 중복 요청 방지
+    setIsLoading(true);
+    try {
+      const response = await getNextNotifications(lastNotificationId, lastCreatedAt);
+      const sortedNotifications = response.data.notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+      if (sortedNotifications.length === 0) {
+        setHasMore(false);
+      } else {
+        addNotifications(sortedNotifications);
+        const lastNoti = sortedNotifications[sortedNotifications.length - 1];
+        setLastNotificationId(lastNoti.notificationId);
+        setLastCreatedAt(lastNoti.date);
+      }
+    } catch (error) {
+      console.error('Failed to load next notifications:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,6 +85,30 @@ export default function NotiPage() {
   const handleDelete = (id) => {
     clearNotifications(notices.filter(noti => noti.notificationId !== id));
   };
+
+  const handleObserver = (entities) => {
+    const target = entities[0];
+    if (target.isIntersecting) {
+      loadNextNotifications();
+    }
+  };
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    observer.current = new IntersectionObserver(handleObserver, options);
+    if (observer.current) {
+      const element = document.querySelector('#end-of-list');
+      if (element) observer.current.observe(element);
+    }
+
+    return () => {
+      if (observer.current) observer.current.disconnect();
+    };
+  }, [lastNotificationId, lastCreatedAt]);
 
   return (
     <div className="flex h-screen">
@@ -90,6 +145,10 @@ export default function NotiPage() {
               );
             })}
           </SwipeableList>
+          <div id="end-of-list" className="text-center mt-4 mb-4">
+            {isLoading && <span className="text-white">로딩중...</span>}
+            {!hasMore && <span className="text-white">더 이상 알림이 없습니다</span>}
+          </div>
         </div>
       </div>
       <div className="flex flex-col w-2/3 bg-gray-800/50 justify-center text-center items-center">
