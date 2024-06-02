@@ -46,7 +46,7 @@ export const fetchScreenshotsByBoardUserId = (boardUserId) => {
  */
 export const accessRoom = (boardId, userId) => {
     const { accessToken } = AuthStore.getState();
-    const url = `/room/${boardId}?userId=${userId}`;
+    const url = `/v1/board/${boardId}/${userId}`;
 
     return axios.get(url, {
         headers: {

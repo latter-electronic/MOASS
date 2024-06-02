@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchBoards, createBoard } from '../../services/boardService';
+import { fetchBoards, createBoard, accessRoom } from '../../services/boardService';
 import useGlobalStore from '../../stores/useGlobalStore';
 
 import headerIcon from '../../assets/images/board/board-header-icon.svg';
@@ -74,7 +74,7 @@ export default function BoardPage() {
             const boardsResponse = await fetchBoards();
             setBoards(boardsResponse.data.data);
             // 생성된 보드 URL을 저장
-            const boardUrl = response.data.boardUrl;  // Assuming the created board URL is in response.data.boardUrl
+            const boardUrl = response.data.boardUrl+"?date="+new Date().getDate();  // Assuming the created board URL is in response.data.boardUrl
             console.log("Setting board URL:", boardUrl);
             setBoardUrl(boardUrl);
             localStorage.setItem('boardId', response.data.boardId);
@@ -128,19 +128,23 @@ export default function BoardPage() {
                             </button>
                         </div>
                     ) : (
-                        <div className="absolute inset-0 flex flex-col items-center gap-3">
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
                             {boards.map((board, index) => (
-                                <div key={index} className="text-center text-2xl text-gray-500 mb-4">
-                                    <p>보드 이름: {board.boardName || '이름 없음'}</p>
-                                    <p>보드 URL: <a href={board.boardUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">{board.boardUrl}</a></p>
+                                <div key={index} className="text-center text-gray-500 mb-4">
+                                    {/* <p>보드 이름: {board.boardName || '이름 없음'}</p>
+                                    <p>보드 URL: <a href={board.boardUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500">{board.boardUrl}</a></p> */}
+                                    <p className='text-5xl mb-10'>E203 팀</p>
+                                    <p className='text-5xl mb-10'>이음보드 회의 중</p>
                                     <button
                                         onClick={() => {
+                                            accessRoom(board.boardId, localStorage.getItem('userId'))
+                                            localStorage.setItem('boardId', board.boardId)
                                             setBoardUrl(board.boardUrl);
                                             navigate(`/board/detail`);
                                         }}
-                                        className="mt-2 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-xl px-4 py-2.5 text-center me-2 mb-2"
+                                        className="mt-6 text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-3xl px-4 py-2.5 text-center me-2 mb-2"
                                     >
-                                        보드 열기
+                                        보드 참가
                                     </button>
                                 </div>
                             ))}
