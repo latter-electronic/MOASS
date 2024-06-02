@@ -18,6 +18,7 @@ import alertIcon_w from './navbar_icon_alert_white.svg'
 import testProfileImg from './profileImageTest.jpg'
 
 import LogoutConfirmModal from '../modals/LogoutConfirmModal.jsx'
+import LogoutSuccessModal from '../modals/LogoutSuccessModal.jsx';
 
 export default function Navbar() {
   const navigate = useNavigate()
@@ -34,6 +35,7 @@ export default function Navbar() {
   const [selectedIndex, setSelectedIndex] = useState(null)
   const statusOptions = ['자리비움', '착석중']
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showLogoutSuccessModal, setShowLogoutSuccessModal] = useState(false);
 
   const { accessToken, refreshToken } = AuthStore.getState()
 
@@ -175,14 +177,14 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       const logoutData = {
-        deviceId: deviceId, // deviceId 나중에 실제로 가져오기
-        userId: cardSerialId // userId 나중에 실제로 가져오기
+        deviceId: deviceId,
+        userId: cardSerialId
       }
       await deviceLogout(logoutData)
       logout()  // store 상태 변경
 
-      alert('로그아웃 성공!')
-      navigate('/login')
+      setShowLogoutSuccessModal(true);
+      // navigate('/login'); // 로그아웃 성공 모달을 닫은 후 로그인 페이지로 이동하도록 변경
       // ipcLogoutHandle()
     } catch (error) {
       console.error('로그아웃 실패:', error)
@@ -411,6 +413,14 @@ export default function Navbar() {
             setShowLogoutModal(false);
           }}
           onCancel={() => setShowLogoutModal(false)}
+        />
+      )}
+      {showLogoutSuccessModal && (
+        <LogoutSuccessModal
+          onClose={() => {
+            setShowLogoutSuccessModal(false);
+            navigate('/login'); // 모달을 닫은 후 로그인 페이지로 이동
+          }}
         />
       )}
     </nav>
