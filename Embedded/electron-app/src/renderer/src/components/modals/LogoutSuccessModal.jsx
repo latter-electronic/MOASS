@@ -22,7 +22,7 @@ export default function LogoutSuccessModal({ onClose }) {
         <p className="text-lg mb-4">다음에도 모아쓰와 함께해주세요🖐🏻</p>
         <div className="flex justify-center mt-6">
           <button
-            className="bg-green-100 text-lg hover:bg-green-700 text-green-600 font-semibold py-2 px-4 rounded-2xl flex-grow"
+            className="bg-green-100 text-lg text-green-600 font-semibold py-2 px-4 rounded-2xl flex-grow"
             onClick={onClose}
           >
             {secondsLeft}초 후 자동으로 닫힘

@@ -292,7 +292,8 @@ export default function Navbar() {
                 background: '#fff',
                 minWidth: 100,
                 borderRadius: 8,
-                outline: 0
+                outline: 0,
+                paddingTop: '8px',
               }}
               {...getFloatingProps()}
             >
@@ -309,7 +310,7 @@ export default function Navbar() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '10px 20px', // Padding을 좌우로 증가시켜 주어 좀 더 넓은 간격을 제공
+                    padding: '8px 20px', // Padding을 좌우로 증가시켜 주어 좀 더 넓은 간격을 제공
                     cursor: 'default',
                     color: '#000',
                     background: i === activeIndex ? 'gainsboro' : ''
