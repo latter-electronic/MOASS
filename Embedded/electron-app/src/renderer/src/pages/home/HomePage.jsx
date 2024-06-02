@@ -97,11 +97,11 @@ export default function HomePage() {
     return (
         <div className="mx-auto p-4 h-screen">
             <div className="grid grid-cols-[0.5fr,2.5fr,1fr] gap-8 h-full">
-                <div className="ml-1 flex flex-col space-y-8 gap-8">
+                <div className="ml-1 flex flex-col space-y-8">
                     <div onClick={() => callAlertFunction()}>
                         <Clock />
                     </div>
-                    <div className="flex h-80 w-56 justify-center ml-3">
+                    <div className="flex h-80 w-56 justify-center ml-3 flex-grow">
                         <Swiper
                             style={{
                                 "--swiper-theme-color": "#6ECEF5",
