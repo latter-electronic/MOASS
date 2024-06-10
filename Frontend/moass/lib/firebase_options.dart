@@ -41,8 +41,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCxvy44x_24l4upZ5xupHwF6AeISy6pRHc',
-    appId: '1:139102845960:web:17574e32c4384852ab25bd',
+    apiKey: apiKey,
+    appId: appId,
     messagingSenderId: '139102845960',
     projectId: 'moass-b25d1',
     authDomain: 'moass-b25d1.firebaseapp.com',
@@ -50,16 +50,16 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAYDSI6NC7VJvbR7fX8OuZO2AuVLgA4X2E',
-    appId: '1:139102845960:android:157b1ad6c8d8bbf6ab25bd',
+    apiKey: apiKey,
+    appId: appId,
     messagingSenderId: '139102845960',
     projectId: 'moass-b25d1',
     storageBucket: 'moass-b25d1.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAI4_nAUekrwu0OYnJlWdbuZSsHy2KNjpM',
-    appId: '1:139102845960:ios:e12b39c3e071dcd3ab25bd',
+    apiKey: apiKey,
+    appId: appId,
     messagingSenderId: '139102845960',
     projectId: 'moass-b25d1',
     storageBucket: 'moass-b25d1.appspot.com',
@@ -67,8 +67,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAI4_nAUekrwu0OYnJlWdbuZSsHy2KNjpM',
-    appId: '1:139102845960:ios:e12b39c3e071dcd3ab25bd',
+    apiKey: apiKey,
+    appId: appId,
     messagingSenderId: '139102845960',
     projectId: 'moass-b25d1',
     storageBucket: 'moass-b25d1.appspot.com',
@@ -76,8 +76,8 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCxvy44x_24l4upZ5xupHwF6AeISy6pRHc',
-    appId: '1:139102845960:web:e5ef88b0bdcc3792ab25bd',
+    apiKey: apiKey,
+    appId: appId,
     messagingSenderId: '139102845960',
     projectId: 'moass-b25d1',
     authDomain: 'moass-b25d1.firebaseapp.com',
